@@ -1,0 +1,90 @@
+{
+  "loading": "Memuat...",
+  "epcLists": "Daftar EPC",
+  "noEpcData": "Data EPC tidak tersedia untuk transaksi masuk/keluar ini.",
+  "productList": "Daftar Produk",
+  "noProductData": "Tidak ada data produk yang tersedia",
+  "productTable": {
+    "header": {
+      "no": "No",
+      "productName": "Nama Produk",
+      "category": "Kategori",
+      "brand": "Merek",
+      "color": "Warna",
+      "size": "Ukuran",
+      "quantity": "Jumlah",
+      "lastStatus": "Status Terakhir",
+      "action": "Aksi"
+    }
+  },
+  "epcTable": {
+    "header": {
+      "no": "No",
+      "epc": "EPC",
+      "rfidName": "Nama RFID",
+      "category": "Kategori",
+      "amount": "Jumlah",
+      "status": "Status",
+      "action": "Aksi",
+      "lastUpdate": "Terakhir Diperbarui"
+    },
+    "title": "Daftar EPC untuk {{skuName}}"
+  },
+  "status": {
+    "waitingPrint": "Menunggu Cetak",
+    "waitingInbound": "Menunggu Inbound",
+    "waitingOutbound": "Menunggu Outbound",
+    "failedInbound": "Gagal Inbound",
+    "failedOutbound": "Gagal Outbound",
+    "successInbound": "Berhasil Inbound",
+    "successOutbound": "Berhasil Outbound"
+  },
+  "empty": {
+    "title": "Produk tidak ditemukan",
+    "description": "Tidak ada produk dalam transaksi masuk/keluar ini.",
+    "note": "Tidak ada catatan yang tersedia"
+  },
+  "note": "Catatan",
+  "exportAll": "Ekspor Semua",
+  "images": {
+    "title": "Gambar",
+    "alt": "Gambar {{index}}",
+    "viewAll": "Lihat Semua {{count}} Gambar",
+    "galleryTitle": "Gambar Transaksi",
+    "noImages": "Tidak ada gambar tersedia untuk transaksi ini"
+  },
+  "verificationLog": {
+    "title": "Log Verifikasi",
+    "description": "Riwayat kronologis aksi verifikasi untuk stock movement ini.",
+    "transition": "{{from}} -> {{to}}",
+    "systemActor": "Sistem",
+    "systemDescription": "Verifikasi otomatis",
+    "notAvailable": "-",
+    "labels": {
+      "actor": "Pelaku",
+      "note": "Catatan"
+    },
+    "actions": {
+      "SUBMITTED": "Diajukan",
+      "RESUBMITTED": "Diajukan Ulang",
+      "VERIFIED": "Disetujui",
+      "VALIDATED": "Divalidasi",
+      "REJECTED": "Ditolak",
+      "REVOKED": "Ditarik Kembali",
+      "CANCELLED": "Dibatalkan",
+      "AUTO_VERIFIED": "Terverifikasi Otomatis"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "submitted": "Diajukan",
+      "validated": "Divalidasi",
+      "verified": "Terverifikasi",
+      "rejected": "Ditolak",
+      "cancelled": "Dibatalkan"
+    },
+    "empty": {
+      "title": "Belum Ada Log Verifikasi",
+      "description": "Belum ada aktivitas verifikasi yang tercatat untuk stock movement ini."
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "title": "Profil",
+  "description": "Informasi akun Anda",
+  "loading": "Memuat...",
+  "status": {
+    "active": "Aktif"
+  },
+  "fields": {
+    "fullName": "Nama Lengkap",
+    "email": "Email",
+    "phone": "Telepon",
+    "role": "Jabatan",
+    "accountStatus": "Status",
+    "licenseExpiry": "Masa Berlaku Lisensi"
+  },
+  "accessSettings": {
+    "title": "Akses & Pengaturan",
+    "description": "Toko, izin, dan preferensi Anda"
+  },
+  "permissions": {
+    "title": "Izin",
+    "noPermissions": "Belum ada izin"
+  },
+  "stores": {
+    "title": "Toko",
+    "noStores": "Belum ada toko"
+  },
+  "editProfile": {
+    "title": "Edit Profil",
+    "description": "Perbarui informasi pribadi Anda",
+    "firstName": "Nama Depan",
+    "firstNamePlaceholder": "Masukkan nama depan Anda",
+    "lastName": "Nama Belakang",
+    "lastNamePlaceholder": "Masukkan nama belakang Anda",
+    "submit": "Simpan Perubahan",
+    "saving": "Menyimpan...",
+    "success": "Profil berhasil diperbarui",
+    "error": "Gagal memperbarui profil. Silakan coba lagi.",
+    "validation": {
+      "required": "Field ini wajib diisi"
+    }
+  },
+  "changePassword": {
+    "confirmPassword": "Konfirmasi Password Baru",
+    "currentPassword": "Password Saat Ini",
+    "description": "Perbarui password akun Anda. Anda memerlukan password saat ini untuk melakukan perubahan.",
+    "error": "Gagal mengubah password. Periksa password saat ini dan coba lagi.",
+    "logoutWarning": "Anda akan otomatis keluar setelah password berhasil diubah.",
+    "newPassword": "Password Baru",
+    "newPasswordHint": "Minimal 8 karakter",
+    "saving": "Menyimpan...",
+    "submit": "Ubah Password",
+    "success": "Password berhasil diubah. Silakan login kembali.",
+    "title": "Ubah Password",
+    "validation": {
+      "minLength": "Password minimal 8 karakter",
+      "passwordMismatch": "Password tidak cocok",
+      "required": "Field ini wajib diisi"
+    }
+  },
+  "developerSettings": {
+    "bypassHardware": {
+      "label": "Bypass Pemindaian Hardware",
+      "description": "Jika diaktifkan, memungkinkan input EPC manual sebagai pengganti pemindaian dari hardware RFID"
+    }
+  },
+  "license": {
+    "valid": "Langganan aktif",
+    "validMessage": "Langganan Anda berlaku hingga {{date}}.",
+    "expiringSoon": "Langganan akan segera berakhir",
+    "expiringSoonMessage": "Langganan Anda berakhir pada {{date}}. Kami senang untuk membantu Anda melanjutkan layanan.",
+    "expired": "Langganan telah berakhir",
+    "expiredMessage": "Akses layanan Anda mungkin terbatas. Hubungi tim kami untuk perpanjangan."
+  }
+}

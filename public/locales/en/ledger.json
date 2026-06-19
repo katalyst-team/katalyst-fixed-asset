@@ -1,0 +1,300 @@
+{
+  "loading": "Loading...",
+  "common": {
+    "loading": "Loading..."
+  },
+  "noData": "No items found",
+  "table": {
+    "header": {
+      "id": "ID",
+      "select": "Select",
+      "sku": "SKU",
+      "epc": "EPC",
+      "internalCode": "Internal Code",
+      "rfidName": "RFID Name",
+      "status": "Status",
+      "lastUpdated": "Last Updated",
+      "category": "Category",
+      "action": "Action",
+      "no": "No",
+      "productName": "Product Name",
+      "quantity": "Quantity",
+      "operator": "Operator",
+      "amountItem": "Amount Item",
+      "unitPrint": "Unit Print",
+      "item": "Item",
+      "brand": "Brand",
+      "color": "Color",
+      "size": "Size",
+      "attributes": "Attributes",
+      "section": "Section",
+      "changedAt": "Changed At",
+      "type": "Type"
+    },
+    "noData": "No data available"
+  },
+  "detail": {
+    "productTable": "Product Table",
+    "historyTable": "History Table",
+    "noData": "No data available"
+  },
+  "ledgerV2": {
+    "information": "Ledger Information",
+    "store": "Store",
+    "section": "Section",
+    "movementType": "Movement Type",
+    "quantity": "Quantity",
+    "totalItems": "Total Items",
+    "packageQuantity": "Package Quantity",
+    "quantityBreakdown": "{{total}} total items{{packageText}}",
+    "packageBreakdown": " ({{count}} package)",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "editor": "Editor",
+    "itemStatusHistory": "Item Status History",
+    "referenceNumber": "Reference Number",
+    "metadata": "Metadata"
+  },
+  "buttons": {
+    "addLedger": "Add Ledger",
+    "printSelected": "Print Selected ({{count}})",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
+    "createFromPacking": "Create Ledger from Selected ({{count}})",
+    "deleteSelected": "Delete Selected ({{count}})"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "success": "Success",
+    "waiting": "Waiting",
+    "failed": "Failed",
+    "waitinginbound": "Waiting Inbound",
+    "inboundsuccess": "Inbound Success",
+    "inboundfailed": "Inbound Failed",
+    "waitingoutbound": "Waiting Outbound",
+    "outboundsuccess": "Outbound Success",
+    "outboundfailed": "Outbound Failed",
+    "unknown": "Unknown",
+    "waiting_print": "Waiting Print"
+  },
+  "types": {
+    "single": "Single",
+    "packing": "Packing",
+    "ledger": "Single",
+    "ledger_packing": "Packing"
+  },
+  "rfidCategory": {
+    "single": "Single",
+    "package": "Package"
+  },
+  "rfidType": {
+    "reusable": "Reusable",
+    "disposable": "Disposable"
+  },
+  "modal": {
+    "create": {
+      "title": "Create Ledger",
+      "description": "Create your ledger here. Click create when you're done.",
+      "item": "Item",
+      "itemType": "Item Type",
+      "selectItemType": "Select item type",
+      "itemTypes": {
+        "single": "Single",
+        "packing": "Packing"
+      },
+      "selectionMode": "Selection Mode",
+      "manualSelection": "Manual Selection",
+      "packingCollection": "Packing Collection",
+      "selectPackingCollection": "Select Packing Collection",
+      "packingItems": "Items from Packing Collection",
+      "noPackingCollections": "No packing collections available",
+      "selectSku": "Select SKU",
+      "quantity": "Quantity",
+      "addItem": "Add Item",
+      "saving": "Saving...",
+      "save": "Save changes",
+      "success": "Ledger created successfully",
+      "packingCollectionDetails": "Packing Collection Details",
+      "packingCollectionName": "Collection Name",
+      "packingCollectionNamePlaceholder": "Enter collection name",
+      "packingCollectionDescription": "Description (Optional)",
+      "packingCollectionDescriptionPlaceholder": "Enter collection description",
+      "saveAsPackingCollection": "Save as packing collection",
+      "ledgersValid": "ledgers valid",
+      "unit": "Unit",
+      "packingCollectionCreatedSuccessfully": "Packing collection created successfully!",
+      "unknownError": "Unknown error",
+      "sku": "SKU",
+      "autoFilledFromPackingCollection": "Auto-filled from packing collection",
+      "creatingCollection": "Creating Collection...",
+      "processingLedgers": "Processing Ledgers...",
+      "rfidEpcReusable": "RFID/EPC (Reusable)",
+      "selectItemTypeFirst": "Select item type first",
+      "selectRfidEpc": "Select RFID/EPC",
+      "notAvailable": "N/A",
+      "createLedgers_one": "Create {{count}} Ledger",
+      "createLedgers_other": "Create {{count}} Ledgers",
+      "addNewLedger": "Add New Ledger"
+    },
+    "print": {
+      "title": "Print Items",
+      "description": "Configure printer settings and print the selected items",
+      "print": "Print",
+      "itemsToPrint": "Items to print",
+      "allPrinted": "All items printed successfully",
+      "printingStatus": "Printing...",
+      "tabs": {
+        "connection": "Connection",
+        "template": "Template"
+      },
+      "network": {
+        "title": "Network Connection",
+        "ipAddress": "IP Address",
+        "port": "Port",
+        "connect": "Connect Network"
+      },
+      "serial": {
+        "title": "Serial Connection",
+        "port": "Serial Port",
+        "baudRate": "Baud Rate",
+        "connect": "Connect Serial"
+      },
+      "emulation": {
+        "title": "Emulation",
+        "zpl": "ZPL",
+        "tspl": "TSPL",
+        "escpos": "ESCPOS"
+      },
+      "rfid": {
+        "title": "RFID Settings",
+        "readTID": "Read TID first",
+        "readEPC": "Read EPC first"
+      },
+      "template": {
+        "file": "Template File",
+        "browse": "Browse",
+        "choosePlaceholder": "Choose template file",
+        "mapping": "Template Field Mapping",
+        "elementId": "Element ID",
+        "elementIdPlaceholder": "Enter element ID",
+        "mapProperty": "Map to Item Property",
+        "selectProperty": "Select property",
+        "addField": "Add Field"
+      },
+      "namingMode": {
+        "label": "Naming Mode",
+        "system": "System Generated",
+        "custom": "Custom Pattern",
+        "description": "Choose how RFID names should be created for this batch.",
+        "systemHint": "RFID names will match the generated EPC by default."
+      },
+      "customPattern": {
+        "label": "Custom Pattern",
+        "placeholder": "e.g., AA001, AA000001, AA001BB",
+        "hint": "Use letters and a numeric sequence (e.g., AA001) to increment names per item.",
+        "preview": "Preview",
+        "invalidFormat": "Invalid pattern format. Use letters with a numeric sequence (e.g., AA001, 001BB).",
+        "insufficientCapacity": "Pattern cannot cover all selected items. Increase padding or reduce selection.",
+        "generationFailed": "Failed to generate RFID names from the provided pattern."
+      },
+      "terminal": {
+        "title": "Terminal Output",
+        "clear": "Clear"
+      },
+      "fields": {
+        "id": "ID",
+        "epc": "EPC",
+        "statusName": "Status Name",
+        "skuId": "SKU ID",
+        "skuName": "SKU Name",
+        "brandName": "Brand Name",
+        "color": "Color",
+        "size": "Size",
+        "category": "Category",
+        "updatedAt": "Updated Date",
+        "internalCode": "Internal Code",
+        "createdAt": "Created Date",
+        "currentDate": "Current Date",
+        "packing_name": "Packing Name"
+      },
+      "cancelButton": "Cancel"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Options",
+    "category": {
+      "label": "Category",
+      "placeholder": "Select Category",
+      "all": "All Categories"
+    },
+    "status": {
+      "label": "Status",
+      "placeholder": "Select Status",
+      "all": "All Status"
+    },
+    "storeArea": "Store Area",
+    "storeAreaPlaceholder": "Select store area...",
+    "rfidCategory": "RFID Category",
+    "rfidCategoryPlaceholder": "Select RFID category...",
+    "rfidType": "RFID Type",
+    "rfidTypePlaceholder": "Select RFID type...",
+    "stockMovementTypes": "Stock Movement Types",
+    "stockMovementTypesPlaceholder": "Select stock movement types...",
+    "noStockMovementTypes": "No stock movement types available",
+    "lastUpdatedStart": "Last Updated Start",
+    "lastUpdatedEnd": "Last Updated End",
+    "timeframe": "Time Range",
+    "timeframePlaceholder": "Select time range...",
+    "orderDirection": "Sort Order",
+    "orderDirectionPlaceholder": "Select sort order...",
+    "editor": "Editor/Operator",
+    "editorPlaceholder": "Select editor...",
+    "store": "Store",
+    "storePlaceholder": "Select store...",
+    "options": {
+      "allAreas": "All Areas",
+      "allRfidCategories": "All RFID Categories",
+      "allRfidTypes": "All RFID Types",
+      "allEditors": "All Editors",
+      "allDirections": "Default",
+      "newest": "Newest First",
+      "oldest": "Oldest First",
+      "selectStore": "Select Store"
+    },
+    "date": {
+      "label": "Date Range",
+      "startDate": "Start Date",
+      "endDate": "End Date"
+    },
+    "type": {
+      "label": "Inbound Type",
+      "placeholder": "Select Type",
+      "all": "All Types"
+    },
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "reset": "Reset"
+  },
+  "all": "All",
+  "printed": "Printed",
+  "unprinted": "Unprinted",
+  "empty": {
+    "title": "No Ledger Data Found",
+    "description": "There is no ledger data to display."
+  },
+  "detailEmpty": {
+    "title": "Ledger Not Found",
+    "description": "The requested ledger data could not be found."
+  },
+  "creationMode": {
+    "manual": "Manual Selection",
+    "packingCollection": "Packing Collection"
+  },
+  "scan": {
+    "epcRegistered": "EPC {{epc}} found and selected",
+    "epcNotRegistered": "EPC {{epc}} is not registered in the system",
+    "validationError": "Error validating scanned EPC"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "itemInformation": "Item Information",
+  "epc": "EPC",
+  "currentStatus": "Current Status",
+  "createdAt": "Created At",
+  "statusHistory": "Status History",
+  "historyEmpty": {
+    "title": "No History Found",
+    "description": "No status history available for this item."
+  }
+}

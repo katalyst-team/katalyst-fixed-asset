@@ -1,0 +1,11 @@
+{
+  "itemInformation": "Informasi Item",
+  "epc": "EPC",
+  "currentStatus": "Status Saat Ini",
+  "createdAt": "Dibuat Pada",
+  "statusHistory": "Riwayat Status",
+  "historyEmpty": {
+    "title": "Tidak Ada Riwayat",
+    "description": "Tidak ada riwayat status untuk item ini."
+  }
+}

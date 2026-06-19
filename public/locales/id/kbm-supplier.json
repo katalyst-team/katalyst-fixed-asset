@@ -1,0 +1,121 @@
+{
+  "title": "KBM Supplier",
+  "description": "Kelola master data KBM Supplier",
+  "table": {
+    "header": {
+      "no": "No",
+      "action": "Aksi",
+      "name": "Nama",
+      "internalCode": "Kode Internal",
+      "category": "Kategori",
+      "status": "Status"
+    },
+    "noData": "Tidak ada data supplier"
+  },
+  "filter": {
+    "searchPlaceholder": "Cari supplier...",
+    "internalCodePlaceholder": "Masukkan kode internal..."
+  },
+  "empty": {
+    "title": "Tidak Ada Data Supplier",
+    "description": "Tidak ada data supplier. Mulai dengan menambahkan supplier pertama Anda."
+  },
+  "form": {
+    "createTitle": "Buat KBM Supplier",
+    "editTitle": "Edit KBM Supplier",
+    "createDescription": "Tambahkan KBM Supplier baru ke master data. Kolom dengan tanda * wajib diisi.",
+    "editDescription": "Perbarui detail supplier. Perubahan akan tercermin di semua catatan.",
+    "backToList": "Kembali ke Daftar KBM Supplier",
+    "section": {
+      "basicInfo": "Informasi Dasar",
+      "basicInfoDescription": "Detail penting untuk mengidentifikasi supplier",
+      "attributes": "Atribut Supplier",
+      "attributesDescription": "Berikan spesifikasi detail untuk supplier ini. Kolom dengan tanda * wajib diisi.",
+      "calculation": "Nilai Volume",
+      "calculationDescription": "Masukkan nilai volume final. Kami tampilkan acuan perhitungan otomatis di bawah untuk verifikasi."
+    },
+    "field": {
+      "name": "Nama KBM Supplier",
+      "namePlaceholder": "cth., SUP-001",
+      "nameHelp": "Pilih nama deskriptif yang jelas mengidentifikasi KBM Supplier ini",
+      "internalCode": "Kode Internal",
+      "internalCodePlaceholder": "cth., SUP-001",
+      "internalCodeHelp": "Kode unik untuk supplier ini"
+    },
+    "button": {
+      "cancel": "Batal",
+      "create": "Buat Supplier",
+      "creating": "Membuat...",
+      "update": "Perbarui Supplier",
+      "updating": "Memperbarui..."
+    },
+    "unsavedChanges": "Anda memiliki perubahan yang belum disimpan. Yakin ingin keluar?",
+    "categoryNotFound": "Kategori KBM Supplier tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "missingRequired": "Harap isi semua atribut yang wajib: {{attributes}}",
+    "duplicateName": "Nama supplier '{{name}}' sudah ada.",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "createSuccess": "KBM Supplier berhasil dibuat",
+    "updateSuccess": "KBM Supplier berhasil diperbarui"
+  },
+  "actions": {
+    "add": "Tambah KBM Supplier",
+    "delete": "Hapus",
+    "edit": "Edit",
+    "view": "Lihat Detail"
+  },
+  "exportTemplate": {
+    "button": "Ekspor Template",
+    "categoryLabel": "Kategori: {{category}}",
+    "categoryNotFound": "Kategori KBM Supplier tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "description": "Unduh template Excel khusus untuk tipe supplier ini.",
+    "exportButton": "Ekspor Template",
+    "howToUse": "Cara penggunaan:",
+    "noAttributes": "Kategori ini belum memiliki atribut.",
+    "note": "Kolom bertanda * wajib diisi.",
+    "required": "*wajib",
+    "step1": "Tinjau atribut yang disertakan dalam template",
+    "step2": "Klik 'Ekspor Template' untuk mengunduh file Excel",
+    "step3": "Isi data supplier mengikuti format contoh baris",
+    "step4": "Gunakan 'Impor Excel' untuk mengunggah file yang sudah diisi",
+    "title": "Ekspor Template KBM Supplier",
+    "tooltip": "Unduh template Excel dengan atribut supplier"
+  },
+  "import": {
+    "attributesFilled": "Atribut",
+    "button": "Impor Excel",
+    "categoryNotFound": "Kategori KBM Supplier tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "complete": "Impor Selesai",
+    "description": "Unggah file Excel untuk membuat supplier secara massal. Gunakan template agar format benar.",
+    "dragDrop": "Seret & letakkan file Excel di sini",
+    "dropHere": "Lepaskan file di sini...",
+    "duplicateName": "Nama supplier '{{name}}' sudah ada.",
+    "emptyFile": "File Excel kosong atau tidak berisi data",
+    "errorDetails": "Detail Kesalahan",
+    "errors": "Kesalahan",
+    "failedCount": "Gagal: {{count}}",
+    "failedMessage": "Gagal mengimpor {{count}} supplier",
+    "gradeNameRequired": "Nama Supplier wajib diisi",
+    "hasErrors": "Tidak bisa impor: beberapa baris memiliki kesalahan validasi. Perbaiki terlebih dahulu.",
+    "importButton": "Impor {{count}} supplier",
+    "importing": "Mengimpor supplier...",
+    "instructions": "Instruksi:",
+    "note": "Gunakan format template untuk setiap baris.",
+    "orClick": "atau klik untuk memilih file",
+    "parseError": "Gagal membaca file Excel",
+    "preview": "Pratinjau (10 baris pertama)",
+    "processing": "Memproses file...",
+    "requiredAttributeMissing": "Atribut wajib '{{attribute}}' belum diisi",
+    "step1": "Unduh template menggunakan tombol 'Ekspor Template'",
+    "step2": "Isi data supplier Anda",
+    "step3": "Unggah file Excel yang sudah diisi di sini",
+    "step4": "Tinjau pratinjau lalu klik 'Impor'",
+    "successCount": "Berhasil diimpor: {{count}}",
+    "successMessage": "Berhasil mengimpor {{count}} supplier",
+    "supportedFormats": "Format yang didukung: CSV, XLSX",
+    "title": "Impor Supplier dari Excel",
+    "tooltip": "Unggah file Excel untuk membuat supplier massal sesuai format template",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "validRows": "Valid",
+    "warnings": "Peringatan"
+  }
+}

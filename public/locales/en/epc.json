@@ -1,0 +1,263 @@
+{
+  "loading": "Loading RFIDs...",
+  "noData": "No RFID data available",
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Name",
+      "internalCode": "Internal Code",
+      "epcCode": "RFID Code",
+      "barcode": "Barcode",
+      "type": "Type",
+      "category": "Category",
+      "status": "Status",
+      "isUsed": "Is Used",
+      "cycleCount": "Cycle Count",
+      "store": "Store",
+      "createdDate": "Created Date",
+      "actions": "Actions"
+    },
+    "noData": "No RFIDs found"
+  },
+  "modal": {
+    "create": {
+      "title": "Create RFID",
+      "description": "Add a new RFID tag to the system.",
+      "button": "Add RFID",
+      "scan_button": "Add RFIDs by scanning",
+      "creating": "Creating...",
+      "success": "RFID created successfully"
+    },
+    "edit": {
+      "title": "Edit RFID",
+      "description": "Edit the RFID tag information.",
+      "saving": "Saving...",
+      "success": "RFID updated successfully"
+    },
+    "form": {
+      "epcCode": "RFID Code",
+      "epcCodePlaceholder": "Enter RFID code",
+      "name": "Name",
+      "namePlaceholder": "Enter name",
+      "type": "Type",
+      "category": "Category",
+      "status": "Status",
+      "store": "Store",
+      "storeSelect": "Select store...",
+      "allStores": "All Stores",
+      "required": "This field is required",
+      "typeSelect": "Select type...",
+      "categorySelect": "Select category...",
+      "statusSelect": "Select status...",
+      "save": "Save",
+      "cancel": "Cancel"
+    }
+  },
+  "type": {
+    "reusable": "Reusable",
+    "disposable": "Disposable"
+  },
+  "category": {
+    "single": "Single",
+    "package": "Package"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "isUsed": {
+    "yes": "Yes",
+    "no": "No"
+  },
+  "delete": {
+    "success": "RFID deleted successfully"
+  },
+  "detail": {
+    "back": "Back to RFID List",
+    "title": "RFID Detail",
+    "information": "RFID Information",
+    "name": "RFID Name",
+    "epcCode": "EPC Code",
+    "type": "Type",
+    "category": "Category",
+    "status": "Status",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "cycleCount": "Cycle Count",
+    "movements": "Movement History",
+    "historyTable": {
+      "header": {
+        "direction": "Direction",
+        "event": "Event",
+        "no": "No",
+        "note": "Note",
+        "operator": "Operator",
+        "sku": "SKU",
+        "stockMovement": "Stock Movement",
+        "store": "Store / Sub-store",
+        "status": "Item Status",
+        "timestamp": "Timestamp",
+        "actions": "Actions"
+      },
+      "labels": {
+        "direction": "Direction",
+        "id": "ID",
+        "skuCode": "SKU Code",
+        "subStore": "Sub-store"
+      }
+    }
+  },
+  "detailEmpty": {
+    "title": "RFID Not Found",
+    "description": "The RFID you are looking for does not exist or could not be found."
+  },
+  "empty": {
+    "title": "No RFIDs Found",
+    "description": "You haven't created any RFIDs yet."
+  },
+  "scanFind": {
+    "button": "Scan & Find RFID",
+    "title": "Scan & Find RFID",
+    "description": "Scan RFID tags to look up their details",
+    "searchButton": "Search EPCs",
+    "found": "Found {{count}} registered RFID(s)",
+    "noneFound": "No registered RFIDs found for the scanned tags",
+    "foundList": "Found RFIDs ({{count}})",
+    "notFoundList": "Unregistered EPCs ({{count}})"
+  },
+  "scan": {
+    "title": "Scan RFIDs",
+    "description": "Scan RFID tags and create unregistered ones",
+    "scanner": "RFID Scanner",
+    "scannedCount": "Scanned: {{scanned}} | Unregistered: {{unregistered}}",
+    "startScan": "Start Scan",
+    "stopScan": "Stop Scan",
+    "processing": "Processing...",
+    "reset": "Reset",
+    "unregisteredList": "Unregistered RFIDs ({{count}})",
+    "enterName": "Enter name",
+    "noEpcsScanned": "No RFIDs were scanned",
+    "allRegistered": "All scanned RFIDs are already registered",
+    "foundUnregistered": "Found {{count}} unregistered RFID(s)",
+    "success": "Successfully created {{count}} RFID(s)",
+    "creating": "Creating {{count}} RFID(s)...",
+    "create": "Create {{count}} RFID(s)"
+  },
+  "bypass": {
+    "manualInput": "Manual Input",
+    "modeEnabled": "Bypass Mode",
+    "description": "Hardware scanning is bypassed. Enter RFID codes manually below to check and register them.",
+    "epcCodes": "RFID Codes",
+    "epcPlaceholder": "Enter RFID code...",
+    "addMore": "Add Another RFID",
+    "checkEpcs": "Check RFIDs",
+    "checking": "Checking...",
+    "noEpcsEntered": "Please enter at least one RFID code"
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Options",
+    "type": "RFID Type",
+    "typePlaceholder": "Select RFID type...",
+    "category": "RFID Category",
+    "categoryPlaceholder": "Select RFID category...",
+    "status": "Status",
+    "statusPlaceholder": "Select status...",
+    "isUsed": "Usage Status",
+    "isUsedPlaceholder": "Select usage status...",
+    "epcCodes": "EPC Codes",
+    "epcCodesPlaceholder": "Enter EPC codes separated by commas...",
+    "epcCodesHelp": "Separate multiple EPC codes with commas",
+    "sortBy": {
+      "label": "Sort By",
+      "placeholder": "Select sort by...",
+      "cycleCount": "Cycle Count",
+      "name": "Name"
+    },
+    "orderBy": {
+      "label": "Order By",
+      "placeholder": "Select order...",
+      "asc": "Ascending",
+      "desc": "Descending"
+    },
+    "options": {
+      "allTypes": "All Types",
+      "allCategories": "All Categories",
+      "allStatuses": "All Statuses",
+      "allUsageStates": "All Usage States",
+      "allStores": "All Stores",
+      "none": "None"
+    },
+    "selectStore": "Select Store...",
+    "apply": "Apply",
+    "cancel": "Cancel",
+    "reset": "Reset"
+  },
+  "pagination": {
+    "itemsPerPage": "Items per page",
+    "list": "List"
+  },
+  "exportImport": {
+    "button": "Export & Import"
+  },
+  "export": {
+    "currentPage": "Export Current Page",
+    "currentPageTooltip": "Export RFID data from the current page to Excel",
+    "currentPageDesc": "Export visible data",
+    "allData": "Export All Data",
+    "allDataTooltip": "Export all RFID data to Excel",
+    "allDataDesc": "Export all records",
+    "noData": "No RFID data to export",
+    "success": "RFID data exported successfully",
+    "successAll": "Successfully exported {{count}} RFID data",
+    "failed": "Failed to export RFID data",
+    "progress": {
+      "title": "Exporting RFID Data",
+      "fetching": "Fetching RFID data...",
+      "processing": "Processing data for export...",
+      "downloading": "Generating Excel file...",
+      "complete": "Export complete!",
+      "records": "{{count}} records"
+    }
+  },
+  "header": {
+    "exportTemplate": "Export Template",
+    "importExcel": "Import Excel"
+  },
+  "exportTemplate": {
+    "title": "Export EPC Template",
+    "description": "Download Excel template",
+    "tooltip": "Download an Excel template with columns for EPC/RFID tags",
+    "howToUse": "How to use:",
+    "step1": "Click 'Export Template' to download the Excel file",
+    "step2": "Fill in your EPC/RFID data following the example row format",
+    "step3": "Use 'Import Excel' button to upload your completed file",
+    "note": "Note: All fields are required. Type must be REUSABLE or DISPOSABLE. Category must be SINGLE or PACKAGE. Status must be ACTIVE or INACTIVE.",
+    "columnsIncluded": "Columns that will be included:",
+    "button": "Export Template"
+  },
+  "import": {
+    "title": "Import EPCs from Excel",
+    "description": "Bulk create from file",
+    "tooltip": "Upload an Excel file to bulk create EPC/RFID tags. Use the template for correct format",
+    "instructions": "Instructions:",
+    "step1": "Download the template using 'Export Template' button",
+    "step2": "Fill in your EPC/RFID data",
+    "step3": "Upload the completed Excel file here",
+    "step4": "Review the preview and click 'Import'",
+    "dragDrop": "Drag & drop an Excel file here",
+    "orClick": "or click to select a file",
+    "dropHere": "Drop the file here...",
+    "supportedFormats": "Supported formats: CSV, XLSX",
+    "emptyFile": "Excel file is empty or has no data",
+    "parseError": "Failed to parse Excel file",
+    "processing": "Processing file...",
+    "importing": "Importing EPCs...",
+    "validRows": "Valid",
+    "errors": "Errors",
+    "warnings": "Warnings",
+    "preview": "Preview (first 10 rows)",
+    "hasErrors": "Cannot import: Some rows have validation errors. Please fix them first.",
+    "button": "Import Excel"
+  }
+}

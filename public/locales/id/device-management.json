@@ -1,0 +1,23 @@
+{
+  "title": "Manajemen Perangkat",
+  "description": "Kelola pembaca RFID dan perangkat hardware di seluruh toko.",
+  "empty": {
+    "title": "Belum ada perangkat terdaftar",
+    "description": "Data perangkat akan muncul secara otomatis setelah reader terhubung ke sistem."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "deviceId": "Device ID",
+      "totalScans": "Total Scan",
+      "lastSeen": "Terakhir Aktif",
+      "stores": "Toko",
+      "antennas": "Antena"
+    }
+  },
+  "detail": {
+    "title": "Detail Perangkat",
+    "recentLogs": "Log Terkini",
+    "noLogs": "Belum ada log untuk perangkat ini"
+  }
+}

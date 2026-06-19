@@ -1,0 +1,46 @@
+{
+  "title": "Validasi Penerimaan Log",
+  "filter": {
+    "store": "Pilih toko..."
+  },
+  "empty": {
+    "title": "Tidak Ada Validasi Tertunda",
+    "description": "Tidak ada penerimaan log yang menunggu validasi (status SUBMITTED)."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "referenceNumber": "No. Ref",
+      "status": "Status",
+      "editor": "Editor",
+      "quantity": "Jumlah",
+      "store": "Toko",
+      "createdAt": "Dibuat Pada",
+      "actions": "Aksi"
+    },
+    "noData": "Tidak ada item yang menunggu validasi"
+  },
+  "buttons": {
+    "validate": "Validasi",
+    "revoke": "Kembalikan"
+  },
+  "toast": {
+    "validateSuccess": "Berhasil divalidasi",
+    "validateError": "Gagal memvalidasi",
+    "revokeSuccess": "Berhasil dikembalikan",
+    "revokeError": "Gagal mengembalikan"
+  },
+  "detail": {
+    "editor": "Editor",
+    "section": "Area",
+    "quantity": "Jumlah",
+    "note": "Catatan",
+    "epcs": "EPC",
+    "items": "Item"
+  },
+  "pagination": {
+    "prev": "Sebelumnya",
+    "next": "Berikutnya",
+    "page": "Halaman {{page}}"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "loading": "Loading attribute collections...",
+  "notFound": "Attribute collection not found",
+  "yes": "Yes",
+  "no": "No",
+  "attributes": "Attributes",
+  "attributeCount": "Number of Attributes",
+  "required": "Required",
+  "validation": {
+    "attributesRequired": "Please select at least one attribute"
+  },
+  "toast": {
+    "createSuccess": "Attribute collection created successfully",
+    "updateSuccess": "Attribute collection updated successfully",
+    "deleteSuccess": "Attribute collection deleted successfully"
+  },
+  "form": {
+    "name": "Name",
+    "namePlaceholder": "Enter collection name",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter collection description",
+    "attributes": "Attributes",
+    "required": "Required",
+    "attributeCount": "Number of Attributes"
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Name",
+      "description": "Description",
+      "attributes": "Attributes",
+      "action": "Action"
+    },
+    "noData": "No attribute collections found"
+  },
+  "buttons": {
+    "create": "Create Collection",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "back": "Back",
+    "updating": "Updating...",
+    "deleting": "Deleting...",
+    "creating": "Creating..."
+  },
+  "modal": {
+    "create": {
+      "title": "Create Attribute Collection",
+      "description": "Create a new collection of related attributes"
+    },
+    "edit": {
+      "title": "Edit Attribute Collection",
+      "description": "Modify this collection of attributes"
+    }
+  },
+  "detail": {
+    "title": "Attribute Collection Details"
+  },
+  "delete": {
+    "title": "Delete Collection",
+    "description": "Are you sure you want to delete this collection? This action cannot be undone."
+  },
+  "noAttributes": "No attributes in this collection",
+  "no_attributes": "No attributes found for this collection.",
+  "empty": {
+    "title": "No Attribute Collections Found",
+    "description": "Get started by creating a new attribute collection."
+  }
+}

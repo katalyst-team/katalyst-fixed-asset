@@ -1,0 +1,93 @@
+{
+  "title": "Tambah/Hapus RFID",
+  "description": "Tambah atau hapus tag RFID dari item di inventaris Anda.",
+
+  "store": {
+    "label": "Toko",
+    "allStores": "Semua Toko",
+    "placeholder": "Pilih toko"
+  },
+
+  "actionType": {
+    "label": "Tipe Aksi",
+    "add": "Tambah RFID",
+    "remove": "Hapus RFID"
+  },
+
+  "search": {
+    "label": "Cari SKU",
+    "placeholder": "Masukkan kode atau nama SKU..."
+  },
+
+  "table": {
+    "header": {
+      "select": "Pilih",
+      "sku": "Kode Internal",
+      "name": "Nama",
+      "rfid": "RFID"
+    },
+    "itemCount": "item",
+    "noData": "Tidak ada item yang ditemukan",
+    "noRfidAssigned": "Tidak ada RFID yang ditetapkan",
+    "selectRfid": "Pilih RFID"
+  },
+
+  "rfidDialog": {
+    "title": "Pilih RFID",
+    "search": {
+      "epcCode": "Kode EPC",
+      "epcCodePlaceholder": "Masukkan kode EPC...",
+      "rfidName": "Nama RFID",
+      "rfidNamePlaceholder": "Masukkan nama RFID...",
+      "type": "Tipe",
+      "category": "Kategori"
+    },
+    "type": {
+      "single": "Satuan",
+      "package": "Paket"
+    },
+    "category": {
+      "reusable": "Dapat Digunakan Ulang",
+      "disposable": "Sekali Pakai"
+    },
+    "table": {
+      "header": {
+        "epc": "Kode EPC",
+        "type": "Tipe",
+        "name": "Nama"
+      }
+    },
+    "noRfids": "Tidak ada RFID yang tersedia",
+    "selected": "Dipilih"
+  },
+
+  "pagination": {
+    "previous": "Sebelumnya",
+    "next": "Selanjutnya"
+  },
+
+  "confirmation": {
+    "title": "Konfirmasi {action}",
+    "addMessage": "Anda akan menambahkan RFID ke {count} item",
+    "removeMessage": "Anda akan menghapus RFID dari {count} item",
+    "submit": "Konfirmasi",
+    "cancel": "Batal"
+  },
+
+  "selectedItems": "Dipilih: {count} item",
+
+  "messages": {
+    "success": "Operasi berhasil diselesaikan",
+    "error": "Terjadi kesalahan",
+    "noItemsSelected": "Mohon pilih setidaknya satu item",
+    "rfidAlreadyAssigned": "RFID ini sudah ditetapkan ke item lain",
+    "singleRfidLimit": "RFID Satuan hanya dapat ditetapkan ke satu item"
+  },
+
+  "buttons": {
+    "submit": "Kirim",
+    "reset": "Reset",
+    "select": "Pilih",
+    "cancel": "Batal"
+  }
+}

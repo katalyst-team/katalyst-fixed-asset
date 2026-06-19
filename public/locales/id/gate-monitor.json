@@ -1,0 +1,22 @@
+{
+  "title": "Monitor Gate",
+  "description": "Pantau status gate dan lalu lintas RFID secara real-time.",
+  "summary": {
+    "totalGates": "Total Gate",
+    "totalLogs24h": "Log (24 Jam)",
+    "violations": "Violasi",
+    "avgRssi": "Rata-rata RSSI"
+  },
+  "traffic": {
+    "title": "Lalu Lintas Gate (24 Jam Terakhir)",
+    "placeholder": "Belum ada data lalu lintas gate."
+  },
+  "gates": {
+    "title": "Status Gate",
+    "noLogs": "Belum ada log",
+    "lastSeen": "Terakhir terlihat",
+    "store": "Toko",
+    "logs": "log"
+  },
+  "noData": "Data belum tersedia. Data akan muncul setelah gate mulai aktif."
+}

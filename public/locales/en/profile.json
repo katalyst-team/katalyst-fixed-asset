@@ -1,0 +1,75 @@
+{
+  "title": "Profile",
+  "description": "Your account information",
+  "loading": "Loading...",
+  "status": {
+    "active": "Active"
+  },
+  "fields": {
+    "fullName": "Full Name",
+    "email": "Email",
+    "phone": "Phone",
+    "role": "Role",
+    "accountStatus": "Status",
+    "licenseExpiry": "License Expiry"
+  },
+  "accessSettings": {
+    "title": "Access & Settings",
+    "description": "Your stores, permissions, and preferences"
+  },
+  "permissions": {
+    "title": "Permissions",
+    "noPermissions": "No permissions yet"
+  },
+  "stores": {
+    "title": "Stores",
+    "noStores": "No stores yet"
+  },
+  "editProfile": {
+    "title": "Edit Profile",
+    "description": "Update your personal information",
+    "firstName": "First Name",
+    "firstNamePlaceholder": "Enter your first name",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Enter your last name",
+    "submit": "Save Changes",
+    "saving": "Saving...",
+    "success": "Profile updated successfully",
+    "error": "Failed to update profile. Please try again.",
+    "validation": {
+      "required": "This field is required"
+    }
+  },
+  "changePassword": {
+    "confirmPassword": "Confirm New Password",
+    "currentPassword": "Current Password",
+    "description": "Update your account password. You will need your current password to make changes.",
+    "error": "Failed to change password. Please check your current password and try again.",
+    "logoutWarning": "You will be logged out automatically after changing your password.",
+    "newPassword": "New Password",
+    "newPasswordHint": "Minimum 8 characters",
+    "saving": "Saving...",
+    "submit": "Change Password",
+    "success": "Password changed. Please log in again.",
+    "title": "Change Password",
+    "validation": {
+      "minLength": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match",
+      "required": "This field is required"
+    }
+  },
+  "developerSettings": {
+    "bypassHardware": {
+      "label": "Bypass Hardware Scanning",
+      "description": "When enabled, allows manual EPC input instead of scanning from RFID hardware"
+    }
+  },
+  "license": {
+    "valid": "Subscription active",
+    "validMessage": "Your subscription is valid until {{date}}.",
+    "expiringSoon": "Subscription expiring soon",
+    "expiringSoonMessage": "Your subscription ends on {{date}}. We'd love to help you continue using our service.",
+    "expired": "Subscription has expired",
+    "expiredMessage": "Your service access may be limited. Contact our team to renew your subscription."
+  }
+}

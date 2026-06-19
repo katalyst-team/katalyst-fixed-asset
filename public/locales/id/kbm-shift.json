@@ -1,0 +1,121 @@
+{
+  "title": "KBM Shift",
+  "description": "Kelola master data KBM Shift",
+  "table": {
+    "header": {
+      "no": "No",
+      "action": "Aksi",
+      "name": "Nama",
+      "internalCode": "Kode Internal",
+      "category": "Kategori",
+      "status": "Status"
+    },
+    "noData": "Tidak ada data shift"
+  },
+  "filter": {
+    "searchPlaceholder": "Cari shift...",
+    "internalCodePlaceholder": "Masukkan kode internal..."
+  },
+  "empty": {
+    "title": "Tidak Ada Data Shift",
+    "description": "Tidak ada data shift. Mulai dengan menambahkan shift pertama Anda."
+  },
+  "form": {
+    "createTitle": "Buat KBM Shift",
+    "editTitle": "Edit KBM Shift",
+    "createDescription": "Tambahkan KBM Shift baru ke master data. Kolom dengan tanda * wajib diisi.",
+    "editDescription": "Perbarui detail shift. Perubahan akan tercermin di semua catatan.",
+    "backToList": "Kembali ke Daftar KBM Shift",
+    "section": {
+      "basicInfo": "Informasi Dasar",
+      "basicInfoDescription": "Detail penting untuk mengidentifikasi shift",
+      "attributes": "Atribut Shift",
+      "attributesDescription": "Berikan spesifikasi detail untuk shift ini. Kolom dengan tanda * wajib diisi.",
+      "calculation": "Nilai Volume",
+      "calculationDescription": "Masukkan nilai volume final. Kami tampilkan acuan perhitungan otomatis di bawah untuk verifikasi."
+    },
+    "field": {
+      "name": "Nama KBM Shift",
+      "namePlaceholder": "cth., SHIFT-001",
+      "nameHelp": "Pilih nama deskriptif yang jelas mengidentifikasi KBM Shift ini",
+      "internalCode": "Kode Internal",
+      "internalCodePlaceholder": "cth., SHIFT-001",
+      "internalCodeHelp": "Kode unik untuk shift ini"
+    },
+    "button": {
+      "cancel": "Batal",
+      "create": "Buat Shift",
+      "creating": "Membuat...",
+      "update": "Perbarui Shift",
+      "updating": "Memperbarui..."
+    },
+    "unsavedChanges": "Anda memiliki perubahan yang belum disimpan. Yakin ingin keluar?",
+    "categoryNotFound": "Kategori KBM Shift tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "missingRequired": "Harap isi semua atribut yang wajib: {{attributes}}",
+    "duplicateName": "Nama shift '{{name}}' sudah ada.",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "createSuccess": "KBM Shift berhasil dibuat",
+    "updateSuccess": "KBM Shift berhasil diperbarui"
+  },
+  "actions": {
+    "add": "Tambah KBM Shift",
+    "delete": "Hapus",
+    "edit": "Edit",
+    "view": "Lihat Detail"
+  },
+  "exportTemplate": {
+    "button": "Ekspor Template",
+    "categoryLabel": "Kategori: {{category}}",
+    "categoryNotFound": "Kategori KBM Shift tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "description": "Unduh template Excel khusus untuk tipe shift ini.",
+    "exportButton": "Ekspor Template",
+    "howToUse": "Cara penggunaan:",
+    "noAttributes": "Kategori ini belum memiliki atribut.",
+    "note": "Kolom bertanda * wajib diisi.",
+    "required": "*wajib",
+    "step1": "Tinjau atribut yang disertakan dalam template",
+    "step2": "Klik 'Ekspor Template' untuk mengunduh file Excel",
+    "step3": "Isi data shift mengikuti format contoh baris",
+    "step4": "Gunakan 'Impor Excel' untuk mengunggah file yang sudah diisi",
+    "title": "Ekspor Template KBM Shift",
+    "tooltip": "Unduh template Excel dengan atribut shift"
+  },
+  "import": {
+    "attributesFilled": "Atribut",
+    "button": "Impor Excel",
+    "categoryNotFound": "Kategori KBM Shift tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "complete": "Impor Selesai",
+    "description": "Unggah file Excel untuk membuat shift secara massal. Gunakan template agar format benar.",
+    "dragDrop": "Seret & letakkan file Excel di sini",
+    "dropHere": "Lepaskan file di sini...",
+    "duplicateName": "Nama shift '{{name}}' sudah ada.",
+    "emptyFile": "File Excel kosong atau tidak berisi data",
+    "errorDetails": "Detail Kesalahan",
+    "errors": "Kesalahan",
+    "failedCount": "Gagal: {{count}}",
+    "failedMessage": "Gagal mengimpor {{count}} shift",
+    "gradeNameRequired": "Nama Shift wajib diisi",
+    "hasErrors": "Tidak bisa impor: beberapa baris memiliki kesalahan validasi. Perbaiki terlebih dahulu.",
+    "importButton": "Impor {{count}} shift",
+    "importing": "Mengimpor shift...",
+    "instructions": "Instruksi:",
+    "note": "Gunakan format template untuk setiap baris.",
+    "orClick": "atau klik untuk memilih file",
+    "parseError": "Gagal membaca file Excel",
+    "preview": "Pratinjau (10 baris pertama)",
+    "processing": "Memproses file...",
+    "requiredAttributeMissing": "Atribut wajib '{{attribute}}' belum diisi",
+    "step1": "Unduh template menggunakan tombol 'Ekspor Template'",
+    "step2": "Isi data shift Anda",
+    "step3": "Unggah file Excel yang sudah diisi di sini",
+    "step4": "Tinjau pratinjau lalu klik 'Impor'",
+    "successCount": "Berhasil diimpor: {{count}}",
+    "successMessage": "Berhasil mengimpor {{count}} shift",
+    "supportedFormats": "Format yang didukung: CSV, XLSX",
+    "title": "Impor Shift dari Excel",
+    "tooltip": "Unggah file Excel untuk membuat shift massal sesuai format template",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "validRows": "Valid",
+    "warnings": "Peringatan"
+  }
+}

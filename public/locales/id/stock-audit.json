@@ -1,0 +1,229 @@
+{
+  "loading": "Memuat...",
+  "noData": "Data audit stok tidak ditemukan",
+  "table": {
+    "header": {
+      "action": "Aksi",
+      "anomaly": "Hilang",
+      "area": "Gudang",
+      "auditName": "Nama Audit",
+      "epc": "EPC",
+      "expected": "Diharapkan",
+      "expectedQuantity": "Kuantitas Diharapkan",
+      "extraQuantity": "Kuantitas Tambahan",
+      "id": "ID",
+      "images": "Gambar",
+      "internalCode": "Kode Internal",
+      "lastUpdated": "Terakhir Diperbarui",
+      "matchQty": "Qty Cocok",
+      "missingQuantity": "Kuantitas Hilang",
+      "no": "No",
+      "note": "Catatan",
+      "operator": "Operator",
+      "section": "Bagian",
+      "sku": "SKU",
+      "skuName": "Nama SKU",
+      "status": "Status",
+      "store": "Toko",
+      "total": "Total",
+      "totalItemExtra": "Total Item Tambahan",
+      "movementTypes": "Tipe Pergerakan",
+      "type": "Tipe"
+    }
+  },
+  "status": {
+    "pending": "Tertunda",
+    "inProgress": "Sedang Berjalan",
+    "on_progress": "Sedang Berjalan",
+    "completed": "Selesai",
+    "cancelled": "Dibatalkan",
+    "inprogress": "Sedang Berjalan",
+    "matched": "Ditemukan",
+    "missing": "Hilang",
+    "unexpected": "Item Tambahan",
+    "not_recorded": "Tidak Terdaftar",
+    "notRecorded": "Tidak Terdaftar",
+    "unknown": "Tidak Dikenal"
+  },
+  "auditStatus": {
+    "match": "Cocok",
+    "excess": "Kelebihan",
+    "misplaced": "Salah Tempat",
+    "mismatch": "Tidak Cocok"
+  },
+  "detail": {
+    "accuracyRate": "Tingkat Akurasi",
+    "anomaly": "Anomali",
+    "area": "Area",
+    "auditStatus": "Status Audit",
+    "createdOn": "Dibuat Pada",
+    "expectedFormula": "Ditemukan + Hilang",
+    "expectedItems": "Item Diharapkan",
+    "extra": "Tambahan",
+    "items": "item",
+    "itemsFound": "Item Ditemukan",
+    "itemsForSKU": "Item untuk SKU ini",
+    "itemsInSection": "Item di bagian ini",
+    "itemsMissing": "Item Tidak Ditemukan",
+    "match": "Cocok",
+    "missing": "Hilang",
+    "noData": "Tidak ada data tersedia",
+    "noNotRegisteredItems": "Tidak ada item yang tidak terdaftar",
+    "noSectionData": "Tidak ada data bagian",
+    "noSKUData": "Tidak ada data SKU",
+    "notFound": "Audit stok tidak ditemukan",
+    "notMatch": "Tidak Cocok",
+    "notRegisteredReport": "Item Tidak Terdaftar",
+    "notScanned": "Tidak Ditemukan",
+    "operator": "Operator",
+    "reportTitle": "Laporan Audit",
+    "rfidCategoryBreakdown": "Breakdown Kategori RFID",
+    "rfidInsights": "Wawasan RFID",
+    "rfidTypeBreakdown": "Breakdown Tipe RFID",
+    "sectionAccuracy": "Tingkat Akurasi Bagian",
+    "sectionDistribution": "Distribusi Bagian",
+    "sectionReport": "Laporan Per Bagian",
+    "sections": "Bagian",
+    "sku": "SKU",
+    "skuReport": "Laporan Per SKU",
+    "status": "Status",
+    "statusDistribution": "Distribusi Status",
+    "summary": "Ringkasan Audit",
+    "title": "Detail Audit Stok",
+    "topSKUs": "SKU Teratas berdasarkan Jumlah Item"
+  },
+  "buttons": {
+    "startAudit": "Mulai Audit",
+    "viewDetails": "Lihat Detail",
+    "cancel": "Batal",
+    "export": "Ekspor Laporan",
+    "exportAll": "Ekspor Semua"
+  },
+  "modal": {
+    "create": {
+      "title": "Buat Audit Stok Baru",
+      "description": "Pilih jenis audit stok yang ingin Anda buat.",
+      "auditType": "Jenis Audit",
+      "selectType": "Pilih jenis audit",
+      "store": "Toko",
+      "selectStore": "Pilih toko",
+      "storeSection": "Bagian Toko",
+      "selectSection": "Pilih bagian toko",
+      "selectSku": "Pilih SKU",
+      "movementTypes": "Tipe Pergerakan",
+      "selectMovementTypes": "Pilih tipe pergerakan...",
+      "optional": "opsional",
+      "create": "Buat Audit Stok",
+      "creating": "Membuat...",
+      "types": {
+        "all": "Semua Item",
+        "bySection": "Berdasarkan Bagian",
+        "bySku": "Berdasarkan SKU"
+      }
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Audit",
+    "status": {
+      "label": "Status",
+      "all": "Semua Status",
+      "placeholder": "Pilih Status"
+    },
+    "date": {
+      "label": "Rentang Tanggal",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Akhir"
+    },
+    "apply": "Terapkan",
+    "cancel": "Batal",
+    "reset": "Reset",
+    "type": {
+      "label": "Jenis Audit",
+      "placeholder": "Pilih Jenis"
+    },
+    "result": {
+      "label": "Hasil Audit",
+      "placeholder": "Pilih Hasil"
+    },
+    "employee": {
+      "label": "Karyawan",
+      "placeholder": "Pilih Karyawan"
+    },
+    "checkingObject": {
+      "label": "Objek Pemeriksaan",
+      "placeholder": "Pilih Objek"
+    },
+    "order": {
+      "label": "Urutan",
+      "placeholder": "Pilih Urutan"
+    },
+    "options": {
+      "allTypes": "Semua Jenis",
+      "allStatuses": "Semua Status",
+      "allResults": "Semua Hasil",
+      "allEmployees": "Semua Karyawan",
+      "allObjects": "Semua Objek",
+      "consistent": "Konsisten",
+      "mismatch": "Tidak Cocok",
+      "newest": "Terbaru Dulu",
+      "oldest": "Terlama Dulu"
+    }
+  },
+  "empty": {
+    "title": "Audit Stok tidak ditemukan",
+    "description": "Anda belum memulai audit stok apa pun."
+  },
+  "rfid": {
+    "type": {
+      "reusable": "Dapat Digunakan Ulang",
+      "disposable": "Sekali Pakai"
+    },
+    "category": {
+      "single": "Tunggal",
+      "package": "Paket"
+    }
+  },
+  "note": {
+    "saveSuccess": "Catatan berhasil disimpan"
+  },
+  "result": {
+    "consistent": "Konsisten",
+    "mismatch": "Tidak Cocok",
+    "unknown": "Tidak Dikenal"
+  },
+  "verificationLog": {
+    "title": "Log Verifikasi",
+    "description": "Riwayat kronologis aksi verifikasi untuk audit stok ini.",
+    "transition": "{{from}} -> {{to}}",
+    "systemActor": "Sistem",
+    "systemDescription": "Verifikasi otomatis",
+    "notAvailable": "-",
+    "labels": {
+      "actor": "Pelaku",
+      "note": "Catatan"
+    },
+    "actions": {
+      "SUBMITTED": "Diajukan",
+      "RESUBMITTED": "Diajukan Ulang",
+      "VERIFIED": "Disetujui",
+      "VALIDATED": "Divalidasi",
+      "REJECTED": "Ditolak",
+      "REVOKED": "Ditarik Kembali",
+      "CANCELLED": "Dibatalkan",
+      "AUTO_VERIFIED": "Terverifikasi Otomatis"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "submitted": "Diajukan",
+      "validated": "Divalidasi",
+      "verified": "Terverifikasi",
+      "rejected": "Ditolak",
+      "cancelled": "Dibatalkan"
+    },
+    "empty": {
+      "title": "Belum Ada Log Verifikasi",
+      "description": "Belum ada aktivitas verifikasi yang tercatat untuk audit stok ini."
+    }
+  }
+}

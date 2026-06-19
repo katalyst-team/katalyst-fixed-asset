@@ -1,0 +1,313 @@
+{
+  "loading": "Loading...",
+  "category": {
+    "table": {
+      "header": {
+        "no": "No",
+        "categoryName": "Category Name",
+        "action": "Action"
+      }
+    },
+    "modal": {
+      "create": {
+        "button": "Create Category",
+        "title": "Create Category",
+        "description": "Create a new category by filling out the form below. Click create when you're done.",
+        "categoryParent": "Category Parent",
+        "categoryParentPlaceholder": "Select or Create Category Parent",
+        "subCategory": "Sub Category (Optional)",
+        "subCategoryPlaceholder": "Sub Category",
+        "creating": "Creating...",
+        "created": "Category created successfully",
+        "attributes": "Attributes",
+        "defaultAttributesForSub": "Default Attributes for Sub Category",
+        "defaultAttributesForSubDescription": "These attributes and default values will be auto-filled when creating a new sub category.",
+        "attributeCollection": "Attribute Collection",
+        "categoryName": "Category Name",
+        "categoryNamePlaceholder": "Category Name"
+      },
+      "edit": {
+        "title": "Edit Category",
+        "button": "Edit Category",
+        "description": "Edit the category by updating the form below. Click save when you're done.",
+        "categoryName": "Category Name",
+        "categoryNamePlaceholder": "Category Name",
+        "editing": "Editing...",
+        "updated": "Category updated successfully"
+      },
+      "addSub": {
+        "title": "Add Sub-Category",
+        "description": "Add a new subcategory to this category",
+        "button": "Add Sub-Category",
+        "subCategoryName": "Sub-Category Name",
+        "subCategoryNamePlaceholder": "Enter sub-category name",
+        "creating": "Creating...",
+        "created": "Sub-category created successfully"
+      }
+    },
+    "empty": {
+      "title": "No Categories Found",
+      "description": "You haven't created any categories yet."
+    }
+  },
+  "empty": {
+    "title": "No Categories Found",
+    "description": "You haven't created any categories yet."
+  },
+  "brand": {
+    "table": {
+      "header": {
+        "no": "No",
+        "brandName": "Brand Name",
+        "action": "Action"
+      }
+    },
+    "modal": {
+      "create": {
+        "button": "Add Brand",
+        "title": "Create Brand",
+        "description": "Create a new Brand by filling out the form below. Click create when you're done.",
+        "brandName": "Brand Name",
+        "brandNamePlaceholder": "Brand Name",
+        "creating": "Creating...",
+        "created": "Brand created successfully"
+      },
+      "edit": {
+        "title": "Edit Brand",
+        "button": "Edit Brand",
+        "brandName": "Brand Name",
+        "brandNamePlaceholder": "Brand Name",
+        "editing": "Editing...",
+        "updated": "Brand edited successfully"
+      }
+    },
+    "empty": {
+      "title": "No Brands Found",
+      "description": "You haven't added any brands yet."
+    }
+  },
+  "size": {
+    "table": {
+      "header": {
+        "no": "No",
+        "sizeName": "Size Name",
+        "action": "Action"
+      }
+    },
+    "modal": {
+      "create": {
+        "button": "Create Size",
+        "title": "Create Size",
+        "description": "Add a new size to your organization.",
+        "sizeName": "Size Name",
+        "sizeNamePlaceholder": "Enter size name",
+        "creating": "Creating...",
+        "created": "Size created successfully"
+      },
+      "edit": {
+        "title": "Edit Size",
+        "button": "Edit Size",
+        "sizeName": "Size Name",
+        "sizeNamePlaceholder": "Enter size name",
+        "editing": "Editing...",
+        "updated": "Size updated successfully"
+      }
+    },
+    "empty": {
+      "title": "No Sizes Found",
+      "description": "You haven't added any sizes yet."
+    }
+  },
+  "color": {
+    "table": {
+      "header": {
+        "no": "No",
+        "colorName": "Color Name",
+        "action": "Action"
+      }
+    },
+    "modal": {
+      "create": {
+        "button": "Add Color",
+        "title": "Create Color",
+        "description": "Create a new Color by filling out the form below. Click create when you're done.",
+        "colorName": "Color Name",
+        "colorNamePlaceholder": "Color Name",
+        "creating": "Creating...",
+        "created": "Color created successfully"
+      },
+      "edit": {
+        "title": "Edit Color",
+        "button": "Edit Color",
+        "colorName": "Color Name",
+        "colorNamePlaceholder": "Color Name",
+        "editing": "Editing...",
+        "updated": "Color updated successfully"
+      }
+    },
+    "empty": {
+      "title": "No Colors Found",
+      "description": "You haven't added any colors yet."
+    }
+  },
+  "direct": {
+    "attributes": "Attributes",
+    "defaultValues": "Default Values",
+    "noAttributes": "No attributes configured",
+    "noDefaultValues": "No default values configured",
+    "title": "Category Attributes"
+  },
+  "modal": {
+    "add": {
+      "attributeDefaults": "Default Values",
+      "attributeDefaultsDescription": "Set default values for each attribute (optional).",
+      "attributes": "Attributes",
+      "button": "Add Category",
+      "categoryName": "Category Name",
+      "categoryNamePlaceholder": "Enter category name",
+      "code": "Code (optional)",
+      "codePlaceholder": "Enter code",
+      "creating": "Saving...",
+      "description": "Add new Category",
+      "hasSubCategory": "Has Sub Category",
+      "title": "Add Category"
+    },
+    "edit": {
+      "attributeDefaults": "Default Values",
+      "attributeDefaultsDescription": "Set default values for each attribute (optional).",
+      "attributes": "Attributes",
+      "button": "Save",
+      "categoryName": "Category Name",
+      "categoryNamePlaceholder": "Enter category name",
+      "code": "Code (optional)",
+      "codePlaceholder": "Enter code",
+      "description": "Edit Category data",
+      "editing": "Saving...",
+      "hasSubCategory": "Has Sub Category",
+      "title": "Edit Category"
+    }
+  },
+  "sub": {
+    "filter": {
+      "searchPlaceholder": "Search name or code..."
+    },
+    "empty": {
+      "description": "No Sub Category in this Category yet",
+      "title": "No Sub Category"
+    },
+    "export": {
+      "button": "Export",
+      "filename": "sub-category",
+      "noAttributes": "No attributes defined. Add at least one sub category with attributes first.",
+      "noData": "No sub categories to export",
+      "templateButton": "Export Template",
+      "templateFilename": "template-sub-category"
+    },
+    "import": {
+      "button": "Import",
+      "columnCode": "Code",
+      "columnName": "Sub Category Name",
+      "description": "Upload an Excel file to import sub categories. Download the template first to see the correct format.",
+      "dragDrop": "Drag & drop Excel file here, or click to select",
+      "emptyFile": "Excel file is empty or has no data",
+      "importing": "Importing...",
+      "codeDuplicateApi": "Code \"{{code}}\" already exists in the system",
+      "codeDuplicateFile": "Code \"{{code}}\" is duplicated in this file",
+      "nameRequired": "Sub Category Name is required",
+      "noSchema": "No sub categories yet. Create at least one sub category manually first as a template.",
+      "storeLabel": "Assign to Store",
+      "storeNone": "No store (unassigned)",
+      "storePlaceholder": "Select store...",
+      "preview": "Preview ({{count}} rows)",
+      "result": "Import complete: {{success}} succeeded, {{failed}} failed",
+      "startImport": "Start Import",
+      "title": "Import Sub Category"
+    },
+    "modal": {
+      "add": {
+        "attributes": "Attributes",
+        "attributeDefaults": "Default Values",
+        "attributeDefaultsDescription": "Set default values for each attribute (optional). Leave empty if users fill manually.",
+        "button": "Add Sub Category",
+        "code": "Code (optional)",
+        "codePlaceholder": "Enter code",
+        "copyFromTemplate": "Copy from Template",
+        "copyFromTemplatePlaceholder": "Select a sub category as template...",
+        "copyFromTemplateDescription": "Attributes and default values will be copied from the selected template.",
+        "creating": "Saving...",
+        "description": "Add new Sub Category",
+        "name": "Sub Category Name",
+        "namePlaceholder": "Enter sub category name",
+        "title": "Add Sub Category"
+      },
+      "edit": {
+        "attributes": "Attributes",
+        "attributeDefaults": "Default Values",
+        "attributeDefaultsDescription": "Set default values for each attribute (optional). Leave empty if users fill manually.",
+        "button": "Save",
+        "code": "Code (optional)",
+        "codePlaceholder": "Enter code",
+        "description": "Edit Sub Category data",
+        "editing": "Saving...",
+        "name": "Sub Category Name",
+        "namePlaceholder": "Enter sub category name",
+        "title": "Edit Sub Category"
+      }
+    },
+    "table": {
+      "header": {
+        "action": "Action",
+        "attributes": "Attributes",
+        "code": "Code",
+        "defaultValues": "Default Values",
+        "name": "Sub Category Name",
+        "no": "No",
+        "store": "Store"
+      }
+    },
+    "title": "Sub Category"
+  },
+  "table": {
+    "header": {
+      "action": "Action",
+      "categoryName": "Category Name",
+      "code": "Code",
+      "no": "No",
+      "store": "Store",
+      "subCount": "Sub Category Count"
+    }
+  },
+  "list": {
+    "export": {
+      "button": "Export",
+      "filename": "category-list",
+      "noData": "No categories to export",
+      "templateButton": "Export Template",
+      "templateFilename": "template-category"
+    },
+    "filter": {
+      "allStores": "All Stores",
+      "searchPlaceholder": "Search name or code..."
+    },
+    "import": {
+      "button": "Import",
+      "close": "Close",
+      "columnCode": "Code",
+      "columnName": "Category Name",
+      "description": "Upload an Excel file to bulk-create categories. Download the template first to see the correct format.",
+      "dragDrop": "Drag & drop Excel file here, or click to select",
+      "codeDuplicateApi": "Code \"{{code}}\" already exists in the system",
+      "codeDuplicateFile": "Code \"{{code}}\" is duplicated in this file",
+      "emptyFile": "Excel file is empty or has no data",
+      "importing": "Importing...",
+      "nameDuplicateApi": "Name \"{{name}}\" already exists in the system",
+      "nameDuplicateFile": "Name \"{{name}}\" is duplicated in this file",
+      "nameRequired": "Category Name is required",
+      "preview": "Preview ({{count}} rows)",
+      "result": "Import complete: {{success}} succeeded, {{failed}} failed",
+      "startImport": "Start Import",
+      "title": "Import Categories"
+    }
+  },
+  "title": "Category"
+}

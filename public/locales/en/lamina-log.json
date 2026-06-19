@@ -1,0 +1,50 @@
+{
+  "title": "Lamina Log",
+  "loading": "Loading...",
+  "noData": "No Lamina log entries found",
+  "empty": {
+    "title": "No Lamina Log Entries",
+    "description": "No Lamina log entries found."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "image": "Image",
+      "name": "Name",
+      "rfidEpc": "RFID EPC",
+      "rfidName": "RFID Name",
+      "category": "Category",
+      "status": "Status",
+      "action": "Action",
+      "internalCode": "Internal Code",
+      "itemStatus": "Item Status",
+      "stockMovementType": "Stock Movement Type"
+    },
+    "noData": "No data available"
+  },
+  "filter": {
+    "searchPlaceholder": "Search products...",
+    "rfidSearchPlaceholder": "Search RFID name...",
+    "internalCodePlaceholder": "Enter internal code...",
+    "button": "Filter",
+    "title": "Filter Options",
+    "timeframe": "Time Range",
+    "timeframePlaceholder": "Select time range...",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "pickDate": "Pick a date",
+    "noDateAttributes": "No date attributes available",
+    "dateAttributes": {
+      "title": "Filter by Date Attributes",
+      "startDate": "Start Date",
+      "endDate": "End Date"
+    },
+    "attributes": {
+      "title": "Filter by Attributes",
+      "placeholder": "Enter value..."
+    }
+  },
+  "item": {
+    "imageAlt": "{{defaultValue}}"
+  }
+}

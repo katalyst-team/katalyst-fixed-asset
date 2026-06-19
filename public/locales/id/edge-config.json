@@ -1,0 +1,75 @@
+{
+  "loading": "Memuat Konfigurasi Edge...",
+  "noData": "Tidak ada data Konfigurasi Edge tersedia",
+  "title": "Konfigurasi Edge",
+  "subtitle": "Kelola konfigurasi perangkat edge",
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Nama",
+      "store": "Toko",
+      "antenna": "Antena",
+      "deviceId": "ID Perangkat",
+      "currentStockMovementType": "Pergerakan Saat Ini",
+      "nextStockMovementType": "Pergerakan Berikutnya",
+      "rfidTagStatus": "Status RFID",
+      "operatorAor": "Operator",
+      "parentCategories": "Kategori",
+      "actions": "Aksi"
+    },
+    "noData": "Tidak ada Konfigurasi Edge ditemukan"
+  },
+  "modal": {
+    "create": {
+      "title": "Buat Konfigurasi Edge",
+      "description": "Tambahkan konfigurasi edge baru ke sistem.",
+      "button": "Tambah Konfigurasi Edge"
+    },
+    "edit": {
+      "title": "Edit Konfigurasi Edge",
+      "description": "Edit konfigurasi edge."
+    },
+    "form": {
+      "store": "Toko",
+      "storeSelect": "Pilih toko...",
+      "name": "Nama",
+      "namePlaceholder": "cth. Gate A - Pending ke Transit",
+      "nameHint": "Nama tampilan untuk konfigurasi ini. Default \"Untitled\" jika dikosongkan.",
+      "antenna": "Antena",
+      "deviceId": "ID Perangkat",
+      "deviceIdPlaceholder": "cth. 02 (hex)",
+      "deviceIdHint": "Filter scan berdasarkan ID perangkat RFID reader (hex). Kosongkan untuk mengizinkan semua perangkat.",
+      "currentStockMovementType": "Tipe Pergerakan Stok Saat Ini",
+      "currentStockMovementTypeSelect": "Pilih tipe pergerakan stok saat ini...",
+      "nextStockMovementType": "Tipe Pergerakan Stok Berikutnya",
+      "nextStockMovementTypeSelect": "Pilih tipe pergerakan stok berikutnya...",
+      "operatorAor": "Operator",
+      "operatorAorSelect": "Pilih operator...",
+      "parentCategories": "Kategori Induk",
+      "parentCategoriesSelect": "Pilih kategori untuk filter...",
+      "parentCategoriesHint": "Hanya proses EPC yang SKU-nya termasuk dalam salah satu kategori ini atau subkategorinya. Kosongkan untuk memproses semua.",
+      "rfidTagStatus": "Status Tag RFID",
+      "rfidTagStatusSelect": "Pilih status...",
+      "skuAttributeUpdates": "Pembaruan Atribut SKU",
+      "attributeSelect": "Pilih atribut...",
+      "attributeValues": "Nilai (pisahkan dengan koma)",
+      "addAttribute": "Tambah Atribut",
+      "datetimeDefault": "Default datetime",
+      "datetimeDefaultNow": "Sekarang",
+      "save": "Simpan",
+      "cancel": "Batal",
+      "required": "Field ini wajib diisi"
+    }
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Tidak Aktif"
+  },
+  "delete": {
+    "success": "Konfigurasi Edge berhasil dihapus"
+  },
+  "empty": {
+    "title": "Konfigurasi Edge Tidak Ditemukan",
+    "description": "Anda belum membuat Konfigurasi Edge."
+  }
+}

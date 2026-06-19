@@ -1,0 +1,175 @@
+{
+  "table": {
+    "header": {
+      "no": "No",
+      "image": "Image",
+      "internalCode": "Internal Code",
+      "category": "Category",
+      "brand": "Brand",
+      "size": "Size",
+      "color": "Color",
+      "type": "Type",
+      "action": "Action",
+      "name": "Name",
+      "attributes": "Attributes"
+    },
+    "type": {
+      "common": "Common",
+      "unique": "Unique"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "noData": "No SKUs found"
+  },
+  "modal": {
+    "addSku": {
+      "addButton": "Add SKU",
+      "createTitle": "Create SKU",
+      "editTitle": "Edit SKU",
+      "createDescription": "Create a new SKU by filling out the form below. Click create when you're done.",
+      "editDescription": "Edit the SKU by updating the form below. Click save when you're done.",
+      "skuLabel": "SKU",
+      "skuPlaceholder": "SKU...",
+      "nameLabel": "Name",
+      "namePlaceholder": "Name...",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Select Category",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Status",
+      "statusActive": "Active",
+      "statusInactive": "Inactive",
+      "skuTypeLabel": "SKU Type",
+      "selectSkuType": "Select SKU type",
+      "common": "Common",
+      "unique": "Unique",
+      "priceLabel": "Price",
+      "pricePlaceholder": "Price...",
+      "stockLabel": "Stock",
+      "stockPlaceholder": "Stock...",
+      "createButton": "Create SKU",
+      "editButton": "Save Changes",
+      "creating": "Creating...",
+      "saving": "Saving...",
+      "skuCreated": "SKU created successfully",
+      "skuUpdated": "SKU updated successfully",
+      "skuDeleted": "SKU deleted successfully",
+      "internalCodeLabel": "Internal Code",
+      "internalCodePlaceholder": "Internal Code...",
+      "subcategory": "Subcategory",
+      "imageLabel": "Images",
+      "imageDescription": "Upload product images from your device or take photos with your camera",
+      "attributesLabel": "Attributes",
+      "loadingAttributes": "Loading attributes...",
+      "update": "Update SKU",
+      "updating": "Updating...",
+      "updateSuccess": "SKU updated successfully",
+      "createSuccess": "SKU created successfully"
+    }
+  },
+  "filter": {
+    "filter": "Filter",
+    "search": "Search",
+    "searchPlaceholder": "Search by SKU or name",
+    "status": "Status",
+    "statusPlaceholder": "Select Status",
+    "category": "Category",
+    "categoryPlaceholder": "Select Category",
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "active": "Active",
+    "inactive": "Inactive",
+    "options": {
+      "allStores": "All Stores",
+      "allCategories": "All Categories",
+      "allStatuses": "All Statuses"
+    },
+    "selectStore": "Select Store..."
+  },
+  "detail": {
+    "sku": "SKU Detail",
+    "info": "SKU Information",
+    "history": "History",
+    "stock": "Stock",
+    "price": "Price",
+    "status": "Status",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At"
+  },
+  "loading": "Loading...",
+  "detailEmpty": {
+    "title": "No SKU Details Found",
+    "description": "There is no detailed information for this SKU."
+  },
+  "historyEmpty": {
+    "title": "No Product History",
+    "description": "There is no history for this product."
+  },
+  "empty": {
+    "title": "No SKUs Found",
+    "description": "You haven't added any SKUs yet."
+  },
+  "exportTemplate": {
+    "button": "Export Template",
+    "tooltip": "Download an Excel template with attribute columns for a specific category",
+    "title": "Export SKU Template",
+    "description": "Download an Excel template with columns for a specific category. The template includes an example row to guide you.",
+    "howToUse": "How to use:",
+    "step1": "Select a category below",
+    "step2": "Click 'Export Template' to download the Excel file",
+    "step3": "Fill in your product data following the example row format",
+    "step4": "Use 'Import Excel' button to upload your completed file",
+    "note": "Note: Fields marked with * are required. Image URLs should be comma-separated (max 5).",
+    "selectCategory": "Select Category",
+    "categoryPlaceholder": "Choose a category",
+    "attributes": "attributes",
+    "attributesIncluded": "Attributes that will be included:",
+    "noAttributes": "This category has no attributes defined.",
+    "exportButton": "Export Template"
+  },
+  "import": {
+    "button": "Import Excel",
+    "tooltip": "Upload an Excel file to bulk create SKUs. Use the template for correct format",
+    "title": "Import SKUs from Excel",
+    "description": "Upload an Excel file to bulk create SKUs. Use the template for correct format.",
+    "instructions": "Instructions:",
+    "step1": "Download the template using 'Export Template' button",
+    "step2": "Fill in your product data",
+    "step3": "Upload the completed Excel file here",
+    "step4": "Review the preview and click 'Import'",
+    "dropHere": "Drop the file here...",
+    "dragDrop": "Drag & drop an Excel file here",
+    "orClick": "or click to select a file",
+    "supportedFormats": "Supported formats: XLSX, CSV",
+    "processing": "Processing file...",
+    "importing": "Importing SKUs...",
+    "emptyFile": "Excel file is empty or has no data",
+    "parseError": "Failed to parse Excel file",
+    "hasErrors": "Cannot import: Some rows have validation errors. Please fix them first.",
+    "validRows": "Valid",
+    "warnings": "Warnings",
+    "errors": "Errors",
+    "preview": "Preview (first 10 rows)",
+    "complete": "Import Complete",
+    "successMessage": "Successfully imported {{count}} SKU(s)",
+    "failedMessage": "Failed to import {{count}} SKU(s)",
+    "successCount": "Successfully imported: {{count}}",
+    "failedCount": "Failed: {{count}}",
+    "errorDetails": "Error Details",
+    "importButton": "Import {{count}} SKU(s)"
+  },
+  "form": {
+    "field": {
+      "category": "Category",
+      "categoryPlaceholder": "Select a category for this SKU",
+      "categoryHelp": "Category determines which attributes are available for this SKU",
+      "store": "Store",
+      "storePlaceholder": "Select a store...",
+      "storeHelp": "Select the store where this SKU will be available",
+      "allStores": "All Stores"
+    },
+    "createSuccess": "SKU created successfully",
+    "updateSuccess": "SKU updated successfully"
+  }
+}

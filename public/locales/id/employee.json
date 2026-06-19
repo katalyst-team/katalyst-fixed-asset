@@ -1,0 +1,101 @@
+{
+  "table": {
+    "header": {
+      "id": "ID",
+      "name": "Nama",
+      "role": "Peran",
+      "email": "Email",
+      "phone": "Nomor Telepon",
+      "status": "Status",
+      "otpStatus": "Status OTP",
+      "stores": "Toko",
+      "actions": "Aksi"
+    },
+    "status": {
+      "active": "Aktif",
+      "inactive": "Tidak Aktif",
+      "suspended": "Ditangguhkan"
+    },
+    "otpStatus": {
+      "active": "Aktif",
+      "inactive": "Tidak Aktif",
+      "pending": "Tertunda"
+    },
+    "noData": "Tidak ada pengguna ditemukan"
+  },
+  "modal": {
+    "addEmployee": {
+      "addButton": "Tambah Pengguna",
+      "createTitle": "Buat Pengguna",
+      "createDescription": "Buat pengguna baru dengan mengisi formulir di bawah ini. Klik buat jika sudah selesai.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Email...",
+      "nameLabel": "Nama Depan",
+      "namePlaceholder": "Nama depan...",
+      "lastNameLabel": "Nama Belakang",
+      "lastNamePlaceholder": "Nama Belakang...",
+      "phoneLabel": "Telepon",
+      "phonePlaceholder": "Telepon...",
+      "passwordLabel": "Kata Sandi",
+      "passwordPlaceholder": "Kata Sandi...",
+      "roleLabel": "Peran",
+      "rolePlaceholder": "Pilih Peran",
+      "storeLabel": "Toko",
+      "storePlaceholder": "Pilih Toko",
+      "creating": "Membuat...",
+      "createButton": "Buat Pengguna"
+    },
+    "edit": {
+      "title": "Edit Pengguna",
+      "description": "Perbarui peran, toko, atau status pengguna.",
+      "employee": "Pengguna",
+      "emailLabel": "Email Baru",
+      "emailPlaceholder": "Email...",
+      "passwordLabel": "Kata Sandi Baru",
+      "passwordPlaceholder": "Kata Sandi...",
+      "roleLabel": "Peran",
+      "rolePlaceholder": "Pilih Peran",
+      "storeLabel": "Toko",
+      "storePlaceholder": "Pilih Toko",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Pilih Status",
+      "saveButton": "Simpan Perubahan",
+      "saving": "Menyimpan..."
+    }
+  },
+  "toast": {
+    "created": "Pengguna berhasil dibuat",
+    "updated": "Pengguna berhasil diperbarui",
+    "deleted": "Pengguna berhasil dihapus"
+  },
+  "roles": {
+    "APP_SUPERADMIN": "Super Admin",
+    "APP_ADMIN": "Admin Aplikasi",
+    "ORGANIZATION_OWNER": "Pemilik Organisasi",
+    "ORGANIZATION_ADMIN": "Admin Organisasi",
+    "ORGANIZATION_MEMBER": "Anggota Organisasi"
+  },
+  "filter": {
+    "filter": "Filter",
+    "search": "Cari",
+    "searchPlaceholder": "Cari berdasarkan nama atau email",
+    "status": "Status",
+    "statusPlaceholder": "Pilih Status",
+    "role": "Peran",
+    "rolePlaceholder": "Pilih Peran",
+    "store": "Toko",
+    "storePlaceholder": "Pilih Toko",
+    "cancel": "Batal",
+    "apply": "Terapkan",
+    "active": "Aktif",
+    "inactive": "Tidak Aktif"
+  },
+  "loading": "Memuat...",
+  "header": {
+    "title": "Pengguna"
+  },
+  "empty": {
+    "title": "Pengguna tidak ditemukan",
+    "description": "Anda belum menambahkan pengguna."
+  }
+}

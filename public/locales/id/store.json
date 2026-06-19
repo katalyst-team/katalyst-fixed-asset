@@ -1,0 +1,66 @@
+{
+  "modal": {
+    "addStore": {
+      "addButton": "Tambah Toko",
+      "createTitle": "Buat Toko",
+      "editTitle": "Edit Toko",
+      "createDescription": "Buat toko baru dengan mengisi formulir di bawah ini. Klik buat jika sudah selesai.",
+      "editDescription": "Edit toko dengan memperbarui formulir di bawah ini. Klik simpan jika sudah selesai.",
+      "storeNameLabel": "Nama Toko",
+      "storeNamePlaceholder": "Nama gudang...",
+      "addressLabel": "Alamat",
+      "addressPlaceholder": "Alamat toko...",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Status",
+      "statusActive": "Aktif",
+      "statusInactive": "Tidak Aktif",
+      "createButton": "Buat Toko",
+      "editButton": "Simpan Perubahan",
+      "creating": "Membuat...",
+      "saving": "Menyimpan...",
+      "storeCreated": "Toko berhasil dibuat",
+      "storeUpdated": "Toko berhasil diperbarui"
+    },
+    "addArea": {
+      "addButton": "Tambah Area Baru",
+      "createTitle": "Tambah Area Baru",
+      "editTitle": "Edit Area",
+      "createDescription": "Isi formulir di bawah ini untuk menambah area baru",
+      "editDescription": "Perbarui detail area",
+      "areaNameLabel": "Nama Area",
+      "areaNamePlaceholder": "Masukkan nama area",
+      "processing": "Memproses...",
+      "save": "Simpan",
+      "areaCreated": "Area berhasil dibuat",
+      "areaUpdated": "Area berhasil diperbarui"
+    }
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "store": "Toko",
+      "address": "Alamat",
+      "status": "Status",
+      "action": "Aksi",
+      "area": "Area"
+    },
+    "status": {
+      "active": "Aktif",
+      "inactive": "Tidak Aktif"
+    }
+  },
+  "toast": {
+    "storeDeleted": "Toko berhasil dihapus",
+    "areaDeleted": "Area berhasil dihapus"
+  },
+  "loading": "Memuat...",
+  "loadingDetails": "Memuat detail toko...",
+  "empty": {
+    "title": "Toko tidak ditemukan",
+    "description": "Anda belum menambahkan toko apa pun."
+  },
+  "areaEmpty": {
+    "title": "Area tidak ditemukan",
+    "description": "Anda belum menambahkan area apa pun ke toko ini."
+  }
+}

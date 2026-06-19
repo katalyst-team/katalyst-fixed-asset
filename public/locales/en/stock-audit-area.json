@@ -1,0 +1,134 @@
+{
+  "loading": "Loading...",
+  "noData": "No stock audit area data found",
+  "card": {
+    "owner": "Auditor",
+    "lastAudit": "LAST AUDIT",
+    "result": "RESULT",
+    "expected": "EXPECTED",
+    "counted": "COUNTED",
+    "accuracy": "ACCURACY"
+  },
+  "status": {
+    "clean": "Clean",
+    "issues": "issues",
+    "unknown": "Unknown",
+    "pending": "Pending",
+    "completed": "Completed"
+  },
+  "buttons": {
+    "startAudit": "Start Audit",
+    "createAllAudit": "Create Audit All Items",
+    "viewDetails": "View Details",
+    "cancel": "Cancel"
+  },
+  "modal": {
+    "create": {
+      "title": "Create New Stock Audit Area",
+      "description": "Select store and section to create a new stock audit area.",
+      "store": "Store",
+      "selectStore": "Select store",
+      "storeSection": "Store Section",
+      "selectSection": "Select store section",
+      "movementTypes": "Movement Types",
+      "selectMovementTypes": "Select movement types...",
+      "optional": "optional",
+      "create": "Create Stock Audit Area",
+      "creating": "Creating..."
+    },
+    "createAll": {
+      "title": "Create Audit for All Items",
+      "description": "This will create a comprehensive audit for all items in the store. The audit results will be organized by section.",
+      "confirm": "Create All Audits"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Audits",
+    "sort": {
+      "label": "Sort By",
+      "placeholder": "Select sort option"
+    },
+    "date": {
+      "label": "Date",
+      "placeholder": "Select date"
+    },
+    "auditResult": {
+      "placeholder": "Audit Result",
+      "all": "All Results",
+      "empty": "No Audit Yet"
+    },
+    "apply": "Apply",
+    "reset": "Reset",
+    "options": {
+      "allSorts": "All Sorts",
+      "discrepancy": "Discrepancy",
+      "lastAudit": "Last Audit",
+      "accuracy": "Accuracy"
+    }
+  },
+  "empty": {
+    "title": "No Stock Audit Areas Found",
+    "description": "You haven't started any stock audit areas yet."
+  },
+  "metrics": {
+    "totalSections": "Total Sections",
+    "sectionsWithDiscrepancy": "Sections with Discrepancy",
+    "averageAccuracy": "Average Accuracy",
+    "overdueAudits": "Overdue Audits",
+    "notAvailable": "N/A"
+  },
+  "result": {
+    "consistent": "Consistent",
+    "mismatch": "Mismatch",
+    "unknown": "Unknown"
+  },
+  "detailMetrics": {
+    "lastAudit": "Last Audit",
+    "lastCounted": "Last Counted",
+    "openIssues": "Open Issues",
+    "accuracy": "Accuracy",
+    "expectedQuantity": "Expected Quantity",
+    "actualQuantity": "Actual Quantity",
+    "currentExpectedQuantity": "Current Expected Quantity"
+  },
+  "detailHeader": {
+    "backToAreas": "Back to Areas",
+    "subtitle": "Audit history & actions for this area."
+  },
+  "detailFilters": {
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "allAuditors": "All Auditors",
+    "selectAuditor": "Filter by auditor...",
+    "sortBy": "Sort by...",
+    "apply": "Apply"
+  },
+  "auditHistory": {
+    "title": "Audit History",
+    "noData": "No audit history available",
+    "columns": {
+      "auditId": "Audit ID",
+      "timestamp": "Timestamp",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "auditor": "Auditor",
+      "status": "Status",
+      "result": "Result",
+      "expectedQuantity": "Expected Qty",
+      "actualQuantity": "Actual Qty",
+      "tags": "Tags",
+      "missing": "Missing",
+      "extra": "Extra",
+      "notes": "Notes",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View"
+    }
+  },
+  "toast": {
+    "createAllSuccess": "Successfully created audit for all items",
+    "createAllError": "An error occurred while creating audit"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "title": "Assign RFID",
+  "description": "Assign existing RFID tags to inventory items. Select RFIDs and map them to SKUs or packing collections.",
+
+  "ledger": "Ledger",
+  "addNewLedger": "Add New Ledger",
+  "ledgersValid": "ledgers valid",
+
+  "rfidType": "RFID Type",
+  "rfidCategory": "RFID Category",
+  "selectRfid": "Select RFID",
+  "selectRfidPlaceholder": "Choose an RFID tag",
+  "selectRfidsPlaceholder": "Choose RFID tags",
+
+  "reusable": "Reusable",
+  "disposable": "Disposable",
+  "single": "Single",
+  "package": "Package",
+
+  "loading": "Loading...",
+  "notAvailable": "N/A",
+
+  "sku": "SKU",
+  "product": "Product",
+  "quantity": "Quantity",
+  "unit": "Unit",
+
+  "itemSelectionType": "Item Selection Type",
+  "skuType": "SKU (Common)",
+  "productType": "Product (Unique)",
+  "selectProduct": "Choose a product",
+  "productTypeInfo": "For products, only one RFID can be assigned per product. Each product can only be selected once.",
+
+  "disposableSingleInfo": "For disposable single RFIDs, only 1 item with quantity 1 is allowed.",
+
+  "reset": "Reset",
+  "processing": "Processing...",
+  "assignRfids": "Assign {{count}} RFID(s)",
+
+  "allLedgersCreated": "Successfully assigned {{count}} RFID(s) to ledger items!",
+  "partialSuccess": "{{success}}/{{total}} RFID(s) assigned successfully",
+  "someFailed": "{{count}} RFID assignment(s) failed",
+  "allFailed": "All RFID assignments failed",
+  "unknownError": "An unknown error occurred",
+  "packingCollectionCreatedSuccessfully": "Packing collection created successfully!"
+}

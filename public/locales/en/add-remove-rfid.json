@@ -1,0 +1,93 @@
+{
+  "title": "Add/Remove RFID",
+  "description": "Add or remove RFID tags from items in your inventory.",
+
+  "store": {
+    "label": "Store",
+    "allStores": "All Stores",
+    "placeholder": "Select a store"
+  },
+
+  "actionType": {
+    "label": "Action Type",
+    "add": "Add RFID",
+    "remove": "Remove RFID"
+  },
+
+  "search": {
+    "label": "Search SKU",
+    "placeholder": "Enter SKU code or name..."
+  },
+
+  "table": {
+    "header": {
+      "select": "Select",
+      "sku": "Internal Code",
+      "name": "Name",
+      "rfid": "RFID"
+    },
+    "itemCount": "item(s)",
+    "noData": "No items found",
+    "noRfidAssigned": "No RFID assigned",
+    "selectRfid": "Select RFID"
+  },
+
+  "rfidDialog": {
+    "title": "Select RFID",
+    "search": {
+      "epcCode": "EPC Code",
+      "epcCodePlaceholder": "Enter EPC code...",
+      "rfidName": "RFID Name",
+      "rfidNamePlaceholder": "Enter RFID name...",
+      "type": "Type",
+      "category": "Category"
+    },
+    "type": {
+      "single": "Single",
+      "package": "Package"
+    },
+    "category": {
+      "reusable": "Reusable",
+      "disposable": "Disposable"
+    },
+    "table": {
+      "header": {
+        "epc": "EPC Code",
+        "type": "Type",
+        "name": "Name"
+      }
+    },
+    "noRfids": "No available RFIDs found",
+    "selected": "Selected"
+  },
+
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+
+  "confirmation": {
+    "title": "Confirm {action}",
+    "addMessage": "You are about to add RFID to {count} item(s)",
+    "removeMessage": "You are about to remove RFID from {count} item(s)",
+    "submit": "Confirm",
+    "cancel": "Cancel"
+  },
+
+  "selectedItems": "Selected: {count} item(s)",
+
+  "messages": {
+    "success": "Operation completed successfully",
+    "error": "An error occurred",
+    "noItemsSelected": "Please select at least one item",
+    "rfidAlreadyAssigned": "This RFID is already assigned to another item",
+    "singleRfidLimit": "SINGLE RFID can only be assigned to one item"
+  },
+
+  "buttons": {
+    "submit": "Submit",
+    "reset": "Reset",
+    "select": "Select",
+    "cancel": "Cancel"
+  }
+}

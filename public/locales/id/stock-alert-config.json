@@ -1,0 +1,94 @@
+{
+  "title": "Konfigurasi Alert Stok",
+  "description": "Monitor dan konfigurasi status alert stok inventaris Anda secara real-time.",
+
+  "filters": {
+    "store": {
+      "label": "Toko",
+      "placeholder": "Pilih toko",
+      "allStores": "Semua Toko"
+    }
+  },
+
+  "summary": {
+    "title": "Ringkasan Alert",
+    "totalAlerts": "Total Alert",
+    "critical": "Kritis",
+    "warning": "Peringatan",
+    "healthy": "Sehat",
+    "overstocked": "Berlebih",
+    "lowStock": "Stok Rendah",
+    "expiringSoon": "Segera Kadaluarsa",
+    "expired": "Kadaluarsa"
+  },
+
+  "stockHealth": {
+    "title": "Kesehatan Stok",
+    "healthScore": "Skor Kesehatan",
+    "healthy": "Sehat",
+    "lowStock": "Stok Rendah",
+    "overstocked": "Berlebih",
+    "expiringSoon": "Segera Kadaluarsa",
+    "expired": "Kadaluarsa",
+    "empty": "Data stok belum tersedia"
+  },
+
+  "alerts": {
+    "title": "Alert",
+    "empty": "Tidak ada alert saat ini",
+    "criticalTitle": "SKU kritis",
+    "criticalBody": "Di bawah safety stock — perlu reorder",
+    "agingTitle": "aging > 90 hari",
+    "agingBody": "Stok bergerak lambat untuk ditinjau",
+    "epcTitle": "Ketidakcocokan EPC",
+    "epcBody": "Scan gate kemarin vs ledger",
+    "auditsTitle": "audit tertunda",
+    "auditsBody": "Stock Audit tertunda"
+  },
+
+  "lowStockWatchlist": {
+    "title": "Da Pantauan Stok Rendah",
+    "totalAlerts": "Total Alert",
+    "criticalAlerts": "Kritis",
+    "warningAlerts": "Peringatan",
+    "empty": "Tidak ada alert stok rendah",
+    "severity": {
+      "all": "Semua",
+      "critical": "Kritis",
+      "warning": "Peringatan"
+    },
+    "table": {
+      "product": "Produk",
+      "store": "Toko",
+      "currentStock": "Stok Saat Ini",
+      "minMax": "Min / Max",
+      "daysSinceRestock": "Hari Sejak Restock",
+      "actions": "Aksi"
+    },
+    "deficit": "Defisit: {{count}}",
+    "minMaxValue": "{{min}} / {{max}}",
+    "days": "hari",
+    "estimatedStockout": "~{{days}} hari sampai habis",
+    "restockNow": "Restock Sekarang"
+  },
+
+  "topMovers": {
+    "title": "Pergerakan Teratas",
+    "empty": "Belum ada data pergerakan"
+  },
+
+  "categoryDistribution": {
+    "title": "Distribusi Kategori",
+    "empty": "Belum ada data distribusi"
+  },
+
+  "recentTransactions": {
+    "title": "Transaksi Terkini",
+    "empty": "Belum ada transaksi terkini"
+  },
+
+  "loading": "Memuat...",
+  "error": "Gagal memuat data. Silakan coba lagi.",
+  "refresh": "Segarkan",
+  "noData": "Data belum tersedia. Fitur ini akan aktif setelah data inventaris tersedia."
+}

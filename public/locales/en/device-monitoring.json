@@ -1,0 +1,106 @@
+{
+  "title": "Device Monitor",
+  "description": "Monitor RFID devices and gate status in real-time.",
+  "stats": {
+    "totalDevices": "Total Devices",
+    "onlineDevices": "Online",
+    "offlineDevices": "Offline",
+    "gateDevices": "Gates",
+    "fixedReaderDevices": "Fixed Readers",
+    "activeAlerts": "Active Alerts",
+    "totalScansToday": "Total Scans Today",
+    "totalErrorsToday": "Total Errors Today"
+  },
+  "table": {
+    "title": "Device List",
+    "detail": "Detail",
+    "inactive": "Inactive",
+    "header": {
+      "no": "No",
+      "deviceType": "Type",
+      "deviceId": "Device ID",
+      "deviceName": "Name",
+      "gate": "Gate",
+      "status": "Status",
+      "ipAddress": "IP Address",
+      "lastSeen": "Last Seen",
+      "rssi": "RSSI",
+      "scanCount": "Total Scans",
+      "errorCount": "Errors",
+      "actions": "Actions"
+    }
+  },
+  "alerts": {
+    "title": "Active Alerts",
+    "severity": "Severity",
+    "type": "Type",
+    "message": "Message",
+    "resolved": "Resolved",
+    "unresolved": "Unresolved",
+    "resolve": "Resolve",
+    "noAlerts": "No alerts",
+    "filterAll": "All",
+    "filterUnresolved": "Unresolved",
+    "resolveError": "Failed to resolve alert"
+  },
+  "empty": {
+    "title": "No devices registered",
+    "description": "Device data will appear automatically once devices connect to the system."
+  },
+  "filter": {
+    "all": "All",
+    "gate": "Gate",
+    "fixedReader": "Fixed Reader",
+    "online": "Online",
+    "offline": "Offline",
+    "search": "Search devices..."
+  },
+  "detail": {
+    "deviceInfo": "Device Information",
+    "gate": "Gate",
+    "section": "Section",
+    "updateDevice": "Update Device",
+    "deviceName": "Device Name",
+    "alertThreshold": "Alert Threshold",
+    "connectionCount": "Connections",
+    "avgRssi": "Avg RSSI",
+    "isActive": "Active",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "metrics": "Performance Metrics",
+    "updateError": "Failed to update device",
+    "signalExcellent": "Excellent",
+    "signalGood": "Good",
+    "signalFair": "Fair",
+    "signalPoor": "Poor"
+  },
+  "create": {
+    "trigger": "Register Device",
+    "title": "Register New Device",
+    "submit": "Register",
+    "creating": "Registering...",
+    "error": "Failed to register device",
+    "deviceType": "Device Type",
+    "deviceTypeHint": "Gate scanners connect via TCP port 4000, Fixed Readers via port 21000",
+    "deviceId": "Device ID",
+    "deviceIdPlaceholder": "e.g. 01",
+    "deviceIdHint": "Globally unique identifier used by the TCP protocol",
+    "deviceName": "Device Name",
+    "deviceNamePlaceholder": "e.g. Warehouse Reader A",
+    "description": "Description",
+    "location": "Location",
+    "locationPlaceholder": "e.g. Warehouse A - Dock 1",
+    "alertThreshold": "Alert Threshold",
+    "alertThresholdHint": "Error count threshold before alert triggers (default: 60)",
+    "validation": {
+      "deviceType": "Device type is required",
+      "deviceId": "Device ID is required",
+      "deviceName": "Device name is required",
+      "alertThreshold": "Alert threshold is required"
+    }
+  },
+  "delete": {
+    "error": "Failed to delete device"
+  }
+}

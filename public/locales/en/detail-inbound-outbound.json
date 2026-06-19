@@ -1,0 +1,90 @@
+{
+  "loading": "Loading...",
+  "epcLists": "EPC Lists",
+  "noEpcData": "No EPC data available for this inbound/outbound transaction.",
+  "productList": "Product List",
+  "noProductData": "No product data available",
+  "productTable": {
+    "header": {
+      "no": "No",
+      "productName": "Product Name",
+      "category": "Category",
+      "brand": "Brand",
+      "color": "Color",
+      "size": "Size",
+      "quantity": "Quantity",
+      "lastStatus": "Last Status",
+      "action": "Action"
+    }
+  },
+  "epcTable": {
+    "header": {
+      "no": "No",
+      "epc": "EPC",
+      "rfidName": "RFID Name",
+      "category": "Category",
+      "amount": "Amount",
+      "status": "Status",
+      "action": "Action",
+      "lastUpdate": "Last Update"
+    },
+    "title": "EPC List for {{skuName}}"
+  },
+  "status": {
+    "waitingPrint": "Waiting Print",
+    "waitingInbound": "Waiting Inbound",
+    "waitingOutbound": "Waiting Outbound",
+    "failedInbound": "Failed Inbound",
+    "failedOutbound": "Failed Outbound",
+    "successInbound": "Success Inbound",
+    "successOutbound": "Success Outbound"
+  },
+  "empty": {
+    "title": "No Products Found",
+    "description": "There are no products in this inbound/outbound transaction.",
+    "note": "No note available"
+  },
+  "note": "Note",
+  "exportAll": "Export All",
+  "images": {
+    "title": "Images",
+    "alt": "Image {{index}}",
+    "viewAll": "View All {{count}} Images",
+    "galleryTitle": "Transaction Images",
+    "noImages": "No images available for this transaction"
+  },
+  "verificationLog": {
+    "title": "Verification Log",
+    "description": "Chronological record of verification actions for this stock movement.",
+    "transition": "{{from}} -> {{to}}",
+    "systemActor": "System",
+    "systemDescription": "Automatic verification",
+    "notAvailable": "-",
+    "labels": {
+      "actor": "Actor",
+      "note": "Note"
+    },
+    "actions": {
+      "SUBMITTED": "Submitted",
+      "RESUBMITTED": "Resubmitted",
+      "VERIFIED": "Verified",
+      "VALIDATED": "Validated",
+      "REJECTED": "Rejected",
+      "REVOKED": "Revoked",
+      "CANCELLED": "Cancelled",
+      "AUTO_VERIFIED": "Auto Verified"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "validated": "Validated",
+      "verified": "Verified",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    },
+    "empty": {
+      "title": "No Verification Log",
+      "description": "There are no verification activities recorded for this stock movement yet."
+    }
+  }
+}

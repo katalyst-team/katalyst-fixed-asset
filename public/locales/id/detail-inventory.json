@@ -1,0 +1,97 @@
+{
+  "loading": "Memuat...",
+  "noData": "Data detail inventaris tidak ditemukan",
+  "notAvailable": "T/A",
+  "unsetItems": "Item belum diatur",
+  "item": "item",
+  "items": "item",
+  "total": "total",
+  "package": "kemasan",
+  "single": "satuan",
+  "noItemsInSection": "Tidak ada item yang ditemukan di bagian ini.",
+  "noItemsFound": "Tidak ada item yang ditemukan",
+  "summary": {
+    "title": "Detail Inventaris",
+    "productName": "Nama Produk",
+    "category": "Kategori",
+    "brand": "Merek",
+    "color": "Warna",
+    "size": "Ukuran",
+    "totalItems": "Total Item",
+    "aging": "Umur Stok (Hari)"
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "epc": "EPC",
+      "rfidName": "Nama RFID",
+      "category": "Kategori",
+      "amount": "Jumlah",
+      "aging": "Umur Stok (Hari)",
+      "agingTooltip": "Umur stok menunjukkan berapa hari barang tersimpan sejak diterima.",
+      "status": "Status",
+      "lastStatus": "Status Terakhir",
+      "quantity": "Kuantitas",
+      "lastUpdate": "Pembaruan Terakhir",
+      "operator": "Operator",
+      "note": "Catatan",
+      "location": "Lokasi",
+      "area": "Area",
+      "section": "Bagian",
+      "lastUpdated": "Terakhir Diperbarui",
+      "action": "Aksi"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Detail Inventaris",
+    "status": {
+      "label": "Status",
+      "placeholder": "Pilih Status",
+      "all": "Semua Status"
+    },
+    "location": {
+      "label": "Lokasi",
+      "placeholder": "Pilih Lokasi",
+      "all": "Semua Lokasi"
+    },
+    "apply": "Terapkan",
+    "cancel": "Batal"
+  },
+  "buttons": {
+    "export": "Ekspor",
+    "viewDetails": "Lihat Detail",
+    "back": "Kembali ke Inventaris"
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Tidak Aktif",
+    "pending": "Tertunda",
+    "waiting": "Menunggu",
+    "success": "Berhasil",
+    "failed": "Gagal",
+    "waitinginbound": "Menunggu Inbound",
+    "inboundsuccess": "Inbound Berhasil",
+    "inboundfailed": "Inbound Gagal",
+    "waitingoutbound": "Menunggu Outbound",
+    "outboundsuccess": "Outbound Berhasil",
+    "outboundfailed": "Outbound Gagal",
+    "unknown": "Tidak Diketahui"
+  },
+  "stores": {
+    "title": "Inventaris Toko",
+    "total": "toko",
+    "empty": {
+      "title": "Tidak Ada Toko",
+      "description": "Tidak ada data inventaris toko yang tersedia untuk SKU ini."
+    }
+  },
+  "store": {
+    "name": "Nama Toko",
+    "quantity": "Kuantitas"
+  },
+  "error": {
+    "title": "Error Memuat Data",
+    "description": "Tidak dapat memuat data inventaris. Silakan coba lagi nanti."
+  }
+}

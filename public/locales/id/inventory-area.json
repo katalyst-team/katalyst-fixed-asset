@@ -1,0 +1,72 @@
+{
+  "title": "Area Inventaris",
+  "loading": "Memuat...",
+  "header": {
+    "selectStore": "Pilih toko...",
+    "searchPlaceholder": "Cari area...",
+    "subtitle": "Monitor kuantitas inventaris di semua area."
+  },
+  "metrics": {
+    "totalSections": "Total Area",
+    "totalQuantity": "Total Kuantitas",
+    "notAvailable": "N/A"
+  },
+  "card": {
+    "quantity": "Total Item",
+    "section": "Area Inventaris",
+    "ofMax": "dari tertinggi"
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter",
+    "apply": "Terapkan",
+    "reset": "Reset",
+    "sort": {
+      "label": "Urutkan",
+      "placeholder": "Pilih urutan..."
+    },
+    "stockMovementType": {
+      "label": "Tipe Pergerakan Stok",
+      "placeholder": "Pilih tipe inbound..."
+    },
+    "options": {
+      "name": "Nama (A-Z)",
+      "quantityAsc": "Kuantitas (Rendah ke Tinggi)",
+      "quantityDesc": "Kuantitas (Tinggi ke Rendah)"
+    }
+  },
+  "empty": {
+    "title": "Tidak ada area ditemukan",
+    "description": "Tidak ada area inventaris yang tersedia untuk toko ini."
+  },
+  "detail": {
+    "back": "Kembali",
+    "subtitle": "Item inventaris dalam area ini",
+    "searchPlaceholder": "Cari nama atau kode item...",
+    "inventoryTitle": "Item Inventaris",
+    "showingCount": "{{count}} item",
+    "metrics": {
+      "sectionQuantity": "Kuantitas Area",
+      "sectionQuantityDesc": "Total kuantitas tercatat di area ini",
+      "totalQuantity": "Total SKU",
+      "totalQuantityDesc": "Total item SKU unik di area ini"
+    },
+    "table": {
+      "sku": "SKU",
+      "name": "Nama",
+      "internalCode": "Kode Internal",
+      "brand": "Merek",
+      "color": "Warna",
+      "size": "Ukuran",
+      "quantity": "Kuantitas",
+      "attributes": "Atribut",
+      "aging": "Aging (hari)",
+      "actions": "Aksi",
+      "noData": "Tidak ada item inventaris ditemukan"
+    },
+    "pagination": {
+      "prev": "Sebelumnya",
+      "next": "Selanjutnya"
+    }
+  }
+}

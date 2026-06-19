@@ -1,0 +1,91 @@
+{
+  "title": "Log ST Kering",
+  "loading": "Memuat...",
+  "noData": "Tidak ada log ST Kering yang ditemukan",
+  "empty": {
+    "title": "Tidak Ada Log ST Kering",
+    "description": "Tidak ada entri log ST Kering yang ditemukan."
+  },
+  "cuttingStatus": {
+    "uncut": "Belum Potong",
+    "cut": "Sudah Potong",
+    "all": "Semua"
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "image": "Gambar",
+      "name": "Nama",
+      "rfidEpc": "EPC RFID",
+      "rfidName": "Nama RFID",
+      "category": "Kategori",
+      "status": "Status",
+      "action": "Aksi",
+      "internalCode": "Kode Internal",
+      "itemStatus": "Status Item",
+      "stockMovementType": "Tipe Pergerakan Stok",
+      "cuttingStatus": "Status Potong"
+    },
+    "noData": "Tidak ada data tersedia"
+  },
+  "filter": {
+    "searchPlaceholder": "Cari produk...",
+    "rfidSearchPlaceholder": "Cari nama RFID...",
+    "internalCodePlaceholder": "Masukkan kode internal...",
+    "button": "Filter",
+    "title": "Opsi Filter",
+    "timeframe": "Rentang Waktu",
+    "timeframePlaceholder": "Pilih rentang waktu...",
+    "startDate": "Tanggal Mulai",
+    "endDate": "Tanggal Akhir",
+    "pickDate": "Pilih tanggal",
+    "noDateAttributes": "Tidak ada atribut tanggal tersedia",
+    "dateAttributes": {
+      "title": "Filter berdasarkan Atribut Tanggal",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Akhir"
+    },
+    "textAttributes": {
+      "title": "Filter berdasarkan Atribut",
+      "placeholder": "Masukkan nilai..."
+    }
+  },
+  "action": {
+    "bongkarStik": "Bongkar Stik",
+    "susunRst": "Susun RST",
+    "assignArea": "Assign Area"
+  },
+  "assignArea": {
+    "title": "Assign Area",
+    "description": "Assign area untuk palet {{code}}",
+    "descriptionGeneric": "Assign area gudang untuk item ini",
+    "store": "Toko",
+    "storePlaceholder": "Pilih toko...",
+    "area": "Area Toko",
+    "areaPlaceholder": "Pilih area...",
+    "type": "Tipe Pergerakan",
+    "typePlaceholder": "Pilih tipe...",
+    "note": "Catatan (opsional)",
+    "notePlaceholder": "Tambah catatan...",
+    "cancel": "Batal",
+    "submit": "Assign Area",
+    "submitting": "Menyimpan...",
+    "success": "Area berhasil di-assign",
+    "validationError": "Mohon lengkapi semua field yang wajib diisi"
+  },
+  "susunRst": {
+    "title": "Susun RST Kering",
+    "description": "Set Tanggal Potong untuk palet {{code}}",
+    "descriptionGeneric": "Set tanggal potong untuk item ini",
+    "date": "Tanggal Potong",
+    "cancel": "Batal",
+    "submit": "Set Tanggal Potong",
+    "submitting": "Menyimpan...",
+    "success": "Tanggal Potong berhasil diperbarui",
+    "error": "Gagal memperbarui Tanggal Potong",
+    "validationError": "Tidak dapat memperbarui: atribut tidak ditemukan"
+  },
+  "item": {
+    "imageAlt": "{{defaultValue}}"
+  }
+}

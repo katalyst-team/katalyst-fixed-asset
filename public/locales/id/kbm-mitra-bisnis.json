@@ -1,0 +1,141 @@
+{
+  "title": "KBM Mitra Bisnis",
+  "description": "Kelola data master KBM Mitra Bisnis",
+  "table": {
+    "header": {
+      "no": "No",
+      "action": "Aksi",
+      "name": "Nama",
+      "internalCode": "Kode Internal",
+      "category": "Kategori",
+      "status": "Status"
+    },
+    "noData": "Tidak ada data mitra bisnis"
+  },
+  "filter": {
+    "searchPlaceholder": "Cari mitra bisnis...",
+    "internalCodePlaceholder": "Masukkan kode internal..."
+  },
+  "empty": {
+    "title": "Tidak Ada Data Mitra Bisnis",
+    "description": "Tidak ada data mitra bisnis ditemukan. Mulai dengan menambahkan mitra bisnis pertama Anda."
+  },
+  "form": {
+    "createTitle": "Buat KBM Mitra Bisnis",
+    "editTitle": "Edit KBM Mitra Bisnis",
+    "createDescription": "Tambahkan KBM Mitra Bisnis baru ke data master. Kolom bertanda * wajib diisi.",
+    "editDescription": "Perbarui detail mitra bisnis. Perubahan akan tercermin di semua catatan.",
+    "backToList": "Kembali ke Daftar KBM Mitra Bisnis",
+    "section": {
+      "basicInfo": "Informasi Dasar",
+      "basicInfoDescription": "Detail penting untuk mengidentifikasi mitra bisnis",
+      "attributes": "Atribut Mitra Bisnis",
+      "attributesDescription": "Berikan spesifikasi detail untuk mitra bisnis ini. Kolom bertanda * wajib diisi.",
+      "calculation": "Nilai Volume",
+      "calculationDescription": "Masukkan nilai volume akhir. Kami menampilkan referensi yang dihitung otomatis di bawah untuk verifikasi."
+    },
+    "field": {
+      "name": "Nama Mitra Bisnis",
+      "namePlaceholder": "mis., MITRA-001",
+      "nameHelp": "Pilih nama deskriptif yang jelas mengidentifikasi mitra bisnis ini",
+      "internalCode": "Kode Internal",
+      "internalCodePlaceholder": "mis., MITRA-001",
+      "internalCodeHelp": "Kode unik untuk mengidentifikasi mitra bisnis ini"
+    },
+    "attribute": {
+      "kdGrade": "KD_GRADE (Kode Grade)",
+      "nmGrade": "NM_GRADE (Nama Grade)",
+      "tebal": "G_TEBAL (Tebal dalam mm)",
+      "lebar": "G_LEBAR (Lebar dalam mm)",
+      "panjang": "G_PANJANG (Panjang dalam mm)",
+      "stdSusun": "G_STD_SUSUN (Standard Susun)",
+      "vol": "G_VOL (Volume per Susun dalam m³)",
+      "stdVol": "G_STD_VOL (Volume Standard dalam m³)"
+    },
+    "calculation": {
+      "vol": "VOL (Volume per Susun)",
+      "volFormula": "= (TEBAL × LEBAR × PANJANG) ÷ 1.000.000.000",
+      "volPlaceholder": "Masukkan VOL",
+      "expectedVol": "Ekspektasi (otomatis): {{value}} m³",
+      "stdVol": "STD_VOL (Volume Standard)",
+      "stdVolFormula": "= VOL × STD_SUSUN",
+      "stdVolPlaceholder": "Masukkan STD_VOL",
+      "expectedStdVol": "Ekspektasi (otomatis): {{value}} m³"
+    },
+    "button": {
+      "cancel": "Batal",
+      "create": "Buat Mitra Bisnis",
+      "creating": "Membuat...",
+      "update": "Perbarui Mitra Bisnis",
+      "updating": "Memperbarui..."
+    },
+    "unsavedChanges": "Anda memiliki perubahan yang belum disimpan. Apakah Anda yakin ingin meninggalkan halaman?",
+    "categoryNotFound": "Kategori KBM Mitra Bisnis tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "missingRequired": "Harap isi semua atribut wajib: {{attributes}}",
+    "duplicateName": "Nama mitra bisnis '{{name}}' sudah ada.",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "createSuccess": "KBM Mitra Bisnis berhasil dibuat",
+    "updateSuccess": "KBM Mitra Bisnis berhasil diperbarui"
+  },
+  "actions": {
+    "add": "Tambah KBM Mitra Bisnis",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "view": "Lihat Detail"
+  },
+  "exportTemplate": {
+    "button": "Ekspor Template",
+    "tooltip": "Unduh template Excel dengan atribut mitra bisnis",
+    "title": "Ekspor Template KBM Mitra Bisnis",
+    "description": "Unduh template Excel yang disesuaikan untuk tipe mitra bisnis ini.",
+    "howToUse": "Cara penggunaan:",
+    "step1": "Tinjau atribut yang tercakup dalam template",
+    "step2": "Klik 'Ekspor Template' untuk mengunduh file Excel",
+    "step3": "Isi data mitra bisnis Anda mengikuti format baris contoh",
+    "step4": "Gunakan 'Import Excel' untuk mengunggah file yang telah diisi",
+    "note": "Kolom bertanda * wajib diisi. G_TYPE otomatis diatur ke {{gradeType}}.",
+    "categoryNotFound": "Kategori KBM Mitra Bisnis tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "categoryLabel": "Kategori: {{category}}",
+    "required": "*wajib",
+    "noAttributes": "Kategori ini tidak memiliki atribut yang terdefinisi.",
+    "exportButton": "Ekspor Template"
+  },
+  "import": {
+    "button": "Import Excel",
+    "tooltip": "Unggah file Excel untuk membuat mitra bisnis secara massal menggunakan format template",
+    "title": "Import Mitra Bisnis dari Excel",
+    "description": "Unggah file Excel untuk membuat mitra bisnis secara massal. Gunakan template untuk format yang benar.",
+    "instructions": "Instruksi:",
+    "step1": "Unduh template menggunakan tombol 'Ekspor Template'",
+    "step2": "Isi data mitra bisnis Anda",
+    "step3": "Unggah file Excel yang telah selesai di sini",
+    "step4": "Tinjau pratinjau dan klik 'Import'",
+    "note": "G_TYPE otomatis diatur ke {{gradeType}} untuk setiap baris.",
+    "categoryNotFound": "Kategori KBM Mitra Bisnis tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "emptyFile": "File Excel kosong atau tidak ada data",
+    "parseError": "Gagal memproses file Excel",
+    "hasErrors": "Tidak dapat mengimpor: Beberapa baris memiliki kesalahan validasi. Harap perbaiki terlebih dahulu.",
+    "gradeNameRequired": "Nama Mitra Bisnis wajib diisi",
+    "requiredAttributeMissing": "Atribut wajib '{{attribute}}' tidak ada",
+    "duplicateName": "Nama mitra bisnis '{{name}}' sudah ada.",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "dropHere": "Letakkan file di sini...",
+    "dragDrop": "Seret & lepas file Excel di sini",
+    "orClick": "atau klik untuk memilih file",
+    "supportedFormats": "Format yang didukung: CSV, XLSX",
+    "processing": "Memproses file...",
+    "importing": "Mengimpor mitra bisnis...",
+    "validRows": "Valid",
+    "warnings": "Peringatan",
+    "errors": "Kesalahan",
+    "preview": "Pratinjau (10 baris pertama)",
+    "attributesFilled": "Atribut",
+    "complete": "Import Selesai",
+    "successCount": "Berhasil diimpor: {{count}}",
+    "failedCount": "Gagal: {{count}}",
+    "errorDetails": "Detail Kesalahan",
+    "importButton": "Import {{count}} mitra bisnis",
+    "successMessage": "Berhasil mengimpor {{count}} mitra bisnis",
+    "failedMessage": "Gagal mengimpor {{count}} mitra bisnis"
+  }
+}

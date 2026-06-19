@@ -1,0 +1,55 @@
+{
+  "title": "User Menu",
+  "backToList": "Back to List",
+  "editPage": {
+    "title": "Edit Menu Access",
+    "saving": "Saving...",
+    "statsLabel": "Menus Enabled",
+    "menusAllowed": "menus allowed",
+    "permissionsLabel": "Menu Permissions"
+  },
+  "table": {
+    "header": {
+      "no": "No.",
+      "name": "Name",
+      "stores": "Stores",
+      "phone": "Phone",
+      "role": "Role",
+      "menuAccess": "Menu Access",
+      "status": "Status",
+      "actions": "Actions",
+      "edit": "Edit"
+    },
+    "menuAccessHint": "active",
+    "legend": {
+      "hoverHint": "Hover the checkmark to see sub-menu details",
+      "fullyEnabled": "All sub-menus enabled",
+      "partialEnabled": "Some sub-menus disabled",
+      "disabled": "Disabled"
+    }
+  },
+  "modal": {
+    "edit": {
+      "title": "Edit Menu Access",
+      "save": "Save",
+      "cancel": "Cancel",
+      "childMenus": "Child Menus",
+      "orgDisabled": "Org Disabled",
+      "overridden": "Overridden"
+    }
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "overridden": "Overridden",
+    "allowed": "Allowed",
+    "forbidden": "Forbidden"
+  },
+  "toast": {
+    "saved": "Menu access saved successfully"
+  },
+  "empty": {
+    "title": "No users found",
+    "description": "There are no users to configure menu access for."
+  }
+}

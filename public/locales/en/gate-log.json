@@ -1,0 +1,101 @@
+{
+  "title": "Gate Logs",
+  "description": "Monitor and review RFID gate activity logs",
+  "loading": "Loading gate logs...",
+  "noData": "No gate logs found",
+  "table": {
+    "header": {
+      "no": "No",
+      "timestamp": "Timestamp",
+      "gate": "Gate",
+      "store": "Store",
+      "section": "Section",
+      "epc": "EPC",
+      "internalCode": "Internal Code",
+      "rssi": "Signal Strength",
+      "antenna": "Antenna",
+      "deviceId": "Device ID",
+      "gpioTrigger": "GPIO Trigger",
+      "itemCount": "Items",
+      "action": "Action"
+    }
+  },
+  "buttons": {
+    "viewDetails": "View Details",
+    "refresh": "Refresh",
+    "export": "Export"
+  },
+  "detail": {
+    "title": "Gate Log Details",
+    "notFound": "Gate log not found",
+    "summary": "Log Summary",
+    "timestamp": "Timestamp",
+    "gate": "Gate",
+    "store": "Store",
+    "section": "Section",
+    "antenna": "Antenna Number",
+    "deviceId": "Device ID",
+    "rssi": "Signal Strength (RSSI)",
+    "gpioTrigger": "GPIO Trigger",
+    "rfidStatus": "RFID Status",
+    "items": "Scanned Items",
+    "itemsCount": "Total Items",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "itemsTable": {
+    "header": {
+      "no": "No",
+      "epc": "EPC",
+      "sku": "SKU",
+      "internalCode": "Internal Code",
+      "skuName": "SKU Name",
+      "section": "Section",
+      "status": "Status",
+      "aging": "Aging (Days)",
+      "expiryDate": "Expiry Date",
+      "lastUpdated": "Last Updated"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Gate Logs",
+    "store": {
+      "label": "Store",
+      "placeholder": "All Stores"
+    },
+    "section": {
+      "label": "Section",
+      "placeholder": "All Sections"
+    },
+    "dateRange": {
+      "label": "Date Range",
+      "startDate": "Start Date",
+      "endDate": "End Date"
+    },
+    "apply": "Apply Filters",
+    "reset": "Reset Filters"
+  },
+  "empty": {
+    "title": "No Gate Logs Found",
+    "description": "No RFID gate activity has been recorded yet"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "rfidType": {
+    "reusable": "Reusable",
+    "disposable": "Disposable"
+  },
+  "rfidCategory": {
+    "single": "Single",
+    "package": "Package"
+  },
+  "itemStatus": {
+    "waitingPrint": "Waiting Print",
+    "printed": "Printed",
+    "inStock": "In Stock",
+    "outStock": "Out Stock"
+  }
+}

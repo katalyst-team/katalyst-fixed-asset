@@ -1,0 +1,72 @@
+{
+  "title": "Grup Referensi",
+  "buttons": {
+    "addGroup": "Tambah Grup",
+    "addItem": "Tambah Item"
+  },
+  "createGroupSuccess": "Grup referensi berhasil dibuat",
+  "createItemSuccess": "Item referensi berhasil dibuat",
+  "deleteGroupSuccess": "Grup referensi berhasil dihapus",
+  "deleteItemSuccess": "Item referensi berhasil dihapus",
+  "empty": {
+    "description": "Buat grup referensi pertama Anda untuk mengorganisir data lookup.",
+    "itemsDescription": "Tambahkan item pertama ke grup referensi ini.",
+    "itemsTitle": "Tidak ada item ditemukan",
+    "title": "Tidak ada grup referensi ditemukan"
+  },
+  "fields": {
+    "code": "Kode",
+    "description": "Deskripsi",
+    "descriptionPlaceholder": "Masukkan deskripsi...",
+    "name": "Nama",
+    "slug": "Slug",
+    "sortOrder": "Urutan"
+  },
+  "modal": {
+    "addGroup": {
+      "title": "Tambah Grup Referensi"
+    },
+    "addItem": {
+      "title": "Tambah Item Referensi"
+    },
+    "editGroup": {
+      "title": "Edit Grup Referensi"
+    },
+    "editItem": {
+      "title": "Edit Item Referensi"
+    }
+  },
+  "table": {
+    "header": {
+      "action": "Aksi",
+      "code": "Kode",
+      "description": "Deskripsi",
+      "name": "Nama",
+      "no": "No",
+      "slug": "Slug",
+      "sortOrder": "Urutan"
+    }
+  },
+  "relation": {
+    "add": "Tambah Relasi",
+    "addButton": "Tambah Relasi",
+    "button": "Relasi",
+    "createSuccess": "Relasi berhasil dibuat",
+    "deleteSuccess": "Relasi berhasil dihapus",
+    "empty": "Belum ada relasi.",
+    "existing": "Relasi yang Ada",
+    "manage": "Kelola Relasi",
+    "selectGroupFirst": "Pilih grup terlebih dahulu",
+    "selectItem": "Pilih item...",
+    "selectGroup": "Pilih grup...",
+    "targetGroup": "Grup Tujuan",
+    "targetItem": "Item Tujuan",
+    "title": "Relasi",
+    "toItemRequired": "Item tujuan wajib diisi",
+    "type": "Tipe Relasi",
+    "typeRequired": "Tipe relasi wajib diisi",
+    "typeBelongsTo": "Dimiliki oleh"
+  },
+  "updateGroupSuccess": "Grup referensi berhasil diperbarui",
+  "updateItemSuccess": "Item referensi berhasil diperbarui"
+}

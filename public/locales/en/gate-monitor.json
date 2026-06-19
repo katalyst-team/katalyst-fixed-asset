@@ -1,0 +1,22 @@
+{
+  "title": "Gate Monitor",
+  "description": "Monitor gate status and RFID traffic in real-time.",
+  "summary": {
+    "totalGates": "Total Gates",
+    "totalLogs24h": "Logs (24h)",
+    "violations": "Violations",
+    "avgRssi": "Avg RSSI"
+  },
+  "traffic": {
+    "title": "Gate Traffic (Last 24 Hours)",
+    "placeholder": "No gate traffic data yet."
+  },
+  "gates": {
+    "title": "Gate Status",
+    "noLogs": "No logs yet",
+    "lastSeen": "Last seen",
+    "store": "Store",
+    "logs": "logs"
+  },
+  "noData": "Data not yet available. Data will appear once gates become active."
+}

@@ -1,0 +1,101 @@
+{
+  "title": "Log Gate",
+  "description": "Pantau dan tinjau log aktivitas gate RFID",
+  "loading": "Memuat log gate...",
+  "noData": "Log gate tidak ditemukan",
+  "table": {
+    "header": {
+      "no": "No",
+      "timestamp": "Waktu",
+      "gate": "Gate",
+      "store": "Toko",
+      "section": "Bagian",
+      "epc": "EPC",
+      "internalCode": "Kode Internal",
+      "rssi": "Kekuatan Sinyal",
+      "antenna": "Antena",
+      "deviceId": "ID Perangkat",
+      "gpioTrigger": "Pemicu GPIO",
+      "itemCount": "Item",
+      "action": "Aksi"
+    }
+  },
+  "buttons": {
+    "viewDetails": "Lihat Detail",
+    "refresh": "Muat Ulang",
+    "export": "Ekspor"
+  },
+  "detail": {
+    "title": "Detail Log Gate",
+    "notFound": "Log gate tidak ditemukan",
+    "summary": "Ringkasan Log",
+    "timestamp": "Waktu",
+    "gate": "Gate",
+    "store": "Toko",
+    "section": "Bagian",
+    "antenna": "Nomor Antena",
+    "deviceId": "ID Perangkat",
+    "rssi": "Kekuatan Sinyal (RSSI)",
+    "gpioTrigger": "Pemicu GPIO",
+    "rfidStatus": "Status RFID",
+    "items": "Item yang Dipindai",
+    "itemsCount": "Total Item",
+    "yes": "Ya",
+    "no": "Tidak"
+  },
+  "itemsTable": {
+    "header": {
+      "no": "No",
+      "epc": "EPC",
+      "sku": "SKU",
+      "internalCode": "Kode Internal",
+      "skuName": "Nama SKU",
+      "section": "Bagian",
+      "status": "Status",
+      "aging": "Usia (Hari)",
+      "expiryDate": "Tanggal Kadaluarsa",
+      "lastUpdated": "Terakhir Diperbarui"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Log Gate",
+    "store": {
+      "label": "Toko",
+      "placeholder": "Semua Toko"
+    },
+    "section": {
+      "label": "Bagian",
+      "placeholder": "Semua Bagian"
+    },
+    "dateRange": {
+      "label": "Rentang Tanggal",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Akhir"
+    },
+    "apply": "Terapkan Filter",
+    "reset": "Reset Filter"
+  },
+  "empty": {
+    "title": "Log Gate Tidak Ditemukan",
+    "description": "Belum ada aktivitas gate RFID yang tercatat"
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Tidak Aktif"
+  },
+  "rfidType": {
+    "reusable": "Dapat Digunakan Ulang",
+    "disposable": "Sekali Pakai"
+  },
+  "rfidCategory": {
+    "single": "Tunggal",
+    "package": "Paket"
+  },
+  "itemStatus": {
+    "waitingPrint": "Menunggu Cetak",
+    "printed": "Tercetak",
+    "inStock": "Dalam Stok",
+    "outStock": "Keluar Stok"
+  }
+}

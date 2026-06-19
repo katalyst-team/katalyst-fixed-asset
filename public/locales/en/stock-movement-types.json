@@ -1,0 +1,70 @@
+{
+  "title": "Stock Movement Types",
+  "description": "Manage your stock movement types and their configurations",
+  "loading": "Loading...",
+  "noData": "No stock movement types found",
+  "itemsPerPage": "items per page",
+  "confirmDelete": "Are you sure you want to delete this stock movement type? This action cannot be undone.",
+
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Name",
+      "namePlaceholder": "Enter type name",
+      "direction": "Direction",
+      "action": "Actions"
+    }
+  },
+
+  "directions": {
+    "inbound": "Inbound",
+    "outbound": "Outbound",
+    "ledger": "Ledger"
+  },
+
+  "filters": {
+    "all": "All",
+    "inbound": "Inbound",
+    "outbound": "Outbound"
+  },
+
+  "buttons": {
+    "create": "Create New Type",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+
+  "modal": {
+    "create": {
+      "title": "Create Stock Movement Type",
+      "description": "Add a new stock movement type to your system",
+      "name": "Name",
+      "namePlaceholder": "Enter type name",
+      "direction": "Direction",
+      "directionPlaceholder": "Select direction",
+      "create": "Create",
+      "creating": "Creating...",
+      "cancel": "Cancel"
+    },
+    "edit": {
+      "title": "Edit Stock Movement Type",
+      "description": "Update stock movement type information",
+      "name": "Name",
+      "direction": "Direction",
+      "directionPlaceholder": "Select direction",
+      "update": "Update",
+      "updating": "Updating...",
+      "cancel": "Cancel"
+    }
+  },
+
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+
+  "empty": {
+    "title": "No Stock Movement Types Found",
+    "description": "Get started by creating your first stock movement type"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "title": "KBM Mesin",
+  "description": "Manage master data for KBM Mesin",
+  "table": {
+    "header": {
+      "action": "Action",
+      "code": "Code",
+      "name": "Name",
+      "no": "No",
+      "sortOrder": "Sort Order"
+    }
+  },
+  "filter": {
+    "allDepartments": "All Departments"
+  },
+  "empty": {
+    "description": "No mesin data found. Start by adding your first mesin item.",
+    "title": "No Mesin Data"
+  }
+}

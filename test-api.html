@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Test Scanner API</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .endpoint {
+        margin: 20px 0;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .result {
+        background: #f5f5f5;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 3px;
+      }
+      button {
+        padding: 10px 20px;
+        margin: 5px;
+        cursor: pointer;
+      }
+      input {
+        padding: 8px;
+        margin: 5px;
+      }
+      pre {
+        background: #eee;
+        padding: 10px;
+        border-radius: 3px;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Scanner App API Tester</h1>
+
+    <div class="endpoint">
+      <h2>1. Get Version (Simple)</h2>
+      <p>GET /api/scanner/version</p>
+      <button onclick="testVersion()">Test Version API</button>
+      <div id="version-result" class="result"></div>
+    </div>
+
+    <div class="endpoint">
+      <h2>2. Check Update (Simple)</h2>
+      <p>GET /api/scanner/simple-update?versionCode=X</p>
+      <input
+        type="number"
+        id="versionCode"
+        placeholder="Version Code (e.g., 95)"
+        value="95"
+      />
+      <button onclick="testUpdate()">Test Update API</button>
+      <div id="update-result" class="result"></div>
+    </div>
+
+    <script>
+      async function testVersion() {
+        const resultDiv = document.getElementById("version-result");
+        resultDiv.innerHTML = "Loading...";
+
+        try {
+          const response = await fetch("/api/scanner/version");
+          const data = await response.json();
+
+          resultDiv.innerHTML = `
+                    <h4>Status: ${response.status}</h4>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+        } catch (error) {
+          resultDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+        }
+      }
+
+      async function testUpdate() {
+        const resultDiv = document.getElementById("update-result");
+        const versionCode = document.getElementById("versionCode").value;
+        resultDiv.innerHTML = "Loading...";
+
+        try {
+          const response = await fetch(
+            `/api/scanner/simple-update?versionCode=${versionCode}`
+          );
+          const data = await response.json();
+
+          resultDiv.innerHTML = `
+                    <h4>Status: ${response.status}</h4>
+                    <h4>Testing with Version Code: ${versionCode}</h4>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+        } catch (error) {
+          resultDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+        }
+      }
+
+      // Auto test version on page load
+      window.onload = function () {
+        testVersion();
+      };
+    </script>
+  </body>
+</html>

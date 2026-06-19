@@ -1,0 +1,59 @@
+{
+  "loading": "Memuat atribut...",
+  "createSuccess": "Atribut berhasil dibuat",
+  "updateSuccess": "Atribut berhasil diperbarui",
+  "deleteSuccess": "Atribut berhasil dihapus",
+  "createError": "Gagal membuat atribut",
+  "updateError": "Gagal memperbarui atribut",
+  "deleteError": "Gagal menghapus atribut",
+  "deleteConfirmTitle": "Hapus Atribut",
+  "deleteConfirmDescription": "Apakah Anda yakin ingin menghapus atribut {{name}}? Tindakan ini tidak dapat dibatalkan.",
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Nama",
+      "type": "Tipe",
+      "direction": "Arah",
+      "description": "Deskripsi",
+      "presets": "Presets",
+      "required": "Diperlukan",
+      "action": "Aksi"
+    },
+    "status": {
+      "active": "Aktif",
+      "inactive": "Non-aktif"
+    },
+    "noData": "Tidak ada Atribut ditemukan"
+  },
+  "modal": {
+    "addAttribute": {
+      "addButton": "Tambah Atribut",
+      "createTitle": "Buat Atribut",
+      "editTitle": "Edit Atribut",
+      "createDescription": "Buat atribut baru dengan mengisi formulir di bawah ini. Klik buat ketika selesai.",
+      "editDescription": "Edit atribut dengan memperbarui formulir di bawah ini. Klik simpan ketika selesai.",
+      "nameLabel": "Nama",
+      "namePlaceholder": "Masukkan nama atribut...",
+      "typeLabel": "Tipe",
+      "typePlaceholder": "Pilih tipe atribut",
+      "directionLabel": "Arah",
+      "directionPlaceholder": "Pilih arah (opsional)",
+      "directionAll": "Tidak ada",
+      "possibleValuesLabel": "Nilai yang mungkin",
+      "possibleValuesPlaceholder": "Masukkan nilai yang dipisahkan koma (mis., Merah, Biru, Hijau)",
+      "unitLabel": "Satuan",
+      "unitPlaceholder": "Masukkan satuan (mis., kg, cm)",
+      "requiredLabel": "Wajib untuk produk"
+    }
+  },
+  "detail": {
+    "title": "Detail Atribut",
+    "createdAt": "Dibuat Pada",
+    "updatedAt": "Diperbarui Pada",
+    "values": "Nilai yang Mungkin"
+  },
+  "empty": {
+    "title": "Atribut tidak ditemukan",
+    "description": "Anda belum membuat atribut apa pun. Mulailah dengan membuat yang baru."
+  }
+}

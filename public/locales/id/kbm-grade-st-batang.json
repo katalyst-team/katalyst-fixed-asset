@@ -1,0 +1,141 @@
+{
+  "title": "KBM Grade ST Batang",
+  "description": "Kelola master data KBM Grade ST Batang",
+  "table": {
+    "header": {
+      "no": "No",
+      "action": "Aksi",
+      "name": "Nama",
+      "internalCode": "Kode Internal",
+      "category": "Kategori",
+      "status": "Status"
+    },
+    "noData": "Tidak ada data grade"
+  },
+  "filter": {
+    "searchPlaceholder": "Cari grade...",
+    "internalCodePlaceholder": "Masukkan kode internal..."
+  },
+  "empty": {
+    "title": "Tidak Ada Data Grade",
+    "description": "Tidak ada data grade. Mulai dengan menambahkan grade pertama Anda."
+  },
+  "form": {
+    "createTitle": "Buat Grade ST Batang",
+    "editTitle": "Edit Grade ST Batang",
+    "createDescription": "Tambahkan grade ST Batang baru ke master data. Kolom dengan tanda * wajib diisi.",
+    "editDescription": "Perbarui detail grade. Perubahan akan tercermin di semua catatan.",
+    "backToList": "Kembali ke Daftar Grade ST Batang",
+    "section": {
+      "basicInfo": "Informasi Dasar",
+      "basicInfoDescription": "Detail penting untuk mengidentifikasi grade",
+      "attributes": "Atribut Grade",
+      "attributesDescription": "Berikan spesifikasi detail untuk grade ini. Kolom dengan tanda * wajib diisi.",
+      "calculation": "Nilai Volume",
+      "calculationDescription": "Masukkan nilai volume final. Kami tampilkan acuan perhitungan otomatis di bawah untuk verifikasi."
+    },
+    "field": {
+      "name": "Nama Grade",
+      "namePlaceholder": "cth., TA(41-10)ALL",
+      "nameHelp": "Pilih nama deskriptif yang jelas mengidentifikasi grade ini",
+      "internalCode": "Kode Internal (KD_GRADE)",
+      "internalCodePlaceholder": "cth., TA(41-10)ALL",
+      "internalCodeHelp": "Kode unik untuk grade ini"
+    },
+    "attribute": {
+      "kdGrade": "KD_GRADE (Kode Grade)",
+      "nmGrade": "NM_GRADE (Nama Grade)",
+      "tebal": "G_TEBAL (Tebal dalam mm)",
+      "lebar": "G_LEBAR (Lebar dalam mm)",
+      "panjang": "G_PANJANG (Panjang dalam mm)",
+      "stdSusun": "G_STD_SUSUN (Standard Susun)",
+      "vol": "G_VOL (Volume per Susun dalam m³)",
+      "stdVol": "G_STD_VOL (Volume Standard dalam m³)"
+    },
+    "calculation": {
+      "vol": "VOL (Volume per Susun)",
+      "volFormula": "= (TEBAL × LEBAR × PANJANG) ÷ 1.000.000.000",
+      "volPlaceholder": "Masukkan VOL",
+      "expectedVol": "Perkiraan (otomatis): {{value}} m³",
+      "stdVol": "STD_VOL (Volume Standard)",
+      "stdVolFormula": "= VOL × STD_SUSUN",
+      "stdVolPlaceholder": "Masukkan STD_VOL",
+      "expectedStdVol": "Perkiraan (otomatis): {{value}} m³"
+    },
+    "button": {
+      "cancel": "Batal",
+      "create": "Buat Grade",
+      "creating": "Membuat...",
+      "update": "Perbarui Grade",
+      "updating": "Memperbarui..."
+    },
+    "unsavedChanges": "Anda memiliki perubahan yang belum disimpan. Yakin ingin keluar?",
+    "categoryNotFound": "Kategori KBM Grade tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "missingRequired": "Harap isi semua atribut yang wajib: {{attributes}}",
+    "duplicateName": "Nama grade '{{name}}' sudah ada untuk tipe grade ini.",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "createSuccess": "Grade ST Batang berhasil dibuat",
+    "updateSuccess": "Grade ST Batang berhasil diperbarui"
+  },
+  "actions": {
+    "add": "Tambah Grade ST Batang",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "view": "Lihat Detail"
+  },
+  "exportTemplate": {
+    "button": "Ekspor Template",
+    "tooltip": "Unduh template Excel dengan atribut grade",
+    "title": "Ekspor Template KBM Grade",
+    "description": "Unduh template Excel khusus untuk tipe grade ini. File berisi atribut yang diperlukan dan contoh baris.",
+    "howToUse": "Cara penggunaan:",
+    "step1": "Tinjau atribut yang disertakan dalam template",
+    "step2": "Klik 'Ekspor Template' untuk mengunduh file Excel",
+    "step3": "Isi data grade mengikuti format contoh baris",
+    "step4": "Gunakan 'Impor Excel' untuk mengunggah file yang sudah diisi",
+    "note": "Kolom bertanda * wajib diisi. G_TYPE otomatis diisi {{gradeType}}.",
+    "categoryNotFound": "Kategori KBM Grade tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "categoryLabel": "Kategori: {{category}}",
+    "required": "*wajib",
+    "noAttributes": "Kategori ini belum memiliki atribut.",
+    "exportButton": "Ekspor Template"
+  },
+  "import": {
+    "button": "Impor Excel",
+    "tooltip": "Unggah file Excel untuk membuat grade massal sesuai format template",
+    "title": "Impor Grade dari Excel",
+    "description": "Unggah file Excel untuk membuat grade secara massal. Gunakan template agar format benar.",
+    "instructions": "Instruksi:",
+    "step1": "Unduh template menggunakan tombol 'Ekspor Template'",
+    "step2": "Isi data grade Anda",
+    "step3": "Unggah file Excel yang sudah diisi di sini",
+    "step4": "Tinjau pratinjau lalu klik 'Impor'",
+    "note": "G_TYPE otomatis diisi {{gradeType}} untuk setiap baris.",
+    "categoryNotFound": "Kategori KBM Grade tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "emptyFile": "File Excel kosong atau tidak berisi data",
+    "parseError": "Gagal membaca file Excel",
+    "hasErrors": "Tidak bisa impor: beberapa baris memiliki kesalahan validasi. Perbaiki terlebih dahulu.",
+    "gradeNameRequired": "Nama Grade wajib diisi",
+    "requiredAttributeMissing": "Atribut wajib '{{attribute}}' belum diisi",
+    "duplicateName": "Nama grade '{{name}}' sudah ada untuk tipe grade ini.",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "dropHere": "Lepaskan file di sini...",
+    "dragDrop": "Seret & letakkan file Excel di sini",
+    "orClick": "atau klik untuk memilih file",
+    "supportedFormats": "Format yang didukung: CSV, XLSX",
+    "processing": "Memproses file...",
+    "importing": "Mengimpor grade...",
+    "validRows": "Valid",
+    "warnings": "Peringatan",
+    "errors": "Kesalahan",
+    "preview": "Pratinjau (10 baris pertama)",
+    "attributesFilled": "Atribut",
+    "complete": "Impor Selesai",
+    "successCount": "Berhasil diimpor: {{count}}",
+    "failedCount": "Gagal: {{count}}",
+    "errorDetails": "Detail Kesalahan",
+    "importButton": "Impor {{count}} grade",
+    "successMessage": "Berhasil mengimpor {{count}} grade",
+    "failedMessage": "Gagal mengimpor {{count}} grade"
+  }
+}

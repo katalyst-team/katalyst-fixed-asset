@@ -1,0 +1,131 @@
+{
+  "loading": "Memuat...",
+  "noData": "Tidak ada produk buku besar ditemukan",
+  "empty": {
+    "title": "Tidak Ada Produk Buku Besar",
+    "description": "Tidak ada produk buku besar ditemukan. Mulai dengan menambahkan produk ke buku besar Anda."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "image": "Gambar",
+      "name": "Nama",
+      "rfidEpc": "RFID EPC",
+      "rfidName": "Nama RFID",
+      "category": "Kategori",
+      "status": "Status",
+      "attributes": "Atribut",
+      "action": "Aksi",
+      "internalCode": "Kode Internal",
+      "itemStatus": "Status Item",
+      "section": "Section"
+    },
+    "noData": "Tidak ada data tersedia",
+    "showAllAttributes": "Tampilkan Semua Atribut"
+  },
+  "filter": {
+    "filter": "Filter",
+    "search": "Cari",
+    "searchPlaceholder": "Cari produk...",
+    "sku": "SKU",
+    "skuPlaceholder": "Masukkan SKU...",
+    "internalCode": "Kode Internal",
+    "internalCodePlaceholder": "Masukkan kode internal...",
+    "status": "Status",
+    "selectStatus": "Pilih status",
+    "allStatuses": "Semua Status",
+    "active": "Aktif",
+    "inactive": "Tidak Aktif",
+    "assignStatus": "Status Penetapan",
+    "selectAssignStatus": "Pilih status penetapan",
+    "assigned": "Sudah Ditetapkan",
+    "unassigned": "Belum Ditetapkan",
+    "itemStatus": "Status Item",
+    "cancel": "Batal",
+    "apply": "Terapkan"
+  },
+  "item": {
+    "imageAlt": "{{defaultValue}}",
+    "attributes": "Atribut",
+    "attribute": "atribut",
+    "noAttributes": "Tidak ada atribut"
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Tidak Aktif"
+  },
+  "type": {
+    "common": "Umum",
+    "unique": "Unik"
+  },
+  "scan": {
+    "button": "Pindai",
+    "connected": "Tersambung",
+    "disconnected": "Terputus",
+    "error": "Gagal membuat ledger. Silakan coba lagi.",
+    "lastEpc": "EPC Terakhir: {{epc}}",
+    "missingContext": "Konteks organisasi atau toko tidak tersedia",
+    "missingItemId": "Pembuatan ledger tidak mengembalikan ID item",
+    "missingStatus": "Status ledger yang dibutuhkan tidak tersedia",
+    "processing": "Memproses",
+    "readerDisconnected": "Pembaca desktop tidak tersambung",
+    "rfidLoading": "Data RFID masih dimuat",
+    "scanError": "Gagal memindai. Silakan coba lagi.",
+    "stop": "Berhenti",
+    "stopped": "Pemindaian dihentikan",
+    "success": "Ledger berhasil dibuat untuk EPC {{epc}}",
+    "epcUnavailable": "EPC {{epc}} tidak tersedia untuk digunakan"
+  },
+  "confirm": {
+    "title": "Konfirmasi Penetapan RFID",
+    "message": "Apakah Anda yakin ingin menetapkan RFID ini ke produk?",
+    "rfidDetails": "Detail RFID",
+    "rfidName": "Nama RFID",
+    "rfidEpc": "RFID EPC",
+    "productName": "Nama Produk",
+    "continue": "Lanjutkan",
+    "cancel": "Batal",
+    "unknownRfid": "RFID Tidak Dikenal"
+  },
+  "manualEpc": {
+    "title": "Pilih EPC",
+    "description": "Mode bypass aktif. Pilih EPC dari daftar untuk mensimulasikan pemindaian.",
+    "label": "Pilih EPC",
+    "placeholder": "Pilih EPC...",
+    "submit": "Kirim",
+    "cancel": "Batal",
+    "emptyError": "Harap pilih EPC",
+    "filterType": "Tipe RFID",
+    "filterTypePlaceholder": "Pilih tipe...",
+    "filterCategory": "Kategori RFID",
+    "filterCategoryPlaceholder": "Pilih kategori...",
+    "typeReusable": "Dapat Dipakai Ulang",
+    "typeDisposable": "Sekali Pakai",
+    "categorySingle": "Tunggal",
+    "categoryPackage": "Paket",
+    "loading": "Memuat RFID...",
+    "noRfids": "Tidak ada RFID tersedia untuk filter yang dipilih",
+    "availableCount": "{{count}} RFID tersedia"
+  },
+  "sync": {
+    "title": "Sinkronisasi Nagatech",
+    "status": {
+      "done": "Selesai",
+      "running": "Berjalan",
+      "failed": "Gagal",
+      "pending": "Tertunda",
+      "unknown": "Tidak Diketahui"
+    },
+    "lastRun": "Terakhir berjalan",
+    "nextRun": "Jadwal berikutnya",
+    "currentTime": "Waktu server",
+    "storeLabel": "Toko",
+    "storePlaceholder": "Pilih toko",
+    "manualTitle": "Sinkronisasi manual",
+    "manualHelp": "Jalankan sinkronisasi manual untuk toko yang dipilih.",
+    "syncNow": "Sinkronkan sekarang",
+    "syncing": "Menyinkronkan...",
+    "success": "Sinkronisasi dimulai.",
+    "noStore": "Pilih toko untuk melihat status sinkronisasi."
+  }
+}

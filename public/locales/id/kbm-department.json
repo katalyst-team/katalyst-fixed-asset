@@ -1,0 +1,141 @@
+{
+  "title": "KBM Department",
+  "description": "Kelola master data KBM Department",
+  "table": {
+    "header": {
+      "no": "No",
+      "action": "Aksi",
+      "name": "Nama",
+      "internalCode": "Kode Internal",
+      "category": "Kategori",
+      "status": "Status"
+    },
+    "noData": "Tidak ada data department"
+  },
+  "filter": {
+    "searchPlaceholder": "Cari department...",
+    "internalCodePlaceholder": "Masukkan kode internal..."
+  },
+  "empty": {
+    "title": "Tidak Ada Data Department",
+    "description": "Tidak ada data department. Mulai dengan menambahkan department pertama Anda."
+  },
+  "form": {
+    "createTitle": "Buat KBM Department",
+    "editTitle": "Edit KBM Department",
+    "createDescription": "Tambahkan KBM Department baru ke master data. Kolom dengan tanda * wajib diisi.",
+    "editDescription": "Perbarui detail department. Perubahan akan tercermin di semua catatan.",
+    "backToList": "Kembali ke Daftar KBM Department",
+    "section": {
+      "basicInfo": "Informasi Dasar",
+      "basicInfoDescription": "Detail penting untuk mengidentifikasi department",
+      "attributes": "Atribut Department",
+      "attributesDescription": "Berikan spesifikasi detail untuk department ini. Kolom dengan tanda * wajib diisi.",
+      "calculation": "Nilai Volume",
+      "calculationDescription": "Masukkan nilai volume final. Kami tampilkan acuan perhitungan otomatis di bawah untuk verifikasi."
+    },
+    "field": {
+      "name": "Nama KBM Department",
+      "namePlaceholder": "cth., DEPT-001",
+      "nameHelp": "Pilih nama deskriptif yang jelas mengidentifikasi KBM Department ini",
+      "internalCode": "Kode Internal",
+      "internalCodePlaceholder": "cth., DEPT-001",
+      "internalCodeHelp": "Kode unik untuk department ini"
+    },
+    "attribute": {
+      "kdGrade": "KD_GRADE (Kode Grade)",
+      "nmGrade": "NM_GRADE (Nama Grade)",
+      "tebal": "G_TEBAL (Tebal dalam mm)",
+      "lebar": "G_LEBAR (Lebar dalam mm)",
+      "panjang": "G_PANJANG (Panjang dalam mm)",
+      "stdSusun": "G_STD_SUSUN (Standard Susun)",
+      "vol": "G_VOL (Volume per Susun dalam m³)",
+      "stdVol": "G_STD_VOL (Volume Standard dalam m³)"
+    },
+    "calculation": {
+      "vol": "VOL (Volume per Susun)",
+      "volFormula": "= (TEBAL × LEBAR × PANJANG) ÷ 1.000.000.000",
+      "volPlaceholder": "Masukkan VOL",
+      "expectedVol": "Perkiraan (otomatis): {{value}} m³",
+      "stdVol": "STD_VOL (Volume Standard)",
+      "stdVolFormula": "= VOL × STD_SUSUN",
+      "stdVolPlaceholder": "Masukkan STD_VOL",
+      "expectedStdVol": "Perkiraan (otomatis): {{value}} m³"
+    },
+    "button": {
+      "cancel": "Batal",
+      "create": "Buat Department",
+      "creating": "Membuat...",
+      "update": "Perbarui Department",
+      "updating": "Memperbarui..."
+    },
+    "unsavedChanges": "Anda memiliki perubahan yang belum disimpan. Yakin ingin keluar?",
+    "categoryNotFound": "Kategori KBM Department tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "missingRequired": "Harap isi semua atribut yang wajib: {{attributes}}",
+    "duplicateName": "Nama department '{{name}}' sudah ada untuk tipe department ini.",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "createSuccess": "KBM Department berhasil dibuat",
+    "updateSuccess": "KBM Department berhasil diperbarui"
+  },
+  "actions": {
+    "add": "Tambah KBM Department",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "view": "Lihat Detail"
+  },
+  "exportTemplate": {
+    "button": "Ekspor Template",
+    "tooltip": "Unduh template Excel dengan atribut department",
+    "title": "Ekspor Template KBM Department",
+    "description": "Unduh template Excel khusus untuk tipe department ini. File berisi atribut yang diperlukan dan contoh baris.",
+    "howToUse": "Cara penggunaan:",
+    "step1": "Tinjau atribut yang disertakan dalam template",
+    "step2": "Klik 'Ekspor Template' untuk mengunduh file Excel",
+    "step3": "Isi data department mengikuti format contoh baris",
+    "step4": "Gunakan 'Impor Excel' untuk mengunggah file yang sudah diisi",
+    "note": "Kolom bertanda * wajib diisi. G_TYPE otomatis diisi {{gradeType}}.",
+    "categoryNotFound": "Kategori KBM Department tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "categoryLabel": "Kategori: {{category}}",
+    "required": "*wajib",
+    "noAttributes": "Kategori ini belum memiliki atribut.",
+    "exportButton": "Ekspor Template"
+  },
+  "import": {
+    "button": "Impor Excel",
+    "tooltip": "Unggah file Excel untuk membuat department massal sesuai format template",
+    "title": "Impor Department dari Excel",
+    "description": "Unggah file Excel untuk membuat department secara massal. Gunakan template agar format benar.",
+    "instructions": "Instruksi:",
+    "step1": "Unduh template menggunakan tombol 'Ekspor Template'",
+    "step2": "Isi data department Anda",
+    "step3": "Unggah file Excel yang sudah diisi di sini",
+    "step4": "Tinjau pratinjau lalu klik 'Impor'",
+    "note": "G_TYPE otomatis diisi {{gradeType}} untuk setiap baris.",
+    "categoryNotFound": "Kategori KBM Department tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "emptyFile": "File Excel kosong atau tidak berisi data",
+    "parseError": "Gagal membaca file Excel",
+    "hasErrors": "Tidak bisa impor: beberapa baris memiliki kesalahan validasi. Perbaiki terlebih dahulu.",
+    "gradeNameRequired": "Nama Department wajib diisi",
+    "requiredAttributeMissing": "Atribut wajib '{{attribute}}' belum diisi",
+    "duplicateName": "Nama department '{{name}}' sudah ada untuk tipe department ini.",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "dropHere": "Lepaskan file di sini...",
+    "dragDrop": "Seret & letakkan file Excel di sini",
+    "orClick": "atau klik untuk memilih file",
+    "supportedFormats": "Format yang didukung: CSV, XLSX",
+    "processing": "Memproses file...",
+    "importing": "Mengimpor department...",
+    "validRows": "Valid",
+    "warnings": "Peringatan",
+    "errors": "Kesalahan",
+    "preview": "Pratinjau (10 baris pertama)",
+    "attributesFilled": "Atribut",
+    "complete": "Impor Selesai",
+    "successCount": "Berhasil diimpor: {{count}}",
+    "failedCount": "Gagal: {{count}}",
+    "errorDetails": "Detail Kesalahan",
+    "importButton": "Impor {{count}} department",
+    "successMessage": "Berhasil mengimpor {{count}} department",
+    "failedMessage": "Gagal mengimpor {{count}} department"
+  }
+}

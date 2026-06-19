@@ -1,0 +1,89 @@
+{
+  "title": "Inventory Overview",
+  "description": "Monitor your inventory performance with real-time metrics and trends.",
+
+  "filters": {
+    "title": "Filters",
+    "store": {
+      "label": "Store",
+      "placeholder": "Select store",
+      "allStores": "All Stores"
+    },
+    "sku": {
+      "label": "SKU",
+      "placeholder": "Select SKU",
+      "allSkus": "All SKUs"
+    },
+    "timePeriod": {
+      "label": "Time Period",
+      "placeholder": "Select period",
+      "options": {
+        "1d": "Last 1 Day",
+        "7d": "Last 7 Days",
+        "1m": "Last 1 Month",
+        "3m": "Last 3 Months",
+        "custom": "Custom Range"
+      }
+    },
+    "dateRange": {
+      "label": "Date Range",
+      "placeholder": "Pick a date range"
+    }
+  },
+
+  "metrics": {
+    "title": "Key Metrics",
+    "inventoryCount": {
+      "title": "Inventory Count / Stock Quantity",
+      "description": "Total number of items currently in inventory"
+    },
+    "totalSku": {
+      "title": "Total SKU",
+      "description": "Number of unique product variants"
+    },
+    "inboundTotal": {
+      "title": "Inbound Total",
+      "description": "Total items received in selected period"
+    },
+    "outboundTotal": {
+      "title": "Outbound Total",
+      "description": "Total items shipped out in selected period"
+    },
+    "inventoryAccuracy": {
+      "title": "Inventory Accuracies",
+      "description": "Percentage accuracy of inventory records"
+    }
+  },
+
+  "metricConfigs": {
+    "title": "Custom Metrics"
+  },
+
+  "charts": {
+    "title": "Trends & Analytics",
+    "inventoryTrend": {
+      "title": "Stock Quantity vs Time",
+      "description": "Showing stock quantity trends over selected time period",
+      "loading": "Loading chart data...",
+      "noData": "No data available for the selected period",
+      "noDataMessage": "No inventory data found"
+    },
+    "stockMovement": {
+      "title": "Inbound vs Outbound vs Time",
+      "description": "Showing stock movement trends over selected time period",
+      "loading": "Loading chart data...",
+      "noData": "No data available for the selected period",
+      "noDataMessage": "No stock movement data found"
+    }
+  },
+
+  "tooltips": {
+    "stockQuantity": "Stock Quantity",
+    "inbound": "Inbound",
+    "outbound": "Outbound"
+  },
+
+  "loading": "Loading...",
+  "error": "Failed to load data. Please try again.",
+  "refresh": "Refresh"
+}

@@ -1,0 +1,50 @@
+{
+  "title": "Log Lamina",
+  "loading": "Memuat...",
+  "noData": "Tidak ada log Lamina yang ditemukan",
+  "empty": {
+    "title": "Tidak Ada Log Lamina",
+    "description": "Tidak ada entri log Lamina yang ditemukan."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "image": "Gambar",
+      "name": "Nama",
+      "rfidEpc": "EPC RFID",
+      "rfidName": "Nama RFID",
+      "category": "Kategori",
+      "status": "Status",
+      "action": "Aksi",
+      "internalCode": "Kode Internal",
+      "itemStatus": "Status Item",
+      "stockMovementType": "Tipe Pergerakan Stok"
+    },
+    "noData": "Tidak ada data tersedia"
+  },
+  "filter": {
+    "searchPlaceholder": "Cari produk...",
+    "rfidSearchPlaceholder": "Cari nama RFID...",
+    "internalCodePlaceholder": "Masukkan kode internal...",
+    "button": "Filter",
+    "title": "Opsi Filter",
+    "timeframe": "Rentang Waktu",
+    "timeframePlaceholder": "Pilih rentang waktu...",
+    "startDate": "Tanggal Mulai",
+    "endDate": "Tanggal Akhir",
+    "pickDate": "Pilih tanggal",
+    "noDateAttributes": "Tidak ada atribut tanggal tersedia",
+    "dateAttributes": {
+      "title": "Filter berdasarkan Atribut Tanggal",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Akhir"
+    },
+    "attributes": {
+      "title": "Filter berdasarkan Atribut",
+      "placeholder": "Masukkan nilai..."
+    }
+  },
+  "item": {
+    "imageAlt": "{{defaultValue}}"
+  }
+}

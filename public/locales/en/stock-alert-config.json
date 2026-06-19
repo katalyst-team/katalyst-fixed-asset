@@ -1,0 +1,94 @@
+{
+  "title": "Stock Alert Configuration",
+  "description": "Monitor and configure your inventory stock alert status in real-time.",
+
+  "filters": {
+    "store": {
+      "label": "Store",
+      "placeholder": "Select store",
+      "allStores": "All Stores"
+    }
+  },
+
+  "summary": {
+    "title": "Alert Summary",
+    "totalAlerts": "Total Alerts",
+    "critical": "Critical",
+    "warning": "Warning",
+    "healthy": "Healthy",
+    "overstocked": "Overstocked",
+    "lowStock": "Low Stock",
+    "expiringSoon": "Expiring Soon",
+    "expired": "Expired"
+  },
+
+  "stockHealth": {
+    "title": "Stock Health",
+    "healthScore": "Health Score",
+    "healthy": "Healthy",
+    "lowStock": "Low Stock",
+    "overstocked": "Overstocked",
+    "expiringSoon": "Expiring Soon",
+    "expired": "Expired",
+    "empty": "Stock data not yet available"
+  },
+
+  "alerts": {
+    "title": "Alerts",
+    "empty": "No alerts at this time",
+    "criticalTitle": "SKUs critical",
+    "criticalBody": "Below safety stock — reorder needed",
+    "agingTitle": "aging > 90d",
+    "agingBody": "Slow-moving stock to review",
+    "epcTitle": "EPC mismatches",
+    "epcBody": "Yesterday's gate scan vs ledger",
+    "auditsTitle": "audits pending",
+    "auditsBody": "Stock Audit pending"
+  },
+
+  "lowStockWatchlist": {
+    "title": "Low Stock Watchlist",
+    "totalAlerts": "Total Alerts",
+    "criticalAlerts": "Critical",
+    "warningAlerts": "Warning",
+    "empty": "No low stock alerts",
+    "severity": {
+      "all": "All",
+      "critical": "Critical",
+      "warning": "Warning"
+    },
+    "table": {
+      "product": "Product",
+      "store": "Store",
+      "currentStock": "Current Stock",
+      "minMax": "Min / Max",
+      "daysSinceRestock": "Days Since Restock",
+      "actions": "Actions"
+    },
+    "deficit": "Deficit: {{count}}",
+    "minMaxValue": "{{min}} / {{max}}",
+    "days": "days",
+    "estimatedStockout": "~{{days}} days until stockout",
+    "restockNow": "Restock Now"
+  },
+
+  "topMovers": {
+    "title": "Top Movers",
+    "empty": "No movement data yet"
+  },
+
+  "categoryDistribution": {
+    "title": "Category Distribution",
+    "empty": "No distribution data yet"
+  },
+
+  "recentTransactions": {
+    "title": "Recent Transactions",
+    "empty": "No recent transactions yet"
+  },
+
+  "loading": "Loading...",
+  "error": "Failed to load data. Please try again.",
+  "refresh": "Refresh",
+  "noData": "Data not yet available. This feature will be active once inventory data is available."
+}

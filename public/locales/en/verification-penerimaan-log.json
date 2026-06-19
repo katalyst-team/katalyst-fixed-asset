@@ -1,0 +1,45 @@
+{
+  "title": "Verification Penerimaan Log",
+  "filter": {
+    "store": "Select store..."
+  },
+  "empty": {
+    "title": "No Pending Verifications",
+    "description": "No penerimaan log items with VALIDATED status waiting for verification."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "referenceNumber": "Ref No.",
+      "status": "Status",
+      "editor": "Editor",
+      "quantity": "Qty",
+      "createdAt": "Created",
+      "actions": "Actions"
+    },
+    "noData": "No data"
+  },
+  "buttons": {
+    "verify": "Verify",
+    "revoke": "Revoke"
+  },
+  "toast": {
+    "verifySuccess": "Verified successfully",
+    "verifyError": "Failed to verify",
+    "revokeSuccess": "Revoked successfully",
+    "revokeError": "Failed to revoke"
+  },
+  "detail": {
+    "editor": "Editor",
+    "section": "Section",
+    "quantity": "Quantity",
+    "note": "Note",
+    "epcs": "EPCs",
+    "items": "Items"
+  },
+  "pagination": {
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page {{page}}"
+  }
+}

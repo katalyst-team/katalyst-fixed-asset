@@ -1,0 +1,1 @@
+export { default as LedgerProductPage } from "./LedgerProduct";

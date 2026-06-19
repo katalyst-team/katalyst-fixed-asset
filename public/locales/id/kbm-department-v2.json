@@ -1,0 +1,17 @@
+{
+  "title": "KBM Department",
+  "description": "Kelola data master KBM Department",
+  "table": {
+    "header": {
+      "action": "Aksi",
+      "code": "Kode",
+      "name": "Nama",
+      "no": "No",
+      "sortOrder": "Urutan"
+    }
+  },
+  "empty": {
+    "description": "Tidak ada data departemen. Mulai dengan menambahkan item pertama.",
+    "title": "Tidak Ada Data Departemen"
+  }
+}

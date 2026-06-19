@@ -1,0 +1,141 @@
+{
+  "title": "KBM Gudang",
+  "description": "Manage master data for KBM Gudang",
+  "table": {
+    "header": {
+      "no": "No",
+      "action": "Action",
+      "name": "Name",
+      "internalCode": "Internal Code",
+      "category": "Category",
+      "status": "Status"
+    },
+    "noData": "No gudang data available"
+  },
+  "filter": {
+    "searchPlaceholder": "Search gudang...",
+    "internalCodePlaceholder": "Enter internal code..."
+  },
+  "empty": {
+    "title": "No Gudang Data",
+    "description": "No gudang data found. Start by adding your first gudang."
+  },
+  "form": {
+    "createTitle": "Create KBM Gudang",
+    "editTitle": "Edit KBM Gudang",
+    "createDescription": "Add a new KBM Gudang to the master data. Fields marked with * are required.",
+    "editDescription": "Update the gudang details. Changes will be reflected across all records.",
+    "backToList": "Back to KBM Gudang List",
+    "section": {
+      "basicInfo": "Basic Information",
+      "basicInfoDescription": "Essential details to identify the gudang",
+      "attributes": "Gudang Attributes",
+      "attributesDescription": "Provide detailed specifications for this gudang. Fields marked with * are required.",
+      "calculation": "Volume Values",
+      "calculationDescription": "Enter the final volume values. We show the auto-calculated reference below so you can verify."
+    },
+    "field": {
+      "name": "Gudang Name",
+      "namePlaceholder": "e.g., GUDANG-001",
+      "nameHelp": "Choose a descriptive name that clearly identifies this gudang",
+      "internalCode": "Internal Code",
+      "internalCodePlaceholder": "e.g., GUDANG-001",
+      "internalCodeHelp": "Unique code identifier for this gudang"
+    },
+    "attribute": {
+      "kdGrade": "KD_GRADE (Kode Grade)",
+      "nmGrade": "NM_GRADE (Nama Grade)",
+      "tebal": "G_TEBAL (Tebal in mm)",
+      "lebar": "G_LEBAR (Lebar in mm)",
+      "panjang": "G_PANJANG (Panjang in mm)",
+      "stdSusun": "G_STD_SUSUN (Standard Susun)",
+      "vol": "G_VOL (Volume per Susun in m³)",
+      "stdVol": "G_STD_VOL (Standard Volume in m³)"
+    },
+    "calculation": {
+      "vol": "VOL (Volume per Susun)",
+      "volFormula": "= (TEBAL × LEBAR × PANJANG) ÷ 1,000,000,000",
+      "volPlaceholder": "Enter VOL",
+      "expectedVol": "Expected (auto): {{value}} m³",
+      "stdVol": "STD_VOL (Standard Volume)",
+      "stdVolFormula": "= VOL × STD_SUSUN",
+      "stdVolPlaceholder": "Enter STD_VOL",
+      "expectedStdVol": "Expected (auto): {{value}} m³"
+    },
+    "button": {
+      "cancel": "Cancel",
+      "create": "Create Gudang",
+      "creating": "Creating...",
+      "update": "Update Gudang",
+      "updating": "Updating..."
+    },
+    "unsavedChanges": "You have unsaved changes. Are you sure you want to leave?",
+    "categoryNotFound": "KBM Gudang category not found. Please create the category first.",
+    "missingRequired": "Please fill in all required attributes: {{attributes}}",
+    "duplicateName": "Gudang name '{{name}}' already exists.",
+    "typeAttributeMissing": "G_TYPE attribute not found. Please update the category configuration.",
+    "createSuccess": "KBM Gudang created successfully",
+    "updateSuccess": "KBM Gudang updated successfully"
+  },
+  "actions": {
+    "add": "Add KBM Gudang",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View Details"
+  },
+  "exportTemplate": {
+    "button": "Export Template",
+    "tooltip": "Download an Excel template with gudang attributes",
+    "title": "Export KBM Gudang Template",
+    "description": "Download an Excel template tailored for this gudang type.",
+    "howToUse": "How to use:",
+    "step1": "Review the attributes included in the template",
+    "step2": "Click 'Export Template' to download the Excel file",
+    "step3": "Fill in your gudang data following the example row format",
+    "step4": "Use 'Import Excel' to upload your completed file",
+    "note": "Fields marked with * are required. G_TYPE is auto-set to {{gradeType}}.",
+    "categoryNotFound": "KBM Gudang category not found. Please create the category first.",
+    "categoryLabel": "Category: {{category}}",
+    "required": "*required",
+    "noAttributes": "This category has no attributes defined.",
+    "exportButton": "Export Template"
+  },
+  "import": {
+    "button": "Import Excel",
+    "tooltip": "Upload an Excel file to bulk create gudang using the template format",
+    "title": "Import Gudang from Excel",
+    "description": "Upload an Excel file to bulk create gudang. Use the template for correct format.",
+    "instructions": "Instructions:",
+    "step1": "Download the template using 'Export Template' button",
+    "step2": "Fill in your gudang data",
+    "step3": "Upload the completed Excel file here",
+    "step4": "Review the preview and click 'Import'",
+    "note": "G_TYPE is auto-set to {{gradeType}} for every row.",
+    "categoryNotFound": "KBM Gudang category not found. Please create the category first.",
+    "emptyFile": "Excel file is empty or has no data",
+    "parseError": "Failed to parse Excel file",
+    "hasErrors": "Cannot import: Some rows have validation errors. Please fix them first.",
+    "gradeNameRequired": "Gudang Name is required",
+    "requiredAttributeMissing": "Required attribute '{{attribute}}' is missing",
+    "duplicateName": "Gudang name '{{name}}' already exists.",
+    "typeAttributeMissing": "G_TYPE attribute not found. Please update the category configuration.",
+    "dropHere": "Drop the file here...",
+    "dragDrop": "Drag & drop an Excel file here",
+    "orClick": "or click to select a file",
+    "supportedFormats": "Supported formats: CSV, XLSX",
+    "processing": "Processing file...",
+    "importing": "Importing gudang...",
+    "validRows": "Valid",
+    "warnings": "Warnings",
+    "errors": "Errors",
+    "preview": "Preview (first 10 rows)",
+    "attributesFilled": "Attributes",
+    "complete": "Import Complete",
+    "successCount": "Successfully imported: {{count}}",
+    "failedCount": "Failed: {{count}}",
+    "errorDetails": "Error Details",
+    "importButton": "Import {{count}} gudang",
+    "successMessage": "Successfully imported {{count}} gudang",
+    "failedMessage": "Failed to import {{count}} gudang"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "title": "KBM Shift",
+  "description": "Manage master data for KBM Shift",
+  "table": {
+    "header": {
+      "no": "No",
+      "action": "Action",
+      "name": "Name",
+      "internalCode": "Internal Code",
+      "category": "Category",
+      "status": "Status"
+    },
+    "noData": "No shift data available"
+  },
+  "filter": {
+    "searchPlaceholder": "Search shift...",
+    "internalCodePlaceholder": "Enter internal code..."
+  },
+  "empty": {
+    "title": "No Shift Data",
+    "description": "No shift data found. Start by adding your first shift."
+  },
+  "form": {
+    "createTitle": "Create KBM Shift",
+    "editTitle": "Edit KBM Shift",
+    "createDescription": "Add a new KBM Shift to the master data. Fields marked with * are required.",
+    "editDescription": "Update the shift details. Changes will be reflected across all records.",
+    "backToList": "Back to KBM Shift List",
+    "section": {
+      "basicInfo": "Basic Information",
+      "basicInfoDescription": "Essential details to identify the shift",
+      "attributes": "Shift Attributes",
+      "attributesDescription": "Provide detailed specifications for this shift. Fields marked with * are required.",
+      "calculation": "Volume Values",
+      "calculationDescription": "Enter the final volume values. We show the auto-calculated reference below so you can verify."
+    },
+    "field": {
+      "name": "KBM Shift Name",
+      "namePlaceholder": "e.g., SHIFT-001",
+      "nameHelp": "Choose a descriptive name that clearly identifies this KBM Shift",
+      "internalCode": "Internal Code",
+      "internalCodePlaceholder": "e.g., SHIFT-001",
+      "internalCodeHelp": "Unique code identifier for this shift"
+    },
+    "button": {
+      "cancel": "Cancel",
+      "create": "Create Shift",
+      "creating": "Creating...",
+      "update": "Update Shift",
+      "updating": "Updating..."
+    },
+    "unsavedChanges": "You have unsaved changes. Are you sure you want to leave?",
+    "categoryNotFound": "KBM Shift category not found. Please create the category first.",
+    "missingRequired": "Please fill in all required attributes: {{attributes}}",
+    "duplicateName": "Shift name '{{name}}' already exists.",
+    "typeAttributeMissing": "G_TYPE attribute not found. Please update the category configuration.",
+    "createSuccess": "KBM Shift created successfully",
+    "updateSuccess": "KBM Shift updated successfully"
+  },
+  "actions": {
+    "add": "Add KBM Shift",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View Details"
+  },
+  "exportTemplate": {
+    "button": "Export Template",
+    "categoryLabel": "Category: {{category}}",
+    "categoryNotFound": "KBM Shift category not found. Please create the category first.",
+    "description": "Download an Excel template tailored for this shift type.",
+    "exportButton": "Export Template",
+    "howToUse": "How to use:",
+    "noAttributes": "This category has no attributes defined.",
+    "note": "Fields marked with * are required.",
+    "required": "*required",
+    "step1": "Review the attributes included in the template",
+    "step2": "Click 'Export Template' to download the Excel file",
+    "step3": "Fill in your shift data following the example row format",
+    "step4": "Use 'Import Excel' to upload your completed file",
+    "title": "Export KBM Shift Template",
+    "tooltip": "Download an Excel template with shift attributes"
+  },
+  "import": {
+    "attributesFilled": "Attributes",
+    "button": "Import Excel",
+    "categoryNotFound": "KBM Shift category not found. Please create the category first.",
+    "complete": "Import Complete",
+    "description": "Upload an Excel file to bulk create shift. Use the template for correct format.",
+    "dragDrop": "Drag & drop an Excel file here",
+    "dropHere": "Drop the file here...",
+    "duplicateName": "Shift name '{{name}}' already exists.",
+    "emptyFile": "Excel file is empty or has no data",
+    "errorDetails": "Error Details",
+    "errors": "Errors",
+    "failedCount": "Failed: {{count}}",
+    "failedMessage": "Failed to import {{count}} shift",
+    "gradeNameRequired": "Shift Name is required",
+    "hasErrors": "Cannot import: Some rows have validation errors. Please fix them first.",
+    "importButton": "Import {{count}} shift",
+    "importing": "Importing shift...",
+    "instructions": "Instructions:",
+    "note": "Use the template format for every row.",
+    "orClick": "or click to select a file",
+    "parseError": "Failed to parse Excel file",
+    "preview": "Preview (first 10 rows)",
+    "processing": "Processing file...",
+    "requiredAttributeMissing": "Required attribute '{{attribute}}' is missing",
+    "step1": "Download the template using 'Export Template' button",
+    "step2": "Fill in your shift data",
+    "step3": "Upload the completed Excel file here",
+    "step4": "Review the preview and click 'Import'",
+    "successCount": "Successfully imported: {{count}}",
+    "successMessage": "Successfully imported {{count}} shift",
+    "supportedFormats": "Supported formats: CSV, XLSX",
+    "title": "Import Shift from Excel",
+    "tooltip": "Upload an Excel file to bulk create shift using the template format",
+    "typeAttributeMissing": "G_TYPE attribute not found. Please update the category configuration.",
+    "validRows": "Valid",
+    "warnings": "Warnings"
+  }
+}

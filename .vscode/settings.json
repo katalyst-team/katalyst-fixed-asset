@@ -1,0 +1,21 @@
+{
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.organizeImports": "always",
+    "source.removeUnusedImports": "always",
+    "source.sortMembers": "always"
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  // "eslint.options": {
+  //   "extensions": [".js", ".jsx", ".ts", ".tsx"]
+  // },
+  "eslint.workingDirectories": [{ "mode": "auto" }]
+}

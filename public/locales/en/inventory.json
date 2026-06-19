@@ -1,0 +1,81 @@
+{
+  "title": "Inventory",
+  "loading": "Loading...",
+  "noData": "No inventory data available",
+  "skuInformation": "SKU Information",
+  "skuCode": "SKU Code",
+  "name": "Name",
+  "status": "Status",
+  "categories": "Categories",
+  "images": "Images",
+  "noImagesAvailable": "No images available",
+  "attributes": "Attributes",
+  "table": {
+    "header": {
+      "no": "No",
+      "productName": "Product Name",
+      "internalCode": "Internal Code",
+      "store": "Store/Location",
+      "category": "Category",
+      "amount": "Amount",
+      "aging": "Aging (Days)",
+      "agingTooltip": "Inventory aging reflects how many days an item has stayed in stock since it was received.",
+      "action": "Action",
+      "id": "ID",
+      "epc": "EPC",
+      "sku": "SKU",
+      "status": "Status",
+      "section": "Section",
+      "lastUpdated": "Last Updated",
+      "createdAt": "Created At"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Inventory",
+    "search": "Search",
+    "searchPlaceholder": "Search by product name",
+    "minAmount": "Min Amount",
+    "minAmountPlaceholder": "Min amount...",
+    "maxAmount": "Max Amount",
+    "maxAmountPlaceholder": "Max amount...",
+    "category": "Category",
+    "categoryPlaceholder": "Select Category",
+    "brand": "Brand",
+    "brandPlaceholder": "Select Brand",
+    "color": "Color",
+    "colorPlaceholder": "Select Color",
+    "size": "Size",
+    "sizePlaceholder": "Select Size",
+    "cancel": "Cancel",
+    "reset": "Reset",
+    "apply": "Apply",
+    "rfidCategory": "RFID Category",
+    "rfidCategoryPlaceholder": "Select RFID category",
+    "stockMovementType": "Stock Movement Type",
+    "stockMovementTypePlaceholder": "Select inbound type",
+    "options": {
+      "allBrands": "All Brands",
+      "allColors": "All Colors",
+      "allSizes": "All Sizes",
+      "allCategories": "All Categories",
+      "allRfidCategories": "All RFID Categories",
+      "allStockMovementTypes": "All Stock Movement Types"
+    }
+  },
+  "rfidCategory": {
+    "single": "Single",
+    "package": "Package"
+  },
+  "totalItems": "Total Items",
+  "lastUpdate": "Last Update",
+  "detail": "Detail",
+  "empty": {
+    "title": "No Inventory Found",
+    "description": "There is no inventory data to display."
+  },
+  "detailEmpty": {
+    "title": "Inventory Not Found",
+    "description": "The requested inventory data could not be found."
+  }
+}

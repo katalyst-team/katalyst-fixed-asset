@@ -1,0 +1,59 @@
+{
+  "empty": {
+    "description": "Belum ada data KAYU LAMINA",
+    "title": "Tidak ada data"
+  },
+  "list": {
+    "filter": {
+      "allStores": "Semua Toko"
+    }
+  },
+  "modal": {
+    "add": {
+      "attributes": "Atribut",
+      "button": "Tambah Kategori",
+      "categoryName": "Nama Kategori",
+      "categoryNamePlaceholder": "Masukkan nama kategori",
+      "code": "Kode",
+      "codePlaceholder": "Masukkan kode",
+      "creating": "Menambahkan...",
+      "defaultAttributesForSub": "Atribut Default untuk Sub Kategori",
+      "defaultAttributesForSubDescription": "Atribut dan nilai default ini akan otomatis terisi saat membuat sub kategori baru.",
+      "description": "Tambah kategori KAYU LAMINA baru",
+      "hasSubCategory": "Memiliki Sub Kategori",
+      "store": "Toko",
+      "storePlaceholder": "Semua Toko",
+      "title": "Tambah Kategori KAYU LAMINA",
+      "toastCreated": "Kategori berhasil ditambahkan"
+    },
+    "edit": {
+      "button": "Simpan",
+      "categoryName": "Nama Kategori",
+      "categoryNamePlaceholder": "Masukkan nama kategori",
+      "code": "Kode",
+      "codePlaceholder": "Masukkan kode",
+      "description": "Edit kategori KAYU LAMINA",
+      "editing": "Menyimpan...",
+      "title": "Edit Kategori KAYU LAMINA",
+      "toastUpdated": "Kategori berhasil diperbarui"
+    }
+  },
+  "table": {
+    "header": {
+      "action": "Aksi",
+      "categoryName": "Nama Kategori",
+      "code": "Kode",
+      "no": "No",
+      "store": "Toko",
+      "subCount": "Sub"
+    },
+    "item": {
+      "sub": "sub",
+      "attribute": "atribut",
+      "attributes": "atribut",
+      "required": "Wajib",
+      "toastDeleted": "Kategori berhasil dihapus",
+      "errorOrganizationNotFound": "Organization ID tidak ditemukan"
+    }
+  }
+}

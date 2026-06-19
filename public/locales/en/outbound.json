@@ -1,0 +1,215 @@
+{
+  "title": "Outbound",
+  "loading": "Loading...",
+  "noData": "No outbound data available",
+  "table": {
+    "header": {
+      "no": "No",
+      "status": "Status",
+      "verificationActions": "Actions",
+      "verificationStatus": "Verification Status",
+      "outboundType": "Outbound Type",
+      "outboundDate": "Outbound Date",
+      "outboundQty": "Quantity",
+      "store": "Store",
+      "warehouse": "Store Area",
+      "operator": "Operator",
+      "images": "Images",
+      "action": "Action",
+      "id": "ID",
+      "type": "Type",
+      "date": "Date",
+      "quantity": "Quantity",
+      "note": "Note",
+      "itemDetail": "Item Detail",
+      "itemId": "Item ID",
+      "itemEpc": "Item EPC",
+      "itemStatus": "Item Status",
+      "section": "Section",
+      "itemStore": "Item Store",
+      "expiryDate": "Expiry Date",
+      "aging": "Aging",
+      "updatedAt": "Updated At",
+      "rfidId": "RFID ID",
+      "rfidName": "RFID Name",
+      "rfidEpc": "RFID EPC",
+      "rfidCategory": "RFID Category",
+      "rfidType": "RFID Type",
+      "rfidStatus": "RFID Status",
+      "rfidUsed": "RFID Used",
+      "rfidCycleCount": "RFID Cycle Count",
+      "rfidStore": "RFID Store",
+      "skuId": "SKU ID",
+      "sku": "SKU",
+      "skuName": "SKU Name",
+      "internalCode": "Internal Code",
+      "skuStatus": "SKU Status",
+      "skuType": "SKU Type",
+      "brand": "Brand",
+      "color": "Color",
+      "size": "Size",
+      "categories": "Categories",
+      "skuImages": "SKU Images",
+      "packingCollection": "Packing Collection"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Options",
+    "storeArea": "Store Area",
+    "storeAreaPlaceholder": "Select store area...",
+    "rfidCategory": "RFID Category",
+    "rfidCategoryPlaceholder": "Select RFID category...",
+    "rfidType": "RFID Type",
+    "rfidTypePlaceholder": "Select RFID type...",
+    "rfidNamePlaceholder": "Search RFID name...",
+    "internalCodePlaceholder": "Search internal code...",
+    "stockMovementTypes": "Stock Movement Types",
+    "stockMovementTypesPlaceholder": "Select stock movement types...",
+    "noStockMovementTypes": "No stock movement types available",
+    "lastUpdatedStart": "Last Updated Start",
+    "lastUpdatedEnd": "Last Updated End",
+    "options": {
+      "allAreas": "All Areas",
+      "allRfidCategories": "All RFID Categories",
+      "allRfidTypes": "All RFID Types",
+      "allStores": "All Stores"
+    },
+    "selectStore": "Select Store...",
+    "date": {
+      "label": "Date Range",
+      "startDate": "Start Date",
+      "endDate": "End Date"
+    },
+    "status": {
+      "label": "Status",
+      "placeholder": "Select Status",
+      "all": "All Status"
+    },
+    "type": {
+      "label": "Outbound Type",
+      "placeholder": "Select Type",
+      "all": "All Types"
+    },
+    "cancel": "Cancel",
+    "apply": "Apply"
+  },
+  "rfidCategory": {
+    "single": "Single",
+    "package": "Package"
+  },
+  "rfidType": {
+    "reusable": "Reusable",
+    "disposable": "Disposable"
+  },
+  "status": {
+    "waitingPrint": "Waiting Print",
+    "waitingOutbound": "Waiting Outbound",
+    "failedOutbound": "Failed Outbound",
+    "successOutbound": "Success Outbound"
+  },
+  "export": {
+    "button": "Export"
+  },
+  "button": {
+    "create": "Create Outbound"
+  },
+  "empty": {
+    "title": "No Outbound Data",
+    "description": "There is no outbound data to display."
+  },
+  "create": {
+    "title": "Create Outbound",
+    "description": "Create new outbound stock movement",
+    "form": {
+      "rfid": {
+        "label": "RFID",
+        "placeholder": "Select RFID...",
+        "emptyMessage": "No RFID available",
+        "required": "RFID is required"
+      },
+      "store": {
+        "label": "Store",
+        "placeholder": "Select store...",
+        "emptyMessage": "No stores available",
+        "required": "Store is required"
+      },
+      "storeArea": {
+        "label": "Store Area",
+        "placeholder": "Select store area...",
+        "emptyMessage": "No store areas available",
+        "required": "Store area is required"
+      },
+      "stockMovementType": {
+        "label": "Stock Movement Type",
+        "placeholder": "Select stock movement type...",
+        "emptyMessage": "No outbound stock movement types available",
+        "required": "Stock movement type is required"
+      },
+      "note": {
+        "label": "Note",
+        "placeholder": "Enter note (optional)..."
+      }
+    },
+    "scanning": {
+      "title": "RFID Scanning",
+      "scanButton": "Scan RFID",
+      "stopButton": "Stop Scanning",
+      "scanning": "Scanning...",
+      "epcFound": "EPC found: {{epc}}",
+      "epcMatched": "EPC {{epc}} matched with RFID",
+      "epcNotMatched": "EPC {{epc}} does not match any selected RFID",
+      "scanError": "Error while scanning",
+      "noEpcsFound": "No EPCs found during scan"
+    },
+    "scannedItems": {
+      "title": "Scanned Items",
+      "epc": "EPC",
+      "sku": "SKU",
+      "quantity": "Quantity",
+      "remove": "Remove"
+    },
+    "selectedRfids": {
+      "title": "Selected RFID",
+      "id": "ID",
+      "type": "Type",
+      "quantity": "Quantity",
+      "note": "Note",
+      "editor": "Editor",
+      "createdAt": "Created At",
+      "items": "Items"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "create": "Create Outbound",
+      "creating": "Creating...",
+      "reset": "Reset Selection"
+    },
+    "messages": {
+      "success": "Outbound created successfully",
+      "error": "Failed to create outbound",
+      "validationError": "Please fill in all required fields",
+      "selectionReset": "Selection has been reset"
+    },
+    "manualEpc": {
+      "title": "Select EPC",
+      "description": "Bypass mode is enabled. Select an EPC from list to simulate a scan.",
+      "label": "Select EPC",
+      "placeholder": "Select an EPC...",
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "emptyError": "Please select an EPC",
+      "filterType": "RFID Type",
+      "filterTypePlaceholder": "Select type...",
+      "filterCategory": "RFID Category",
+      "filterCategoryPlaceholder": "Select category...",
+      "typeReusable": "Reusable",
+      "typeDisposable": "Disposable",
+      "categorySingle": "Single",
+      "categoryPackage": "Package",
+      "loading": "Loading RFIDs...",
+      "noRfids": "No available RFIDs found for selected filters",
+      "availableCount": "{{count}} available RFIDs"
+    }
+  }
+}

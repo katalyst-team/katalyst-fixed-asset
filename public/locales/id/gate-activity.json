@@ -1,0 +1,34 @@
+{
+  "title": "Laporan Aktivitas Gate",
+  "description": "Analisis throughput, violasi, dan anomali per gate.",
+  "filters": {
+    "gate": "Gate",
+    "allGates": "Semua Gate",
+    "period": "Periode",
+    "last24h": "24 Jam Terakhir",
+    "last7d": "7 Hari Terakhir",
+    "last30d": "30 Hari Terakhir"
+  },
+  "summary": {
+    "totalScans": "Total Scan",
+    "violations": "Violasi",
+    "uniqueTags": "Tag Unik",
+    "avgRssi": "Rata-rata RSSI"
+  },
+  "byGate": {
+    "title": "Aktivitas per Gate",
+    "scans": "scan",
+    "violations": "violasi"
+  },
+  "timeline": {
+    "title": "Timeline Aktivitas",
+    "placeholder": "Belum ada data aktivitas."
+  },
+  "topEpcs": {
+    "title": "EPC Teratas",
+    "epc": "EPC",
+    "count": "Jumlah",
+    "lastSeen": "Terakhir Dilihat"
+  },
+  "noData": "Belum ada data aktivitas gate."
+}

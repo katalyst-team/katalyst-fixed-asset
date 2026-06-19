@@ -1,0 +1,64 @@
+{
+  "empty": {
+    "description": "Belum ada data KAYU BULAT",
+    "title": "Tidak ada data"
+  },
+  "list": {
+    "filter": {
+      "allStores": "Semua Toko"
+    }
+  },
+  "modal": {
+    "add": {
+      "attributes": "Atribut",
+      "defaultAttributesForSub": "Atribut Default untuk Sub Kategori",
+      "defaultAttributesForSubDescription": "Atribut dan nilai default ini akan otomatis terisi saat membuat sub kategori baru.",
+      "defaultSubcategory": "Grade Default",
+      "defaultSubcategoryDescription": "Pilih grade default yang akan otomatis terpilih saat kategori ini dipilih.",
+      "defaultSubcategoryNone": "Tidak ada",
+      "defaultSubcategoryPlaceholder": "Pilih grade default",
+      "categoryName": "Nama Kategori",
+      "categoryNamePlaceholder": "Masukkan nama kategori",
+      "code": "Kode",
+      "codePlaceholder": "Masukkan kode",
+      "creating": "Menambahkan...",
+      "description": "Tambah kategori KAYU BULAT baru",
+      "hasSubCategory": "Memiliki Sub Kategori",
+      "title": "Tambah Kategori KAYU BULAT",
+      "store": "Toko",
+      "storePlaceholder": "Semua Toko",
+      "toastCreated": "Kategori berhasil ditambahkan",
+      "button": "Tambah Kayu Bulat"
+    },
+    "edit": {
+      "button": "Simpan",
+      "categoryName": "Nama Kategori",
+      "categoryNamePlaceholder": "Masukkan nama kategori",
+      "code": "Kode",
+      "codePlaceholder": "Masukkan kode",
+      "description": "Edit kategori KAYU BULAT",
+      "editing": "Menyimpan...",
+      "title": "Edit Kategori KAYU BULAT",
+      "toastUpdated": "Kategori berhasil diperbarui"
+    }
+  },
+  "table": {
+    "header": {
+      "action": "Aksi",
+      "categoryName": "Nama Kategori",
+      "code": "Kode",
+      "defaultGrade": "Grade Default",
+      "no": "No",
+      "store": "Toko",
+      "subCount": "Sub"
+    },
+    "item": {
+      "sub": "sub",
+      "attribute": "atribut",
+      "attributes": "atribut",
+      "required": "Wajib",
+      "toastDeleted": "Kategori berhasil dihapus",
+      "errorOrganizationNotFound": "Organization ID tidak ditemukan"
+    }
+  }
+}

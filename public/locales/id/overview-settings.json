@@ -1,0 +1,60 @@
+{
+  "title": "Pengaturan Overview",
+  "description": "Konfigurasi threshold dan parameter untuk data overview dashboard",
+  "loading": "Memuat pengaturan...",
+
+  "stockThreshold": {
+    "title": "Threshold Stok",
+    "description": "Atur batas peringatan untuk kondisi stok di dashboard overview",
+    "criticalStock": {
+      "label": "Threshold Stok Kritis (%)",
+      "desc": "Persentase stok di bawah safety stock untuk dikategorikan sebagai stok kritis"
+    },
+    "lowStock": {
+      "label": "Threshold Stok Rendah (%)",
+      "desc": "Persentase stok di bawah reorder point untuk dikategorikan sebagai stok rendah"
+    },
+    "overstock": {
+      "label": "Threshold Stok Berlebih (%)",
+      "desc": "Persentase stok di atas kapasitas normal untuk dikategorikan sebagai stok berlebih"
+    }
+  },
+
+  "analytics": {
+    "title": "Parameter Analitik",
+    "description": "Atur parameter untuk perhitungan analitik dan metrik dashboard",
+    "agingStock": {
+      "label": "Batas Hari Stok Aging",
+      "desc": "Jumlah hari stok dianggap aging (stagnan) tanpa pergerakan"
+    },
+    "accuracyTarget": {
+      "label": "Target Akurasi Inventaris (%)",
+      "desc": "Target persentase akurasi inventaris yang diharapkan"
+    }
+  },
+
+  "features": {
+    "title": "Fitur",
+    "description": "Aktifkan atau nonaktifkan fitur tertentu di dashboard overview",
+    "ritNumber": {
+      "label": "Nomor RIT",
+      "desc": "Aktifkan fitur nomor RIT pada transaksi"
+    }
+  },
+
+  "suffix": {
+    "days": "hari"
+  },
+
+  "unsavedChanges": "Ada perubahan yang belum disimpan",
+
+  "actions": {
+    "save": "Simpan",
+    "saving": "Menyimpan...",
+    "reset": "Reset"
+  },
+
+  "reset": {
+    "toast": "Pengaturan dikembalikan ke nilai tersimpan"
+  }
+}

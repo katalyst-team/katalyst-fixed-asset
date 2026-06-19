@@ -1,0 +1,75 @@
+{
+  "loading": "Memuat koleksi atribut...",
+  "notFound": "Koleksi atribut tidak ditemukan",
+  "yes": "Ya",
+  "no": "Tidak",
+  "attributes": "Atribut",
+  "attributeCount": "Jumlah Atribut",
+  "required": "Wajib",
+  "validation": {
+    "attributesRequired": "Harap pilih setidaknya satu atribut"
+  },
+  "toast": {
+    "createSuccess": "Koleksi atribut berhasil dibuat",
+    "updateSuccess": "Koleksi atribut berhasil diperbarui",
+    "deleteSuccess": "Koleksi atribut berhasil dihapus"
+  },
+  "form": {
+    "name": "Nama",
+    "namePlaceholder": "Masukkan nama koleksi",
+    "description": "Deskripsi",
+    "descriptionPlaceholder": "Masukkan deskripsi koleksi",
+    "attributes": "Atribut",
+    "required": "Wajib",
+    "attributeCount": "Jumlah Atribut"
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Nama",
+      "description": "Deskripsi",
+      "attributes": "Atribut",
+      "action": "Aksi"
+    },
+    "noData": "Tidak ada koleksi atribut ditemukan"
+  },
+  "buttons": {
+    "create": "Buat Koleksi",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "view": "Lihat",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "confirm": "Konfirmasi",
+    "back": "Kembali",
+    "updating": "Memperbarui...",
+    "deleting": "Menghapus...",
+    "creating": "Membuat..."
+  },
+  "modal": {
+    "create": {
+      "title": "Buat Koleksi Atribut",
+      "description": "Buat koleksi atribut terkait baru"
+    },
+    "edit": {
+      "title": "Edit Koleksi Atribut",
+      "description": "Modifikasi koleksi atribut ini"
+    }
+  },
+  "detail": {
+    "title": "Detail Koleksi Atribut"
+  },
+  "delete": {
+    "title": "Hapus Koleksi",
+    "description": "Apakah Anda yakin ingin menghapus koleksi ini? Tindakan ini tidak dapat dibatalkan."
+  },
+  "noAttributes": "Tidak ada atribut dalam koleksi ini",
+  "no_attributes": "Tidak ada atribut yang ditemukan untuk koleksi ini.",
+  "validation": {
+    "attributesRequired": "Silakan pilih setidaknya satu atribut."
+  },
+  "empty": {
+    "title": "Koleksi Atribut tidak ditemukan",
+    "description": "Mulailah dengan membuat koleksi atribut baru."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "title": "Inventory Area",
+  "loading": "Loading...",
+  "header": {
+    "selectStore": "Select store...",
+    "searchPlaceholder": "Search area...",
+    "subtitle": "Monitor inventory quantity across all areas."
+  },
+  "metrics": {
+    "totalSections": "Total Areas",
+    "totalQuantity": "Total Quantity",
+    "notAvailable": "N/A"
+  },
+  "card": {
+    "quantity": "Total Items",
+    "section": "Inventory Area",
+    "ofMax": "of highest"
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filters",
+    "apply": "Apply",
+    "reset": "Reset",
+    "sort": {
+      "label": "Sort By",
+      "placeholder": "Select sort..."
+    },
+    "stockMovementType": {
+      "label": "Stock Movement Type",
+      "placeholder": "Select inbound type..."
+    },
+    "options": {
+      "name": "Name (A-Z)",
+      "quantityAsc": "Quantity (Low to High)",
+      "quantityDesc": "Quantity (High to Low)"
+    }
+  },
+  "empty": {
+    "title": "No areas found",
+    "description": "No inventory areas are available for this store."
+  },
+  "detail": {
+    "back": "Back",
+    "subtitle": "Inventory items within this area",
+    "searchPlaceholder": "Search item name or code...",
+    "inventoryTitle": "Inventory Items",
+    "showingCount": "{{count}} items",
+    "metrics": {
+      "sectionQuantity": "Area Quantity",
+      "sectionQuantityDesc": "Total quantity recorded in this area",
+      "totalQuantity": "Total SKU",
+      "totalQuantityDesc": "Total unique SKU items in this area"
+    },
+    "table": {
+      "sku": "SKU",
+      "name": "Name",
+      "internalCode": "Internal Code",
+      "brand": "Brand",
+      "color": "Color",
+      "size": "Size",
+      "quantity": "Quantity",
+      "attributes": "Attributes",
+      "aging": "Aging (days)",
+      "actions": "Actions",
+      "noData": "No inventory items found"
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next"
+    }
+  }
+}

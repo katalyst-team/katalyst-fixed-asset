@@ -1,0 +1,57 @@
+{
+  "empty": {
+    "description": "No KAYU ST KERING data available",
+    "title": "No Data"
+  },
+  "list": {
+    "filter": {
+      "allStores": "All Stores"
+    }
+  },
+  "modal": {
+    "add": {
+      "attributes": "Attributes",
+      "button": "Add",
+      "categoryName": "Category Name",
+      "categoryNamePlaceholder": "Enter category name",
+      "code": "Code",
+      "codePlaceholder": "Enter code",
+      "creating": "Creating...",
+      "description": "Add new KAYU ST KERING category",
+      "hasSubCategory": "Has Sub Category",
+      "title": "Add KAYU ST KERING Category",
+      "store": "Store",
+      "storePlaceholder": "All Stores",
+      "toastCreated": "Category successfully added"
+    },
+    "edit": {
+      "button": "Save",
+      "categoryName": "Category Name",
+      "categoryNamePlaceholder": "Enter category name",
+      "code": "Code",
+      "codePlaceholder": "Enter code",
+      "description": "Edit KAYU ST KERING category",
+      "editing": "Saving...",
+      "title": "Edit KAYU ST KERING Category",
+      "toastUpdated": "Category successfully updated"
+    }
+  },
+  "table": {
+    "header": {
+      "action": "Action",
+      "categoryName": "Category Name",
+      "code": "Code",
+      "no": "No",
+      "store": "Store",
+      "subCount": "Sub"
+    },
+    "item": {
+      "sub": "sub",
+      "attribute": "attribute",
+      "attributes": "attributes",
+      "required": "Required",
+      "toastDeleted": "Category successfully deleted",
+      "errorOrganizationNotFound": "Organization ID not found"
+    }
+  }
+}

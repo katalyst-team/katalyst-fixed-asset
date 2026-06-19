@@ -1,0 +1,17 @@
+{
+  "title": "KBM Proses",
+  "description": "Kelola data master KBM Proses",
+  "table": {
+    "header": {
+      "action": "Aksi",
+      "code": "Kode",
+      "name": "Nama",
+      "no": "No",
+      "sortOrder": "Urutan"
+    }
+  },
+  "empty": {
+    "description": "Tidak ada data proses. Mulai dengan menambahkan item pertama.",
+    "title": "Tidak Ada Data Proses"
+  }
+}

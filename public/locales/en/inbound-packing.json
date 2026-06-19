@@ -1,0 +1,56 @@
+{
+  "title": "Inbound Packing",
+  "loading": "Loading...",
+  "noData": "No inbound packing data available",
+  "table": {
+    "header": {
+      "no": "No",
+      "status": "Status",
+      "inboundPackingType": "Inbound Packing Type",
+      "inboundPackingDate": "Inbound Packing Date",
+      "inboundPackingQty": "Quantity",
+      "storeArea": "Store Area",
+      "operator": "Operator",
+      "action": "Action",
+      "id": "ID",
+      "type": "Type",
+      "date": "Date",
+      "quantity": "Quantity",
+      "warehouse": "Warehouse"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Inbound Packing",
+    "date": {
+      "label": "Date Range",
+      "startDate": "Start Date",
+      "endDate": "End Date"
+    },
+    "status": {
+      "label": "Status",
+      "placeholder": "Select Status",
+      "all": "All Status"
+    },
+    "type": {
+      "label": "Inbound Packing Type",
+      "placeholder": "Select Type",
+      "all": "All Types"
+    },
+    "cancel": "Cancel",
+    "apply": "Apply"
+  },
+  "status": {
+    "waitingPrint": "Waiting Print",
+    "waitingInboundPacking": "Waiting Inbound Packing",
+    "failedInboundPacking": "Failed Inbound Packing",
+    "successInboundPacking": "Success Inbound Packing"
+  },
+  "export": {
+    "button": "Export"
+  },
+  "empty": {
+    "title": "No Inbound Packing Data",
+    "description": "There is no inbound packing data to display."
+  }
+}

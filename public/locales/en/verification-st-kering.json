@@ -1,0 +1,15 @@
+{
+  "title": "Verification ST Kering",
+  "filter": {
+    "store": "Store"
+  },
+  "empty": {
+    "title": "No pending verifications",
+    "description": "There are no items awaiting verification"
+  },
+  "pagination": {
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page {{page}}"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "header": {
+    "description": "Kelola nilai preset untuk atribut ini"
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "value": "Nilai",
+      "action": "Aksi"
+    }
+  },
+  "empty": {
+    "title": "Tidak Ada Nilai Preset",
+    "description": "Tidak ada nilai preset. Mulai dengan menambahkan nilai pertama Anda."
+  },
+  "buttons": {
+    "add": "Tambah Nilai"
+  },
+  "modal": {
+    "add": {
+      "title": "Tambah Nilai Baru",
+      "description": "Masukkan nilai preset baru. Nilai harus unik.",
+      "valueLabel": "Nilai",
+      "valuePlaceholder": "Masukkan nilai"
+    },
+    "edit": {
+      "title": "Ubah Nilai",
+      "description": "Ubah nilai preset. Nilai harus unik.",
+      "valueLabel": "Nilai",
+      "valuePlaceholder": "Masukkan nilai",
+      "currentValue": "Nilai saat ini"
+    },
+    "delete": {
+      "title": "Hapus Nilai",
+      "description": "Apakah Anda yakin ingin menghapus nilai ini? Tindakan ini tidak dapat dibatalkan.",
+      "valueToDelete": "Nilai yang akan dihapus"
+    }
+  },
+  "validation": {
+    "required": "Nilai wajib diisi",
+    "duplicate": "Nilai ini sudah ada"
+  },
+  "toast": {
+    "addSuccess": "Nilai berhasil ditambahkan",
+    "editSuccess": "Nilai berhasil diperbarui",
+    "deleteSuccess": "Nilai berhasil dihapus"
+  }
+}

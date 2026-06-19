@@ -1,0 +1,86 @@
+{
+  "table": {
+    "header": {
+      "no": "No",
+      "image": "Image",
+      "internalCode": "Internal Code",
+      "name": "Product Name",
+      "category": "Category",
+      "attributes": "Attributes",
+      "action": "Action"
+    },
+    "attributesLabel": "Attributes",
+    "showAllAttributes": "Show All Attributes",
+    "noData": "No unique products found"
+  },
+  "modal": {
+    "addProduct": {
+      "addButton": "Add Product",
+      "productDeleted": "Product deleted successfully"
+    },
+    "addSku": {
+      "addButton": "Add Product",
+      "createTitle": "Create Product",
+      "editTitle": "Edit Product",
+      "createDescription": "Create a new unique product by filling out the form below. Click create when you're done.",
+      "editDescription": "Edit the product by updating the form below. Click save when you're done.",
+      "skuLabel": "Product Code",
+      "skuPlaceholder": "Product code...",
+      "nameLabel": "Product Name",
+      "namePlaceholder": "Enter product name",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Select Category",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Status",
+      "statusActive": "Active",
+      "statusInactive": "Inactive",
+      "priceLabel": "Price",
+      "pricePlaceholder": "Price...",
+      "stockLabel": "Stock",
+      "stockPlaceholder": "Stock...",
+      "createButton": "Create Product",
+      "editButton": "Save Changes",
+      "creating": "Creating...",
+      "saving": "Saving...",
+      "skuCreated": "Product created successfully",
+      "skuUpdated": "Product updated successfully",
+      "skuDeleted": "Product deleted successfully",
+      "internalCodeLabel": "Internal Code",
+      "internalCodePlaceholder": "Internal Code...",
+      "subcategory": "Subcategory",
+      "title": "Add New Product",
+      "description": "Add a new Product to manage inventory",
+      "selectCategory": "Select a category",
+      "imageLabel": "Images",
+      "imageDescription": "Upload product images from your device or take photos with your camera",
+      "attributesLabel": "Attributes",
+      "loadingAttributes": "Loading attributes...",
+      "create": "Create Product",
+      "update": "Update Product",
+      "updating": "Updating...",
+      "createSuccess": "Product created successfully",
+      "updateSuccess": "Product updated successfully"
+    }
+  },
+  "empty": {
+    "title": "No Unique Products",
+    "description": "You haven't added any unique products yet."
+  },
+  "detail": {
+    "title": "Product Detail",
+    "table": {
+      "header": {
+        "no": "No"
+      }
+    }
+  },
+  "form": {
+    "field": {
+      "category": "Category",
+      "categoryPlaceholder": "Select a category for this product",
+      "categoryHelp": "Category determines which attributes are available for this product"
+    },
+    "createSuccess": "Product created successfully",
+    "updateSuccess": "Product updated successfully"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "title": "Inventori",
+  "loading": "Memuat...",
+  "noData": "Tidak ada data inventori tersedia",
+  "skuInformation": "Informasi SKU",
+  "skuCode": "Kode SKU",
+  "name": "Nama",
+  "status": "Status",
+  "categories": "Kategori",
+  "images": "Gambar",
+  "noImagesAvailable": "Tidak ada gambar tersedia",
+  "attributes": "Atribut",
+  "table": {
+    "header": {
+      "no": "No",
+      "productName": "Nama Produk",
+      "internalCode": "Kode Internal",
+      "store": "Toko/Lokasi",
+      "category": "Kategori",
+      "amount": "Jumlah",
+      "aging": "Umur Stok (Hari)",
+      "agingTooltip": "Umur stok menunjukkan berapa hari barang tersimpan sejak diterima.",
+      "action": "Aksi",
+      "id": "ID",
+      "epc": "EPC",
+      "sku": "SKU",
+      "status": "Status",
+      "section": "Bagian",
+      "lastUpdated": "Terakhir Diperbarui",
+      "createdAt": "Dibuat Pada"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Inventaris",
+    "search": "Cari",
+    "searchPlaceholder": "Cari berdasarkan nama produk",
+    "minAmount": "Jumlah Min",
+    "minAmountPlaceholder": "Jumlah min...",
+    "maxAmount": "Jumlah Max",
+    "maxAmountPlaceholder": "Jumlah max...",
+    "category": "Kategori",
+    "categoryPlaceholder": "Pilih Kategori",
+    "brand": "Merek",
+    "brandPlaceholder": "Pilih Merek",
+    "color": "Warna",
+    "colorPlaceholder": "Pilih Warna",
+    "size": "Ukuran",
+    "sizePlaceholder": "Pilih Ukuran",
+    "cancel": "Batal",
+    "reset": "Reset",
+    "apply": "Terapkan",
+    "rfidCategory": "Kategori RFID",
+    "rfidCategoryPlaceholder": "Pilih kategori RFID",
+    "stockMovementType": "Tipe Pergerakan Stok",
+    "stockMovementTypePlaceholder": "Pilih tipe inbound",
+    "options": {
+      "allBrands": "Semua Merek",
+      "allColors": "Semua Warna",
+      "allSizes": "Semua Ukuran",
+      "allCategories": "Semua Kategori",
+      "allRfidCategories": "Semua Kategori RFID",
+      "allStockMovementTypes": "Semua Tipe Pergerakan Stok"
+    }
+  },
+  "rfidCategory": {
+    "single": "Satuan",
+    "package": "Paketan"
+  },
+  "totalItems": "Total Barang",
+  "lastUpdate": "Pembaruan Terakhir",
+  "detail": "Detail",
+  "empty": {
+    "title": "Inventaris tidak ditemukan",
+    "description": "Tidak ada data inventaris untuk ditampilkan."
+  },
+  "detailEmpty": {
+    "title": "Inventaris Tidak Ditemukan",
+    "description": "Data inventaris yang diminta tidak dapat ditemukan."
+  }
+}

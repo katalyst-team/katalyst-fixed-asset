@@ -1,0 +1,263 @@
+{
+  "loading": "Memuat RFID...",
+  "noData": "Tidak ada data RFID tersedia",
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Nama",
+      "internalCode": "Kode Internal",
+      "epcCode": "Kode RFID",
+      "barcode": "Barcode",
+      "type": "Tipe",
+      "category": "Kategori",
+      "status": "Status",
+      "isUsed": "Sudah Digunakan",
+      "cycleCount": "Hitungan Siklus",
+      "store": "Toko",
+      "createdDate": "Tanggal Dibuat",
+      "actions": "Aksi"
+    },
+    "noData": "Tidak ada RFID ditemukan"
+  },
+  "modal": {
+    "create": {
+      "title": "Buat RFID",
+      "description": "Tambahkan tag RFID baru ke sistem.",
+      "button": "Tambah RFID",
+      "scan_button": "Tambah RFID dengan memindai",
+      "creating": "Membuat...",
+      "success": "RFID berhasil dibuat"
+    },
+    "edit": {
+      "title": "Edit RFID",
+      "description": "Edit informasi tag RFID.",
+      "saving": "Menyimpan...",
+      "success": "RFID berhasil diperbarui"
+    },
+    "form": {
+      "epcCode": "Kode RFID",
+      "epcCodePlaceholder": "Masukkan kode RFID",
+      "name": "Nama",
+      "namePlaceholder": "Masukkan nama",
+      "type": "Tipe",
+      "category": "Kategori",
+      "status": "Status",
+      "store": "Toko",
+      "storeSelect": "Pilih toko...",
+      "allStores": "Semua Toko",
+      "required": "Field ini wajib diisi",
+      "typeSelect": "Pilih tipe...",
+      "categorySelect": "Pilih kategori...",
+      "statusSelect": "Pilih status...",
+      "save": "Simpan",
+      "cancel": "Batal"
+    }
+  },
+  "type": {
+    "reusable": "Dapat Digunakan Kembali",
+    "disposable": "Sekali Pakai"
+  },
+  "category": {
+    "single": "Tunggal",
+    "package": "Paket"
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Tidak Aktif"
+  },
+  "isUsed": {
+    "yes": "Ya",
+    "no": "Tidak"
+  },
+  "delete": {
+    "success": "RFID berhasil dihapus"
+  },
+  "detail": {
+    "back": "Kembali ke Daftar RFID",
+    "title": "Detail RFID",
+    "information": "Informasi RFID",
+    "name": "Nama RFID",
+    "epcCode": "Kode EPC",
+    "type": "Tipe",
+    "category": "Kategori",
+    "status": "Status",
+    "createdAt": "Dibuat Pada",
+    "updatedAt": "Diperbarui Pada",
+    "cycleCount": "Hitungan Siklus",
+    "movements": "Riwayat Pergerakan",
+    "historyTable": {
+      "header": {
+        "direction": "Arah",
+        "event": "Peristiwa",
+        "no": "No",
+        "note": "Catatan",
+        "operator": "Operator",
+        "sku": "SKU",
+        "stockMovement": "Pergerakan Stok",
+        "store": "Toko / Sub-toko",
+        "status": "Status Item",
+        "timestamp": "Waktu",
+        "actions": "Aksi"
+      },
+      "labels": {
+        "direction": "Arah",
+        "id": "ID",
+        "skuCode": "Kode SKU",
+        "subStore": "Sub-toko"
+      }
+    }
+  },
+  "detailEmpty": {
+    "title": "RFID Tidak Ditemukan",
+    "description": "RFID yang Anda cari tidak ada atau tidak dapat ditemukan."
+  },
+  "empty": {
+    "title": "RFID tidak ditemukan",
+    "description": "Anda belum membuat RFID."
+  },
+  "scanFind": {
+    "button": "Pindai & Temukan RFID",
+    "title": "Pindai & Temukan RFID",
+    "description": "Pindai tag RFID untuk melihat detailnya",
+    "searchButton": "Cari EPC",
+    "found": "Ditemukan {{count}} RFID terdaftar",
+    "noneFound": "Tidak ada RFID terdaftar yang ditemukan dari tag yang dipindai",
+    "foundList": "RFID Ditemukan ({{count}})",
+    "notFoundList": "EPC Tidak Terdaftar ({{count}})"
+  },
+  "scan": {
+    "title": "Pindai RFID",
+    "description": "Pindai tag RFID dan buat yang belum terdaftar",
+    "scanner": "Pemindai RFID",
+    "scannedCount": "Dipindai: {{scanned}} | Belum terdaftar: {{unregistered}}",
+    "startScan": "Mulai Pindai",
+    "stopScan": "Hentikan Pindai",
+    "processing": "Memproses...",
+    "reset": "Reset",
+    "unregisteredList": "RFID Belum Terdaftar ({{count}})",
+    "enterName": "Masukkan nama",
+    "noEpcsScanned": "Tidak ada RFID yang dipindai",
+    "allRegistered": "Semua RFID yang dipindai sudah terdaftar",
+    "foundUnregistered": "Ditemukan {{count}} RFID yang belum terdaftar",
+    "success": "Berhasil membuat {{count}} RFID",
+    "creating": "Membuat {{count}} RFID...",
+    "create": "Buat {{count}} RFID"
+  },
+  "bypass": {
+    "manualInput": "Input Manual",
+    "modeEnabled": "Mode Bypass",
+    "description": "Pemindaian hardware dilewati. Masukkan kode RFID secara manual di bawah untuk memeriksa dan mendaftarkannya.",
+    "epcCodes": "Kode RFID",
+    "epcPlaceholder": "Masukkan kode RFID...",
+    "addMore": "Tambah RFID Lainnya",
+    "checkEpcs": "Periksa RFID",
+    "checking": "Memeriksa...",
+    "noEpcsEntered": "Mohon masukkan setidaknya satu kode RFID"
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Opsi Filter",
+    "type": "Tipe RFID",
+    "typePlaceholder": "Pilih tipe RFID...",
+    "category": "Kategori RFID",
+    "categoryPlaceholder": "Pilih kategori RFID...",
+    "status": "Status",
+    "statusPlaceholder": "Pilih status...",
+    "isUsed": "Status Penggunaan",
+    "isUsedPlaceholder": "Pilih status penggunaan...",
+    "epcCodes": "Kode EPC",
+    "epcCodesPlaceholder": "Masukkan kode EPC dipisahkan dengan koma...",
+    "epcCodesHelp": "Pisahkan beberapa kode EPC dengan koma",
+    "sortBy": {
+      "label": "Urutkan Berdasarkan",
+      "placeholder": "Pilih urutan...",
+      "cycleCount": "Jumlah Siklus",
+      "name": "Nama"
+    },
+    "orderBy": {
+      "label": "Urutan",
+      "placeholder": "Pilih urutan...",
+      "asc": "Menaik",
+      "desc": "Menurun"
+    },
+    "options": {
+      "allTypes": "Semua Tipe",
+      "allCategories": "Semua Kategori",
+      "allStatuses": "Semua Status",
+      "allUsageStates": "Semua Status Penggunaan",
+      "allStores": "Semua Toko",
+      "none": "None"
+    },
+    "selectStore": "Pilih Toko...",
+    "apply": "Terapkan",
+    "cancel": "Batal",
+    "reset": "Reset"
+  },
+  "pagination": {
+    "itemsPerPage": "Item per halaman",
+    "list": "Daftar"
+  },
+  "exportImport": {
+    "button": "Ekspor & Impor"
+  },
+  "export": {
+    "currentPage": "Ekspor Halaman Ini",
+    "currentPageTooltip": "Ekspor data RFID dari halaman saat ini ke Excel",
+    "currentPageDesc": "Ekspor data yang terlihat",
+    "allData": "Ekspor Semua Data",
+    "allDataTooltip": "Ekspor semua data RFID ke Excel",
+    "allDataDesc": "Ekspor semua data",
+    "noData": "Tidak ada data RFID untuk diekspor",
+    "success": "Data RFID berhasil diekspor",
+    "successAll": "Berhasil mengekspor {{count}} data RFID",
+    "failed": "Gagal mengekspor data RFID",
+    "progress": {
+      "title": "Mengekspor Data RFID",
+      "fetching": "Mengambil data RFID...",
+      "processing": "Memproses data untuk ekspor...",
+      "downloading": "Membuat file Excel...",
+      "complete": "Ekspor selesai!",
+      "records": "{{count}} data"
+    }
+  },
+  "header": {
+    "exportTemplate": "Ekspor Template",
+    "importExcel": "Impor Excel"
+  },
+  "exportTemplate": {
+    "title": "Ekspor Template EPC",
+    "description": "Unduh template Excel",
+    "tooltip": "Unduh template Excel dengan kolom untuk tag EPC/RFID",
+    "howToUse": "Cara menggunakan:",
+    "step1": "Klik 'Ekspor Template' untuk mengunduh file Excel",
+    "step2": "Isi data EPC/RFID Anda mengikuti format baris contoh",
+    "step3": "Gunakan tombol 'Impor Excel' untuk mengunggah file yang sudah selesai",
+    "note": "Catatan: Semua field wajib diisi. Tipe harus REUSABLE atau DISPOSABLE. Kategori harus SINGLE atau PACKAGE. Status harus ACTIVE atau INACTIVE.",
+    "columnsIncluded": "Kolom yang akan disertakan:",
+    "button": "Ekspor Template"
+  },
+  "import": {
+    "title": "Impor EPC dari Excel",
+    "description": "Buat massal dari file",
+    "tooltip": "Unggah file Excel untuk membuat tag EPC/RFID secara massal. Gunakan template untuk format yang benar",
+    "instructions": "Instruksi:",
+    "step1": "Unduh template menggunakan tombol 'Ekspor Template'",
+    "step2": "Isi data EPC/RFID Anda",
+    "step3": "Unggah file Excel yang sudah selesai di sini",
+    "step4": "Tinjau pratinjau dan klik 'Impor'",
+    "dragDrop": "Seret & lepas file Excel di sini",
+    "orClick": "atau klik untuk memilih file",
+    "dropHere": "Lepaskan file di sini...",
+    "supportedFormats": "Format yang didukung: CSV, XLSX",
+    "emptyFile": "File Excel kosong atau tidak ada data",
+    "parseError": "Gagal memparsing file Excel",
+    "processing": "Memproses file...",
+    "importing": "Mengimpor EPC...",
+    "validRows": "Valid",
+    "errors": "Error",
+    "warnings": "Peringatan",
+    "preview": "Pratinjau (10 baris pertama)",
+    "hasErrors": "Tidak dapat mengimpor: Beberapa baris memiliki error validasi. Harap perbaiki terlebih dahulu.",
+    "button": "Impor Excel"
+  }
+}

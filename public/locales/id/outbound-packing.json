@@ -1,0 +1,55 @@
+{
+  "title": "Barang Keluar Packing",
+  "loading": "Memuat...",
+  "noData": "Tidak ada data barang keluar packing tersedia",
+  "table": {
+    "header": {
+      "no": "No",
+      "status": "Status",
+      "outboundPackingType": "Jenis Barang Keluar Packing",
+      "outboundPackingDate": "Tanggal Barang Keluar Packing",
+      "outboundPackingQty": "Jumlah",
+      "warehouse": "Gudang",
+      "operator": "Operator",
+      "action": "Aksi",
+      "id": "ID",
+      "type": "Jenis",
+      "date": "Tanggal",
+      "quantity": "Jumlah"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Outbound Packing",
+    "date": {
+      "label": "Rentang Tanggal",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Selesai"
+    },
+    "status": {
+      "label": "Status",
+      "placeholder": "Pilih Status",
+      "all": "Semua Status"
+    },
+    "type": {
+      "label": "Tipe Outbound Packing",
+      "placeholder": "Pilih Tipe",
+      "all": "Semua Tipe"
+    },
+    "cancel": "Batal",
+    "apply": "Terapkan"
+  },
+  "status": {
+    "waitingPrint": "Menunggu Cetak",
+    "waitingOutboundPacking": "Menunggu Outbound Packing",
+    "failedOutboundPacking": "Gagal Outbound Packing",
+    "successOutboundPacking": "Berhasil Outbound Packing"
+  },
+  "export": {
+    "button": "Ekspor"
+  },
+  "empty": {
+    "title": "Tidak Ada Data Pengepakan Keluar",
+    "description": "Tidak ada data pengepakan keluar untuk ditampilkan."
+  }
+}

@@ -1,0 +1,1 @@
+export { useInventoryAreaStore } from "./InventoryAreaStore";

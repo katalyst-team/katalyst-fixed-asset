@@ -1,0 +1,88 @@
+{
+  "title": "Verifikasi",
+  "filter": {
+    "allStores": "Semua Toko",
+    "allTypes": "Semua Tipe",
+    "entityType": "Tipe Entitas",
+    "store": "Toko"
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "entityType": "Tipe Entitas",
+      "title": "Judul",
+      "store": "Toko",
+      "status": "Status",
+      "createdAt": "Dibuat Pada",
+      "editor": "Editor",
+      "section": "Area",
+      "epcName": "Nama EPC",
+      "actions": "Aksi"
+    },
+    "noData": "Tidak ada item verifikasi yang tertunda"
+  },
+  "entityType": {
+    "STOCK_MOVEMENT_INBOUND": "Stok Masuk",
+    "AUDIT_STOCK_OPNAME": "Audit Stok"
+  },
+  "status": {
+    "DRAFT": "Draft",
+    "SUBMITTED": "Diajukan",
+    "VALIDATED": "Divalidasi",
+    "VERIFIED": "Terverifikasi",
+    "REJECTED": "Ditolak",
+    "CANCELLED": "Dibatalkan"
+  },
+  "buttons": {
+    "cancel": "Batal",
+    "confirmReject": "Konfirmasi Penolakan",
+    "noPermission": "Tidak Memiliki Izin",
+    "reject": "Tolak",
+    "resubmit": "Ajukan Ulang",
+    "revoke": "Tarik Kembali",
+    "submit": "Ajukan untuk Review",
+    "verify": "Verifikasi"
+  },
+  "rejectModal": {
+    "title": "Tolak Verifikasi",
+    "description": "Harap berikan alasan penolakan. Catatan ini wajib diisi.",
+    "notePlaceholder": "Masukkan alasan penolakan...",
+    "noteLabel": "Catatan Penolakan"
+  },
+  "toast": {
+    "submitSuccess": "Berhasil diajukan untuk review",
+    "submitError": "Gagal mengajukan untuk review",
+    "verifySuccess": "Berhasil diverifikasi",
+    "verifyError": "Gagal memverifikasi",
+    "rejectSuccess": "Berhasil ditolak",
+    "rejectError": "Gagal menolak",
+    "revokeSuccess": "Berhasil ditarik kembali",
+    "revokeError": "Gagal menarik kembali"
+  },
+  "empty": {
+    "title": "Tidak ada verifikasi tertunda",
+    "description": "Tidak ada item yang menunggu verifikasi"
+  },
+  "pagination": {
+    "prev": "Sebelumnya",
+    "next": "Berikutnya",
+    "page": "Halaman {{page}}"
+  },
+  "detail": {
+    "toggle": "Tampilkan/sembunyikan detail",
+    "expandHint": "Klik baris untuk melihat detail",
+    "collapseHint": "Klik baris untuk menyembunyikan detail",
+    "editor": "Editor",
+    "section": "Area",
+    "quantity": "Jumlah",
+    "note": "Catatan",
+    "epcs": "EPC",
+    "items": "Item",
+    "epc": "EPC",
+    "status": "Status",
+    "category": "Kategori",
+    "type": "Tipe",
+    "rfid": "RFID",
+    "attributes": "Atribut"
+  }
+}

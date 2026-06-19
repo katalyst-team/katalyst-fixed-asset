@@ -1,0 +1,127 @@
+{
+  "empty": {
+    "description": "Belum ada data KBM Barang",
+    "title": "Tidak ada data"
+  },
+  "export": {
+    "button": "Export",
+    "filename": "kbm-grade",
+    "noGrades": "Belum ada grade untuk diekspor"
+  },
+  "direct": {
+    "attributes": "Atribut",
+    "defaultValues": "Nilai Default",
+    "noAttributes": "Belum ada atribut yang dikonfigurasi",
+    "noDefaultValues": "Belum ada nilai default yang dikonfigurasi",
+    "title": "Atribut KBM Barang"
+  },
+  "exportTemplate": {
+    "button": "Export Template",
+    "filename": "template-kbm-grade",
+    "noAttributes": "Belum ada atribut. Tambahkan minimal satu grade dengan atribut terlebih dahulu."
+  },
+  "import": {
+    "button": "Import",
+    "columnCode": "Kode",
+    "columnGradeName": "Nama Grade",
+    "description": "Upload file Excel untuk import grade. Download template terlebih dahulu untuk melihat format yang benar.",
+    "dragDrop": "Drag & drop file Excel di sini, atau klik untuk memilih",
+    "emptyFile": "File Excel kosong atau tidak ada data",
+    "error": "Error",
+    "failed": "gagal",
+    "gradeNameRequired": "Nama Grade wajib diisi",
+    "importing": "Mengimpor...",
+    "noSchema": "Belum ada grade. Buat minimal satu grade secara manual terlebih dahulu sebagai template.",
+    "preview": "Preview ({{count}} baris)",
+    "result": "Import selesai: {{success}} berhasil, {{failed}} gagal",
+    "startImport": "Mulai Import",
+    "success": "berhasil",
+    "title": "Import Grade",
+    "warning": "Peringatan"
+  },
+  "grade": {
+    "empty": {
+      "description": "Belum ada Grade di KBM Barang ini",
+      "title": "Tidak ada Grade"
+    },
+    "modal": {
+      "add": {
+        "attributeDefaults": "Nilai Default",
+        "attributeDefaultsDescription": "Set nilai default untuk tiap atribut (opsional). Biarkan kosong jika user mengisi manual.",
+        "attributes": "Atribut",
+        "button": "Tambah Grade",
+        "code": "Kode (opsional)",
+        "codePlaceholder": "Masukkan kode",
+        "creating": "Menyimpan...",
+        "description": "Tambah Grade baru",
+        "gradeName": "Nama Grade",
+        "gradeNamePlaceholder": "Masukkan nama grade",
+        "title": "Tambah Grade"
+      },
+      "edit": {
+        "attributeDefaults": "Nilai Default",
+        "attributeDefaultsDescription": "Set nilai default untuk tiap atribut (opsional). Biarkan kosong jika user mengisi manual.",
+        "attributes": "Atribut",
+        "button": "Simpan",
+        "code": "Kode (opsional)",
+        "codePlaceholder": "Masukkan kode",
+        "description": "Edit data Grade",
+        "editing": "Menyimpan...",
+        "gradeName": "Nama Grade",
+        "gradeNamePlaceholder": "Masukkan nama grade",
+        "title": "Edit Grade"
+      }
+    },
+    "table": {
+      "header": {
+        "action": "Aksi",
+        "attributes": "Atribut",
+        "code": "Kode",
+        "defaultValues": "Nilai Default",
+        "gradeName": "Nama Grade",
+        "no": "No"
+      }
+    },
+    "title": "KBM Grade"
+  },
+  "modal": {
+    "add": {
+      "attributeDefaults": "Nilai Default",
+      "attributeDefaultsDescription": "Set nilai default untuk tiap atribut (opsional).",
+      "attributes": "Atribut",
+      "barangName": "Nama KBM Barang",
+      "barangNamePlaceholder": "Masukkan nama KBM Barang",
+      "button": "Tambah KBM Barang",
+      "code": "Kode (opsional)",
+      "codePlaceholder": "Masukkan kode",
+      "creating": "Menyimpan...",
+      "description": "Tambah KBM Barang baru",
+      "hasGrade": "Memiliki Sub Category (Grade)",
+      "title": "Tambah KBM Barang"
+    },
+    "edit": {
+      "attributeDefaults": "Nilai Default",
+      "attributeDefaultsDescription": "Set nilai default untuk tiap atribut (opsional).",
+      "attributes": "Atribut",
+      "barangName": "Nama KBM Barang",
+      "barangNamePlaceholder": "Masukkan nama KBM Barang",
+      "button": "Simpan",
+      "code": "Kode (opsional)",
+      "codePlaceholder": "Masukkan kode",
+      "description": "Edit data KBM Barang",
+      "editing": "Menyimpan...",
+      "hasGrade": "Memiliki Sub Category (Grade)",
+      "title": "Edit KBM Barang"
+    }
+  },
+  "table": {
+    "header": {
+      "action": "Aksi",
+      "barangName": "Nama KBM Barang",
+      "code": "Kode",
+      "gradeCount": "Jumlah Grade",
+      "no": "No"
+    }
+  },
+  "title": "KBM Barang"
+}

@@ -1,0 +1,38 @@
+{
+  "title": "Manajemen Gate",
+  "description": "Kelola gate RFID di seluruh toko dan section.",
+  "empty": {
+    "title": "Belum ada gate",
+    "description": "Buat gate pertama untuk mulai memantau lalu lintas RFID."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Nama Gate",
+      "store": "Toko",
+      "section": "Section",
+      "actions": "Aksi"
+    }
+  },
+  "modal": {
+    "create": {
+      "title": "Tambah Gate Baru",
+      "trigger": "Tambah Gate"
+    },
+    "edit": {
+      "title": "Edit Gate"
+    },
+    "form": {
+      "name": "Nama Gate",
+      "namePlaceholder": "Masukkan nama gate",
+      "store": "Toko",
+      "storePlaceholder": "Pilih toko",
+      "section": "Section",
+      "sectionPlaceholder": "Pilih section (opsional)"
+    }
+  },
+  "delete": {
+    "success": "Gate berhasil dihapus",
+    "confirm": "Yakin ingin menghapus gate ini?"
+  }
+}

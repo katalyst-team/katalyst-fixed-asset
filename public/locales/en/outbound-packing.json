@@ -1,0 +1,55 @@
+{
+  "title": "Outbound Packing",
+  "loading": "Loading...",
+  "noData": "No outbound packing data available",
+  "table": {
+    "header": {
+      "no": "No",
+      "status": "Status",
+      "outboundPackingType": "Outbound Packing Type",
+      "outboundPackingDate": "Outbound Packing Date",
+      "outboundPackingQty": "Quantity",
+      "warehouse": "Warehouse",
+      "operator": "Operator",
+      "action": "Action",
+      "id": "ID",
+      "type": "Type",
+      "date": "Date",
+      "quantity": "Quantity"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Outbound Packing",
+    "date": {
+      "label": "Date Range",
+      "startDate": "Start Date",
+      "endDate": "End Date"
+    },
+    "status": {
+      "label": "Status",
+      "placeholder": "Select Status",
+      "all": "All Status"
+    },
+    "type": {
+      "label": "Outbound Packing Type",
+      "placeholder": "Select Type",
+      "all": "All Types"
+    },
+    "cancel": "Cancel",
+    "apply": "Apply"
+  },
+  "status": {
+    "waitingPrint": "Waiting Print",
+    "waitingOutboundPacking": "Waiting Outbound Packing",
+    "failedOutboundPacking": "Failed Outbound Packing",
+    "successOutboundPacking": "Success Outbound Packing"
+  },
+  "export": {
+    "button": "Export"
+  },
+  "empty": {
+    "title": "No Outbound Packing Data",
+    "description": "There is no outbound packing data to display."
+  }
+}

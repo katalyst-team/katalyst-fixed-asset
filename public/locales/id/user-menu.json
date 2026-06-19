@@ -1,0 +1,55 @@
+{
+  "title": "Menu Pengguna",
+  "backToList": "Kembali ke Daftar",
+  "editPage": {
+    "title": "Edit Akses Menu",
+    "saving": "Menyimpan...",
+    "statsLabel": "Menu Diaktifkan",
+    "menusAllowed": "menu diizinkan",
+    "permissionsLabel": "Izin Menu"
+  },
+  "table": {
+    "header": {
+      "no": "No.",
+      "name": "Nama",
+      "stores": "Toko",
+      "phone": "Telepon",
+      "role": "Peran",
+      "menuAccess": "Akses Menu",
+      "status": "Status",
+      "actions": "Aksi",
+      "edit": "Edit"
+    },
+    "menuAccessHint": "aktif",
+    "legend": {
+      "hoverHint": "Hover tanda centang untuk melihat detail sub menu",
+      "fullyEnabled": "Semua sub menu aktif",
+      "partialEnabled": "Sebagian sub menu nonaktif",
+      "disabled": "Nonaktif"
+    }
+  },
+  "modal": {
+    "edit": {
+      "title": "Edit Akses Menu",
+      "save": "Simpan",
+      "cancel": "Batal",
+      "childMenus": "Menu Anak",
+      "orgDisabled": "Org Nonaktif",
+      "overridden": "Ditimpa"
+    }
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Nonaktif",
+    "overridden": "Ditimpa",
+    "allowed": "Diizinkan",
+    "forbidden": "Dilarang"
+  },
+  "toast": {
+    "saved": "Akses menu berhasil disimpan"
+  },
+  "empty": {
+    "title": "Tidak ada pengguna",
+    "description": "Tidak ada pengguna untuk dikonfigurasi akses menunya."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Verifikasi ST Kering",
+  "filter": {
+    "store": "Toko"
+  },
+  "empty": {
+    "title": "Tidak ada verifikasi tertunda",
+    "description": "Tidak ada item yang menunggu verifikasi"
+  },
+  "pagination": {
+    "prev": "Sebelumnya",
+    "next": "Berikutnya",
+    "page": "Halaman {{page}}"
+  }
+}

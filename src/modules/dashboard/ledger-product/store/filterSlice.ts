@@ -1,0 +1,28 @@
+import { ProductFilterOptions } from "@/services/product/getProductService";
+
+type FilterState = Omit<ProductFilterOptions, "limit" | "cursor">;
+
+export interface FilterSlice {
+  filters: FilterState;
+
+  // Actions
+  setFilters: (
+    filters: FilterState | ((prev: FilterState) => FilterState)
+  ) => void;
+}
+
+export const createFilterSlice = (
+  set: (partial: Partial<FilterSlice>) => void,
+  get: () => FilterSlice
+): FilterSlice => ({
+  // Initial state
+  filters: {
+    assign_status: "ASSIGNED",
+  },
+
+  // Actions
+  setFilters: (filters) =>
+    set({
+      filters: typeof filters === "function" ? filters(get().filters) : filters,
+    }),
+});

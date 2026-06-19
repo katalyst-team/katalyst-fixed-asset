@@ -1,0 +1,66 @@
+{
+  "loading": "Loading...",
+  "noData": "No data available",
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Name",
+      "description": "Description",
+      "itemCount": "Items",
+      "items": "Items",
+      "totalQuantity": "Total Quantity",
+      "actions": "Actions"
+    },
+    "noData": "No packing collections found",
+    "item": "item",
+    "items": "items"
+  },
+  "modal": {
+    "create": {
+      "title": "Create Packing Collection",
+      "description": "Create a new packing collection with SKU items and quantities.",
+      "button": "Create Collection",
+      "creating": "Creating...",
+      "success": "Packing collection created successfully"
+    },
+    "edit": {
+      "title": "Edit Packing Collection",
+      "description": "Update the packing collection details and items.",
+      "button": "Edit",
+      "updating": "Updating...",
+      "success": "Packing collection updated successfully"
+    },
+    "cancel": "Cancel"
+  },
+  "form": {
+    "name": {
+      "label": "Collection Name",
+      "placeholder": "Enter collection name"
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Enter collection description"
+    },
+    "packingItems": {
+      "label": "Packing Items",
+      "description": "Add SKU items with quantities to this collection",
+      "sku": "SKU",
+      "quantity": "Quantity",
+      "selectSku": "Select a SKU",
+      "addItem": "Add Item"
+    }
+  },
+  "empty": {
+    "title": "No Packing Collections Found",
+    "description": "You haven't created any packing collections yet. Create your first collection to get started."
+  },
+  "delete": {
+    "success": "Packing collection deleted successfully"
+  },
+  "detail": {
+    "title": "Packing Collection Details",
+    "items": "Items in Collection",
+    "quantity": "Quantity",
+    "sku": "SKU"
+  }
+}

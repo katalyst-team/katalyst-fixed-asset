@@ -1,0 +1,89 @@
+{
+  "title": "Ikhtisar Inventaris",
+  "description": "Pantau performa inventaris Anda dengan metrik dan tren real-time.",
+
+  "filters": {
+    "title": "Filter",
+    "store": {
+      "label": "Toko",
+      "placeholder": "Pilih toko",
+      "allStores": "Semua Toko"
+    },
+    "sku": {
+      "label": "SKU",
+      "placeholder": "Pilih SKU",
+      "allSkus": "Semua SKU"
+    },
+    "timePeriod": {
+      "label": "Periode Waktu",
+      "placeholder": "Pilih periode",
+      "options": {
+        "1d": "1 Hari Terakhir",
+        "7d": "7 Hari Terakhir",
+        "1m": "1 Bulan Terakhir",
+        "3m": "3 Bulan Terakhir",
+        "custom": "Rentang Khusus"
+      }
+    },
+    "dateRange": {
+      "label": "Rentang Tanggal",
+      "placeholder": "Pilih rentang tanggal"
+    }
+  },
+
+  "metrics": {
+    "title": "Metrik Utama",
+    "inventoryCount": {
+      "title": "Jumlah Inventaris / Kuantitas Stok",
+      "description": "Total jumlah barang yang saat ini ada di inventaris"
+    },
+    "totalSku": {
+      "title": "Total SKU",
+      "description": "Jumlah varian produk unik"
+    },
+    "inboundTotal": {
+      "title": "Total Inbound",
+      "description": "Total barang yang diterima dalam periode yang dipilih"
+    },
+    "outboundTotal": {
+      "title": "Total Outbound",
+      "description": "Total barang yang dikirim dalam periode yang dipilih"
+    },
+    "inventoryAccuracy": {
+      "title": "Akurasi Inventaris",
+      "description": "Persentase akurasi catatan inventaris"
+    }
+  },
+
+  "metricConfigs": {
+    "title": "Metrik Kustom"
+  },
+
+  "charts": {
+    "title": "Tren & Analitik",
+    "inventoryTrend": {
+      "title": "Kuantitas Stok vs Waktu",
+      "description": "Menampilkan tren kuantitas stok selama periode yang dipilih",
+      "loading": "Memuat data grafik...",
+      "noData": "Tidak ada data yang tersedia untuk periode yang dipilih",
+      "noDataMessage": "Data inventaris tidak ditemukan"
+    },
+    "stockMovement": {
+      "title": "Inbound vs Outbound vs Waktu",
+      "description": "Menampilkan tren pergerakan stok selama periode yang dipilih",
+      "loading": "Memuat data grafik...",
+      "noData": "Tidak ada data yang tersedia untuk periode yang dipilih",
+      "noDataMessage": "Data pergerakan stok tidak ditemukan"
+    }
+  },
+
+  "tooltips": {
+    "stockQuantity": "Kuantitas Stok",
+    "inbound": "Inbound",
+    "outbound": "Outbound"
+  },
+
+  "loading": "Memuat...",
+  "error": "Gagal memuat data. Silakan coba lagi.",
+  "refresh": "Segarkan"
+}

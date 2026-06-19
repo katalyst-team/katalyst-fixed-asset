@@ -1,0 +1,300 @@
+{
+  "loading": "Memuat...",
+  "common": {
+    "loading": "Memuat..."
+  },
+  "noData": "Tidak ada item yang ditemukan",
+  "table": {
+    "header": {
+      "id": "ID",
+      "select": "Pilih",
+      "sku": "SKU",
+      "epc": "EPC",
+      "internalCode": "Kode Internal",
+      "rfidName": "Nama RFID",
+      "status": "Status",
+      "lastUpdated": "Terakhir Diperbarui",
+      "category": "Kategori",
+      "action": "Aksi",
+      "no": "No",
+      "productName": "Nama Produk",
+      "quantity": "Jumlah",
+      "operator": "Operator",
+      "amountItem": "Jumlah Item",
+      "unitPrint": "Unit Cetak",
+      "item": "Barang",
+      "brand": "Merek",
+      "color": "Warna",
+      "size": "Ukuran",
+      "attributes": "Atribut",
+      "section": "Bagian",
+      "changedAt": "Waktu Perubahan",
+      "type": "Tipe"
+    },
+    "noData": "Tidak ada data tersedia"
+  },
+  "detail": {
+    "productTable": "Tabel Produk",
+    "historyTable": "Tabel Riwayat",
+    "noData": "Tidak ada data tersedia"
+  },
+  "ledgerV2": {
+    "information": "Informasi Ledger",
+    "store": "Toko",
+    "section": "Bagian",
+    "movementType": "Tipe Pergerakan",
+    "quantity": "Jumlah",
+    "totalItems": "Total Item",
+    "packageQuantity": "Jumlah Kemasan",
+    "quantityBreakdown": "{{total}} total item{{packageText}}",
+    "packageBreakdown": " ({{count}} kemasan)",
+    "createdAt": "Dibuat Pada",
+    "updatedAt": "Diperbarui Pada",
+    "editor": "Editor",
+    "itemStatusHistory": "Riwayat Status Item",
+    "referenceNumber": "Nomor Referensi",
+    "metadata": "Metadata"
+  },
+  "buttons": {
+    "addLedger": "Tambah Ledger",
+    "printSelected": "Cetak Terpilih ({{count}})",
+    "selectAll": "Pilih Semua",
+    "deselectAll": "Batalkan Semua",
+    "createFromPacking": "Buat Ledger dari Terpilih ({{count}})",
+    "deleteSelected": "Hapus Terpilih ({{count}})"
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Tidak Aktif",
+    "success": "Berhasil",
+    "waiting": "Menunggu",
+    "failed": "Gagal",
+    "waitinginbound": "Menunggu Inbound",
+    "inboundsuccess": "Inbound Berhasil",
+    "inboundfailed": "Inbound Gagal",
+    "waitingoutbound": "Menunggu Outbound",
+    "outboundsuccess": "Outbound Berhasil",
+    "outboundfailed": "Outbound Gagal",
+    "unknown": "Tidak Diketahui",
+    "waiting_print": "Menunggu Cetak"
+  },
+  "types": {
+    "single": "Tunggal",
+    "packing": "Kemasan",
+    "ledger": "Tunggal",
+    "ledger_packing": "Kemasan"
+  },
+  "rfidCategory": {
+    "single": "Satuan",
+    "package": "Paket"
+  },
+  "rfidType": {
+    "reusable": "Dapat Digunakan Ulang",
+    "disposable": "Sekali Pakai"
+  },
+  "modal": {
+    "print": {
+      "title": "Cetak Item",
+      "description": "Konfigurasi pengaturan printer dan cetak item yang dipilih",
+      "printButton": "Cetak",
+      "itemsToPrint": "Item untuk dicetak",
+      "allPrinted": "Semua item berhasil dicetak",
+      "printingStatus": "Mencetak...",
+      "tabs": {
+        "connection": "Koneksi",
+        "template": "Template"
+      },
+      "network": {
+        "title": "Koneksi Jaringan",
+        "ipAddress": "Alamat IP",
+        "port": "Port",
+        "connect": "Hubungkan Jaringan"
+      },
+      "serial": {
+        "title": "Koneksi Serial",
+        "port": "Port Serial",
+        "baudRate": "Baud Rate",
+        "connect": "Hubungkan Serial"
+      },
+      "emulation": {
+        "title": "Emulasi",
+        "zpl": "ZPL",
+        "tspl": "TSPL",
+        "escpos": "ESCPOS"
+      },
+      "rfid": {
+        "title": "Pengaturan RFID",
+        "readTID": "Baca TID terlebih dahulu",
+        "readEPC": "Baca EPC terlebih dahulu"
+      },
+      "template": {
+        "file": "File Template",
+        "browse": "Telusuri",
+        "choosePlaceholder": "Pilih file template",
+        "mapping": "Pemetaan Bidang Template",
+        "elementId": "ID Elemen",
+        "elementIdPlaceholder": "Masukkan ID elemen",
+        "mapProperty": "Petakan ke Properti Item",
+        "selectProperty": "Pilih properti",
+        "addField": "Tambah Bidang"
+      },
+      "namingMode": {
+        "label": "Mode Penamaan",
+        "system": "Sistem (Otomatis)",
+        "custom": "Pola Kustom",
+        "description": "Pilih bagaimana nama RFID dibuat untuk batch ini.",
+        "systemHint": "Nama RFID akan sama dengan EPC yang dihasilkan."
+      },
+      "customPattern": {
+        "label": "Pola Kustom",
+        "placeholder": "mis. AA001, AA000001, AA001BB",
+        "hint": "Gunakan kombinasi huruf dan angka (contoh: AA001) agar nama bertambah otomatis tiap item.",
+        "preview": "Pratinjau",
+        "invalidFormat": "Format pola tidak valid. Gunakan huruf dengan urutan angka (mis. AA001, 001BB).",
+        "insufficientCapacity": "Pola tidak cukup untuk semua item terpilih. Tambahkan digit angka atau kurangi jumlah item.",
+        "generationFailed": "Gagal membuat nama RFID dari pola yang diberikan."
+      },
+      "terminal": {
+        "title": "Output Terminal",
+        "clear": "Bersihkan"
+      },
+      "fields": {
+        "id": "ID",
+        "epc": "EPC",
+        "statusName": "Nama Status",
+        "skuId": "ID SKU",
+        "skuName": "Nama SKU",
+        "brandName": "Nama Merek",
+        "color": "Warna",
+        "size": "Ukuran",
+        "category": "Kategori",
+        "updatedAt": "Tanggal Diperbarui",
+        "internalCode": "Kode Internal",
+        "createdAt": "Tanggal Dibuat",
+        "currentDate": "Tanggal Saat Ini",
+        "packing_name": "Nama Kemasan"
+      },
+      "cancelButton": "Batal"
+    },
+    "create": {
+      "title": "Buat Ledger",
+      "description": "Buat ledger Anda di sini. Klik buat setelah selesai.",
+      "item": "Item",
+      "itemType": "Tipe Item",
+      "selectItemType": "Pilih tipe item",
+      "itemTypes": {
+        "single": "Tunggal",
+        "packing": "Kemasan"
+      },
+      "selectionMode": "Mode Seleksi",
+      "manualSelection": "Seleksi Manual",
+      "packingCollection": "Koleksi Kemasan",
+      "selectPackingCollection": "Pilih Koleksi Kemasan",
+      "packingItems": "Item dari Koleksi Kemasan",
+      "noPackingCollections": "Tidak ada koleksi kemasan tersedia",
+      "selectSku": "Pilih SKU",
+      "quantity": "Jumlah",
+      "addItem": "Tambah Item",
+      "saving": "Menyimpan...",
+      "save": "Simpan perubahan",
+      "success": "Ledger berhasil dibuat",
+      "packingCollectionDetails": "Detail Koleksi Kemasan",
+      "packingCollectionName": "Nama Koleksi",
+      "packingCollectionNamePlaceholder": "Masukkan nama koleksi",
+      "packingCollectionDescription": "Deskripsi (Opsional)",
+      "packingCollectionDescriptionPlaceholder": "Masukkan deskripsi koleksi",
+      "saveAsPackingCollection": "Simpan sebagai koleksi kemasan",
+      "ledgersValid": "ledger valid",
+      "unit": "Unit",
+      "packingCollectionCreatedSuccessfully": "Koleksi kemasan berhasil dibuat!",
+      "unknownError": "Kesalahan tidak diketahui",
+      "sku": "SKU",
+      "autoFilledFromPackingCollection": "Diisi otomatis dari koleksi kemasan",
+      "creatingCollection": "Membuat Koleksi...",
+      "processingLedgers": "Memproses Ledger...",
+      "rfidEpcReusable": "RFID/EPC (Dapat Digunakan Kembali)",
+      "selectItemTypeFirst": "Pilih tipe item terlebih dahulu",
+      "selectRfidEpc": "Pilih RFID/EPC",
+      "notAvailable": "T/A",
+      "createLedgers_one": "Buat {{count}} Ledger",
+      "createLedgers_other": "Buat {{count}} Ledger",
+      "addNewLedger": "Tambah Ledger Baru"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Opsi Filter",
+    "category": {
+      "label": "Kategori",
+      "placeholder": "Pilih Kategori",
+      "all": "Semua Kategori"
+    },
+    "status": {
+      "label": "Status",
+      "placeholder": "Pilih Status",
+      "all": "Semua Status"
+    },
+    "storeArea": "Area Toko",
+    "storeAreaPlaceholder": "Pilih area toko...",
+    "rfidCategory": "Kategori RFID",
+    "rfidCategoryPlaceholder": "Pilih kategori RFID...",
+    "rfidType": "Tipe RFID",
+    "rfidTypePlaceholder": "Pilih tipe RFID...",
+    "stockMovementTypes": "Tipe Pergerakan Stok",
+    "stockMovementTypesPlaceholder": "Pilih tipe pergerakan stok...",
+    "noStockMovementTypes": "Tidak ada tipe pergerakan stok tersedia",
+    "lastUpdatedStart": "Waktu Pembaruan Mulai",
+    "lastUpdatedEnd": "Waktu Pembaruan Selesai",
+    "timeframe": "Rentang Waktu",
+    "timeframePlaceholder": "Pilih rentang waktu...",
+    "orderDirection": "Urutan Penyortiran",
+    "orderDirectionPlaceholder": "Pilih urutan penyortiran...",
+    "editor": "Editor/Operator",
+    "editorPlaceholder": "Pilih editor...",
+    "store": "Toko",
+    "storePlaceholder": "Pilih toko...",
+    "options": {
+      "allAreas": "Semua Area",
+      "allRfidCategories": "Semua Kategori RFID",
+      "allRfidTypes": "Semua Tipe RFID",
+      "allEditors": "Semua Editor",
+      "allDirections": "Bawaan",
+      "newest": "Terbaru",
+      "oldest": "Terlama",
+      "selectStore": "Pilih Toko"
+    },
+    "date": {
+      "label": "Rentang Tanggal",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Selesai"
+    },
+    "type": {
+      "label": "Tipe Inbound",
+      "placeholder": "Pilih Tipe",
+      "all": "Semua Tipe"
+    },
+    "cancel": "Batal",
+    "apply": "Terapkan",
+    "reset": "Reset"
+  },
+  "all": "Semua",
+  "printed": "Cetak",
+  "unprinted": "Belum Dicetak",
+  "empty": {
+    "title": "Data Ledger tidak ditemukan",
+    "description": "Tidak ada data ledger untuk ditampilkan."
+  },
+  "detailEmpty": {
+    "title": "Ledger Tidak Ditemukan",
+    "description": "Data ledger yang diminta tidak dapat ditemukan."
+  },
+  "creationMode": {
+    "manual": "Seleksi Manual",
+    "packingCollection": "Koleksi Kemasan"
+  },
+  "scan": {
+    "epcRegistered": "EPC {{epc}} ditemukan dan dipilih",
+    "epcNotRegistered": "EPC {{epc}} tidak terdaftar dalam sistem",
+    "validationError": "Kesalahan memvalidasi EPC yang dipindai"
+  }
+}

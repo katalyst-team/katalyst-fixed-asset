@@ -1,0 +1,97 @@
+{
+  "loading": "Loading...",
+  "noData": "No inventory detail data found",
+  "notAvailable": "N/A",
+  "unsetItems": "Unset items",
+  "item": "item",
+  "items": "items",
+  "total": "total",
+  "package": "package",
+  "single": "single",
+  "noItemsInSection": "No items found in this section.",
+  "noItemsFound": "No items found",
+  "summary": {
+    "title": "Inventory Detail",
+    "productName": "Product Name",
+    "category": "Category",
+    "brand": "Brand",
+    "color": "Color",
+    "size": "Size",
+    "totalItems": "Total Items",
+    "aging": "Aging (Days)"
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "epc": "EPC",
+      "rfidName": "RFID Name",
+      "category": "Category",
+      "amount": "Amount",
+      "aging": "Aging (Days)",
+      "agingTooltip": "Inventory aging shows how many days the item has stayed in stock since it was received.",
+      "status": "Status",
+      "lastStatus": "Last Status",
+      "quantity": "Quantity",
+      "lastUpdate": "Last Update",
+      "operator": "Operator",
+      "note": "Note",
+      "location": "Location",
+      "area": "Area",
+      "section": "Section",
+      "lastUpdated": "Last Updated",
+      "action": "Action"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Inventory Details",
+    "status": {
+      "label": "Status",
+      "placeholder": "Select Status",
+      "all": "All Status"
+    },
+    "location": {
+      "label": "Location",
+      "placeholder": "Select Location",
+      "all": "All Locations"
+    },
+    "apply": "Apply",
+    "cancel": "Cancel"
+  },
+  "buttons": {
+    "export": "Export",
+    "viewDetails": "View Details",
+    "back": "Back to Inventory"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "waiting": "Waiting",
+    "success": "Success",
+    "failed": "Failed",
+    "waitinginbound": "Waiting Inbound",
+    "inboundsuccess": "Inbound Success",
+    "inboundfailed": "Inbound Failed",
+    "waitingoutbound": "Waiting Outbound",
+    "outboundsuccess": "Outbound Success",
+    "outboundfailed": "Outbound Failed",
+    "unknown": "Unknown"
+  },
+  "stores": {
+    "title": "Store Inventory",
+    "total": "stores",
+    "empty": {
+      "title": "No Stores Found",
+      "description": "No store inventory data available for this SKU."
+    }
+  },
+  "store": {
+    "name": "Store Name",
+    "quantity": "Quantity"
+  },
+  "error": {
+    "title": "Error Loading Data",
+    "description": "Unable to load inventory data. Please try again later."
+  }
+}

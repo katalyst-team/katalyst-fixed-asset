@@ -1,0 +1,75 @@
+{
+  "loading": "Loading Edge Configs...",
+  "noData": "No Edge Config data available",
+  "title": "Edge Configuration",
+  "subtitle": "Manage edge device configurations",
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Name",
+      "store": "Store",
+      "antenna": "Antenna",
+      "deviceId": "Device ID",
+      "currentStockMovementType": "Current Movement",
+      "nextStockMovementType": "Next Movement",
+      "rfidTagStatus": "RFID Status",
+      "operatorAor": "Operator",
+      "parentCategories": "Categories",
+      "actions": "Actions"
+    },
+    "noData": "No Edge Configs found"
+  },
+  "modal": {
+    "create": {
+      "title": "Create Edge Config",
+      "description": "Add a new edge configuration to the system.",
+      "button": "Add Edge Config"
+    },
+    "edit": {
+      "title": "Edit Edge Config",
+      "description": "Edit the edge configuration."
+    },
+    "form": {
+      "store": "Store",
+      "storeSelect": "Select store...",
+      "name": "Name",
+      "namePlaceholder": "e.g. Gate A - Pending to Transit",
+      "nameHint": "Display name for this config. Defaults to \"Untitled\" if left empty.",
+      "antenna": "Antenna",
+      "deviceId": "Device ID",
+      "deviceIdPlaceholder": "e.g. 02 (hex)",
+      "deviceIdHint": "Filter scans by RFID reader device ID (hex). Leave empty to allow all devices.",
+      "currentStockMovementType": "Current Stock Movement Type",
+      "currentStockMovementTypeSelect": "Select current stock movement type...",
+      "nextStockMovementType": "Next Stock Movement Type",
+      "nextStockMovementTypeSelect": "Select next stock movement type...",
+      "operatorAor": "Operator",
+      "operatorAorSelect": "Select operator...",
+      "parentCategories": "Parent Categories",
+      "parentCategoriesSelect": "Select categories to filter...",
+      "parentCategoriesHint": "Only process EPCs whose SKU belongs to one of these categories or their subcategories. Leave empty to process all.",
+      "rfidTagStatus": "RFID Tag Status",
+      "rfidTagStatusSelect": "Select status...",
+      "skuAttributeUpdates": "SKU Attribute Updates",
+      "attributeSelect": "Select attribute...",
+      "attributeValues": "Values (comma-separated)",
+      "addAttribute": "Add Attribute",
+      "datetimeDefault": "Datetime default",
+      "datetimeDefaultNow": "Now",
+      "save": "Save",
+      "cancel": "Cancel",
+      "required": "This field is required"
+    }
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "delete": {
+    "success": "Edge Config deleted successfully"
+  },
+  "empty": {
+    "title": "No Edge Configs Found",
+    "description": "You haven't created any Edge Configurations yet."
+  }
+}

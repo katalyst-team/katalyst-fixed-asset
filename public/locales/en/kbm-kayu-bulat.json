@@ -1,0 +1,64 @@
+{
+  "empty": {
+    "description": "No KAYU BULAT data available",
+    "title": "No Data"
+  },
+  "list": {
+    "filter": {
+      "allStores": "All Stores"
+    }
+  },
+  "modal": {
+    "add": {
+      "attributes": "Attributes",
+      "defaultAttributesForSub": "Default Attributes for Sub Category",
+      "defaultAttributesForSubDescription": "These attributes and default values will be auto-filled when creating a new sub category.",
+      "defaultSubcategory": "Default Grade",
+      "defaultSubcategoryDescription": "Select the default grade that will be auto-selected when this category is chosen.",
+      "defaultSubcategoryNone": "None",
+      "defaultSubcategoryPlaceholder": "Select default grade",
+      "categoryName": "Category Name",
+      "categoryNamePlaceholder": "Enter category name",
+      "code": "Code",
+      "codePlaceholder": "Enter code",
+      "creating": "Creating...",
+      "description": "Add new KAYU BULAT category",
+      "hasSubCategory": "Has Sub Category",
+      "title": "Add KAYU BULAT Category",
+      "store": "Store",
+      "storePlaceholder": "All Stores",
+      "toastCreated": "Category successfully added",
+      "button": "Tambah Kayu Bulat"
+    },
+    "edit": {
+      "button": "Save",
+      "categoryName": "Category Name",
+      "categoryNamePlaceholder": "Enter category name",
+      "code": "Code",
+      "codePlaceholder": "Enter code",
+      "description": "Edit KAYU BULAT category",
+      "editing": "Saving...",
+      "title": "Edit KAYU BULAT Category",
+      "toastUpdated": "Category successfully updated"
+    }
+  },
+  "table": {
+    "header": {
+      "action": "Action",
+      "categoryName": "Category Name",
+      "code": "Code",
+      "defaultGrade": "Default Grade",
+      "no": "No",
+      "store": "Store",
+      "subCount": "Sub"
+    },
+    "item": {
+      "sub": "sub",
+      "attribute": "attribute",
+      "attributes": "attributes",
+      "required": "Required",
+      "toastDeleted": "Category successfully deleted",
+      "errorOrganizationNotFound": "Organization ID not found"
+    }
+  }
+}

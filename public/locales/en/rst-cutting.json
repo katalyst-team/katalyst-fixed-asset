@@ -1,0 +1,114 @@
+{
+  "bongkarStik": {
+    "title": "Hasil Bongkar Stik",
+    "description": "Register pallet from stick dismantling (uncut)",
+    "form": {
+      "tanggalTally": {
+        "label": "Tally Date",
+        "placeholder": "Select tally date..."
+      },
+      "store": {
+        "label": "Store",
+        "placeholder": "Select store...",
+        "required": "Store is required"
+      },
+      "category": {
+        "label": "Category",
+        "placeholder": "Select category...",
+        "required": "Category is required"
+      },
+      "internalCode": {
+        "label": "Internal Code (Pallet Number)",
+        "placeholder": "Enter internal code / pallet number...",
+        "required": "Internal code is required"
+      },
+      "skuName": {
+        "label": "SKU Name",
+        "placeholder": "Enter SKU name..."
+      },
+      "epcs": {
+        "label": "RFID EPC",
+        "placeholder": "Scan or enter EPC..."
+      },
+      "quantity": {
+        "label": "Quantity",
+        "placeholder": "1"
+      }
+    },
+    "scanning": {
+      "title": "RFID Scanning",
+      "scanButton": "Scan RFID",
+      "stopButton": "Stop Scanning",
+      "scanning": "Scanning..."
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "submit": "Register Bongkar Stik",
+      "submitting": "Registering..."
+    },
+    "messages": {
+      "success": "Pallet successfully registered as bongkar stik",
+      "error": "Failed to register bongkar stik pallet",
+      "validationError": "Please fill in all required fields"
+    }
+  },
+  "susunRst": {
+    "title": "Hasil Susun RST Kering",
+    "description": "Register pallet from RST kering assembly (cut)",
+    "form": {
+      "tanggalProses": {
+        "label": "Process Date",
+        "placeholder": "Select process date..."
+      },
+      "store": {
+        "label": "Store",
+        "placeholder": "Select store...",
+        "required": "Store is required"
+      },
+      "category": {
+        "label": "Category",
+        "placeholder": "Select category...",
+        "required": "Category is required"
+      },
+      "internalCode": {
+        "label": "Internal Code (Pallet Number)",
+        "placeholder": "Enter internal code / pallet number..."
+      },
+      "skuName": {
+        "label": "SKU Name",
+        "placeholder": "Enter SKU name..."
+      },
+      "epcs": {
+        "label": "RFID EPC",
+        "placeholder": "Scan or enter EPC..."
+      },
+      "quantity": {
+        "label": "Quantity",
+        "placeholder": "1"
+      }
+    },
+    "scanning": {
+      "title": "RFID Scanning",
+      "scanButton": "Scan RFID",
+      "stopButton": "Stop Scanning",
+      "scanning": "Scanning..."
+    },
+    "status": {
+      "checking": "Checking RFID...",
+      "found": "RFID found, updating Tanggal Potong...",
+      "notFound": "RFID not registered, registering new pallet...",
+      "updated": "Tanggal Potong updated successfully"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "submit": "Register Susun RST Kering",
+      "submitting": "Registering..."
+    },
+    "messages": {
+      "success": "Pallet successfully registered as susun RST kering",
+      "successUpdate": "Tanggal Potong updated successfully on SKU",
+      "error": "Failed to register susun RST kering pallet",
+      "validationError": "Please fill in all required fields"
+    }
+  }
+}

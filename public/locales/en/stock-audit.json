@@ -1,0 +1,229 @@
+{
+  "loading": "Loading...",
+  "noData": "No stock audit data found",
+  "table": {
+    "header": {
+      "action": "Action",
+      "anomaly": "Missing",
+      "area": "Warehouse",
+      "auditName": "Audit Name",
+      "epc": "EPC",
+      "expected": "Expected",
+      "expectedQuantity": "Expected Quantity",
+      "extraQuantity": "Extra Quantity",
+      "id": "ID",
+      "images": "Image",
+      "internalCode": "Internal Code",
+      "lastUpdated": "Last Updated",
+      "matchQty": "Match Qty",
+      "missingQuantity": "Missing Quantity",
+      "no": "No",
+      "note": "Note",
+      "operator": "Operator",
+      "section": "Section",
+      "sku": "SKU",
+      "skuName": "SKU Name",
+      "status": "Status",
+      "store": "Store",
+      "total": "Total",
+      "totalItemExtra": "Total Item Extra",
+      "movementTypes": "Movement Types",
+      "type": "Type"
+    }
+  },
+  "status": {
+    "pending": "Pending",
+    "inProgress": "In Progress",
+    "on_progress": "On Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "inprogress": "In Progress",
+    "matched": "Found",
+    "missing": "Missing",
+    "unexpected": "Extra Item",
+    "not_recorded": "Not Registered",
+    "notRecorded": "Not Registered",
+    "unknown": "Unknown"
+  },
+  "auditStatus": {
+    "match": "Match",
+    "excess": "Excess",
+    "misplaced": "Misplaced",
+    "mismatch": "Mismatch"
+  },
+  "detail": {
+    "accuracyRate": "Accuracy Rate",
+    "anomaly": "Anomaly",
+    "area": "Area",
+    "auditStatus": "Audit Status",
+    "createdOn": "Created On",
+    "expectedFormula": "Matched + Missing",
+    "expectedItems": "Expected Items",
+    "extra": "Extra",
+    "items": "items",
+    "itemsFound": "Items Found",
+    "itemsForSKU": "Items for this SKU",
+    "itemsInSection": "Items in this section",
+    "itemsMissing": "Items Missing",
+    "match": "Match",
+    "missing": "Missing",
+    "noData": "No data available",
+    "noNotRegisteredItems": "No not-registered items found",
+    "noSectionData": "No section data available",
+    "noSKUData": "No SKU data available",
+    "notFound": "Stock audit not found",
+    "notMatch": "Not Match",
+    "notRegisteredReport": "Not Registered Items",
+    "notScanned": "Not Registered",
+    "operator": "Operator",
+    "reportTitle": "Audit Report",
+    "rfidCategoryBreakdown": "RFID Category Breakdown",
+    "rfidInsights": "RFID Insights",
+    "rfidTypeBreakdown": "RFID Type Breakdown",
+    "sectionAccuracy": "Section Accuracy Rate",
+    "sectionDistribution": "Section Distribution",
+    "sectionReport": "Per-Section Report",
+    "sections": "Sections",
+    "sku": "SKU",
+    "skuReport": "Per-SKU Report",
+    "status": "Status",
+    "statusDistribution": "Status Distribution",
+    "summary": "Audit Summary",
+    "title": "Stock Audit Details",
+    "topSKUs": "Top SKUs by Item Count"
+  },
+  "buttons": {
+    "startAudit": "Start Audit",
+    "viewDetails": "View Details",
+    "cancel": "Cancel",
+    "export": "Export Report",
+    "exportAll": "Export All"
+  },
+  "modal": {
+    "create": {
+      "title": "Create New Stock Audit",
+      "description": "Select the type of stock audit you want to create.",
+      "auditType": "Audit Type",
+      "selectType": "Select audit type",
+      "store": "Store",
+      "selectStore": "Select store",
+      "storeSection": "Store Section",
+      "selectSection": "Select store section",
+      "selectSku": "Select SKU",
+      "movementTypes": "Movement Types",
+      "selectMovementTypes": "Select movement types...",
+      "optional": "optional",
+      "create": "Create Stock Audit",
+      "creating": "Creating...",
+      "types": {
+        "all": "All Items",
+        "bySection": "By Section",
+        "bySku": "By SKU"
+      }
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Audits",
+    "status": {
+      "label": "Status",
+      "all": "All Status",
+      "placeholder": "Select Status"
+    },
+    "date": {
+      "label": "Date Range",
+      "startDate": "Start Date",
+      "endDate": "End Date"
+    },
+    "apply": "Apply",
+    "cancel": "Cancel",
+    "reset": "Reset",
+    "type": {
+      "label": "Audit Type",
+      "placeholder": "Select Type"
+    },
+    "result": {
+      "label": "Audit Result",
+      "placeholder": "Select Result"
+    },
+    "employee": {
+      "label": "Employee",
+      "placeholder": "Select Employee"
+    },
+    "checkingObject": {
+      "label": "Checking Object",
+      "placeholder": "Select Object"
+    },
+    "order": {
+      "label": "Sort Order",
+      "placeholder": "Select Order"
+    },
+    "options": {
+      "allTypes": "All Types",
+      "allStatuses": "All Statuses",
+      "allResults": "All Results",
+      "allEmployees": "All Employees",
+      "allObjects": "All Objects",
+      "consistent": "Consistent",
+      "mismatch": "Mismatch",
+      "newest": "Newest First",
+      "oldest": "Oldest First"
+    }
+  },
+  "empty": {
+    "title": "No Stock Audits Found",
+    "description": "You haven't started any stock audits yet."
+  },
+  "rfid": {
+    "type": {
+      "reusable": "Reusable",
+      "disposable": "Disposable"
+    },
+    "category": {
+      "single": "Single",
+      "package": "Package"
+    }
+  },
+  "note": {
+    "saveSuccess": "Note saved successfully"
+  },
+  "result": {
+    "consistent": "Consistent",
+    "mismatch": "Mismatch",
+    "unknown": "Unknown"
+  },
+  "verificationLog": {
+    "title": "Verification Log",
+    "description": "Chronological record of verification actions for this stock audit.",
+    "transition": "{{from}} -> {{to}}",
+    "systemActor": "System",
+    "systemDescription": "Automatic verification",
+    "notAvailable": "-",
+    "labels": {
+      "actor": "Actor",
+      "note": "Note"
+    },
+    "actions": {
+      "SUBMITTED": "Submitted",
+      "RESUBMITTED": "Resubmitted",
+      "VERIFIED": "Verified",
+      "VALIDATED": "Validated",
+      "REJECTED": "Rejected",
+      "REVOKED": "Revoked",
+      "CANCELLED": "Cancelled",
+      "AUTO_VERIFIED": "Auto Verified"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "validated": "Validated",
+      "verified": "Verified",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    },
+    "empty": {
+      "title": "No Verification Log",
+      "description": "There are no verification activities recorded for this stock audit yet."
+    }
+  }
+}

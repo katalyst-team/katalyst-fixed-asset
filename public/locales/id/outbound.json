@@ -1,0 +1,215 @@
+{
+  "title": "Barang Keluar",
+  "loading": "Memuat...",
+  "noData": "Tidak ada data barang keluar tersedia",
+  "table": {
+    "header": {
+      "no": "No",
+      "status": "Status",
+      "verificationActions": "Aksi",
+      "verificationStatus": "Status Verifikasi",
+      "outboundType": "Jenis Barang Keluar",
+      "outboundDate": "Tanggal Barang Keluar",
+      "outboundQty": "Jumlah",
+      "store": "Toko",
+      "warehouse": "Area Toko",
+      "operator": "Operator",
+      "images": "Gambar",
+      "action": "Aksi",
+      "id": "ID",
+      "type": "Jenis",
+      "date": "Tanggal",
+      "quantity": "Jumlah",
+      "note": "Catatan",
+      "itemDetail": "Detail Item",
+      "itemId": "ID Item",
+      "itemEpc": "EPC Item",
+      "itemStatus": "Status Item",
+      "section": "Area",
+      "itemStore": "Toko Item",
+      "expiryDate": "Tanggal Kedaluwarsa",
+      "aging": "Aging",
+      "updatedAt": "Diperbarui Pada",
+      "rfidId": "ID RFID",
+      "rfidName": "Nama RFID",
+      "rfidEpc": "EPC RFID",
+      "rfidCategory": "Kategori RFID",
+      "rfidType": "Tipe RFID",
+      "rfidStatus": "Status RFID",
+      "rfidUsed": "RFID Digunakan",
+      "rfidCycleCount": "Siklus RFID",
+      "rfidStore": "Toko RFID",
+      "skuId": "ID SKU",
+      "sku": "SKU",
+      "skuName": "Nama SKU",
+      "internalCode": "Kode Internal",
+      "skuStatus": "Status SKU",
+      "skuType": "Tipe SKU",
+      "brand": "Merek",
+      "color": "Warna",
+      "size": "Ukuran",
+      "categories": "Kategori",
+      "skuImages": "Gambar SKU",
+      "packingCollection": "Koleksi Kemasan"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Opsi Filter",
+    "storeArea": "Area Toko",
+    "storeAreaPlaceholder": "Pilih area toko...",
+    "rfidCategory": "Kategori RFID",
+    "rfidCategoryPlaceholder": "Pilih kategori RFID...",
+    "rfidType": "Tipe RFID",
+    "rfidTypePlaceholder": "Pilih tipe RFID...",
+    "rfidNamePlaceholder": "Cari nama RFID...",
+    "internalCodePlaceholder": "Cari kode internal...",
+    "stockMovementTypes": "Tipe Pergerakan Stok",
+    "stockMovementTypesPlaceholder": "Pilih tipe pergerakan stok...",
+    "noStockMovementTypes": "Tidak ada tipe pergerakan stok",
+    "lastUpdatedStart": "Waktu Pembaruan Mulai",
+    "lastUpdatedEnd": "Waktu Pembaruan Selesai",
+    "options": {
+      "allAreas": "Semua Area",
+      "allRfidCategories": "Semua Kategori RFID",
+      "allRfidTypes": "Semua Tipe RFID",
+      "allStores": "Semua Toko"
+    },
+    "selectStore": "Pilih Toko...",
+    "date": {
+      "label": "Rentang Tanggal",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Selesai"
+    },
+    "status": {
+      "label": "Status",
+      "placeholder": "Pilih Status",
+      "all": "Semua Status"
+    },
+    "type": {
+      "label": "Tipe Outbound",
+      "placeholder": "Pilih Tipe",
+      "all": "Semua Tipe"
+    },
+    "cancel": "Batal",
+    "apply": "Terapkan"
+  },
+  "rfidCategory": {
+    "single": "Satuan",
+    "package": "Paket"
+  },
+  "rfidType": {
+    "reusable": "Dapat Digunakan Ulang",
+    "disposable": "Sekali Pakai"
+  },
+  "status": {
+    "waitingPrint": "Menunggu Cetak",
+    "waitingOutbound": "Menunggu Outbound",
+    "failedOutbound": "Gagal Outbound",
+    "successOutbound": "Berhasil Outbound"
+  },
+  "export": {
+    "button": "Ekspor"
+  },
+  "button": {
+    "create": "Buat Outbound"
+  },
+  "empty": {
+    "title": "Tidak Ada Data Keluar",
+    "description": "Tidak ada data keluar untuk ditampilkan."
+  },
+  "create": {
+    "title": "Buat Outbound",
+    "description": "Buat pergerakan stok outbound baru",
+    "form": {
+      "rfid": {
+        "label": "RFID",
+        "placeholder": "Pilih RFID...",
+        "emptyMessage": "Tidak ada RFID tersedia",
+        "required": "RFID wajib diisi"
+      },
+      "store": {
+        "label": "Toko",
+        "placeholder": "Pilih toko...",
+        "emptyMessage": "Tidak ada toko tersedia",
+        "required": "Toko wajib diisi"
+      },
+      "storeArea": {
+        "label": "Area Toko",
+        "placeholder": "Pilih area toko...",
+        "emptyMessage": "Tidak ada area toko tersedia",
+        "required": "Area toko wajib diisi"
+      },
+      "stockMovementType": {
+        "label": "Tipe Pergerakan Stok",
+        "placeholder": "Pilih tipe pergerakan stok...",
+        "emptyMessage": "Tidak ada tipe pergerakan stok outbound tersedia",
+        "required": "Tipe pergerakan stok wajib diisi"
+      },
+      "note": {
+        "label": "Catatan",
+        "placeholder": "Masukkan catatan (opsional)..."
+      }
+    },
+    "scanning": {
+      "title": "Pemindaian RFID",
+      "scanButton": "Pindai RFID",
+      "stopButton": "Hentikan Pemindaian",
+      "scanning": "Memindai...",
+      "epcFound": "EPC ditemukan: {{epc}}",
+      "epcMatched": "EPC {{epc}} cocok dengan RFID",
+      "epcNotMatched": "EPC {{epc}} tidak cocok dengan RFID yang dipilih",
+      "scanError": "Error saat memindai",
+      "noEpcsFound": "Tidak ada EPC ditemukan selama pemindaian"
+    },
+    "scannedItems": {
+      "title": "Item yang Dipindai",
+      "epc": "EPC",
+      "sku": "SKU",
+      "quantity": "Jumlah",
+      "remove": "Hapus"
+    },
+    "selectedRfids": {
+      "title": "RFID Terpilih",
+      "id": "ID",
+      "type": "Tipe",
+      "quantity": "Jumlah",
+      "note": "Catatan",
+      "editor": "Editor",
+      "createdAt": "Dibuat Pada",
+      "items": "Item"
+    },
+    "buttons": {
+      "cancel": "Batal",
+      "create": "Buat Outbound",
+      "creating": "Membuat...",
+      "reset": "Reset Pilihan"
+    },
+    "messages": {
+      "success": "Outbound berhasil dibuat",
+      "error": "Gagal membuat outbound",
+      "validationError": "Mohon lengkapi semua field yang wajib diisi",
+      "selectionReset": "Pilihan telah direset"
+    },
+    "manualEpc": {
+      "title": "Pilih EPC",
+      "description": "Mode bypass diaktifkan. Pilih EPC dari daftar untuk mensimulasikan pemindaian.",
+      "label": "Pilih EPC",
+      "placeholder": "Pilih EPC...",
+      "submit": "Kirim",
+      "cancel": "Batal",
+      "emptyError": "Mohon pilih EPC",
+      "filterType": "Tipe RFID",
+      "filterTypePlaceholder": "Pilih tipe...",
+      "filterCategory": "Kategori RFID",
+      "filterCategoryPlaceholder": "Pilih kategori...",
+      "typeReusable": "Dapat Digunakan Ulang",
+      "typeDisposable": "Sekali Pakai",
+      "categorySingle": "Satuan",
+      "categoryPackage": "Paket",
+      "loading": "Memuat RFID...",
+      "noRfids": "Tidak ada RFID tersedia untuk filter yang dipilih",
+      "availableCount": "{{count}} RFID tersedia"
+    }
+  }
+}

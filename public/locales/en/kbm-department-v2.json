@@ -1,0 +1,17 @@
+{
+  "title": "KBM Department",
+  "description": "Manage master data for KBM Department",
+  "table": {
+    "header": {
+      "action": "Action",
+      "code": "Code",
+      "name": "Name",
+      "no": "No",
+      "sortOrder": "Sort Order"
+    }
+  },
+  "empty": {
+    "description": "No department data found. Start by adding your first item.",
+    "title": "No Department Data"
+  }
+}

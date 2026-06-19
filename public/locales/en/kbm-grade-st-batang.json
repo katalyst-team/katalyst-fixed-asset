@@ -1,0 +1,141 @@
+{
+  "title": "KBM Grade ST Batang",
+  "description": "Manage master data for KBM Grade ST Batang",
+  "table": {
+    "header": {
+      "no": "No",
+      "action": "Action",
+      "name": "Name",
+      "internalCode": "Internal Code",
+      "category": "Category",
+      "status": "Status"
+    },
+    "noData": "No grade data available"
+  },
+  "filter": {
+    "searchPlaceholder": "Search grades...",
+    "internalCodePlaceholder": "Enter internal code..."
+  },
+  "empty": {
+    "title": "No Grade Data",
+    "description": "No grade data found. Start by adding your first grade."
+  },
+  "form": {
+    "createTitle": "Create Grade ST Batang",
+    "editTitle": "Edit Grade ST Batang",
+    "createDescription": "Add a new ST Batang grade to the master data. Fields marked with * are required.",
+    "editDescription": "Update the grade details. Changes will be reflected across all records.",
+    "backToList": "Back to ST Batang Grade List",
+    "section": {
+      "basicInfo": "Basic Information",
+      "basicInfoDescription": "Essential details to identify the grade",
+      "attributes": "Grade Attributes",
+      "attributesDescription": "Provide detailed specifications for this grade. Fields marked with * are required.",
+      "calculation": "Volume Values",
+      "calculationDescription": "Enter the final volume values. We show the auto-calculated reference below so you can verify."
+    },
+    "field": {
+      "name": "Grade Name",
+      "namePlaceholder": "e.g., TA(41-10)ALL",
+      "nameHelp": "Choose a descriptive name that clearly identifies this grade",
+      "internalCode": "Internal Code (KD_GRADE)",
+      "internalCodePlaceholder": "e.g., TA(41-10)ALL",
+      "internalCodeHelp": "Unique code identifier for this grade"
+    },
+    "attribute": {
+      "kdGrade": "KD_GRADE (Kode Grade)",
+      "nmGrade": "NM_GRADE (Nama Grade)",
+      "tebal": "G_TEBAL (Tebal in mm)",
+      "lebar": "G_LEBAR (Lebar in mm)",
+      "panjang": "G_PANJANG (Panjang in mm)",
+      "stdSusun": "G_STD_SUSUN (Standard Susun)",
+      "vol": "G_VOL (Volume per Susun in m³)",
+      "stdVol": "G_STD_VOL (Standard Volume in m³)"
+    },
+    "calculation": {
+      "vol": "VOL (Volume per Susun)",
+      "volFormula": "= (TEBAL × LEBAR × PANJANG) ÷ 1,000,000,000",
+      "volPlaceholder": "Enter VOL",
+      "expectedVol": "Expected (auto): {{value}} m³",
+      "stdVol": "STD_VOL (Standard Volume)",
+      "stdVolFormula": "= VOL × STD_SUSUN",
+      "stdVolPlaceholder": "Enter STD_VOL",
+      "expectedStdVol": "Expected (auto): {{value}} m³"
+    },
+    "button": {
+      "cancel": "Cancel",
+      "create": "Create Grade",
+      "creating": "Creating...",
+      "update": "Update Grade",
+      "updating": "Updating..."
+    },
+    "unsavedChanges": "You have unsaved changes. Are you sure you want to leave?",
+    "categoryNotFound": "KBM Grade category not found. Please create the category first.",
+    "missingRequired": "Please fill in all required attributes: {{attributes}}",
+    "duplicateName": "Grade name '{{name}}' already exists for this grade type.",
+    "typeAttributeMissing": "G_TYPE attribute not found. Please update the category configuration.",
+    "createSuccess": "ST Batang grade created successfully",
+    "updateSuccess": "ST Batang grade updated successfully"
+  },
+  "actions": {
+    "add": "Add ST Batang Grade",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View Details"
+  },
+  "exportTemplate": {
+    "button": "Export Template",
+    "tooltip": "Download an Excel template with grade attributes",
+    "title": "Export KBM Grade Template",
+    "description": "Download an Excel template tailored for this grade type. The file includes the required attributes and an example row.",
+    "howToUse": "How to use:",
+    "step1": "Review the attributes included in the template",
+    "step2": "Click 'Export Template' to download the Excel file",
+    "step3": "Fill in your grade data following the example row format",
+    "step4": "Use 'Import Excel' to upload your completed file",
+    "note": "Fields marked with * are required. G_TYPE is auto-set to {{gradeType}}.",
+    "categoryNotFound": "KBM Grade category not found. Please create the category first.",
+    "categoryLabel": "Category: {{category}}",
+    "required": "*required",
+    "noAttributes": "This category has no attributes defined.",
+    "exportButton": "Export Template"
+  },
+  "import": {
+    "button": "Import Excel",
+    "tooltip": "Upload an Excel file to bulk create grades using the template format",
+    "title": "Import Grades from Excel",
+    "description": "Upload an Excel file to bulk create grades. Use the template for correct format.",
+    "instructions": "Instructions:",
+    "step1": "Download the template using 'Export Template' button",
+    "step2": "Fill in your grade data",
+    "step3": "Upload the completed Excel file here",
+    "step4": "Review the preview and click 'Import'",
+    "note": "G_TYPE is auto-set to {{gradeType}} for every row.",
+    "categoryNotFound": "KBM Grade category not found. Please create the category first.",
+    "emptyFile": "Excel file is empty or has no data",
+    "parseError": "Failed to parse Excel file",
+    "hasErrors": "Cannot import: Some rows have validation errors. Please fix them first.",
+    "gradeNameRequired": "Grade Name is required",
+    "requiredAttributeMissing": "Required attribute '{{attribute}}' is missing",
+    "duplicateName": "Grade name '{{name}}' already exists for this grade type.",
+    "typeAttributeMissing": "G_TYPE attribute not found. Please update the category configuration.",
+    "dropHere": "Drop the file here...",
+    "dragDrop": "Drag & drop an Excel file here",
+    "orClick": "or click to select a file",
+    "supportedFormats": "Supported formats: CSV, XLSX",
+    "processing": "Processing file...",
+    "importing": "Importing grades...",
+    "validRows": "Valid",
+    "warnings": "Warnings",
+    "errors": "Errors",
+    "preview": "Preview (first 10 rows)",
+    "attributesFilled": "Attributes",
+    "complete": "Import Complete",
+    "successCount": "Successfully imported: {{count}}",
+    "failedCount": "Failed: {{count}}",
+    "errorDetails": "Error Details",
+    "importButton": "Import {{count}} grade(s)",
+    "successMessage": "Successfully imported {{count}} grade(s)",
+    "failedMessage": "Failed to import {{count}} grade(s)"
+  }
+}

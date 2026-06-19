@@ -1,0 +1,91 @@
+{
+  "title": "ST Kering Log",
+  "loading": "Loading...",
+  "noData": "No ST Kering log entries found",
+  "empty": {
+    "title": "No ST Kering Log Entries",
+    "description": "No ST Kering log entries found."
+  },
+  "cuttingStatus": {
+    "uncut": "Uncut",
+    "cut": "Cut",
+    "all": "All"
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "image": "Image",
+      "name": "Name",
+      "rfidEpc": "RFID EPC",
+      "rfidName": "RFID Name",
+      "category": "Category",
+      "status": "Status",
+      "action": "Action",
+      "internalCode": "Internal Code",
+      "itemStatus": "Item Status",
+      "stockMovementType": "Stock Movement Type",
+      "cuttingStatus": "Cutting Status"
+    },
+    "noData": "No data available"
+  },
+  "filter": {
+    "searchPlaceholder": "Search products...",
+    "rfidSearchPlaceholder": "Search RFID name...",
+    "internalCodePlaceholder": "Enter internal code...",
+    "button": "Filter",
+    "title": "Filter Options",
+    "timeframe": "Time Range",
+    "timeframePlaceholder": "Select time range...",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "pickDate": "Pick a date",
+    "noDateAttributes": "No date attributes available",
+    "dateAttributes": {
+      "title": "Filter by Date Attributes",
+      "startDate": "Start Date",
+      "endDate": "End Date"
+    },
+    "textAttributes": {
+      "title": "Filter by Attributes",
+      "placeholder": "Enter value..."
+    }
+  },
+  "action": {
+    "bongkarStik": "Bongkar Stik",
+    "susunRst": "Susun RST",
+    "assignArea": "Assign Area"
+  },
+  "assignArea": {
+    "title": "Assign Area",
+    "description": "Assign area for palet {{code}}",
+    "descriptionGeneric": "Assign warehouse area for this item",
+    "store": "Store",
+    "storePlaceholder": "Select store...",
+    "area": "Store Area",
+    "areaPlaceholder": "Select area...",
+    "type": "Movement Type",
+    "typePlaceholder": "Select type...",
+    "note": "Note (optional)",
+    "notePlaceholder": "Add note...",
+    "cancel": "Cancel",
+    "submit": "Assign Area",
+    "submitting": "Assigning...",
+    "success": "Area assigned successfully",
+    "validationError": "Please fill in all required fields"
+  },
+  "susunRst": {
+    "title": "Susun RST Kering",
+    "description": "Set Tanggal Potong for palet {{code}}",
+    "descriptionGeneric": "Set cutting date for this item",
+    "date": "Tanggal Potong",
+    "cancel": "Cancel",
+    "submit": "Set Tanggal Potong",
+    "submitting": "Updating...",
+    "success": "Tanggal Potong updated successfully",
+    "error": "Failed to update Tanggal Potong",
+    "validationError": "Cannot update: attribute not found"
+  },
+  "item": {
+    "imageAlt": "{{defaultValue}}"
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "table": {
+    "header": {
+      "no": "No",
+      "image": "Image",
+      "internalCode": "Kode Internal",
+      "category": "Kategori",
+      "brand": "Merek",
+      "size": "Ukuran",
+      "name": "Nama",
+      "color": "Warna",
+      "type": "Tipe",
+      "action": "Aksi",
+      "attributes": "Atribut"
+    },
+    "type": {
+      "common": "Umum",
+      "unique": "Unik"
+    },
+    "status": {
+      "active": "Aktif",
+      "inactive": "Tidak Aktif"
+    },
+    "noData": "Tidak ada SKU ditemukan"
+  },
+  "modal": {
+    "addSku": {
+      "addButton": "Tambah SKU",
+      "createTitle": "Buat SKU",
+      "editTitle": "Edit SKU",
+      "createDescription": "Buat SKU baru dengan mengisi formulir di bawah ini. Klik buat jika sudah selesai.",
+      "editDescription": "Edit SKU dengan memperbarui formulir di bawah ini. Klik simpan jika sudah selesai.",
+      "skuLabel": "SKU",
+      "skuPlaceholder": "SKU...",
+      "nameLabel": "Nama",
+      "namePlaceholder": "Nama...",
+      "categoryLabel": "Kategori",
+      "categoryPlaceholder": "Pilih Kategori",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Status",
+      "statusActive": "Aktif",
+      "statusInactive": "Tidak Aktif",
+      "skuTypeLabel": "Tipe SKU",
+      "selectSkuType": "Pilih tipe SKU",
+      "common": "Umum",
+      "unique": "Unik",
+      "priceLabel": "Harga",
+      "pricePlaceholder": "Harga...",
+      "stockLabel": "Stok",
+      "stockPlaceholder": "Stok...",
+      "createButton": "Buat SKU",
+      "editButton": "Simpan Perubahan",
+      "creating": "Membuat...",
+      "saving": "Menyimpan...",
+      "skuCreated": "SKU berhasil dibuat",
+      "skuUpdated": "SKU berhasil diperbarui",
+      "skuDeleted": "SKU berhasil dihapus",
+      "internalCodeLabel": "Kode Internal",
+      "internalCodePlaceholder": "Kode Internal...",
+      "subcategory": "Subkategori",
+      "imageLabel": "Gambar",
+      "imageDescription": "Unggah gambar produk dari perangkat Anda atau ambil foto dengan kamera",
+      "attributesLabel": "Atribut",
+      "loadingAttributes": "Memuat atribut...",
+      "update": "Perbarui SKU",
+      "updating": "Memperbarui...",
+      "updateSuccess": "SKU berhasil diperbarui",
+      "createSuccess": "SKU berhasil dibuat"
+    }
+  },
+  "filter": {
+    "filter": "Filter",
+    "search": "Cari",
+    "searchPlaceholder": "Cari berdasarkan SKU atau nama",
+    "status": "Status",
+    "statusPlaceholder": "Pilih Status",
+    "category": "Kategori",
+    "categoryPlaceholder": "Pilih Kategori",
+    "cancel": "Batal",
+    "apply": "Terapkan",
+    "active": "Aktif",
+    "inactive": "Tidak Aktif",
+    "options": {
+      "allStores": "Semua Toko",
+      "allCategories": "Semua Kategori",
+      "allStatuses": "Semua Status"
+    },
+    "selectStore": "Pilih Toko..."
+  },
+  "detail": {
+    "sku": "Detail SKU",
+    "info": "Informasi SKU",
+    "history": "Riwayat",
+    "stock": "Stok",
+    "price": "Harga",
+    "status": "Status",
+    "createdAt": "Dibuat Pada",
+    "updatedAt": "Diperbarui Pada"
+  },
+  "loading": "Memuat...",
+  "detailEmpty": {
+    "title": "Detail SKU Tidak Ditemukan",
+    "description": "Tidak ada informasi detail untuk SKU ini."
+  },
+  "historyEmpty": {
+    "title": "Tidak Ada Riwayat Produk",
+    "description": "Tidak ada riwayat untuk produk ini."
+  },
+  "empty": {
+    "title": "SKU tidak ditemukan",
+    "description": "Anda belum menambahkan SKU apa pun."
+  },
+  "exportTemplate": {
+    "button": "Ekspor Template",
+    "tooltip": "Unduh template Excel dengan kolom atribut untuk kategori tertentu",
+    "title": "Ekspor Template SKU",
+    "description": "Unduh template Excel dengan kolom untuk kategori tertentu. Template termasuk baris contoh untuk memandu Anda.",
+    "howToUse": "Cara menggunakan:",
+    "step1": "Pilih kategori di bawah ini",
+    "step2": "Klik 'Ekspor Template' untuk mengunduh file Excel",
+    "step3": "Isi data produk Anda mengikuti format baris contoh",
+    "step4": "Gunakan tombol 'Impor Excel' untuk mengunggah file yang telah diisi",
+    "note": "Catatan: Kolom yang ditandai dengan * wajib diisi. URL gambar harus dipisahkan koma (maks 5).",
+    "selectCategory": "Pilih Kategori",
+    "categoryPlaceholder": "Pilih kategori",
+    "attributes": "atribut",
+    "attributesIncluded": "Atribut yang akan disertakan:",
+    "noAttributes": "Kategori ini tidak memiliki atribut yang ditentukan.",
+    "exportButton": "Ekspor Template"
+  },
+  "import": {
+    "button": "Impor Excel",
+    "tooltip": "Unggah file Excel untuk membuat SKU secara massal. Gunakan template untuk format yang benar",
+    "title": "Impor SKU dari Excel",
+    "description": "Unggah file Excel untuk membuat SKU secara massal. Gunakan template untuk format yang benar.",
+    "instructions": "Instruksi:",
+    "step1": "Unduh template menggunakan tombol 'Ekspor Template'",
+    "step2": "Isi data produk Anda",
+    "step3": "Unggah file Excel yang telah diisi di sini",
+    "step4": "Tinjau pratinjau dan klik 'Impor'",
+    "dropHere": "Letakkan file di sini...",
+    "dragDrop": "Seret & lepas file Excel di sini",
+    "orClick": "atau klik untuk memilih file",
+    "supportedFormats": "Format yang didukung: XLSX, CSV",
+    "processing": "Memproses file...",
+    "importing": "Mengimpor SKU...",
+    "emptyFile": "File Excel kosong atau tidak ada data",
+    "parseError": "Gagal mengurai file Excel",
+    "hasErrors": "Tidak dapat mengimpor: Beberapa baris memiliki kesalahan validasi. Silakan perbaiki terlebih dahulu.",
+    "validRows": "Valid",
+    "warnings": "Peringatan",
+    "errors": "Kesalahan",
+    "preview": "Pratinjau (10 baris pertama)",
+    "complete": "Impor Selesai",
+    "successMessage": "Berhasil mengimpor {{count}} SKU",
+    "failedMessage": "Gagal mengimpor {{count}} SKU",
+    "successCount": "Berhasil diimpor: {{count}}",
+    "failedCount": "Gagal: {{count}}",
+    "errorDetails": "Detail Kesalahan",
+    "importButton": "Impor {{count}} SKU"
+  },
+  "form": {
+    "field": {
+      "category": "Kategori",
+      "categoryPlaceholder": "Pilih kategori untuk SKU ini",
+      "categoryHelp": "Kategori menentukan atribut yang tersedia untuk SKU ini",
+      "store": "Toko",
+      "storePlaceholder": "Pilih toko...",
+      "storeHelp": "Pilih toko tempat SKU ini akan tersedia",
+      "allStores": "Semua Toko"
+    },
+    "createSuccess": "SKU berhasil dibuat",
+    "updateSuccess": "SKU berhasil diperbarui"
+  }
+}

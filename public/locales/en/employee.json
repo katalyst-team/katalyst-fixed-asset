@@ -1,0 +1,101 @@
+{
+  "table": {
+    "header": {
+      "id": "ID",
+      "name": "Name",
+      "role": "Role",
+      "email": "Email",
+      "phone": "Phone",
+      "status": "Status",
+      "otpStatus": "OTP Status",
+      "stores": "Stores",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "suspended": "Suspended"
+    },
+    "otpStatus": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending"
+    },
+    "noData": "No users found"
+  },
+  "modal": {
+    "addEmployee": {
+      "addButton": "Add User",
+      "createTitle": "Create User",
+      "createDescription": "Create a new user by filling out the form below. Click create when you're done.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Email...",
+      "nameLabel": "First Name",
+      "namePlaceholder": "First name...",
+      "lastNameLabel": "Last Name",
+      "lastNamePlaceholder": "Last Name...",
+      "phoneLabel": "Phone",
+      "phonePlaceholder": "Phone...",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Password...",
+      "roleLabel": "Role",
+      "rolePlaceholder": "Select Role",
+      "storeLabel": "Store",
+      "storePlaceholder": "Select Store",
+      "creating": "Creating...",
+      "createButton": "Create User"
+    },
+    "edit": {
+      "title": "Edit User",
+      "description": "Update user role, stores, or status.",
+      "employee": "User",
+      "emailLabel": "New Email",
+      "emailPlaceholder": "Email...",
+      "passwordLabel": "New Password",
+      "passwordPlaceholder": "Password...",
+      "roleLabel": "Role",
+      "rolePlaceholder": "Select Role",
+      "storeLabel": "Store",
+      "storePlaceholder": "Select Store",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Select Status",
+      "saveButton": "Save Changes",
+      "saving": "Saving..."
+    }
+  },
+  "toast": {
+    "created": "User created successfully",
+    "updated": "User updated successfully",
+    "deleted": "User deleted successfully"
+  },
+  "roles": {
+    "APP_SUPERADMIN": "Super Admin",
+    "APP_ADMIN": "App Admin",
+    "ORGANIZATION_OWNER": "Organization Owner",
+    "ORGANIZATION_ADMIN": "Organization Admin",
+    "ORGANIZATION_MEMBER": "Organization Member"
+  },
+  "filter": {
+    "filter": "Filter",
+    "search": "Search",
+    "searchPlaceholder": "Search by name or email",
+    "status": "Status",
+    "statusPlaceholder": "Select Status",
+    "role": "Role",
+    "rolePlaceholder": "Select Role",
+    "store": "Store",
+    "storePlaceholder": "Select Store",
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "loading": "Loading...",
+  "header": {
+    "title": "Users"
+  },
+  "empty": {
+    "title": "No Users Found",
+    "description": "You haven't added any users yet."
+  }
+}

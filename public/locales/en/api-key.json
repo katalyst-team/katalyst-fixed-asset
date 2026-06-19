@@ -1,0 +1,49 @@
+{
+  "loading": "Loading API Keys...",
+  "table": {
+    "header": {
+      "no": "No",
+      "key": "API Key",
+      "status": "Status",
+      "action": "Action"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "showKey": "Show",
+    "hideKey": "Hide",
+    "copyKey": "Copy"
+  },
+  "modal": {
+    "addApiKey": {
+      "addButton": "Add API Key",
+      "createTitle": "Create New API Key",
+      "editTitle": "Edit API Key",
+      "createDescription": "Create a new API key for accessing the API. The key will be shown only once after creation.",
+      "editDescription": "Update the status of the API key.",
+      "apiKeyNameLabel": "API Key Name",
+      "apiKeyNamePlaceholder": "Enter API key name",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Select status",
+      "statusActive": "Active",
+      "statusInactive": "Inactive",
+      "createButton": "Create API Key",
+      "editButton": "Update API Key",
+      "creating": "Creating...",
+      "saving": "Saving...",
+      "cancel": "Cancel",
+      "apiKeyCreated": "API key created successfully",
+      "apiKeyUpdated": "API key updated successfully",
+      "generatedKey": "Generated API Key"
+    }
+  },
+  "empty": {
+    "title": "No API Keys",
+    "description": "You haven't created any API keys yet."
+  },
+  "toast": {
+    "apiKeyDeleted": "API key deleted successfully",
+    "keyCopied": "API key copied to clipboard"
+  }
+}

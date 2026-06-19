@@ -1,0 +1,114 @@
+{
+  "bongkarStik": {
+    "title": "Hasil Bongkar Stik",
+    "description": "Registrasi palet hasil bongkar stik (belum dipotong)",
+    "form": {
+      "tanggalTally": {
+        "label": "Tanggal Tally",
+        "placeholder": "Pilih tanggal tally..."
+      },
+      "store": {
+        "label": "Toko",
+        "placeholder": "Pilih toko...",
+        "required": "Toko wajib diisi"
+      },
+      "category": {
+        "label": "Kategori",
+        "placeholder": "Pilih kategori...",
+        "required": "Kategori wajib diisi"
+      },
+      "internalCode": {
+        "label": "Kode Internal (Nomor Palet)",
+        "placeholder": "Masukkan kode internal / nomor palet...",
+        "required": "Kode internal wajib diisi"
+      },
+      "skuName": {
+        "label": "Nama SKU",
+        "placeholder": "Masukkan nama SKU..."
+      },
+      "epcs": {
+        "label": "EPC RFID",
+        "placeholder": "Pindai atau masukkan EPC..."
+      },
+      "quantity": {
+        "label": "Jumlah",
+        "placeholder": "1"
+      }
+    },
+    "scanning": {
+      "title": "Pemindaian RFID",
+      "scanButton": "Pindai RFID",
+      "stopButton": "Hentikan Pemindaian",
+      "scanning": "Memindai..."
+    },
+    "buttons": {
+      "cancel": "Batal",
+      "submit": "Registrasi Bongkar Stik",
+      "submitting": "Mendaftarkan..."
+    },
+    "messages": {
+      "success": "Palet berhasil didaftarkan sebagai bongkar stik",
+      "error": "Gagal mendaftarkan palet bongkar stik",
+      "validationError": "Mohon lengkapi semua field yang wajib diisi"
+    }
+  },
+  "susunRst": {
+    "title": "Hasil Susun RST Kering",
+    "description": "Registrasi palet hasil susun RST kering (sudah dipotong)",
+    "form": {
+      "tanggalProses": {
+        "label": "Tanggal Proses",
+        "placeholder": "Pilih tanggal proses..."
+      },
+      "store": {
+        "label": "Toko",
+        "placeholder": "Pilih toko...",
+        "required": "Toko wajib diisi"
+      },
+      "category": {
+        "label": "Kategori",
+        "placeholder": "Pilih kategori...",
+        "required": "Kategori wajib diisi"
+      },
+      "internalCode": {
+        "label": "Kode Internal (Nomor Palet)",
+        "placeholder": "Masukkan kode internal / nomor palet..."
+      },
+      "skuName": {
+        "label": "Nama SKU",
+        "placeholder": "Masukkan nama SKU..."
+      },
+      "epcs": {
+        "label": "EPC RFID",
+        "placeholder": "Pindai atau masukkan EPC..."
+      },
+      "quantity": {
+        "label": "Jumlah",
+        "placeholder": "1"
+      }
+    },
+    "scanning": {
+      "title": "Pemindaian RFID",
+      "scanButton": "Pindai RFID",
+      "stopButton": "Hentikan Pemindaian",
+      "scanning": "Memindai..."
+    },
+    "status": {
+      "checking": "Memeriksa RFID...",
+      "found": "RFID ditemukan, memperbarui Tanggal Potong...",
+      "notFound": "RFID belum terdaftar, mendaftarkan palet baru...",
+      "updated": "Tanggal Potong berhasil diperbarui"
+    },
+    "buttons": {
+      "cancel": "Batal",
+      "submit": "Registrasi Susun RST Kering",
+      "submitting": "Mendaftarkan..."
+    },
+    "messages": {
+      "success": "Palet berhasil didaftarkan sebagai susun RST kering",
+      "successUpdate": "Tanggal Potong berhasil diperbarui pada SKU",
+      "error": "Gagal mendaftarkan palet susun RST kering",
+      "validationError": "Mohon lengkapi semua field yang wajib diisi"
+    }
+  }
+}

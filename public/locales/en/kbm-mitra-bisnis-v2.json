@@ -1,0 +1,17 @@
+{
+  "title": "KBM Mitra Bisnis",
+  "description": "Manage master data for KBM Mitra Bisnis",
+  "table": {
+    "header": {
+      "action": "Action",
+      "code": "Code",
+      "name": "Name",
+      "no": "No",
+      "sortOrder": "Sort Order"
+    }
+  },
+  "empty": {
+    "description": "No mitra bisnis data found. Start by adding your first item.",
+    "title": "No Mitra Bisnis Data"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "title": "Gate Management",
+  "description": "Manage RFID gates across stores and sections.",
+  "empty": {
+    "title": "No gates yet",
+    "description": "Create your first gate to start monitoring RFID traffic."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Gate Name",
+      "store": "Store",
+      "section": "Section",
+      "actions": "Actions"
+    }
+  },
+  "modal": {
+    "create": {
+      "title": "Add New Gate",
+      "trigger": "Add Gate"
+    },
+    "edit": {
+      "title": "Edit Gate"
+    },
+    "form": {
+      "name": "Gate Name",
+      "namePlaceholder": "Enter gate name",
+      "store": "Store",
+      "storePlaceholder": "Select store",
+      "section": "Section",
+      "sectionPlaceholder": "Select section (optional)"
+    }
+  },
+  "delete": {
+    "success": "Gate deleted successfully",
+    "confirm": "Are you sure you want to delete this gate?"
+  }
+}

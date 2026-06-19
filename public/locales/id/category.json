@@ -1,0 +1,313 @@
+{
+  "loading": "Memuat...",
+  "category": {
+    "table": {
+      "header": {
+        "no": "No",
+        "categoryName": "Nama Kategori",
+        "action": "Aksi"
+      }
+    },
+    "modal": {
+      "create": {
+        "button": "Buat Kategori",
+        "title": "Buat Kategori",
+        "description": "Buat kategori baru dengan mengisi formulir di bawah ini. Klik buat setelah selesai.",
+        "categoryParent": "Kategori Induk",
+        "categoryParentPlaceholder": "Pilih atau Buat Kategori Induk",
+        "subCategory": "Sub Kategori (Opsional)",
+        "subCategoryPlaceholder": "Sub Kategori",
+        "creating": "Membuat...",
+        "created": "Kategori berhasil dibuat",
+        "attributes": "Atribut",
+        "defaultAttributesForSub": "Atribut Default untuk Sub Category",
+        "defaultAttributesForSubDescription": "Atribut dan nilai default ini akan otomatis terisi saat membuat sub category baru.",
+        "attributeCollection": "Koleksi Atribut",
+        "categoryName": "Nama Kategori",
+        "categoryNamePlaceholder": "Nama Kategori"
+      },
+      "edit": {
+        "title": "Edit Kategori",
+        "button": "Edit Kategori",
+        "description": "Edit kategori dengan mengisi formulir di bawah ini. Klik simpan setelah selesai.",
+        "categoryName": "Nama Kategori",
+        "categoryNamePlaceholder": "Nama Kategori",
+        "editing": "Mengedit...",
+        "updated": "Kategori berhasil diperbarui"
+      },
+      "addSub": {
+        "title": "Tambah Sub-Kategori",
+        "description": "Tambahkan sub-kategori baru ke kategori ini",
+        "button": "Tambah Sub-Kategori",
+        "subCategoryName": "Nama Sub-Kategori",
+        "subCategoryNamePlaceholder": "Masukkan nama sub-kategori",
+        "creating": "Membuat...",
+        "created": "Sub-kategori berhasil dibuat"
+      }
+    },
+    "empty": {
+      "title": "Kategori tidak ditemukan",
+      "description": "Anda belum membuat kategori apa pun."
+    }
+  },
+  "empty": {
+    "title": "Kategori tidak ditemukan",
+    "description": "Anda belum membuat kategori apa pun."
+  },
+  "brand": {
+    "table": {
+      "header": {
+        "no": "No",
+        "brandName": "Nama Merek",
+        "action": "Aksi"
+      }
+    },
+    "modal": {
+      "create": {
+        "button": "Tambah Merek",
+        "title": "Buat Merek",
+        "description": "Buat Merek baru dengan mengisi formulir di bawah ini. Klik buat setelah selesai.",
+        "brandName": "Nama Merek",
+        "brandNamePlaceholder": "Nama Merek",
+        "creating": "Membuat...",
+        "created": "Merek berhasil dibuat"
+      },
+      "edit": {
+        "title": "Edit Merek",
+        "button": "Edit Merek",
+        "brandName": "Nama Merek",
+        "brandNamePlaceholder": "Nama Merek",
+        "editing": "Mengedit...",
+        "updated": "Merek berhasil diperbarui"
+      }
+    },
+    "empty": {
+      "title": "Merek tidak ditemukan",
+      "description": "Anda belum menambahkan merek apa pun."
+    }
+  },
+  "size": {
+    "table": {
+      "header": {
+        "no": "No",
+        "sizeName": "Nama Ukuran",
+        "action": "Aksi"
+      }
+    },
+    "modal": {
+      "create": {
+        "button": "Buat Ukuran",
+        "title": "Buat Ukuran",
+        "description": "Tambahkan ukuran baru ke organisasi Anda.",
+        "sizeName": "Nama Ukuran",
+        "sizeNamePlaceholder": "Masukkan nama ukuran",
+        "creating": "Membuat...",
+        "created": "Ukuran berhasil dibuat"
+      },
+      "edit": {
+        "title": "Edit Ukuran",
+        "button": "Edit Ukuran",
+        "sizeName": "Nama Ukuran",
+        "sizeNamePlaceholder": "Masukkan nama ukuran",
+        "editing": "Mengedit...",
+        "updated": "Ukuran berhasil diperbarui"
+      }
+    },
+    "empty": {
+      "title": "Ukuran tidak ditemukan",
+      "description": "Anda belum menambahkan ukuran apa pun."
+    }
+  },
+  "color": {
+    "table": {
+      "header": {
+        "no": "No",
+        "colorName": "Nama Warna",
+        "action": "Aksi"
+      }
+    },
+    "modal": {
+      "create": {
+        "button": "Tambah Warna",
+        "title": "Buat Warna",
+        "description": "Buat Warna baru dengan mengisi formulir di bawah ini. Klik buat setelah selesai.",
+        "colorName": "Nama Warna",
+        "colorNamePlaceholder": "Nama Warna",
+        "creating": "Membuat...",
+        "created": "Warna berhasil dibuat"
+      },
+      "edit": {
+        "title": "Edit Warna",
+        "button": "Edit Warna",
+        "colorName": "Nama Warna",
+        "colorNamePlaceholder": "Nama Warna",
+        "editing": "Mengedit...",
+        "updated": "Warna berhasil diperbarui"
+      }
+    },
+    "empty": {
+      "title": "Warna tidak ditemukan",
+      "description": "Anda belum menambahkan warna apa pun."
+    }
+  },
+  "direct": {
+    "attributes": "Atribut",
+    "defaultValues": "Nilai Default",
+    "noAttributes": "Belum ada atribut yang dikonfigurasi",
+    "noDefaultValues": "Belum ada nilai default yang dikonfigurasi",
+    "title": "Atribut Category"
+  },
+  "modal": {
+    "add": {
+      "attributeDefaults": "Nilai Default",
+      "attributeDefaultsDescription": "Set nilai default untuk tiap atribut (opsional).",
+      "attributes": "Atribut",
+      "button": "Tambah Category",
+      "categoryName": "Nama Category",
+      "categoryNamePlaceholder": "Masukkan nama category",
+      "code": "Kode (opsional)",
+      "codePlaceholder": "Masukkan kode",
+      "creating": "Menyimpan...",
+      "description": "Tambah Category baru",
+      "hasSubCategory": "Memiliki Sub Category",
+      "title": "Tambah Category"
+    },
+    "edit": {
+      "attributeDefaults": "Nilai Default",
+      "attributeDefaultsDescription": "Set nilai default untuk tiap atribut (opsional).",
+      "attributes": "Atribut",
+      "button": "Simpan",
+      "categoryName": "Nama Category",
+      "categoryNamePlaceholder": "Masukkan nama category",
+      "code": "Kode (opsional)",
+      "codePlaceholder": "Masukkan kode",
+      "description": "Edit data Category",
+      "editing": "Menyimpan...",
+      "hasSubCategory": "Memiliki Sub Category",
+      "title": "Edit Category"
+    }
+  },
+  "sub": {
+    "filter": {
+      "searchPlaceholder": "Cari nama atau kode..."
+    },
+    "empty": {
+      "description": "Belum ada Sub Category di Category ini",
+      "title": "Tidak ada Sub Category"
+    },
+    "export": {
+      "button": "Export",
+      "filename": "sub-category",
+      "noAttributes": "Belum ada atribut. Tambahkan minimal satu sub category dengan atribut terlebih dahulu.",
+      "noData": "Belum ada sub category untuk diekspor",
+      "templateButton": "Export Template",
+      "templateFilename": "template-sub-category"
+    },
+    "import": {
+      "button": "Import",
+      "columnCode": "Kode",
+      "columnName": "Nama Sub Category",
+      "description": "Upload file Excel untuk import sub category. Download template terlebih dahulu untuk melihat format yang benar.",
+      "dragDrop": "Drag & drop file Excel di sini, atau klik untuk memilih",
+      "emptyFile": "File Excel kosong atau tidak ada data",
+      "importing": "Mengimpor...",
+      "codeDuplicateApi": "Kode \"{{code}}\" sudah ada di sistem",
+      "codeDuplicateFile": "Kode \"{{code}}\" duplikat dalam file ini",
+      "nameRequired": "Nama Sub Category wajib diisi",
+      "noSchema": "Belum ada sub category. Buat minimal satu sub category secara manual terlebih dahulu sebagai template.",
+      "storeLabel": "Assign ke Store",
+      "storeNone": "Tanpa store",
+      "storePlaceholder": "Pilih store...",
+      "preview": "Preview ({{count}} baris)",
+      "result": "Import selesai: {{success}} berhasil, {{failed}} gagal",
+      "startImport": "Mulai Import",
+      "title": "Import Sub Category"
+    },
+    "modal": {
+      "add": {
+        "attributes": "Atribut",
+        "attributeDefaults": "Nilai Default",
+        "attributeDefaultsDescription": "Set nilai default untuk tiap atribut (opsional). Biarkan kosong jika user mengisi manual.",
+        "button": "Tambah Sub Category",
+        "code": "Kode (opsional)",
+        "codePlaceholder": "Masukkan kode",
+        "copyFromTemplate": "Salin dari Template",
+        "copyFromTemplatePlaceholder": "Pilih sub category sebagai template...",
+        "copyFromTemplateDescription": "Atribut dan nilai default akan disalin dari template yang dipilih.",
+        "creating": "Menyimpan...",
+        "description": "Tambah Sub Category baru",
+        "name": "Nama Sub Category",
+        "namePlaceholder": "Masukkan nama sub category",
+        "title": "Tambah Sub Category"
+      },
+      "edit": {
+        "attributes": "Atribut",
+        "attributeDefaults": "Nilai Default",
+        "attributeDefaultsDescription": "Set nilai default untuk tiap atribut (opsional). Biarkan kosong jika user mengisi manual.",
+        "button": "Simpan",
+        "code": "Kode (opsional)",
+        "codePlaceholder": "Masukkan kode",
+        "description": "Edit data Sub Category",
+        "editing": "Menyimpan...",
+        "name": "Nama Sub Category",
+        "namePlaceholder": "Masukkan nama sub category",
+        "title": "Edit Sub Category"
+      }
+    },
+    "table": {
+      "header": {
+        "action": "Aksi",
+        "attributes": "Atribut",
+        "code": "Kode",
+        "defaultValues": "Nilai Default",
+        "name": "Nama Sub Category",
+        "no": "No",
+        "store": "Store"
+      }
+    },
+    "title": "Sub Category"
+  },
+  "table": {
+    "header": {
+      "action": "Aksi",
+      "categoryName": "Nama Category",
+      "code": "Kode",
+      "no": "No",
+      "store": "Store",
+      "subCount": "Jumlah Sub Category"
+    }
+  },
+  "list": {
+    "export": {
+      "button": "Export",
+      "filename": "daftar-category",
+      "noData": "Tidak ada category untuk diekspor",
+      "templateButton": "Export Template",
+      "templateFilename": "template-category"
+    },
+    "filter": {
+      "allStores": "Semua Toko",
+      "searchPlaceholder": "Cari nama atau kode..."
+    },
+    "import": {
+      "button": "Import",
+      "close": "Tutup",
+      "columnCode": "Kode",
+      "columnName": "Nama Category",
+      "description": "Upload file Excel untuk membuat category secara massal. Download template terlebih dahulu untuk melihat format yang benar.",
+      "dragDrop": "Drag & drop file Excel di sini, atau klik untuk memilih",
+      "codeDuplicateApi": "Kode \"{{code}}\" sudah ada di sistem",
+      "codeDuplicateFile": "Kode \"{{code}}\" duplikat dalam file ini",
+      "emptyFile": "File Excel kosong atau tidak ada data",
+      "importing": "Mengimpor...",
+      "nameDuplicateApi": "Nama \"{{name}}\" sudah ada di sistem",
+      "nameDuplicateFile": "Nama \"{{name}}\" duplikat dalam file ini",
+      "nameRequired": "Nama Category wajib diisi",
+      "preview": "Preview ({{count}} baris)",
+      "result": "Import selesai: {{success}} berhasil, {{failed}} gagal",
+      "startImport": "Mulai Import",
+      "title": "Import Category"
+    }
+  },
+  "title": "Category"
+}

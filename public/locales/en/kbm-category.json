@@ -1,0 +1,127 @@
+{
+  "empty": {
+    "description": "No KBM Barang data yet",
+    "title": "No data"
+  },
+  "export": {
+    "button": "Export",
+    "filename": "kbm-grade",
+    "noGrades": "No grades to export"
+  },
+  "direct": {
+    "attributes": "Attributes",
+    "defaultValues": "Default Values",
+    "noAttributes": "No attributes configured",
+    "noDefaultValues": "No default values configured",
+    "title": "KBM Barang Attributes"
+  },
+  "exportTemplate": {
+    "button": "Export Template",
+    "filename": "template-kbm-grade",
+    "noAttributes": "No attributes defined. Add at least one grade with attributes first."
+  },
+  "import": {
+    "button": "Import",
+    "columnCode": "Code",
+    "columnGradeName": "Grade Name",
+    "description": "Upload an Excel file to import grades. Download the template first to see the correct format.",
+    "dragDrop": "Drag & drop Excel file here, or click to browse",
+    "emptyFile": "Excel file is empty or has no data rows",
+    "error": "Error",
+    "failed": "failed",
+    "gradeNameRequired": "Grade Name is required",
+    "importing": "Importing...",
+    "noSchema": "No grades exist yet. Create at least one grade manually first to use as template.",
+    "preview": "Preview ({{count}} rows)",
+    "result": "Import complete: {{success}} success, {{failed}} failed",
+    "startImport": "Start Import",
+    "success": "success",
+    "title": "Import Grades",
+    "warning": "Warning"
+  },
+  "grade": {
+    "empty": {
+      "description": "No Grades in this KBM Barang",
+      "title": "No Grades"
+    },
+    "modal": {
+      "add": {
+        "attributeDefaults": "Default Values",
+        "attributeDefaultsDescription": "Set default values for each attribute (optional). Leave empty if user should fill manually.",
+        "attributes": "Attributes",
+        "button": "Add Grade",
+        "code": "Code (optional)",
+        "codePlaceholder": "Enter code",
+        "creating": "Saving...",
+        "description": "Add a new Grade",
+        "gradeName": "Grade Name",
+        "gradeNamePlaceholder": "Enter grade name",
+        "title": "Add Grade"
+      },
+      "edit": {
+        "attributeDefaults": "Default Values",
+        "attributeDefaultsDescription": "Set default values for each attribute (optional). Leave empty if user should fill manually.",
+        "attributes": "Attributes",
+        "button": "Save",
+        "code": "Code (optional)",
+        "codePlaceholder": "Enter code",
+        "description": "Edit Grade",
+        "editing": "Saving...",
+        "gradeName": "Grade Name",
+        "gradeNamePlaceholder": "Enter grade name",
+        "title": "Edit Grade"
+      }
+    },
+    "table": {
+      "header": {
+        "action": "Action",
+        "attributes": "Attributes",
+        "code": "Code",
+        "defaultValues": "Default Values",
+        "gradeName": "Grade Name",
+        "no": "No"
+      }
+    },
+    "title": "KBM Grade"
+  },
+  "modal": {
+    "add": {
+      "attributeDefaults": "Default Values",
+      "attributeDefaultsDescription": "Set default values for each attribute (optional).",
+      "attributes": "Attributes",
+      "barangName": "KBM Barang Name",
+      "barangNamePlaceholder": "Enter KBM Barang name",
+      "button": "Add KBM Barang",
+      "code": "Code (optional)",
+      "codePlaceholder": "Enter code",
+      "creating": "Saving...",
+      "description": "Add a new KBM Barang",
+      "hasGrade": "Has Sub Category (Grade)",
+      "title": "Add KBM Barang"
+    },
+    "edit": {
+      "attributeDefaults": "Default Values",
+      "attributeDefaultsDescription": "Set default values for each attribute (optional).",
+      "attributes": "Attributes",
+      "barangName": "KBM Barang Name",
+      "barangNamePlaceholder": "Enter KBM Barang name",
+      "button": "Save",
+      "code": "Code (optional)",
+      "codePlaceholder": "Enter code",
+      "description": "Edit KBM Barang",
+      "editing": "Saving...",
+      "hasGrade": "Has Sub Category (Grade)",
+      "title": "Edit KBM Barang"
+    }
+  },
+  "table": {
+    "header": {
+      "action": "Action",
+      "barangName": "KBM Barang Name",
+      "code": "Code",
+      "gradeCount": "Grade Count",
+      "no": "No"
+    }
+  },
+  "title": "KBM Barang"
+}

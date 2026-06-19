@@ -1,0 +1,72 @@
+{
+  "title": "Reference Groups",
+  "buttons": {
+    "addGroup": "Add Group",
+    "addItem": "Add Item"
+  },
+  "createGroupSuccess": "Reference group created",
+  "createItemSuccess": "Reference item created",
+  "deleteGroupSuccess": "Reference group deleted",
+  "deleteItemSuccess": "Reference item deleted",
+  "empty": {
+    "description": "Create your first reference group to organize lookup data.",
+    "itemsDescription": "Add your first item to this reference group.",
+    "itemsTitle": "No items found",
+    "title": "No reference groups found"
+  },
+  "fields": {
+    "code": "Code",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter description...",
+    "name": "Name",
+    "slug": "Slug",
+    "sortOrder": "Sort Order"
+  },
+  "modal": {
+    "addGroup": {
+      "title": "Add Reference Group"
+    },
+    "addItem": {
+      "title": "Add Reference Item"
+    },
+    "editGroup": {
+      "title": "Edit Reference Group"
+    },
+    "editItem": {
+      "title": "Edit Reference Item"
+    }
+  },
+  "table": {
+    "header": {
+      "action": "Action",
+      "code": "Code",
+      "description": "Description",
+      "name": "Name",
+      "no": "No",
+      "slug": "Slug",
+      "sortOrder": "Sort Order"
+    }
+  },
+  "relation": {
+    "add": "Add Relation",
+    "addButton": "Add Relation",
+    "button": "Relations",
+    "createSuccess": "Relation created",
+    "deleteSuccess": "Relation deleted",
+    "empty": "No relations yet.",
+    "existing": "Existing Relations",
+    "manage": "Manage Relations",
+    "selectGroupFirst": "Select a group first",
+    "selectItem": "Select item...",
+    "selectGroup": "Select group...",
+    "targetGroup": "Target Group",
+    "targetItem": "Target Item",
+    "title": "Relations",
+    "toItemRequired": "Target item is required",
+    "type": "Relation Type",
+    "typeRequired": "Relation type is required",
+    "typeBelongsTo": "Belongs To"
+  },
+  "updateGroupSuccess": "Reference group updated",
+  "updateItemSuccess": "Reference item updated"
+}

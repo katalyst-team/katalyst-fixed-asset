@@ -1,0 +1,141 @@
+{
+  "title": "KBM Lamina",
+  "description": "Kelola master data KBM Lamina",
+  "table": {
+    "header": {
+      "no": "No",
+      "action": "Aksi",
+      "name": "Nama",
+      "internalCode": "Kode Internal",
+      "category": "Kategori",
+      "status": "Status"
+    },
+    "noData": "Tidak ada data lamina"
+  },
+  "filter": {
+    "searchPlaceholder": "Cari lamina...",
+    "internalCodePlaceholder": "Masukkan kode internal..."
+  },
+  "empty": {
+    "title": "Tidak Ada Data Lamina",
+    "description": "Tidak ada data lamina. Mulai dengan menambahkan lamina pertama Anda."
+  },
+  "form": {
+    "createTitle": "Buat KBM Lamina",
+    "editTitle": "Edit KBM Lamina",
+    "createDescription": "Tambahkan KBM Lamina baru ke master data. Kolom dengan tanda * wajib diisi.",
+    "editDescription": "Perbarui detail lamina. Perubahan akan tercermin di semua catatan.",
+    "backToList": "Kembali ke Daftar KBM Lamina",
+    "section": {
+      "basicInfo": "Informasi Dasar",
+      "basicInfoDescription": "Detail penting untuk mengidentifikasi lamina",
+      "attributes": "Atribut Lamina",
+      "attributesDescription": "Berikan spesifikasi detail untuk lamina ini. Kolom dengan tanda * wajib diisi.",
+      "calculation": "Nilai Volume",
+      "calculationDescription": "Masukkan nilai volume final. Kami tampilkan acuan perhitungan otomatis di bawah untuk verifikasi."
+    },
+    "field": {
+      "name": "Nama KBM Lamina",
+      "namePlaceholder": "cth., LAM-001",
+      "nameHelp": "Pilih nama deskriptif yang jelas mengidentifikasi KBM Lamina ini",
+      "internalCode": "Kode Internal",
+      "internalCodePlaceholder": "cth., LAM-001",
+      "internalCodeHelp": "Kode unik untuk lamina ini"
+    },
+    "attribute": {
+      "kdGrade": "KD_GRADE (Kode Grade)",
+      "nmGrade": "NM_GRADE (Nama Grade)",
+      "tebal": "G_TEBAL (Tebal dalam mm)",
+      "lebar": "G_LEBAR (Lebar dalam mm)",
+      "panjang": "G_PANJANG (Panjang dalam mm)",
+      "stdSusun": "G_STD_SUSUN (Standard Susun)",
+      "vol": "G_VOL (Volume per Susun dalam m³)",
+      "stdVol": "G_STD_VOL (Volume Standard dalam m³)"
+    },
+    "calculation": {
+      "vol": "VOL (Volume per Susun)",
+      "volFormula": "= (TEBAL × LEBAR × PANJANG) ÷ 1.000.000.000",
+      "volPlaceholder": "Masukkan VOL",
+      "expectedVol": "Perkiraan (otomatis): {{value}} m³",
+      "stdVol": "STD_VOL (Volume Standard)",
+      "stdVolFormula": "= VOL × STD_SUSUN",
+      "stdVolPlaceholder": "Masukkan STD_VOL",
+      "expectedStdVol": "Perkiraan (otomatis): {{value}} m³"
+    },
+    "button": {
+      "cancel": "Batal",
+      "create": "Buat Lamina",
+      "creating": "Membuat...",
+      "update": "Perbarui Lamina",
+      "updating": "Memperbarui..."
+    },
+    "unsavedChanges": "Anda memiliki perubahan yang belum disimpan. Yakin ingin keluar?",
+    "categoryNotFound": "Kategori KBM Lamina tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "missingRequired": "Harap isi semua atribut yang wajib: {{attributes}}",
+    "duplicateName": "Nama lamina '{{name}}' sudah ada untuk tipe lamina ini.",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "createSuccess": "KBM Lamina berhasil dibuat",
+    "updateSuccess": "KBM Lamina berhasil diperbarui"
+  },
+  "actions": {
+    "add": "Tambah KBM Lamina",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "view": "Lihat Detail"
+  },
+  "exportTemplate": {
+    "button": "Ekspor Template",
+    "tooltip": "Unduh template Excel dengan atribut lamina",
+    "title": "Ekspor Template KBM Lamina",
+    "description": "Unduh template Excel khusus untuk tipe lamina ini. File berisi atribut yang diperlukan dan contoh baris.",
+    "howToUse": "Cara penggunaan:",
+    "step1": "Tinjau atribut yang disertakan dalam template",
+    "step2": "Klik 'Ekspor Template' untuk mengunduh file Excel",
+    "step3": "Isi data lamina mengikuti format contoh baris",
+    "step4": "Gunakan 'Impor Excel' untuk mengunggah file yang sudah diisi",
+    "note": "Kolom bertanda * wajib diisi. G_TYPE otomatis diisi {{gradeType}}.",
+    "categoryNotFound": "Kategori KBM Lamina tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "categoryLabel": "Kategori: {{category}}",
+    "required": "*wajib",
+    "noAttributes": "Kategori ini belum memiliki atribut.",
+    "exportButton": "Ekspor Template"
+  },
+  "import": {
+    "button": "Impor Excel",
+    "tooltip": "Unggah file Excel untuk membuat lamina massal sesuai format template",
+    "title": "Impor Lamina dari Excel",
+    "description": "Unggah file Excel untuk membuat lamina secara massal. Gunakan template agar format benar.",
+    "instructions": "Instruksi:",
+    "step1": "Unduh template menggunakan tombol 'Ekspor Template'",
+    "step2": "Isi data lamina Anda",
+    "step3": "Unggah file Excel yang sudah diisi di sini",
+    "step4": "Tinjau pratinjau lalu klik 'Impor'",
+    "note": "G_TYPE otomatis diisi {{gradeType}} untuk setiap baris.",
+    "categoryNotFound": "Kategori KBM Lamina tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "emptyFile": "File Excel kosong atau tidak berisi data",
+    "parseError": "Gagal membaca file Excel",
+    "hasErrors": "Tidak bisa impor: beberapa baris memiliki kesalahan validasi. Perbaiki terlebih dahulu.",
+    "gradeNameRequired": "Nama Lamina wajib diisi",
+    "requiredAttributeMissing": "Atribut wajib '{{attribute}}' belum diisi",
+    "duplicateName": "Nama lamina '{{name}}' sudah ada untuk tipe lamina ini.",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "dropHere": "Lepaskan file di sini...",
+    "dragDrop": "Seret & letakkan file Excel di sini",
+    "orClick": "atau klik untuk memilih file",
+    "supportedFormats": "Format yang didukung: CSV, XLSX",
+    "processing": "Memproses file...",
+    "importing": "Mengimpor lamina...",
+    "validRows": "Valid",
+    "warnings": "Peringatan",
+    "errors": "Kesalahan",
+    "preview": "Pratinjau (10 baris pertama)",
+    "attributesFilled": "Atribut",
+    "complete": "Impor Selesai",
+    "successCount": "Berhasil diimpor: {{count}}",
+    "failedCount": "Gagal: {{count}}",
+    "errorDetails": "Detail Kesalahan",
+    "importButton": "Impor {{count}} lamina",
+    "successMessage": "Berhasil mengimpor {{count}} lamina",
+    "failedMessage": "Gagal mengimpor {{count}} lamina"
+  }
+}

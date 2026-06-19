@@ -1,0 +1,1286 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #0b1f3a;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer base {
+  :root {
+    /* Surface tokens — Clean white + crisp blue (RT/New_UI "blue" theme) */
+    --background: 0 0% 100%;
+    --foreground: 217 71% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 217 71% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 217 71% 14%;
+
+    /* Granular surface tiers for layering */
+    --surface: 0 0% 100%;
+    --surface-2: 213 100% 97%;
+    --surface-3: 213 89% 95%;
+
+    /* Granular border tiers */
+    --border: 214 75% 94%;
+    --border-strong: 213 71% 85%;
+    --border-subtle: 214 71% 96%;
+
+    /* Text tiers */
+    --text: 217 71% 14%;
+    --text-2: 215 35% 35%;
+    --text-3: 215 26% 60%;
+
+    /* Brand — crisp blue */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --brand: 217 91% 60%;
+    --brand-2: 224 76% 48%;
+    --brand-soft: 214 95% 87%;
+    --brand-ink: 224 64% 33%;
+
+    --secondary: 213 100% 97%;
+    --secondary-foreground: 217 71% 14%;
+    --muted: 214 71% 96%;
+    --muted-foreground: 215 35% 35%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
+    --accent-soft: 204 94% 94%;
+
+    --success: 173 80% 26%;
+    --success-soft: 167 85% 89%;
+    --warning: 28 90% 36%;
+    --warning-soft: 48 96% 89%;
+    --destructive: 350 87% 41%;
+    --destructive-foreground: 0 0% 100%;
+    --info: 217 91% 60%;
+    --info-soft: 214 95% 87%;
+
+    --input: 214 75% 94%;
+    --ring: 217 91% 60%;
+
+    /* Charts — modern blue/cyan palette */
+    --chart-1: 217 91% 60%;
+    --chart-2: 199 89% 48%;
+    --chart-3: 173 80% 40%;
+    --chart-4: 250 84% 60%;
+    --chart-5: 28 90% 55%;
+
+    --radius: 0.625rem;
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 14px;
+    --r-xl: 20px;
+    --shadow-1: 0 1px 0 0 rgba(37,99,235,.05), 0 1px 2px 0 rgba(37,99,235,.04);
+    --shadow-2: 0 2px 4px -1px rgba(37,99,235,.07), 0 4px 12px -2px rgba(37,99,235,.05);
+    /* Aliases for design HTML compatibility */
+    --warn: 28 90% 36%;
+    --warn-soft: 48 96% 89%;
+    --danger: 350 87% 41%;
+    --danger-soft: 350 100% 94%;
+
+    /* Sidebar — clean white with light blue active state (per screenshot.jpg) */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 35% 35%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 214 95% 95%;
+    --sidebar-accent-foreground: 217 91% 60%;
+    --sidebar-border: 214 71% 96%;
+    --sidebar-ring: 217 91% 60%;
+  }
+  .dark {
+    /* Dark mode — frosted midnight blue per RT/New_UI design */
+    --background: 222 47% 6%;
+    --foreground: 213 31% 91%;
+    --card: 222 30% 11%;
+    --card-foreground: 213 31% 91%;
+    --popover: 222 30% 11%;
+    --popover-foreground: 213 31% 91%;
+
+    --surface: 222 30% 11%;
+    --surface-2: 222 25% 14%;
+    --surface-3: 222 25% 18%;
+
+    --border: 222 25% 18%;
+    --border-strong: 222 25% 24%;
+    --border-subtle: 222 25% 14%;
+
+    --text: 213 31% 91%;
+    --text-2: 217 24% 72%;
+    --text-3: 217 20% 62%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --brand: 217 91% 60%;
+    --brand-2: 224 76% 48%;
+    --brand-soft: 222 25% 18%;
+    --brand-ink: 214 95% 87%;
+
+    --secondary: 222 25% 14%;
+    --secondary-foreground: 213 31% 91%;
+    --muted: 222 25% 14%;
+    --muted-foreground: 217 19% 60%;
+    --accent: 199 89% 60%;
+    --accent-foreground: 0 0% 100%;
+    --accent-soft: 222 25% 18%;
+
+    --destructive: 0 63% 50%;
+    --destructive-foreground: 213 31% 91%;
+    --input: 222 25% 18%;
+    --ring: 217 91% 60%;
+
+    --chart-1: 217 91% 60%;
+    --chart-2: 199 89% 55%;
+    --chart-3: 173 70% 50%;
+    --chart-4: 250 84% 70%;
+    --chart-5: 28 90% 65%;
+
+    --sidebar-background: 222 47% 4%;
+    --sidebar-foreground: 213 31% 75%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 222 25% 12%;
+    --sidebar-accent-foreground: 213 31% 91%;
+    --sidebar-border: 222 25% 12%;
+    --sidebar-ring: 217 91% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom scrollbar styling */
+@layer utilities {
+  .scrollbar-soft {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(203 213 225) transparent;
+  }
+  
+  .scrollbar-soft::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollbar-soft::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-soft::-webkit-scrollbar-thumb {
+    background-color: rgb(203 213 225);
+    border-radius: 3px;
+  }
+  
+  .scrollbar-soft::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(148 163 184);
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 0%,
+      hsl(var(--muted-foreground) / 0.08) 50%,
+      hsl(var(--muted)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+  }
+}
+
+/* Apply soft scrollbar globally to all scrollable elements */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(203 213 225) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(203 213 225);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(148 163 184);
+}
+
+/* ============================================================
+   KATALYST DESIGN SYSTEM — ported from RT/New_UI/redesign
+   ============================================================ */
+
+@layer components {
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
+  .serif { font-family: "Instrument Serif", ui-serif, Georgia, serif; font-weight: 400; letter-spacing: -0.01em; }
+
+  /* === SIDEBAR === */
+  .sb-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 14px 12px;
+    border-bottom: 1px solid hsl(var(--sidebar-border));
+  }
+  .sb-logo {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: hsl(var(--brand)); color: #fff;
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 14px; flex-shrink: 0;
+  }
+  .sb-org { flex: 1; min-width: 0; }
+  .sb-org-name { font-weight: 600; font-size: 13px; color: hsl(var(--text)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sb-org-meta { font-size: 11px; color: hsl(var(--text-3)); }
+  .sb-switch {
+    width: 28px; height: 28px; border-radius: 6px;
+    color: hsl(var(--text-3));
+    background: transparent; border: 0;
+    display: grid; place-items: center; cursor: pointer;
+    transition: background .12s, color .12s;
+  }
+  .sb-switch:hover { background: hsl(var(--surface-2)); color: hsl(var(--text)); }
+
+  .sb-scroll { flex: 1; overflow-y: auto; padding: 8px 6px; }
+  .sb-scroll::-webkit-scrollbar { width: 6px; }
+  .sb-scroll::-webkit-scrollbar-thumb { background: hsl(var(--border-strong)); border-radius: 3px; }
+
+  .sb-group-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: hsl(var(--text-3));
+    padding: 14px 14px 6px;
+  }
+
+  .sb-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 11px; margin: 1px 6px;
+    border-radius: 8px;
+    color: hsl(var(--text-2));
+    font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    transition: background .12s, color .12s;
+    position: relative;
+    user-select: none;
+  }
+  .sb-item:hover { background: hsl(var(--surface-2)); color: hsl(var(--text)); }
+  .sb-item svg { flex-shrink: 0; opacity: .85; }
+  .sb-item.active { background: hsl(var(--brand-soft)); color: hsl(var(--brand)); font-weight: 600; }
+  .sb-item.active svg { opacity: 1; }
+  .sb-item.active::before {
+    content: ""; position: absolute;
+    left: -6px; top: 7px; bottom: 7px;
+    width: 3px; background: hsl(var(--brand)); border-radius: 0 3px 3px 0;
+  }
+  .sb-item.has-active-child { color: hsl(var(--text)); font-weight: 600; }
+  .sb-chev { margin-left: auto; transition: transform .15s ease; color: hsl(var(--text-3)); opacity: .7; }
+  .sb-item.expanded .sb-chev { transform: rotate(90deg); opacity: 1; }
+
+  .sb-sub {
+    margin-left: 22px;
+    border-left: 1px solid hsl(var(--border));
+    padding-left: 6px;
+    margin-top: 2px; margin-bottom: 4px;
+  }
+  .sb-sub .sb-item { padding: 6px 10px; font-size: 12.5px; margin: 0; }
+  .sb-sub .sb-item.active::before { left: -7px; width: 2px; }
+
+  .sb-foot {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 10px;
+    border-top: 1px solid hsl(var(--sidebar-border));
+  }
+  .sb-foot-account {
+    display: flex; align-items: center; gap: 10px;
+    flex: 1; padding: 6px 8px; border-radius: 8px;
+    cursor: pointer; transition: background .12s; min-width: 0;
+  }
+  .sb-foot-account:hover { background: hsl(var(--surface-2)); }
+  .sb-foot .sb-avatar {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: hsl(var(--brand)); color: #fff;
+    display: grid; place-items: center;
+    font-weight: 600; font-size: 11px; flex-shrink: 0;
+  }
+  .sb-user { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .sb-user-name { font-size: 12.5px; font-weight: 600; color: hsl(var(--text)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sb-user-mail { font-size: 11px; color: hsl(var(--text-3)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+  /* === TOPBAR === */
+  .ks-topbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 18px; height: 56px;
+    border-bottom: 1px solid hsl(var(--border));
+    background: hsl(var(--surface));
+    position: sticky; top: 0; z-index: 10;
+  }
+  .ks-crumbs { display: flex; align-items: center; gap: 6px; font-size: 13px; color: hsl(var(--text-2)); flex: 1; min-width: 0; }
+  .ks-crumbs .sep { color: hsl(var(--text-3)); }
+  .ks-crumbs b { color: hsl(var(--text)); font-weight: 600; }
+  .ks-topbar-search {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px;
+    background: hsl(var(--surface-2));
+    border: 1px solid hsl(var(--border));
+    border-radius: 8px; min-width: 280px;
+    color: hsl(var(--text-3));
+  }
+  .ks-topbar-search input {
+    flex: 1; background: transparent; border: 0; outline: 0;
+    color: hsl(var(--text)); font-family: inherit; font-size: 13px;
+  }
+  .kbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10.5px; padding: 2px 5px;
+    background: hsl(var(--surface)); border: 1px solid hsl(var(--border));
+    border-radius: 4px; color: hsl(var(--text-3));
+  }
+  .icon-btn {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: transparent; border: 1px solid transparent;
+    color: hsl(var(--text-2));
+    display: grid; place-items: center; cursor: pointer;
+    transition: background .12s, color .12s, border-color .12s;
+    position: relative;
+  }
+  .icon-btn:hover { background: hsl(var(--surface-2)); color: hsl(var(--text)); border-color: hsl(var(--border)); }
+  .dot-badge {
+    position: absolute; top: 6px; right: 6px;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: hsl(var(--destructive));
+    border: 2px solid hsl(var(--surface));
+  }
+
+  /* === PAGE === */
+  .ks-page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 20px; }
+  .ks-page-title { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; color: hsl(var(--text)); }
+  .ks-page-desc { font-size: 13.5px; color: hsl(var(--text-2)); margin-top: 4px; max-width: 620px; }
+  .ks-page-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+  /* === BUTTONS (design system) === */
+  .ks-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 11px; font-size: 12.5px; font-weight: 500;
+    background: hsl(var(--surface));
+    border: 1px solid hsl(var(--border));
+    border-radius: 8px;
+    color: hsl(var(--text)); cursor: pointer;
+    transition: background .12s, border-color .12s, color .12s;
+    font-family: inherit;
+  }
+  .ks-btn:hover { background: hsl(var(--surface-2)); border-color: hsl(var(--border-strong)); }
+  .ks-btn-primary { background: hsl(var(--brand)); border-color: hsl(var(--brand)); color: #fff; }
+  .ks-btn-primary:hover { background: hsl(var(--brand-2)); border-color: hsl(var(--brand-2)); }
+  .ks-btn-ghost { border-color: transparent; background: transparent; color: hsl(var(--text-2)); }
+  .ks-btn-ghost:hover { background: hsl(var(--surface-2)); color: hsl(var(--text)); }
+  .ks-btn-sm { padding: 5px 9px; font-size: 12px; gap: 5px; }
+  .ks-btn-icon { padding: 7px; width: 32px; justify-content: center; }
+
+  /* === SEGMENTED CONTROL === */
+  .ks-seg {
+    display: inline-flex; background: hsl(var(--surface-2));
+    border-radius: 8px; padding: 3px;
+    border: 1px solid hsl(var(--border));
+  }
+  .ks-seg button {
+    padding: 4px 10px; font-size: 12px; font-weight: 500;
+    color: hsl(var(--text-2));
+    border-radius: 5px; background: transparent;
+    border: 0; cursor: pointer; font-family: inherit;
+  }
+  .ks-seg button.on { background: hsl(var(--surface)); color: hsl(var(--text)); box-shadow: var(--shadow-1); font-weight: 600; }
+  .ks-seg-mini {
+    display: inline-flex; background: hsl(var(--surface-2));
+    border-radius: 7px; padding: 2px; gap: 2px;
+  }
+  .ks-seg-mini button {
+    padding: 3px 9px; font-size: 11px; font-weight: 600;
+    color: hsl(var(--text-2));
+    border-radius: 5px; background: transparent;
+    border: 0; cursor: pointer; font-family: inherit;
+  }
+  .ks-seg-mini button.on { background: hsl(var(--surface)); color: hsl(var(--text)); box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+
+  /* === CHIPS === */
+  .ks-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .ks-chip {
+    padding: 5px 10px; border-radius: 999px;
+    font-size: 12px; font-weight: 500;
+    background: hsl(var(--surface));
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--text-2));
+    cursor: pointer;
+    transition: background .12s, border-color .12s, color .12s;
+  }
+  .ks-chip.on { background: hsl(var(--text)); color: hsl(var(--surface)); border-color: hsl(var(--text)); }
+  .ks-chip:hover:not(.on) { background: hsl(var(--surface-2)); }
+
+  /* === SEARCH BOX === */
+  .ks-search-box {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 11px;
+    background: hsl(var(--surface));
+    border: 1px solid hsl(var(--border));
+    border-radius: 8px;
+    color: hsl(var(--text-3));
+  }
+
+  /* === FILTER BAR === */
+  .ks-filterbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px;
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--surface));
+    border-radius: var(--r-lg);
+    flex-wrap: wrap;
+  }
+
+  /* === CARD (design system) === */
+  .ks-card {
+    background: hsl(var(--surface));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+  .ks-card-head { padding: 14px 18px; border-bottom: 1px solid hsl(var(--border)); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .ks-card-title { font-size: 14px; font-weight: 600; color: hsl(var(--text)); }
+  .ks-card-desc { font-size: 12px; color: hsl(var(--text-3)); margin-top: 2px; }
+  .ks-card-body { padding: 18px; }
+
+  /* === BADGES === */
+  .ks-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 5px;
+    font-size: 11px; font-weight: 600;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .ks-badge.success { background: hsl(var(--success-soft)); color: hsl(var(--success)); }
+  .ks-badge.warn    { background: hsl(var(--warn-soft));    color: hsl(var(--warn)); }
+  .ks-badge.danger  { background: hsl(var(--danger-soft));  color: hsl(var(--destructive)); }
+  .ks-badge.info    { background: hsl(var(--info-soft));    color: hsl(var(--info)); }
+  .ks-badge.brand   { background: hsl(var(--brand-soft));   color: hsl(var(--brand-ink)); }
+  .ks-badge.outline { background: transparent; border: 1px solid hsl(var(--border)); color: hsl(var(--text-2)); }
+
+  /* === KPI strip === */
+  .ks-kpi-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 1200px) { .ks-kpi-strip { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 720px)  { .ks-kpi-strip { grid-template-columns: repeat(2, 1fr); } }
+
+  .ks-kpi-cardspark {
+    background: hsl(var(--surface));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--r-lg);
+    padding: 14px 16px 12px;
+    display: flex; flex-direction: column; gap: 6px;
+    position: relative; overflow: hidden;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .ks-kpi-cardspark:hover { border-color: hsl(var(--border-strong)); box-shadow: var(--shadow-1); }
+  .ks-kpi-cardspark-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .ks-kpi-cardspark-value {
+    font-size: 24px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums;
+    margin-top: 6px;
+  }
+  .ks-kpi-cardspark-label { font-size: 12px; color: hsl(var(--text-2)); }
+  .ks-kpi-mini-square {
+    width: 36px; height: 36px; border-radius: 9px;
+    display: grid; place-items: center; flex-shrink: 0;
+  }
+  .ks-kpi-mini-square.brand   { background: hsl(var(--brand-soft));   color: hsl(var(--brand)); }
+  .ks-kpi-mini-square.success { background: hsl(var(--success-soft)); color: hsl(var(--success)); }
+  .ks-kpi-mini-square.warn    { background: hsl(var(--warn-soft));    color: hsl(var(--warn)); }
+  .ks-kpi-mini-square.danger  { background: hsl(var(--danger-soft));  color: hsl(var(--destructive)); }
+  .ks-kpi-delta {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 11px; font-weight: 600; padding: 2px 6px;
+    border-radius: 5px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .ks-kpi-delta.success { background: hsl(var(--success-soft)); color: hsl(var(--success)); }
+  .ks-kpi-delta.danger  { background: hsl(var(--danger-soft));  color: hsl(var(--destructive)); }
+  .ks-kpi-delta.flat    { background: hsl(var(--surface-2));    color: hsl(var(--text-2)); }
+
+  /* === ALERT STRIP === */
+  .ks-alert-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+  @media (max-width: 1100px) { .ks-alert-strip { grid-template-columns: repeat(2, 1fr); } }
+  .ks-alert-tile {
+    background: hsl(var(--surface));
+    border: 1px solid hsl(var(--border));
+    border-left: 3px solid hsl(var(--brand));
+    border-radius: var(--r-md);
+    padding: 10px 12px;
+    display: flex; align-items: center; gap: 10px;
+    transition: background .15s, border-color .15s;
+    cursor: pointer;
+  }
+  .ks-alert-tile:hover { background: hsl(var(--surface-2)); }
+  .ks-alert-tile.ks-alert-danger { border-left-color: hsl(var(--destructive)); }
+  .ks-alert-tile.ks-alert-warn   { border-left-color: hsl(var(--warn)); }
+  .ks-alert-tile.ks-alert-info   { border-left-color: hsl(var(--info)); }
+  .ks-alert-tile-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    display: grid; place-items: center; flex-shrink: 0;
+  }
+  .ks-alert-danger .ks-alert-tile-icon { background: hsl(var(--danger-soft)); color: hsl(var(--destructive)); }
+  .ks-alert-warn   .ks-alert-tile-icon { background: hsl(var(--warn-soft));   color: hsl(var(--warn)); }
+  .ks-alert-info   .ks-alert-tile-icon { background: hsl(var(--info-soft));   color: hsl(var(--info)); }
+  .ks-alert-tile-title { font-size: 13px; font-weight: 600; line-height: 1.2; }
+  .ks-alert-tile-body  { font-size: 11.5px; color: hsl(var(--text-3)); margin-top: 2px; }
+
+  /* === AI BANNER === */
+  .ks-ai-banner {
+    background: linear-gradient(135deg, hsl(var(--brand-soft)) 0%, hsl(var(--surface-2)) 100%);
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--r-lg);
+    padding: 14px 16px;
+    display: flex; align-items: flex-start; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .ks-ai-banner-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: hsl(var(--brand)); color: #fff;
+    display: grid; place-items: center; flex-shrink: 0;
+  }
+  .ks-ai-banner-title { font-size: 13px; font-weight: 600; color: hsl(var(--brand-ink)); margin-bottom: 3px; }
+  .ks-ai-banner-body  { font-size: 12.5px; color: hsl(var(--text-2)); line-height: 1.55; }
+
+  /* === GRIDS === */
+  .ks-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .ks-grid-3 { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 1100px) {
+    .ks-grid-2, .ks-grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* === LEGEND === */
+  .ks-chart-legend { display: flex; gap: 10px; flex-wrap: wrap; }
+  .ks-legend-item { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: hsl(var(--text-2)); font-weight: 500; }
+  .ks-legend-swatch { width: 10px; height: 10px; border-radius: 3px; box-shadow: 0 0 0 2px color-mix(in oklab, currentColor 12%, transparent); }
+}
+
+/* ============================================================ */
+/*  ✨ MODERN POLISH — premium finish, blue-cohesive             */
+/* ============================================================ */
+
+@layer components {
+  /* Body — refined font features */
+  body {
+    font-feature-settings: "ss01", "cv11", "ss03", "cv09";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Page header — display grade with gradient text */
+  .ks-page-title {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: hsl(var(--text));
+    background: linear-gradient(180deg, hsl(var(--text)) 0%, color-mix(in oklab, hsl(var(--text)) 75%, hsl(var(--brand)) 25%) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  .ks-page-desc {
+    font-size: 13.5px;
+    color: hsl(var(--text-2));
+    letter-spacing: -0.005em;
+    line-height: 1.55;
+  }
+
+  /* Card refinement — blue-tinted shadow, gentle lift on hover */
+  .ks-card {
+    border-color: hsl(var(--border));
+    box-shadow:
+      0 1px 0 0 rgba(37,99,235,.04),
+      0 1px 2px -1px rgba(15,23,42,.04);
+    transition: box-shadow .2s, border-color .2s;
+  }
+  .ks-card:hover {
+    box-shadow:
+      0 1px 0 0 rgba(37,99,235,.06),
+      0 8px 20px -8px rgba(37,99,235,.10),
+      0 2px 4px -1px rgba(15,23,42,.05);
+  }
+  .ks-card-head {
+    border-bottom: 1px solid hsl(var(--border-subtle));
+    background: linear-gradient(180deg, hsl(var(--surface)) 0%, color-mix(in oklab, hsl(var(--surface)) 96%, hsl(var(--brand)) 4%) 100%);
+  }
+  .ks-card-title {
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    color: hsl(var(--text));
+  }
+
+  /* KPI sparkline cards — premium feel with brand accent rail + sheen */
+  .ks-kpi-cardspark {
+    background:
+      linear-gradient(180deg, rgba(37,99,235,.015) 0%, transparent 50%),
+      hsl(var(--surface));
+    border-color: hsl(var(--border));
+    box-shadow:
+      0 1px 0 0 rgba(37,99,235,.04),
+      0 1px 2px -1px rgba(15,23,42,.04);
+    transition: transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .18s, border-color .18s;
+    border-radius: 14px;
+  }
+  .ks-kpi-cardspark::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, hsl(var(--brand)) 35%, hsl(var(--accent)) 65%, transparent 100%);
+    opacity: 0;
+    transition: opacity .25s;
+  }
+  .ks-kpi-cardspark:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in oklab, hsl(var(--brand)) 25%, hsl(var(--border)));
+    box-shadow:
+      0 1px 0 0 rgba(37,99,235,.06),
+      0 12px 28px -12px rgba(37,99,235,.18),
+      0 2px 6px -2px rgba(15,23,42,.06);
+  }
+  .ks-kpi-cardspark:hover::before { opacity: .7; }
+  .ks-kpi-cardspark-label {
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: hsl(var(--text-3));
+  }
+  .ks-kpi-cardspark-value {
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.028em;
+    font-size: 28px;
+    color: hsl(var(--text));
+    font-variant-numeric: tabular-nums;
+  }
+  .ks-kpi-mini-square {
+    width: 32px; height: 32px; border-radius: 9px;
+  }
+  .ks-kpi-mini-square.brand {
+    background: linear-gradient(135deg, hsl(var(--brand-soft)) 0%, color-mix(in oklab, hsl(var(--brand-soft)) 60%, hsl(var(--brand)) 8%) 100%);
+    color: hsl(var(--brand));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 0 0 1px rgba(37,99,235,.06);
+  }
+  .ks-kpi-delta {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Buttons — premium primary with gradient + glow */
+  .ks-btn {
+    border-radius: 8px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    transition: all .15s cubic-bezier(.2,.8,.2,1);
+  }
+  .ks-btn:hover {
+    transform: translateY(-0.5px);
+  }
+  .ks-btn-primary {
+    background: linear-gradient(180deg, color-mix(in oklab, hsl(var(--brand)) 92%, white 8%) 0%, hsl(var(--brand)) 100%);
+    border-color: hsl(var(--brand-2));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.18),
+      inset 0 -1px 0 rgba(0,0,0,.06),
+      0 1px 2px rgba(37,99,235,.20),
+      0 0 0 1px rgba(37,99,235,.06);
+  }
+  .ks-btn-primary:hover {
+    background: linear-gradient(180deg, hsl(var(--brand)) 0%, hsl(var(--brand-2)) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.16),
+      0 4px 12px -2px rgba(37,99,235,.35),
+      0 0 0 1px rgba(37,99,235,.10);
+  }
+
+  /* Topbar — frosted blue-tinted header */
+  .ks-topbar {
+    background: linear-gradient(180deg,
+      rgba(255,255,255,.85) 0%,
+      rgba(245,249,255,.75) 100%);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border-bottom: 1px solid hsl(var(--border-subtle));
+  }
+  .ks-topbar-search {
+    background: rgba(255,255,255,.6);
+    border: 1px solid hsl(var(--border));
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  .ks-topbar-search:focus-within {
+    border-color: hsl(var(--brand));
+    background: hsl(var(--surface));
+    box-shadow: 0 0 0 4px color-mix(in oklab, hsl(var(--brand)) 12%, transparent);
+  }
+
+  /* Badges — refined pill, micro shadow */
+  .ks-badge {
+    border-radius: 999px;
+    font-size: 10.5px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    font-weight: 650;
+    padding: 3px 9px;
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, currentColor 14%, transparent);
+  }
+
+  /* Search box — softer ring, smoother focus */
+  .ks-search-box {
+    border-radius: 9px;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  .ks-search-box:focus-within {
+    border-color: hsl(var(--brand));
+    box-shadow: 0 0 0 4px color-mix(in oklab, hsl(var(--brand)) 14%, transparent);
+  }
+
+  /* Segmented control — premium feel */
+  .ks-seg {
+    background: hsl(var(--surface-2));
+    border: 1px solid hsl(var(--border));
+    padding: 3px;
+    border-radius: 9px;
+  }
+  .ks-seg button.on {
+    background: hsl(var(--surface));
+    color: hsl(var(--text));
+    font-weight: 600;
+    box-shadow:
+      0 1px 0 rgba(37,99,235,.08),
+      0 1px 3px rgba(15,23,42,.08),
+      0 0 0 1px rgba(37,99,235,.05);
+  }
+
+  /* AI banner — beautiful blue gradient with soft glow */
+  .ks-ai-banner {
+    background:
+      radial-gradient(80% 100% at 0% 0%, color-mix(in oklab, hsl(var(--brand)) 12%, transparent) 0%, transparent 50%),
+      linear-gradient(135deg, hsl(var(--brand-soft)) 0%, color-mix(in oklab, hsl(var(--accent-soft)) 50%, hsl(var(--surface))) 100%);
+    border-color: color-mix(in oklab, hsl(var(--brand)) 18%, hsl(var(--border)));
+    box-shadow: 0 1px 0 rgba(37,99,235,.04), 0 4px 20px -8px rgba(37,99,235,.18);
+  }
+  .ks-ai-banner-icon {
+    background: linear-gradient(135deg, hsl(var(--brand)) 0%, hsl(var(--brand-2)) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.2),
+      0 4px 14px -4px color-mix(in oklab, hsl(var(--brand)) 50%, transparent);
+  }
+  .ks-ai-banner-title {
+    font-weight: 650;
+    letter-spacing: -0.012em;
+    color: hsl(var(--brand-ink));
+  }
+
+  /* Sidebar logo — match brand exactly */
+  .sb-logo {
+    background: linear-gradient(135deg, hsl(var(--brand)) 0%, hsl(var(--brand-2)) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.25),
+      0 0 0 1px color-mix(in oklab, hsl(var(--brand)) 30%, transparent),
+      0 4px 12px -4px color-mix(in oklab, hsl(var(--brand)) 60%, transparent);
+  }
+
+  /* Sidebar active — gradient + inset hairline */
+  .sb-item.active {
+    background: linear-gradient(135deg,
+      color-mix(in oklab, hsl(var(--brand)) 16%, transparent) 0%,
+      color-mix(in oklab, hsl(var(--brand)) 8%, transparent) 100%);
+    color: hsl(var(--brand-ink));
+    font-weight: 600;
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, hsl(var(--brand)) 14%, transparent);
+  }
+  .sb-item.active svg { color: hsl(var(--brand)); }
+
+  /* Filter bar — match polish */
+  .ks-filterbar {
+    border-radius: 14px;
+    background:
+      linear-gradient(180deg, rgba(37,99,235,.012) 0%, transparent 50%),
+      hsl(var(--surface));
+    box-shadow:
+      0 1px 0 0 rgba(37,99,235,.04),
+      0 1px 2px -1px rgba(15,23,42,.04);
+  }
+
+  /* Selection */
+  ::selection {
+    background: color-mix(in oklab, hsl(var(--brand)) 25%, transparent);
+    color: hsl(var(--brand-ink));
+  }
+}
+
+/* Subtle decorative blue glow behind the page content */
+main {
+  background:
+    radial-gradient(60% 40% at 0% 0%, color-mix(in oklab, hsl(var(--brand)) 4%, transparent) 0%, transparent 60%),
+    radial-gradient(50% 35% at 100% 0%, color-mix(in oklab, hsl(var(--accent)) 3%, transparent) 0%, transparent 60%),
+    hsl(var(--background));
+}
+
+/* Slim & blue scrollbar (overrides global) */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, hsl(var(--brand)) 18%, transparent);
+  border-radius: 5px;
+  border: 2px solid hsl(var(--background));
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, hsl(var(--brand)) 35%, transparent);
+}
+
+/* ============================================================ */
+/*  SHADCN SIDEBAR — design polish overrides                    */
+/*  Targets shadcn's [data-sidebar] attributes so the standard   */
+/*  Sidebar primitive renders with the design's sb-* aesthetics  */
+/* ============================================================ */
+
+@layer components {
+  /* Sidebar wrapper — subtle brand-tinted gradient background */
+  [data-sidebar="sidebar"] {
+    background: linear-gradient(180deg,
+      color-mix(in oklab, hsl(var(--brand)) 4%, hsl(var(--surface))) 0%,
+      color-mix(in oklab, hsl(var(--brand)) 2%, hsl(var(--surface))) 100%);
+    border-right: 1px solid color-mix(in oklab, hsl(var(--brand)) 16%, hsl(var(--border)));
+  }
+
+  /* Sidebar header — design's sb-head treatment */
+  [data-sidebar="header"] {
+    border-bottom: 1px solid hsl(var(--border-subtle));
+    padding: 14px 12px;
+  }
+
+  /* Sidebar footer — design's sb-foot treatment */
+  [data-sidebar="footer"] {
+    border-top: 1px solid hsl(var(--border-subtle));
+    padding: 10px 10px;
+  }
+
+  /* Group label — uppercase tracked smallcaps like design's sb-group-label */
+  [data-sidebar="group-label"] {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: hsl(var(--text-3));
+    padding: 14px 12px 6px;
+  }
+
+  /* Menu button — design's sb-item base */
+  [data-sidebar="menu-button"],
+  [data-sidebar="menu-sub-button"] {
+    border-radius: 8px;
+    color: hsl(var(--text-2));
+    font-size: 13px;
+    font-weight: 500;
+    transition: background .12s, color .12s, box-shadow .15s;
+  }
+  [data-sidebar="menu-button"]:hover,
+  [data-sidebar="menu-sub-button"]:hover {
+    background: color-mix(in oklab, hsl(var(--brand)) 6%, transparent);
+    color: hsl(var(--text));
+  }
+  [data-sidebar="menu-button"] svg,
+  [data-sidebar="menu-sub-button"] svg {
+    color: hsl(var(--text-3));
+    flex-shrink: 0;
+  }
+  [data-sidebar="menu-button"]:hover svg,
+  [data-sidebar="menu-sub-button"]:hover svg {
+    color: hsl(var(--brand));
+  }
+
+  /* Active menu item — gradient pill with inset hairline + brand color */
+  [data-sidebar="menu-button"][data-active="true"],
+  [data-sidebar="menu-sub-button"][data-active="true"] {
+    background: linear-gradient(135deg,
+      color-mix(in oklab, hsl(var(--brand)) 16%, transparent) 0%,
+      color-mix(in oklab, hsl(var(--brand)) 8%, transparent) 100%) !important;
+    color: hsl(var(--brand-ink)) !important;
+    font-weight: 600;
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, hsl(var(--brand)) 14%, transparent);
+    position: relative;
+  }
+  [data-sidebar="menu-button"][data-active="true"] svg,
+  [data-sidebar="menu-sub-button"][data-active="true"] svg {
+    color: hsl(var(--brand)) !important;
+  }
+  [data-sidebar="menu-button"][data-active="true"]::before {
+    content: "";
+    position: absolute;
+    left: -8px;
+    top: 7px;
+    bottom: 7px;
+    width: 3px;
+    background: hsl(var(--brand));
+    border-radius: 0 3px 3px 0;
+  }
+
+  /* Sub-menu — left border guide line */
+  [data-sidebar="menu-sub"] {
+    border-left: 1px solid color-mix(in oklab, hsl(var(--brand)) 14%, hsl(var(--border)));
+    padding-left: 8px;
+    margin-left: 14px;
+  }
+
+  /* Sidebar trigger button — match icon-btn style */
+  [data-sidebar="trigger"] {
+    border-radius: 8px;
+    color: hsl(var(--text-2));
+    transition: background .12s, color .12s, border-color .12s;
+  }
+  [data-sidebar="trigger"]:hover {
+    background: hsl(var(--surface-2));
+    color: hsl(var(--text));
+  }
+
+  /* ============================================================ */
+  /* Project-wide design polish                                   */
+  /* ============================================================ */
+
+  /* Tables — sticky head w/ gradient + uppercase labels (shadcn table) */
+  table thead th {
+    background: linear-gradient(180deg,
+      hsl(var(--surface-2)) 0%,
+      color-mix(in oklab, hsl(var(--surface-2)) 80%, hsl(var(--brand-soft)) 20%) 100%);
+    font-size: 10.5px;
+    font-weight: 650;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: hsl(var(--text-2));
+    border-bottom: 1px solid hsl(var(--border));
+  }
+  table tbody tr {
+    transition: background .12s;
+  }
+  table tbody tr:hover {
+    background: color-mix(in oklab, hsl(var(--brand-soft)) 35%, hsl(var(--surface)));
+  }
+  table tbody td {
+    border-bottom: 1px solid hsl(var(--border-subtle));
+  }
+
+  /* Inputs — softer ring, smoother focus (any input/textarea/select) */
+  input, textarea, select {
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  input:focus, textarea:focus, select:focus,
+  input:focus-visible, textarea:focus-visible, select:focus-visible {
+    border-color: hsl(var(--brand)) !important;
+    box-shadow: 0 0 0 4px color-mix(in oklab, hsl(var(--brand)) 14%, transparent) !important;
+  }
+
+  /* Buttons (shadcn Button primary variant default) — gradient + glow */
+  [data-slot="button"][data-variant="default"],
+  button[type="submit"]:not(.ks-btn):not([class*="ghost"]):not([class*="outline"]) {
+    transition: all .15s cubic-bezier(.2,.8,.2,1);
+  }
+  [data-slot="button"][data-variant="default"]:hover,
+  button[type="submit"]:hover {
+    transform: translateY(-0.5px);
+  }
+
+  /* Dialog content — premium shadow w/ blue cast */
+  [role="dialog"] > div[role="document"],
+  [data-slot="dialog-content"] {
+    border-radius: 14px !important;
+    box-shadow:
+      0 20px 60px -20px rgba(37,99,235,.20),
+      0 8px 32px -8px rgba(15,23,42,.18),
+      0 0 0 1px color-mix(in oklab, hsl(var(--brand)) 8%, hsl(var(--border))) !important;
+  }
+
+  /* Popover content (filter dropdowns, etc.) */
+  [data-slot="popover-content"],
+  [data-radix-popper-content-wrapper] [data-state="open"] {
+    border-radius: 12px !important;
+    box-shadow:
+      0 10px 40px -10px rgba(37,99,235,.15),
+      0 4px 16px -4px rgba(15,23,42,.12) !important;
+  }
+
+  /* shadcn Badge — refined */
+  [data-slot="badge"] {
+    border-radius: 999px !important;
+    font-size: 10.5px !important;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    font-weight: 650 !important;
+  }
+
+  /* Card hover lift (ANY shadcn Card) */
+  [data-slot="card"]:hover {
+    box-shadow:
+      0 1px 0 0 rgba(37,99,235,.06),
+      0 8px 20px -8px rgba(37,99,235,.10),
+      0 2px 4px -1px rgba(15,23,42,.05) !important;
+  }
+
+  /* ============================================================ */
+  /* Dashboard layout polish — topbar + content wrapper           */
+  /* ============================================================ */
+
+  /* Frosted gradient topbar inside SidebarInset */
+  [data-slot="sidebar-inset"] > header,
+  main > header:first-of-type {
+    background: linear-gradient(180deg,
+      rgba(255,255,255,.85) 0%,
+      rgba(245,249,255,.75) 100%);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border-bottom: 1px solid hsl(var(--border-subtle));
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  /* Content wrapper — soften the default border + bigger padding rhythm */
+  [data-slot="sidebar-inset"] > div:not(:first-of-type),
+  main > div:not(:first-of-type) {
+    border-color: transparent !important;
+  }
+
+  /* Breadcrumbs in topbar — design's crumb style */
+  [data-slot="sidebar-inset"] header nav ol {
+    font-size: 13px;
+    color: hsl(var(--text-2));
+  }
+  [data-slot="sidebar-inset"] header nav ol li:last-child * {
+    color: hsl(var(--text));
+    font-weight: 600;
+  }
+
+  /* TeamSwitcher (sidebar header) — refined */
+  [data-sidebar="header"] [data-sidebar="menu-button"] {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 10px;
+  }
+  [data-sidebar="header"] [data-sidebar="menu-button"]:hover {
+    background: color-mix(in oklab, hsl(var(--brand)) 5%, transparent) !important;
+  }
+
+  /* NavUser (sidebar footer) — refined */
+  [data-sidebar="footer"] [data-sidebar="menu-button"] {
+    background: transparent !important;
+    border-radius: 10px;
+    padding: 6px 8px;
+  }
+  [data-sidebar="footer"] [data-sidebar="menu-button"]:hover {
+    background: color-mix(in oklab, hsl(var(--brand)) 5%, transparent) !important;
+  }
+
+  /* Avatar in TeamSwitcher logo + NavUser — brand gradient */
+  [data-sidebar="header"] [data-sidebar="menu-button"] > div:first-child,
+  [data-sidebar="footer"] [data-slot="avatar"] {
+    background: linear-gradient(135deg, hsl(var(--brand)) 0%, hsl(var(--brand-2)) 100%) !important;
+    color: #fff !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.25),
+      0 0 0 1px color-mix(in oklab, hsl(var(--brand)) 30%, transparent),
+      0 4px 12px -4px color-mix(in oklab, hsl(var(--brand)) 60%, transparent);
+  }
+
+  /* Sidebar separator (between menu groups) */
+  [data-sidebar="separator"] {
+    background: hsl(var(--border-subtle)) !important;
+  }
+}
+
+/* ============================================================ */
+/*  LAYOUT DENSITY - compact mode adjustments                    */
+/* ============================================================ */
+
+.density-compact .ks-kpi-strip {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.density-compact .ks-kpi-cardspark {
+  padding: 10px 12px 8px;
+}
+
+.density-compact .ks-kpi-cardspark-value {
+  font-size: 22px;
+}
+
+.density-compact .ks-kpi-cardspark-label {
+  font-size: 9px;
+}
+
+.density-compact .ks-card {
+  border-radius: 12px;
+}
+
+.density-compact .ks-card-body {
+  padding: 14px;
+}
+
+.density-compact .ks-card-head {
+  padding: 12px 14px;
+}
+
+.density-compact .ks-filterbar {
+  padding: 8px;
+  gap: 8px;
+}
+
+.density-compact .ks-page-head {
+  margin-bottom: 14px;
+}
+
+.density-compact .ks-page-title {
+  font-size: 22px;
+}
+
+.density-compact .ks-page-desc {
+  font-size: 12.5px;
+}
+
+@media (max-width: 768px) {
+  .density-compact .ks-kpi-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Dark mode contrast fixes for overview/dashboard surfaces */
+.dark .ks-topbar,
+.dark [data-slot="sidebar-inset"] > header,
+.dark main > header:first-of-type {
+  background: linear-gradient(180deg, hsl(var(--surface-2) / 0.9) 0%, hsl(var(--surface) / 0.88) 100%);
+  border-bottom-color: hsl(var(--border));
+}
+
+.dark .ks-topbar-search {
+  background: hsl(var(--surface));
+  border-color: hsl(var(--border));
+}
+
+.dark .ks-card-head {
+  background: linear-gradient(180deg, hsl(var(--surface-2)) 0%, hsl(var(--surface)) 100%);
+}
+
+.dark .ks-kpi-cardspark,
+.dark .ks-filterbar,
+.dark .ks-alert-tile {
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.25), 0 8px 20px -16px rgba(0, 0, 0, 0.45);
+}
+
+.dark .ks-kpi-cardspark:hover,
+.dark .ks-card:hover {
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 14px 28px -18px rgba(0, 0, 0, 0.6);
+}
+
+.dark .ks-page-title {
+  background: linear-gradient(180deg, hsl(var(--text)) 0%, color-mix(in oklab, hsl(var(--text)) 82%, hsl(var(--brand)) 18%) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.dark .ks-page-desc,
+.dark .ks-legend-item,
+.dark .ks-card-desc {
+  color: hsl(var(--text-2));
+}
+
+.dark .ks-kpi-cardspark-label,
+.dark .ks-alert-tile-body {
+  color: hsl(var(--text-2));
+}
+
+/* If some dashboard blocks stay white in dark mode, force readable dark text. */
+.dark .ks-page-head,
+.dark .ks-page-head .ks-page-title,
+.dark .ks-page-head .ks-page-desc,
+.dark .ks-page-head p,
+.dark .ks-page-head span {
+  color: hsl(217 71% 14%) !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+/* Force readable page heading text (prevents low-contrast gradient text). */
+.ks-page-head .ks-page-title {
+  background: none !important;
+  color: hsl(var(--text)) !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+.ks-page-head .ks-page-desc {
+  color: hsl(var(--text-2)) !important;
+}
+
+.dark main {
+  background:
+    radial-gradient(60% 40% at 0% 0%, color-mix(in oklab, hsl(var(--brand)) 10%, transparent) 0%, transparent 60%),
+    radial-gradient(50% 35% at 100% 0%, color-mix(in oklab, hsl(var(--accent)) 8%, transparent) 0%, transparent 60%),
+    hsl(var(--background));
+}
+
+/* Global readability guard:
+   In dark mode, some pages still render light surfaces. Force dark ink on those surfaces. */
+.dark .bg-white,
+.dark .bg-slate-50,
+.dark .bg-slate-100,
+.dark .bg-gray-50,
+.dark .bg-gray-100,
+.dark .bg-zinc-50,
+.dark .bg-zinc-100,
+.dark .bg-neutral-50,
+.dark .bg-neutral-100 {
+  color: hsl(217 71% 14%);
+}
+
+.dark .bg-white .text-muted-foreground,
+.dark .bg-slate-50 .text-muted-foreground,
+.dark .bg-slate-100 .text-muted-foreground,
+.dark .bg-gray-50 .text-muted-foreground,
+.dark .bg-gray-100 .text-muted-foreground,
+.dark .bg-zinc-50 .text-muted-foreground,
+.dark .bg-zinc-100 .text-muted-foreground,
+.dark .bg-neutral-50 .text-muted-foreground,
+.dark .bg-neutral-100 .text-muted-foreground {
+  color: hsl(215 35% 35%);
+}
+
+.dark .bg-white input::placeholder,
+.dark .bg-white textarea::placeholder,
+.dark .bg-slate-50 input::placeholder,
+.dark .bg-slate-50 textarea::placeholder,
+.dark .bg-gray-50 input::placeholder,
+.dark .bg-gray-50 textarea::placeholder {
+  color: hsl(215 26% 52%);
+}

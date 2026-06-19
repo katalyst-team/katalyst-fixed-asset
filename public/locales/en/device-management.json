@@ -1,0 +1,23 @@
+{
+  "title": "Device Management",
+  "description": "Manage RFID readers and hardware devices across stores.",
+  "empty": {
+    "title": "No devices registered yet",
+    "description": "Device data will appear automatically once readers connect to the system."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "deviceId": "Device ID",
+      "totalScans": "Total Scans",
+      "lastSeen": "Last Active",
+      "stores": "Stores",
+      "antennas": "Antennas"
+    }
+  },
+  "detail": {
+    "title": "Device Detail",
+    "recentLogs": "Recent Logs",
+    "noLogs": "No logs for this device yet"
+  }
+}

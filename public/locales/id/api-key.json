@@ -1,0 +1,49 @@
+{
+  "loading": "Memuat Kunci API...",
+  "table": {
+    "header": {
+      "no": "No",
+      "key": "Kunci API",
+      "status": "Status",
+      "action": "Aksi"
+    },
+    "status": {
+      "active": "Aktif",
+      "inactive": "Tidak Aktif"
+    },
+    "showKey": "Tampilkan",
+    "hideKey": "Sembunyikan",
+    "copyKey": "Salin"
+  },
+  "modal": {
+    "addApiKey": {
+      "addButton": "Tambah Kunci API",
+      "createTitle": "Buat Kunci API Baru",
+      "editTitle": "Edit Kunci API",
+      "createDescription": "Buat kunci API baru untuk mengakses API. Kunci akan ditampilkan hanya sekali setelah pembuatan.",
+      "editDescription": "Perbarui status kunci API.",
+      "apiKeyNameLabel": "Nama Kunci API",
+      "apiKeyNamePlaceholder": "Masukkan nama kunci API",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Pilih status",
+      "statusActive": "Aktif",
+      "statusInactive": "Tidak Aktif",
+      "createButton": "Buat Kunci API",
+      "editButton": "Perbarui Kunci API",
+      "creating": "Membuat...",
+      "saving": "Menyimpan...",
+      "cancel": "Batal",
+      "apiKeyCreated": "Kunci API berhasil dibuat",
+      "apiKeyUpdated": "Kunci API berhasil diperbarui",
+      "generatedKey": "Kunci API yang Dihasilkan"
+    }
+  },
+  "empty": {
+    "title": "Tidak Ada Kunci API",
+    "description": "Anda belum membuat kunci API apa pun."
+  },
+  "toast": {
+    "apiKeyDeleted": "Kunci API berhasil dihapus",
+    "keyCopied": "Kunci API disalin ke clipboard"
+  }
+}

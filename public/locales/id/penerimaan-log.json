@@ -1,0 +1,36 @@
+{
+  "title": "Log Penerimaan",
+  "loading": "Memuat...",
+  "noData": "Tidak ada log Penerimaan yang ditemukan",
+  "empty": {
+    "title": "Tidak Ada Log Penerimaan",
+    "description": "Tidak ada entri log Penerimaan yang ditemukan."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "image": "Gambar",
+      "name": "Nama",
+      "rfidEpc": "EPC RFID",
+      "rfidName": "Nama RFID",
+      "category": "Kategori",
+      "status": "Status",
+      "action": "Aksi",
+      "internalCode": "Kode Internal",
+      "itemStatus": "Status Item",
+      "stockMovementType": "Tipe Pergerakan Stok"
+    },
+    "noData": "Tidak ada data tersedia"
+  },
+  "header": {
+    "createButton": "Buat Penerimaan Log"
+  },
+  "filter": {
+    "searchPlaceholder": "Cari produk...",
+    "rfidSearchPlaceholder": "Cari nama RFID...",
+    "internalCodePlaceholder": "Masukkan kode internal..."
+  },
+  "item": {
+    "imageAlt": "{{defaultValue}}"
+  }
+}

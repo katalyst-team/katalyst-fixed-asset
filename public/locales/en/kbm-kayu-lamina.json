@@ -1,0 +1,59 @@
+{
+  "empty": {
+    "description": "No KAYU LAMINA data available",
+    "title": "No Data"
+  },
+  "list": {
+    "filter": {
+      "allStores": "All Stores"
+    }
+  },
+  "modal": {
+    "add": {
+      "attributes": "Attributes",
+      "button": "Add Category",
+      "categoryName": "Category Name",
+      "categoryNamePlaceholder": "Enter category name",
+      "code": "Code",
+      "codePlaceholder": "Enter code",
+      "creating": "Creating...",
+      "defaultAttributesForSub": "Default Attributes for Sub Category",
+      "defaultAttributesForSubDescription": "These attributes and default values will be auto-filled when creating a new sub category.",
+      "description": "Add new KAYU LAMINA category",
+      "hasSubCategory": "Has Sub Category",
+      "store": "Store",
+      "storePlaceholder": "All Stores",
+      "title": "Add KAYU LAMINA Category",
+      "toastCreated": "Category successfully added"
+    },
+    "edit": {
+      "button": "Save",
+      "categoryName": "Category Name",
+      "categoryNamePlaceholder": "Enter category name",
+      "code": "Code",
+      "codePlaceholder": "Enter code",
+      "description": "Edit KAYU LAMINA category",
+      "editing": "Saving...",
+      "title": "Edit KAYU LAMINA Category",
+      "toastUpdated": "Category successfully updated"
+    }
+  },
+  "table": {
+    "header": {
+      "action": "Action",
+      "categoryName": "Category Name",
+      "code": "Code",
+      "no": "No",
+      "store": "Store",
+      "subCount": "Sub"
+    },
+    "item": {
+      "sub": "sub",
+      "attribute": "attribute",
+      "attributes": "attributes",
+      "required": "Required",
+      "toastDeleted": "Category successfully deleted",
+      "errorOrganizationNotFound": "Organization ID not found"
+    }
+  }
+}

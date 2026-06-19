@@ -1,0 +1,106 @@
+{
+  "title": "Monitor Perangkat",
+  "description": "Pantau status perangkat RFID dan gate secara real-time.",
+  "stats": {
+    "totalDevices": "Total Perangkat",
+    "onlineDevices": "Online",
+    "offlineDevices": "Offline",
+    "gateDevices": "Gate",
+    "fixedReaderDevices": "Fixed Reader",
+    "activeAlerts": "Alert Aktif",
+    "totalScansToday": "Total Scan Hari Ini",
+    "totalErrorsToday": "Total Error Hari Ini"
+  },
+  "table": {
+    "title": "Daftar Perangkat",
+    "detail": "Detail",
+    "inactive": "Nonaktif",
+    "header": {
+      "no": "No",
+      "deviceType": "Tipe",
+      "deviceId": "Device ID",
+      "deviceName": "Nama",
+      "gate": "Gate",
+      "status": "Status",
+      "ipAddress": "IP Address",
+      "lastSeen": "Terakhir Aktif",
+      "rssi": "RSSI",
+      "scanCount": "Total Scan",
+      "errorCount": "Error",
+      "actions": "Aksi"
+    }
+  },
+  "alerts": {
+    "title": "Alert Aktif",
+    "severity": "Severity",
+    "type": "Tipe",
+    "message": "Pesan",
+    "resolved": "Terselesaikan",
+    "unresolved": "Belum Diselesaikan",
+    "resolve": "Selesaikan",
+    "noAlerts": "Tidak ada alert",
+    "filterAll": "Semua",
+    "filterUnresolved": "Belum Diselesaikan",
+    "resolveError": "Gagal menyelesaikan alert"
+  },
+  "empty": {
+    "title": "Belum ada perangkat terdaftar",
+    "description": "Data perangkat akan muncul secara otomatis setelah perangkat terhubung ke sistem."
+  },
+  "filter": {
+    "all": "Semua",
+    "gate": "Gate",
+    "fixedReader": "Fixed Reader",
+    "online": "Online",
+    "offline": "Offline",
+    "search": "Cari perangkat..."
+  },
+  "detail": {
+    "deviceInfo": "Informasi Perangkat",
+    "gate": "Gate",
+    "section": "Section",
+    "updateDevice": "Ubah Perangkat",
+    "deviceName": "Nama Perangkat",
+    "alertThreshold": "Batas Alert",
+    "connectionCount": "Koneksi",
+    "avgRssi": "Rata-rata RSSI",
+    "isActive": "Aktif",
+    "save": "Simpan",
+    "saving": "Menyimpan...",
+    "cancel": "Batal",
+    "metrics": "Metrik Performa",
+    "updateError": "Gagal mengubah perangkat",
+    "signalExcellent": "Sangat Baik",
+    "signalGood": "Baik",
+    "signalFair": "Cukup",
+    "signalPoor": "Lemah"
+  },
+  "create": {
+    "trigger": "Daftar Perangkat",
+    "title": "Daftar Perangkat Baru",
+    "submit": "Daftar",
+    "creating": "Mendaftarkan...",
+    "error": "Gagal mendaftarkan perangkat",
+    "deviceType": "Tipe Perangkat",
+    "deviceTypeHint": "Gate scanner terhubung via TCP port 4000, Fixed Reader via port 21000",
+    "deviceId": "Device ID",
+    "deviceIdPlaceholder": "mis. 01",
+    "deviceIdHint": "Identifier unik global yang digunakan oleh protokol TCP",
+    "deviceName": "Nama Perangkat",
+    "deviceNamePlaceholder": "mis. Warehouse Reader A",
+    "description": "Deskripsi",
+    "location": "Lokasi",
+    "locationPlaceholder": "mis. Warehouse A - Dock 1",
+    "alertThreshold": "Batas Alert",
+    "alertThresholdHint": "Batas jumlah error sebelum alert muncul (default: 60)",
+    "validation": {
+      "deviceType": "Tipe perangkat wajib diisi",
+      "deviceId": "Device ID wajib diisi",
+      "deviceName": "Nama perangkat wajib diisi",
+      "alertThreshold": "Batas alert wajib diisi"
+    }
+  },
+  "delete": {
+    "error": "Gagal menghapus perangkat"
+  }
+}

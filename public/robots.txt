@@ -1,0 +1,43 @@
+# Katalyst Inventory Management System - Robots.txt
+# Website: https://inventory.katalyst.id
+
+User-agent: *
+Allow: /
+Allow: /dashboard/*
+Allow: /sign-up
+Allow: /reset-password
+Allow: /verification-access
+
+# Disallow private/sensitive areas
+Disallow: /api/
+Disallow: /dashboard/*/[
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /private/
+
+# Allow important assets
+Allow: /favicon.ico
+Allow: /images/
+Allow: /js/
+Allow: /*.css
+Allow: /*.js
+
+# Sitemap location
+Sitemap: https://inventory.katalyst.id/sitemap.xml
+Sitemap: https://inventory.katalyst.id/sitemap-index.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+# Specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2 

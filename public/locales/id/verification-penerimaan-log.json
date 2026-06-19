@@ -1,0 +1,45 @@
+{
+  "title": "Verifikasi Penerimaan Log",
+  "filter": {
+    "store": "Pilih toko..."
+  },
+  "empty": {
+    "title": "Tidak Ada Verifikasi Tertunda",
+    "description": "Tidak ada penerimaan log yang menunggu verifikasi (status VALIDATED)."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "referenceNumber": "No. Ref",
+      "status": "Status",
+      "editor": "Editor",
+      "quantity": "Jumlah",
+      "createdAt": "Dibuat",
+      "actions": "Aksi"
+    },
+    "noData": "Tidak ada data"
+  },
+  "buttons": {
+    "verify": "Verifikasi",
+    "revoke": "Tarik Kembali"
+  },
+  "toast": {
+    "verifySuccess": "Berhasil diverifikasi",
+    "verifyError": "Gagal memverifikasi",
+    "revokeSuccess": "Berhasil ditarik kembali",
+    "revokeError": "Gagal menarik kembali"
+  },
+  "detail": {
+    "editor": "Editor",
+    "section": "Area",
+    "quantity": "Jumlah",
+    "note": "Catatan",
+    "epcs": "EPC",
+    "items": "Item"
+  },
+  "pagination": {
+    "prev": "Sebelumnya",
+    "next": "Berikutnya",
+    "page": "Halaman {{page}}"
+  }
+}

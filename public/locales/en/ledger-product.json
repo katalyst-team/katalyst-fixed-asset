@@ -1,0 +1,131 @@
+{
+  "loading": "Loading...",
+  "noData": "No ledger products found",
+  "empty": {
+    "title": "No Ledger Products",
+    "description": "No ledger products found. Start by adding products to your ledger."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "image": "Image",
+      "name": "Name",
+      "rfidEpc": "RFID EPC",
+      "rfidName": "RFID Name",
+      "category": "Category",
+      "status": "Status",
+      "attributes": "Attributes",
+      "action": "Action",
+      "internalCode": "Internal Code",
+      "itemStatus": "Item Status",
+      "section": "Section"
+    },
+    "noData": "No data available",
+    "showAllAttributes": "Show All Attributes"
+  },
+  "filter": {
+    "filter": "Filter",
+    "search": "Search",
+    "searchPlaceholder": "Search products...",
+    "sku": "SKU",
+    "skuPlaceholder": "Enter SKU...",
+    "internalCode": "Internal Code",
+    "internalCodePlaceholder": "Enter internal code...",
+    "status": "Status",
+    "selectStatus": "Select status",
+    "allStatuses": "All Statuses",
+    "active": "Active",
+    "inactive": "Inactive",
+    "assignStatus": "Assign Status",
+    "selectAssignStatus": "Select assign status",
+    "assigned": "Assigned",
+    "unassigned": "Unassigned",
+    "itemStatus": "Item Status",
+    "cancel": "Cancel",
+    "apply": "Apply"
+  },
+  "item": {
+    "imageAlt": "{{defaultValue}}",
+    "attributes": "Attributes",
+    "attribute": "attribute",
+    "noAttributes": "No attributes"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "type": {
+    "common": "Common",
+    "unique": "Unique"
+  },
+  "scan": {
+    "button": "Scan",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "error": "Failed to create ledger. Please try again.",
+    "lastEpc": "Last EPC: {{epc}}",
+    "missingContext": "Organization or store context is missing",
+    "missingItemId": "Ledger creation did not return an item ID",
+    "missingStatus": "Required ledger statuses are not available",
+    "processing": "Processing",
+    "readerDisconnected": "Desktop reader not connected",
+    "rfidLoading": "RFID data is still loading",
+    "scanError": "Failed to scan. Please try again.",
+    "stop": "Stop",
+    "stopped": "Scanning stopped",
+    "success": "Ledger created for EPC {{epc}}",
+    "epcUnavailable": "EPC {{epc}} is not available for use"
+  },
+  "confirm": {
+    "title": "Confirm RFID Assignment",
+    "message": "Are you sure you want to assign this RFID to the product?",
+    "rfidDetails": "RFID Details",
+    "rfidName": "RFID Name",
+    "rfidEpc": "RFID EPC",
+    "productName": "Product Name",
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "unknownRfid": "Unknown RFID"
+  },
+  "manualEpc": {
+    "title": "Select EPC",
+    "description": "Bypass mode is enabled. Select an EPC from the list to simulate a scan.",
+    "label": "Select EPC",
+    "placeholder": "Select an EPC...",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "emptyError": "Please select an EPC",
+    "filterType": "RFID Type",
+    "filterTypePlaceholder": "Select type...",
+    "filterCategory": "RFID Category",
+    "filterCategoryPlaceholder": "Select category...",
+    "typeReusable": "Reusable",
+    "typeDisposable": "Disposable",
+    "categorySingle": "Single",
+    "categoryPackage": "Package",
+    "loading": "Loading RFIDs...",
+    "noRfids": "No available RFIDs found for the selected filters",
+    "availableCount": "{{count}} available RFIDs"
+  },
+  "sync": {
+    "title": "Nagatech Sync",
+    "status": {
+      "done": "Done",
+      "running": "Running",
+      "failed": "Failed",
+      "pending": "Pending",
+      "unknown": "Unknown"
+    },
+    "lastRun": "Last run",
+    "nextRun": "Next run",
+    "currentTime": "Server time",
+    "storeLabel": "Store",
+    "storePlaceholder": "Select store",
+    "manualTitle": "Manual sync",
+    "manualHelp": "Run a manual sync for the selected store.",
+    "syncNow": "Sync now",
+    "syncing": "Syncing...",
+    "success": "Sync started.",
+    "noStore": "Select a store to view sync status."
+  }
+}

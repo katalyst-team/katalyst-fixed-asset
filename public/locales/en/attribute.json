@@ -1,0 +1,59 @@
+{
+  "loading": "Loading attributes...",
+  "createSuccess": "Attribute created successfully",
+  "updateSuccess": "Attribute updated successfully",
+  "deleteSuccess": "Attribute deleted successfully",
+  "createError": "Failed to create attribute",
+  "updateError": "Failed to update attribute",
+  "deleteError": "Failed to delete attribute",
+  "deleteConfirmTitle": "Delete Attribute",
+  "deleteConfirmDescription": "Are you sure you want to delete attribute {{name}}? This action cannot be undone.",
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Name",
+      "type": "Type",
+      "direction": "Direction",
+      "description": "Description",
+      "presets": "Presets",
+      "required": "Required",
+      "action": "Action"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "noData": "No Attributes found"
+  },
+  "modal": {
+    "addAttribute": {
+      "addButton": "Add Attribute",
+      "createTitle": "Create Attribute",
+      "editTitle": "Edit Attribute",
+      "createDescription": "Create a new attribute by filling out the form below. Click create when you're done.",
+      "editDescription": "Edit the attribute by updating the form below. Click save when you're done.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Enter attribute name...",
+      "typeLabel": "Type",
+      "typePlaceholder": "Select attribute type",
+      "directionLabel": "Direction",
+      "directionPlaceholder": "Select direction (optional)",
+      "directionAll": "None",
+      "possibleValuesLabel": "Possible Values",
+      "possibleValuesPlaceholder": "Enter comma-separated values (e.g., Red, Blue, Green)",
+      "unitLabel": "Unit",
+      "unitPlaceholder": "Enter unit (e.g., kg, cm)",
+      "requiredLabel": "Required for products"
+    }
+  },
+  "detail": {
+    "title": "Attribute Details",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "values": "Possible Values"
+  },
+  "empty": {
+    "title": "No Attributes Found",
+    "description": "You have not created any attributes yet. Get started by creating a new one."
+  }
+}

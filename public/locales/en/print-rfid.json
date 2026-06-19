@@ -1,0 +1,116 @@
+{
+  "title": "Print RFID",
+  "description": "Print RFID labels and create RFID tags directly. Configure your printer, customize templates, and generate sequential tags.",
+
+  "qzTray": {
+    "title": "QZ Tray Connection",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "refreshPrinters": "Refresh Printers",
+    "initSigning": "Init Signing",
+    "test": "Test",
+    "messageSigning": "Message Signing",
+    "active": "Active",
+    "failed": "Failed",
+    "certificateLoaded": "Certificate loaded - Silent printing enabled",
+    "selectPrinter": "Select Printer",
+    "choosePrinter": "Choose a printer",
+    "printCopies": "Print Copies"
+  },
+
+  "form": {
+    "title": "RFID Configuration",
+    "description": "Configure RFID type, category, and naming settings",
+    "quantity": {
+      "label": "Quantity",
+      "hint": "Number of RFID tags to create"
+    },
+    "type": {
+      "label": "RFID Type",
+      "reusable": "Reusable",
+      "disposable": "Disposable"
+    },
+    "category": {
+      "label": "RFID Category",
+      "single": "Single",
+      "package": "Package"
+    },
+    "namingMode": {
+      "label": "Naming Mode",
+      "system": "System Generated",
+      "custom": "Custom Pattern",
+      "systemHint": "RFID names will be automatically generated (same as EPC)"
+    },
+    "store": {
+      "label": "Store",
+      "allStores": "All Stores",
+      "hint": "Select a store to assign these RFIDs to, or leave as All Stores."
+    },
+    "customPattern": {
+      "label": "Custom Pattern",
+      "placeholder": "e.g., AA001, AA000001, AA001BB",
+      "hint": "Examples: AA001→AA100, AA000001→AA000100, AA001BB→AA100BB, 001→100",
+      "preview": "Preview",
+      "invalidFormat": "Invalid pattern format. Use letters and numbers (e.g., AA001, 001BB)",
+      "insufficientCapacity": "Pattern cannot generate requested quantity. Increase padding or reduce quantity."
+    }
+  },
+
+  "zpl": {
+    "title": "ZPL Label Configuration",
+    "description": "Configure your label template using ZPL code",
+    "preview": {
+      "title": "Preview Settings",
+      "density": "Print Density",
+      "unit": "Unit",
+      "width": "Width",
+      "height": "Height",
+      "index": "Index",
+      "generate": "Generate Preview",
+      "generating": "Generating...",
+      "clear": "Clear Preview",
+      "previewImage": "Label Preview",
+      "generatingImage": "Generating preview...",
+      "noPreview": "No preview available. Enter ZPL code and click Generate Preview."
+    },
+    "code": {
+      "label": "ZPL Code",
+      "uploadFile": "Upload ZPL File",
+      "orManual": "or enter ZPL code manually below",
+      "placeholder": "Enter your ZPL code here...\n\nExample:\n^XA\n^FO50,50\n^ADN,36,20\n^FD{epc}^FS\n^FO50,100\n^ADN,24,12\n^FD{name}^FS\n^XZ",
+      "hint": "Use {epc} or [epc] for the generated EPC code. Use {name} or [name] for the RFID name."
+    }
+  },
+
+  "terminal": {
+    "title": "Activity Log",
+    "clear": "Clear",
+    "empty": "No activity yet..."
+  },
+
+  "actions": {
+    "reset": "Reset Form",
+    "printAndCreate": "Print & Create RFID",
+    "processing": "Processing..."
+  },
+
+  "progress": {
+    "printing": "Printing {{count}} label(s)...",
+    "printingComplete": "Labels printed successfully!",
+    "creatingRfids": "Creating {{count}} RFID(s) in database...",
+    "creatingRfid": "Creating RFID {{current}} of {{total}}..."
+  },
+
+  "success": {
+    "created": "Successfully created {{count}} RFID tag(s)!",
+    "viewRfids": "View RFIDs"
+  },
+
+  "errors": {
+    "printerNotConnected": "Printer not connected. Please connect to QZ Tray first.",
+    "noPrinterSelected": "No printer selected. Please select a printer.",
+    "noZplCode": "ZPL code is required. Please enter or upload ZPL template.",
+    "nameGenerationFailed": "Failed to generate RFID names from pattern.",
+    "unknownError": "An unknown error occurred. Please try again."
+  }
+}

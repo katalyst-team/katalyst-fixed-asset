@@ -1,0 +1,134 @@
+{
+  "loading": "Memuat...",
+  "noData": "Data audit area stok tidak ditemukan",
+  "card": {
+    "owner": "Auditor",
+    "lastAudit": "AUDIT TERAKHIR",
+    "result": "HASIL",
+    "expected": "DIHARAPKAN",
+    "counted": "TERHITUNG",
+    "accuracy": "AKURASI"
+  },
+  "status": {
+    "clean": "Bersih",
+    "issues": "masalah",
+    "unknown": "Tidak Dikenal",
+    "pending": "Tertunda",
+    "completed": "Selesai"
+  },
+  "buttons": {
+    "startAudit": "Mulai Audit",
+    "createAllAudit": "Buat Audit Semua Item",
+    "viewDetails": "Lihat Detail",
+    "cancel": "Batal"
+  },
+  "modal": {
+    "create": {
+      "title": "Buat Audit Area Stok Baru",
+      "description": "Pilih toko dan bagian untuk membuat audit area stok baru.",
+      "store": "Toko",
+      "selectStore": "Pilih toko",
+      "storeSection": "Bagian Toko",
+      "selectSection": "Pilih bagian toko",
+      "movementTypes": "Tipe Pergerakan",
+      "selectMovementTypes": "Pilih tipe pergerakan...",
+      "optional": "opsional",
+      "create": "Buat Audit Area Stok",
+      "creating": "Membuat..."
+    },
+    "createAll": {
+      "title": "Buat Audit Semua Item",
+      "description": "Ini akan membuat audit komprehensif untuk semua item di toko. Hasil audit akan diorganisasi berdasarkan bagian (section).",
+      "confirm": "Buat Audit Semua"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Audit",
+    "sort": {
+      "label": "Urutkan Berdasarkan",
+      "placeholder": "Pilih opsi pengurutan"
+    },
+    "date": {
+      "label": "Tanggal",
+      "placeholder": "Pilih tanggal"
+    },
+    "auditResult": {
+      "placeholder": "Hasil Audit",
+      "all": "Semua Hasil",
+      "empty": "Belum Ada Audit"
+    },
+    "apply": "Terapkan",
+    "reset": "Reset",
+    "options": {
+      "allSorts": "Semua Urutan",
+      "discrepancy": "Selisih",
+      "lastAudit": "Audit Terakhir",
+      "accuracy": "Akurasi"
+    }
+  },
+  "empty": {
+    "title": "Audit Area Stok tidak ditemukan",
+    "description": "Anda belum memulai audit area stok apa pun."
+  },
+  "metrics": {
+    "totalSections": "Total Bagian",
+    "sectionsWithDiscrepancy": "Bagian dengan Selisih",
+    "averageAccuracy": "Rata-rata Akurasi",
+    "overdueAudits": "Audit Terlambat",
+    "notAvailable": "T/A"
+  },
+  "result": {
+    "consistent": "Konsisten",
+    "mismatch": "Tidak Cocok",
+    "unknown": "Tidak Dikenal"
+  },
+  "detailMetrics": {
+    "lastAudit": "Audit Terakhir",
+    "lastCounted": "Terhitung Terakhir",
+    "openIssues": "Masalah Terbuka",
+    "accuracy": "Akurasi",
+    "expectedQuantity": "Kuantitas Diharapkan",
+    "actualQuantity": "Kuantitas Aktual",
+    "currentExpectedQuantity": "Kuantitas Diharapkan Saat Ini"
+  },
+  "detailHeader": {
+    "backToAreas": "Kembali ke Area",
+    "subtitle": "Riwayat audit & tindakan untuk area ini."
+  },
+  "detailFilters": {
+    "newest": "Terbaru",
+    "oldest": "Terlama",
+    "allAuditors": "Semua Auditor",
+    "selectAuditor": "Filter berdasarkan auditor...",
+    "sortBy": "Urutkan berdasarkan...",
+    "apply": "Terapkan"
+  },
+  "auditHistory": {
+    "title": "Riwayat Audit",
+    "noData": "Riwayat audit tidak tersedia",
+    "columns": {
+      "auditId": "ID Audit",
+      "timestamp": "Waktu",
+      "createdAt": "Dibuat Pada",
+      "updatedAt": "Diperbarui Pada",
+      "auditor": "Auditor",
+      "status": "Status",
+      "result": "Hasil",
+      "expectedQuantity": "Kuantitas Diharapkan",
+      "actualQuantity": "Kuantitas Aktual",
+      "tags": "Tag",
+      "missing": "Hilang",
+      "extra": "Kelebihan",
+      "notes": "Catatan",
+      "actions": "Aksi"
+    },
+    "actions": {
+      "view": "Lihat"
+    }
+  },
+  "toast": {
+    "createAllSuccess": "Berhasil membuat audit semua item",
+    "createAllError": "Terjadi kesalahan saat membuat audit"
+  }
+}

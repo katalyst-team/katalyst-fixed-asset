@@ -1,0 +1,66 @@
+{
+  "modal": {
+    "addStore": {
+      "addButton": "Add Store",
+      "createTitle": "Create Store",
+      "editTitle": "Edit Store",
+      "createDescription": "Create a new Store by filling out the form below. Click create when you're done.",
+      "editDescription": "Edit the Store by updating the form below. Click save when you're done.",
+      "storeNameLabel": "Store Name",
+      "storeNamePlaceholder": "Warehouse name...",
+      "addressLabel": "Address",
+      "addressPlaceholder": "Store address...",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Status",
+      "statusActive": "Active",
+      "statusInactive": "Inactive",
+      "createButton": "Create Store",
+      "editButton": "Save Changes",
+      "creating": "Creating...",
+      "saving": "Saving...",
+      "storeCreated": "Store created successfully",
+      "storeUpdated": "Store updated successfully"
+    },
+    "addArea": {
+      "addButton": "Add New Area",
+      "createTitle": "Add New Area",
+      "editTitle": "Edit Area",
+      "createDescription": "Fill the form below to add a new area",
+      "editDescription": "Update the area details",
+      "areaNameLabel": "Area Name",
+      "areaNamePlaceholder": "Enter area name",
+      "processing": "Processing...",
+      "save": "Save",
+      "areaCreated": "Area created successfully",
+      "areaUpdated": "Area updated successfully"
+    }
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "store": "Store",
+      "address": "Address",
+      "status": "Status",
+      "action": "Action",
+      "area": "Area"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    }
+  },
+  "toast": {
+    "storeDeleted": "Store deleted successfully",
+    "areaDeleted": "Area deleted successfully"
+  },
+  "loading": "Loading...",
+  "loadingDetails": "Loading store details...",
+  "empty": {
+    "title": "No Stores Found",
+    "description": "You haven't added any stores yet."
+  },
+  "areaEmpty": {
+    "title": "No Areas Found",
+    "description": "You haven't added any areas to this store yet."
+  }
+}

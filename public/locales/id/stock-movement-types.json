@@ -1,0 +1,70 @@
+{
+  "title": "Tipe Pergerakan Stok",
+  "description": "Kelola tipe pergerakan stok dan konfigurasinya",
+  "loading": "Memuat...",
+  "noData": "Tipe pergerakan stok tidak ditemukan",
+  "itemsPerPage": "item per halaman",
+  "confirmDelete": "Apakah Anda yakin ingin menghapus tipe pergerakan stok ini? Tindakan ini tidak dapat dibatalkan.",
+
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Nama",
+      "namePlaceholder": "Masukkan nama tipe",
+      "direction": "Arah",
+      "action": "Aksi"
+    }
+  },
+
+  "directions": {
+    "inbound": "Masuk",
+    "outbound": "Keluar",
+    "ledger": "Buku Besar"
+  },
+
+  "filters": {
+    "all": "Semua",
+    "inbound": "Masuk",
+    "outbound": "Keluar"
+  },
+
+  "buttons": {
+    "create": "Buat Tipe Baru",
+    "edit": "Edit",
+    "delete": "Hapus"
+  },
+
+  "modal": {
+    "create": {
+      "title": "Buat Tipe Pergerakan Stok",
+      "description": "Tambahkan tipe pergerakan stok baru ke sistem Anda",
+      "name": "Nama",
+      "namePlaceholder": "Masukkan nama tipe",
+      "direction": "Arah",
+      "directionPlaceholder": "Pilih arah",
+      "create": "Buat",
+      "creating": "Membuat...",
+      "cancel": "Batal"
+    },
+    "edit": {
+      "title": "Edit Tipe Pergerakan Stok",
+      "description": "Perbarui informasi tipe pergerakan stok",
+      "name": "Nama",
+      "direction": "Arah",
+      "directionPlaceholder": "Pilih arah",
+      "update": "Perbarui",
+      "updating": "Memperbarui...",
+      "cancel": "Batal"
+    }
+  },
+
+  "pagination": {
+    "previous": "Sebelumnya",
+    "next": "Berikutnya"
+  },
+
+  "empty": {
+    "title": "Tipe Pergerakan Stok Tidak Ditemukan",
+    "description": "Mulai dengan membuat tipe pergerakan stok pertama Anda"
+  }
+}

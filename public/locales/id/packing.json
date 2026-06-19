@@ -1,0 +1,165 @@
+{
+  "loading": "Memuat...",
+  "noData": "Tidak ada item yang ditemukan",
+  "table": {
+    "header": {
+      "id": "ID",
+      "select": "Pilih",
+      "sku": "SKU",
+      "epc": "EPC",
+      "status": "Status",
+      "lastUpdated": "Terakhir Diperbarui",
+      "category": "Kategori",
+      "action": "Aksi",
+      "no": "No",
+      "productName": "Nama Produk",
+      "quantity": "Jumlah",
+      "operator": "Operator",
+      "amount": "Jumlah",
+      "item": "Barang",
+      "brand": "Merek",
+      "color": "Warna",
+      "size": "Ukuran",
+      "section": "Bagian",
+      "changedAt": "Waktu Perubahan"
+    },
+    "noData": "Tidak ada data tersedia"
+  },
+  "detail": {
+    "productTable": "Tabel Produk",
+    "historyTable": "Tabel Riwayat",
+    "noData": "Tidak ada data tersedia"
+  },
+  "packingV2": {
+    "information": "Informasi Packing",
+    "store": "Toko",
+    "section": "Bagian",
+    "movementType": "Tipe Pergerakan",
+    "quantity": "Jumlah",
+    "createdAt": "Dibuat Pada",
+    "updatedAt": "Diperbarui Pada",
+    "editor": "Editor",
+    "itemStatusHistory": "Riwayat Status Item"
+  },
+  "buttons": {
+    "addPacking": "Tambah Packing",
+    "printSelected": "Cetak Terpilih ({{count}})",
+    "selectAll": "Pilih Semua",
+    "deselectAll": "Batalkan Semua"
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Tidak Aktif",
+    "success": "Berhasil",
+    "waiting": "Menunggu",
+    "failed": "Gagal",
+    "waitinginbound": "Menunggu Inbound",
+    "inboundsuccess": "Inbound Berhasil",
+    "inboundfailed": "Inbound Gagal",
+    "waitingoutbound": "Menunggu Outbound",
+    "outboundsuccess": "Outbound Berhasil",
+    "outboundfailed": "Outbound Gagal",
+    "unknown": "Tidak Diketahui",
+    "waiting_print": "Menunggu Cetak"
+  },
+  "modal": {
+    "print": {
+      "title": "Cetak Item",
+      "description": "Konfigurasi pengaturan printer dan cetak item yang dipilih",
+      "printButton": "Cetak",
+      "itemsToPrint": "Item untuk dicetak",
+      "allPrinted": "Semua item berhasil dicetak",
+      "printingStatus": "Mencetak...",
+      "tabs": {
+        "connection": "Koneksi",
+        "template": "Template"
+      },
+      "network": {
+        "title": "Koneksi Jaringan",
+        "ipAddress": "Alamat IP",
+        "port": "Port",
+        "connect": "Hubungkan Jaringan"
+      },
+      "serial": {
+        "title": "Koneksi Serial",
+        "port": "Port Serial",
+        "baudRate": "Baud Rate",
+        "connect": "Hubungkan Serial"
+      },
+      "emulation": {
+        "title": "Emulasi",
+        "zpl": "ZPL",
+        "tspl": "TSPL",
+        "escpos": "ESCPOS"
+      },
+      "rfid": {
+        "title": "Pengaturan RFID",
+        "readTID": "Baca TID terlebih dahulu",
+        "readEPC": "Baca EPC terlebih dahulu"
+      },
+      "template": {
+        "file": "File Template",
+        "browse": "Telusuri",
+        "choosePlaceholder": "Pilih file template",
+        "mapping": "Pemetaan Bidang Template",
+        "elementId": "ID Elemen",
+        "elementIdPlaceholder": "Masukkan ID elemen",
+        "mapProperty": "Petakan ke Properti Item",
+        "selectProperty": "Pilih properti",
+        "addField": "Tambah Bidang"
+      },
+      "terminal": {
+        "title": "Output Terminal",
+        "clear": "Bersihkan"
+      },
+      "fields": {
+        "id": "ID",
+        "epc": "EPC",
+        "statusName": "Nama Status",
+        "skuId": "ID SKU",
+        "skuName": "Nama SKU",
+        "brandName": "Nama Merek",
+        "color": "Warna",
+        "size": "Ukuran",
+        "category": "Kategori",
+        "updatedAt": "Tanggal Diperbarui",
+        "internalCode": "Kode Internal",
+        "createdAt": "Tanggal Dibuat",
+        "currentDate": "Tanggal Saat Ini"
+      },
+      "cancelButton": "Batal"
+    },
+    "create": {
+      "title": "Buat Packing",
+      "description": "Buat packing Anda di sini. Klik buat setelah selesai.",
+      "item": "Item",
+      "selectSku": "Pilih SKU",
+      "selectRfid": "Pilih RFID (Opsional)",
+      "quantity": "Jumlah",
+      "addItem": "Tambah Item",
+      "saving": "Menyimpan...",
+      "save": "Simpan perubahan",
+      "success": "Packing berhasil dibuat"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Packing",
+    "category": {
+      "label": "Kategori",
+      "placeholder": "Pilih Kategori",
+      "all": "Semua Kategori"
+    },
+    "status": {
+      "label": "Status",
+      "placeholder": "Pilih Status",
+      "all": "Semua Status"
+    },
+    "cancel": "Batal",
+    "apply": "Terapkan"
+  },
+  "empty": {
+    "title": "Tidak Ada Data Pengepakan",
+    "description": "Tidak ada data pengepakan untuk ditampilkan."
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "loading": "Loading...",
+  "noData": "No items found",
+  "table": {
+    "header": {
+      "id": "ID",
+      "select": "Select",
+      "sku": "SKU",
+      "epc": "EPC",
+      "status": "Status",
+      "lastUpdated": "Last Updated",
+      "category": "Category",
+      "action": "Action",
+      "no": "No",
+      "productName": "Product Name",
+      "quantity": "Quantity",
+      "operator": "Operator",
+      "amount": "Amount",
+      "item": "Item",
+      "brand": "Brand",
+      "color": "Color",
+      "size": "Size",
+      "section": "Section",
+      "changedAt": "Changed At"
+    },
+    "noData": "No data available"
+  },
+  "detail": {
+    "productTable": "Product Table",
+    "historyTable": "History Table",
+    "noData": "No data available"
+  },
+  "packingV2": {
+    "information": "Packing Information",
+    "store": "Store",
+    "section": "Section",
+    "movementType": "Movement Type",
+    "quantity": "Quantity",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "editor": "Editor",
+    "itemStatusHistory": "Item Status History"
+  },
+  "buttons": {
+    "addPacking": "Add Packing",
+    "printSelected": "Print Selected ({{count}})",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "success": "Success",
+    "waiting": "Waiting",
+    "failed": "Failed",
+    "waitinginbound": "Waiting Inbound",
+    "inboundsuccess": "Inbound Success",
+    "inboundfailed": "Inbound Failed",
+    "waitingoutbound": "Waiting Outbound",
+    "outboundsuccess": "Outbound Success",
+    "outboundfailed": "Outbound Failed",
+    "unknown": "Unknown",
+    "waiting_print": "Waiting Print"
+  },
+  "modal": {
+    "create": {
+      "title": "Create Packing",
+      "description": "Create your packing here. Click create when you're done.",
+      "item": "Item",
+      "selectSku": "Select SKU",
+      "selectRfid": "Select RFID (Optional)",
+      "quantity": "Quantity",
+      "addItem": "Add Item",
+      "saving": "Saving...",
+      "save": "Save changes",
+      "success": "Packing created successfully"
+    },
+    "print": {
+      "title": "Print Items",
+      "description": "Configure printer settings and print the selected items",
+      "print": "Print",
+      "itemsToPrint": "Items to print",
+      "allPrinted": "All items printed successfully",
+      "printingStatus": "Printing...",
+      "tabs": {
+        "connection": "Connection",
+        "template": "Template"
+      },
+      "network": {
+        "title": "Network Connection",
+        "ipAddress": "IP Address",
+        "port": "Port",
+        "connect": "Connect Network"
+      },
+      "serial": {
+        "title": "Serial Connection",
+        "port": "Serial Port",
+        "baudRate": "Baud Rate",
+        "connect": "Connect Serial"
+      },
+      "emulation": {
+        "title": "Emulation",
+        "zpl": "ZPL",
+        "tspl": "TSPL",
+        "escpos": "ESCPOS"
+      },
+      "rfid": {
+        "title": "RFID Settings",
+        "readTID": "Read TID first",
+        "readEPC": "Read EPC first"
+      },
+      "template": {
+        "file": "Template File",
+        "browse": "Browse",
+        "choosePlaceholder": "Choose template file",
+        "mapping": "Template Field Mapping",
+        "elementId": "Element ID",
+        "elementIdPlaceholder": "Enter element ID",
+        "mapProperty": "Map to Item Property",
+        "selectProperty": "Select property",
+        "addField": "Add Field"
+      },
+      "terminal": {
+        "title": "Terminal Output",
+        "clear": "Clear"
+      },
+      "fields": {
+        "id": "ID",
+        "epc": "EPC",
+        "statusName": "Status Name",
+        "skuId": "SKU ID",
+        "skuName": "SKU Name",
+        "brandName": "Brand Name",
+        "color": "Color",
+        "size": "Size",
+        "category": "Category",
+        "updatedAt": "Updated Date",
+        "internalCode": "Internal Code",
+        "createdAt": "Created Date",
+        "currentDate": "Current Date"
+      },
+      "cancelButton": "Cancel"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Packing",
+    "category": {
+      "label": "Category",
+      "placeholder": "Select Category",
+      "all": "All Categories"
+    },
+    "status": {
+      "label": "Status",
+      "placeholder": "Select Status",
+      "all": "All Status"
+    },
+    "cancel": "Cancel",
+    "apply": "Apply"
+  },
+  "empty": {
+    "title": "No Packing Data",
+    "description": "There is no packing data to display."
+  }
+}

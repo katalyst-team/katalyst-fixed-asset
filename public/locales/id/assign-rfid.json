@@ -1,0 +1,46 @@
+{
+  "title": "Assign RFID",
+  "description": "Assign tag RFID yang sudah ada ke item inventaris. Pilih RFID dan petakan ke SKU atau koleksi packing.",
+
+  "ledger": "Ledger",
+  "addNewLedger": "Tambah Ledger Baru",
+  "ledgersValid": "ledger valid",
+
+  "rfidType": "Tipe RFID",
+  "rfidCategory": "Kategori RFID",
+  "selectRfid": "Pilih RFID",
+  "selectRfidPlaceholder": "Pilih tag RFID",
+  "selectRfidsPlaceholder": "Pilih tag-tag RFID",
+
+  "reusable": "Dapat Digunakan Kembali",
+  "disposable": "Sekali Pakai",
+  "single": "Satuan",
+  "package": "Paket",
+
+  "loading": "Memuat...",
+  "notAvailable": "T/A",
+
+  "sku": "SKU",
+  "product": "Produk",
+  "quantity": "Jumlah",
+  "unit": "Unit",
+
+  "itemSelectionType": "Tipe Pemilihan Item",
+  "skuType": "SKU (Umum)",
+  "productType": "Produk (Unik)",
+  "selectProduct": "Pilih produk",
+  "productTypeInfo": "Untuk produk, hanya satu RFID yang dapat di-assign per produk. Setiap produk hanya dapat dipilih sekali.",
+
+  "disposableSingleInfo": "Untuk RFID disposable single, hanya 1 item dengan jumlah 1 yang diperbolehkan.",
+
+  "reset": "Reset",
+  "processing": "Memproses...",
+  "assignRfids": "Assign {{count}} RFID",
+
+  "allLedgersCreated": "Berhasil assign {{count}} RFID ke item ledger!",
+  "partialSuccess": "{{success}}/{{total}} RFID berhasil di-assign",
+  "someFailed": "{{count}} assignment RFID gagal",
+  "allFailed": "Semua assignment RFID gagal",
+  "unknownError": "Terjadi kesalahan yang tidak diketahui",
+  "packingCollectionCreatedSuccessfully": "Koleksi packing berhasil dibuat!"
+}

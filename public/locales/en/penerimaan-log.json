@@ -1,0 +1,36 @@
+{
+  "title": "Penerimaan Log",
+  "loading": "Loading...",
+  "noData": "No Penerimaan log entries found",
+  "empty": {
+    "title": "No Penerimaan Log Entries",
+    "description": "No Penerimaan log entries found."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "image": "Image",
+      "name": "Name",
+      "rfidEpc": "RFID EPC",
+      "rfidName": "RFID Name",
+      "category": "Category",
+      "status": "Status",
+      "action": "Action",
+      "internalCode": "Internal Code",
+      "itemStatus": "Item Status",
+      "stockMovementType": "Stock Movement Type"
+    },
+    "noData": "No data available"
+  },
+  "header": {
+    "createButton": "Create Penerimaan Log"
+  },
+  "filter": {
+    "searchPlaceholder": "Search products...",
+    "rfidSearchPlaceholder": "Search RFID name...",
+    "internalCodePlaceholder": "Enter internal code..."
+  },
+  "item": {
+    "imageAlt": "{{defaultValue}}"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "loading": "Memuat...",
+  "noData": "Tidak ada data tersedia",
+  "table": {
+    "header": {
+      "no": "No",
+      "name": "Nama",
+      "description": "Deskripsi",
+      "itemCount": "Item",
+      "items": "Item",
+      "totalQuantity": "Total Kuantitas",
+      "actions": "Aksi"
+    },
+    "noData": "Tidak ada koleksi kemasan ditemukan",
+    "item": "item",
+    "items": "item"
+  },
+  "modal": {
+    "create": {
+      "title": "Buat Koleksi Kemasan",
+      "description": "Buat koleksi kemasan baru dengan item SKU dan kuantitas.",
+      "button": "Buat Koleksi",
+      "creating": "Membuat...",
+      "success": "Koleksi kemasan berhasil dibuat"
+    },
+    "edit": {
+      "title": "Edit Koleksi Kemasan",
+      "description": "Perbarui detail dan item koleksi kemasan.",
+      "button": "Edit",
+      "updating": "Memperbarui...",
+      "success": "Koleksi kemasan berhasil diperbarui"
+    },
+    "cancel": "Batal"
+  },
+  "form": {
+    "name": {
+      "label": "Nama Koleksi",
+      "placeholder": "Masukkan nama koleksi"
+    },
+    "description": {
+      "label": "Deskripsi",
+      "placeholder": "Masukkan deskripsi koleksi"
+    },
+    "packingItems": {
+      "label": "Item Kemasan",
+      "description": "Tambahkan item SKU dengan kuantitas ke koleksi ini",
+      "sku": "SKU",
+      "quantity": "Kuantitas",
+      "selectSku": "Pilih SKU",
+      "addItem": "Tambah Item"
+    }
+  },
+  "empty": {
+    "title": "Tidak Ada Koleksi Kemasan",
+    "description": "Anda belum membuat koleksi kemasan apapun. Buat koleksi pertama Anda untuk memulai."
+  },
+  "delete": {
+    "success": "Koleksi kemasan berhasil dihapus"
+  },
+  "detail": {
+    "title": "Detail Koleksi Kemasan",
+    "items": "Item dalam Koleksi",
+    "quantity": "Kuantitas",
+    "sku": "SKU"
+  }
+}

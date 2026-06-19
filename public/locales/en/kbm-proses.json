@@ -1,0 +1,17 @@
+{
+  "title": "KBM Proses",
+  "description": "Manage master data for KBM Proses",
+  "table": {
+    "header": {
+      "action": "Action",
+      "code": "Code",
+      "name": "Name",
+      "no": "No",
+      "sortOrder": "Sort Order"
+    }
+  },
+  "empty": {
+    "description": "No proses data found. Start by adding your first item.",
+    "title": "No Proses Data"
+  }
+}

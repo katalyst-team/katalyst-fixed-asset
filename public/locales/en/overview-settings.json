@@ -1,0 +1,60 @@
+{
+  "title": "Overview Settings",
+  "description": "Configure thresholds and parameters for the dashboard overview data",
+  "loading": "Loading settings...",
+
+  "stockThreshold": {
+    "title": "Stock Thresholds",
+    "description": "Set alert thresholds for stock conditions on the overview dashboard",
+    "criticalStock": {
+      "label": "Critical Stock Threshold (%)",
+      "desc": "Percentage below safety stock to categorize as critical stock"
+    },
+    "lowStock": {
+      "label": "Low Stock Threshold (%)",
+      "desc": "Percentage below reorder point to categorize as low stock"
+    },
+    "overstock": {
+      "label": "Overstock Threshold (%)",
+      "desc": "Percentage above normal capacity to categorize as overstocked"
+    }
+  },
+
+  "analytics": {
+    "title": "Analytics Parameters",
+    "description": "Configure parameters for analytics calculations and dashboard metrics",
+    "agingStock": {
+      "label": "Aging Stock Days Limit",
+      "desc": "Number of days stock is considered aging (stagnant) without movement"
+    },
+    "accuracyTarget": {
+      "label": "Inventory Accuracy Target (%)",
+      "desc": "Target inventory accuracy percentage"
+    }
+  },
+
+  "features": {
+    "title": "Features",
+    "description": "Enable or disable specific features on the overview dashboard",
+    "ritNumber": {
+      "label": "RIT Number",
+      "desc": "Enable RIT number feature on transactions"
+    }
+  },
+
+  "suffix": {
+    "days": "days"
+  },
+
+  "unsavedChanges": "You have unsaved changes",
+
+  "actions": {
+    "save": "Save",
+    "saving": "Saving...",
+    "reset": "Reset"
+  },
+
+  "reset": {
+    "toast": "Settings reset to saved values"
+  }
+}

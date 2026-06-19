@@ -1,0 +1,86 @@
+{
+  "table": {
+    "header": {
+      "no": "No",
+      "image": "Gambar",
+      "internalCode": "Kode Internal",
+      "name": "Nama Produk",
+      "category": "Kategori",
+      "attributes": "Atribut",
+      "action": "Aksi"
+    },
+    "attributesLabel": "Atribut",
+    "showAllAttributes": "Tampilkan Semua Atribut",
+    "noData": "Tidak ada produk unik yang ditemukan"
+  },
+  "modal": {
+    "addProduct": {
+      "addButton": "Tambah Produk",
+      "productDeleted": "Produk berhasil dihapus"
+    },
+    "addSku": {
+      "addButton": "Tambah Produk",
+      "createTitle": "Buat Produk",
+      "editTitle": "Edit Produk",
+      "createDescription": "Buat produk unik baru dengan mengisi formulir di bawah ini. Klik buat jika sudah selesai.",
+      "editDescription": "Edit produk dengan memperbarui formulir di bawah ini. Klik simpan jika sudah selesai.",
+      "skuLabel": "Kode Produk",
+      "skuPlaceholder": "Kode produk...",
+      "nameLabel": "Nama Produk",
+      "namePlaceholder": "Masukkan nama produk",
+      "categoryLabel": "Kategori",
+      "categoryPlaceholder": "Pilih Kategori",
+      "statusLabel": "Status",
+      "statusPlaceholder": "Status",
+      "statusActive": "Aktif",
+      "statusInactive": "Tidak Aktif",
+      "priceLabel": "Harga",
+      "pricePlaceholder": "Harga...",
+      "stockLabel": "Stok",
+      "stockPlaceholder": "Stok...",
+      "createButton": "Buat Produk",
+      "editButton": "Simpan Perubahan",
+      "creating": "Membuat...",
+      "saving": "Menyimpan...",
+      "skuCreated": "Produk berhasil dibuat",
+      "skuUpdated": "Produk berhasil diperbarui",
+      "skuDeleted": "Produk berhasil dihapus",
+      "internalCodeLabel": "Kode Internal",
+      "internalCodePlaceholder": "Kode Internal...",
+      "subcategory": "Subkategori",
+      "title": "Tambah Produk Baru",
+      "description": "Tambah Produk baru untuk mengelola inventori",
+      "selectCategory": "Pilih kategori",
+      "imageLabel": "Gambar",
+      "imageDescription": "Unggah gambar produk dari perangkat Anda atau ambil foto dengan kamera",
+      "attributesLabel": "Atribut",
+      "loadingAttributes": "Memuat atribut...",
+      "create": "Buat Produk",
+      "update": "Perbarui Produk",
+      "updating": "Memperbarui...",
+      "createSuccess": "Produk berhasil dibuat",
+      "updateSuccess": "Produk berhasil diperbarui"
+    }
+  },
+  "empty": {
+    "title": "Tidak Ada Produk Unik",
+    "description": "Anda belum menambahkan produk unik."
+  },
+  "detail": {
+    "title": "Detail Produk",
+    "table": {
+      "header": {
+        "no": "No"
+      }
+    }
+  },
+  "form": {
+    "field": {
+      "category": "Kategori",
+      "categoryPlaceholder": "Pilih kategori untuk produk ini",
+      "categoryHelp": "Kategori menentukan atribut yang tersedia untuk produk ini"
+    },
+    "createSuccess": "Produk berhasil dibuat",
+    "updateSuccess": "Produk berhasil diperbarui"
+  }
+}

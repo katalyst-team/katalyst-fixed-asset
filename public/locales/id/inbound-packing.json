@@ -1,0 +1,56 @@
+{
+  "title": "Barang Masuk Packing",
+  "loading": "Memuat...",
+  "noData": "Tidak ada data barang masuk packing tersedia",
+  "table": {
+    "header": {
+      "no": "No",
+      "status": "Status",
+      "inboundPackingType": "Jenis Barang Masuk Packing",
+      "inboundPackingDate": "Tanggal Barang Masuk Packing",
+      "inboundPackingQty": "Jumlah",
+      "storeArea": "Area Toko",
+      "operator": "Operator",
+      "action": "Aksi",
+      "id": "ID",
+      "type": "Jenis",
+      "date": "Tanggal",
+      "quantity": "Jumlah",
+      "warehouse": "Gudang"
+    }
+  },
+  "filter": {
+    "button": "Filter",
+    "title": "Filter Inbound Packing",
+    "date": {
+      "label": "Rentang Tanggal",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Selesai"
+    },
+    "status": {
+      "label": "Status",
+      "placeholder": "Pilih Status",
+      "all": "Semua Status"
+    },
+    "type": {
+      "label": "Tipe Inbound Packing",
+      "placeholder": "Pilih Tipe",
+      "all": "Semua Tipe"
+    },
+    "cancel": "Batal",
+    "apply": "Terapkan"
+  },
+  "status": {
+    "waitingPrint": "Menunggu Cetak",
+    "waitingInboundPacking": "Menunggu Inbound Packing",
+    "failedInboundPacking": "Gagal Inbound Packing",
+    "successInboundPacking": "Berhasil Inbound Packing"
+  },
+  "export": {
+    "button": "Ekspor"
+  },
+  "empty": {
+    "title": "Tidak Ada Data Pengepakan Masuk",
+    "description": "Tidak ada data pengepakan masuk untuk ditampilkan."
+  }
+}

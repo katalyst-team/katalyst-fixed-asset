@@ -1,0 +1,46 @@
+{
+  "title": "Validation Penerimaan Log",
+  "filter": {
+    "store": "Select store..."
+  },
+  "empty": {
+    "title": "No Pending Validations",
+    "description": "No penerimaan log items with SUBMITTED status waiting for validation."
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "referenceNumber": "Ref No.",
+      "status": "Status",
+      "editor": "Editor",
+      "quantity": "Quantity",
+      "store": "Store",
+      "createdAt": "Created At",
+      "actions": "Actions"
+    },
+    "noData": "No items waiting for validation"
+  },
+  "buttons": {
+    "validate": "Validate",
+    "revoke": "Revoke"
+  },
+  "toast": {
+    "validateSuccess": "Validated successfully",
+    "validateError": "Failed to validate",
+    "revokeSuccess": "Revoked successfully",
+    "revokeError": "Failed to revoke"
+  },
+  "detail": {
+    "editor": "Editor",
+    "section": "Section",
+    "quantity": "Quantity",
+    "note": "Note",
+    "epcs": "EPCs",
+    "items": "Items"
+  },
+  "pagination": {
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page {{page}}"
+  }
+}

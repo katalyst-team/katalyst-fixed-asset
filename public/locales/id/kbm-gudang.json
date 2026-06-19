@@ -1,0 +1,141 @@
+{
+  "title": "KBM Gudang",
+  "description": "Kelola data master KBM Gudang",
+  "table": {
+    "header": {
+      "no": "No",
+      "action": "Aksi",
+      "name": "Nama",
+      "internalCode": "Kode Internal",
+      "category": "Kategori",
+      "status": "Status"
+    },
+    "noData": "Tidak ada data gudang"
+  },
+  "filter": {
+    "searchPlaceholder": "Cari gudang...",
+    "internalCodePlaceholder": "Masukkan kode internal..."
+  },
+  "empty": {
+    "title": "Tidak Ada Data Gudang",
+    "description": "Tidak ada data gudang ditemukan. Mulai dengan menambahkan gudang pertama Anda."
+  },
+  "form": {
+    "createTitle": "Buat KBM Gudang",
+    "editTitle": "Edit KBM Gudang",
+    "createDescription": "Tambahkan KBM Gudang baru ke data master. Kolom bertanda * wajib diisi.",
+    "editDescription": "Perbarui detail gudang. Perubahan akan tercermin di semua catatan.",
+    "backToList": "Kembali ke Daftar KBM Gudang",
+    "section": {
+      "basicInfo": "Informasi Dasar",
+      "basicInfoDescription": "Detail penting untuk mengidentifikasi gudang",
+      "attributes": "Atribut Gudang",
+      "attributesDescription": "Berikan spesifikasi detail untuk gudang ini. Kolom bertanda * wajib diisi.",
+      "calculation": "Nilai Volume",
+      "calculationDescription": "Masukkan nilai volume akhir. Kami menampilkan referensi yang dihitung otomatis di bawah untuk verifikasi."
+    },
+    "field": {
+      "name": "Nama Gudang",
+      "namePlaceholder": "mis., GUDANG-001",
+      "nameHelp": "Pilih nama deskriptif yang jelas mengidentifikasi gudang ini",
+      "internalCode": "Kode Internal",
+      "internalCodePlaceholder": "mis., GUDANG-001",
+      "internalCodeHelp": "Kode unik untuk mengidentifikasi gudang ini"
+    },
+    "attribute": {
+      "kdGrade": "KD_GRADE (Kode Grade)",
+      "nmGrade": "NM_GRADE (Nama Grade)",
+      "tebal": "G_TEBAL (Tebal dalam mm)",
+      "lebar": "G_LEBAR (Lebar dalam mm)",
+      "panjang": "G_PANJANG (Panjang dalam mm)",
+      "stdSusun": "G_STD_SUSUN (Standard Susun)",
+      "vol": "G_VOL (Volume per Susun dalam m³)",
+      "stdVol": "G_STD_VOL (Volume Standard dalam m³)"
+    },
+    "calculation": {
+      "vol": "VOL (Volume per Susun)",
+      "volFormula": "= (TEBAL × LEBAR × PANJANG) ÷ 1.000.000.000",
+      "volPlaceholder": "Masukkan VOL",
+      "expectedVol": "Ekspektasi (otomatis): {{value}} m³",
+      "stdVol": "STD_VOL (Volume Standard)",
+      "stdVolFormula": "= VOL × STD_SUSUN",
+      "stdVolPlaceholder": "Masukkan STD_VOL",
+      "expectedStdVol": "Ekspektasi (otomatis): {{value}} m³"
+    },
+    "button": {
+      "cancel": "Batal",
+      "create": "Buat Gudang",
+      "creating": "Membuat...",
+      "update": "Perbarui Gudang",
+      "updating": "Memperbarui..."
+    },
+    "unsavedChanges": "Anda memiliki perubahan yang belum disimpan. Apakah Anda yakin ingin meninggalkan halaman?",
+    "categoryNotFound": "Kategori KBM Gudang tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "missingRequired": "Harap isi semua atribut wajib: {{attributes}}",
+    "duplicateName": "Nama gudang '{{name}}' sudah ada.",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "createSuccess": "KBM Gudang berhasil dibuat",
+    "updateSuccess": "KBM Gudang berhasil diperbarui"
+  },
+  "actions": {
+    "add": "Tambah KBM Gudang",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "view": "Lihat Detail"
+  },
+  "exportTemplate": {
+    "button": "Ekspor Template",
+    "tooltip": "Unduh template Excel dengan atribut gudang",
+    "title": "Ekspor Template KBM Gudang",
+    "description": "Unduh template Excel yang disesuaikan untuk tipe gudang ini.",
+    "howToUse": "Cara penggunaan:",
+    "step1": "Tinjau atribut yang tercakup dalam template",
+    "step2": "Klik 'Ekspor Template' untuk mengunduh file Excel",
+    "step3": "Isi data gudang Anda mengikuti format baris contoh",
+    "step4": "Gunakan 'Import Excel' untuk mengunggah file yang telah diisi",
+    "note": "Kolom bertanda * wajib diisi. G_TYPE otomatis diatur ke {{gradeType}}.",
+    "categoryNotFound": "Kategori KBM Gudang tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "categoryLabel": "Kategori: {{category}}",
+    "required": "*wajib",
+    "noAttributes": "Kategori ini tidak memiliki atribut yang terdefinisi.",
+    "exportButton": "Ekspor Template"
+  },
+  "import": {
+    "button": "Import Excel",
+    "tooltip": "Unggah file Excel untuk membuat gudang secara massal menggunakan format template",
+    "title": "Import Gudang dari Excel",
+    "description": "Unggah file Excel untuk membuat gudang secara massal. Gunakan template untuk format yang benar.",
+    "instructions": "Instruksi:",
+    "step1": "Unduh template menggunakan tombol 'Ekspor Template'",
+    "step2": "Isi data gudang Anda",
+    "step3": "Unggah file Excel yang telah selesai di sini",
+    "step4": "Tinjau pratinjau dan klik 'Import'",
+    "note": "G_TYPE otomatis diatur ke {{gradeType}} untuk setiap baris.",
+    "categoryNotFound": "Kategori KBM Gudang tidak ditemukan. Silakan buat kategori terlebih dahulu.",
+    "emptyFile": "File Excel kosong atau tidak ada data",
+    "parseError": "Gagal memproses file Excel",
+    "hasErrors": "Tidak dapat mengimpor: Beberapa baris memiliki kesalahan validasi. Harap perbaiki terlebih dahulu.",
+    "gradeNameRequired": "Nama Gudang wajib diisi",
+    "requiredAttributeMissing": "Atribut wajib '{{attribute}}' tidak ada",
+    "duplicateName": "Nama gudang '{{name}}' sudah ada.",
+    "typeAttributeMissing": "Atribut G_TYPE tidak ditemukan. Silakan perbarui konfigurasi kategori.",
+    "dropHere": "Letakkan file di sini...",
+    "dragDrop": "Seret & lepas file Excel di sini",
+    "orClick": "atau klik untuk memilih file",
+    "supportedFormats": "Format yang didukung: CSV, XLSX",
+    "processing": "Memproses file...",
+    "importing": "Mengimpor gudang...",
+    "validRows": "Valid",
+    "warnings": "Peringatan",
+    "errors": "Kesalahan",
+    "preview": "Pratinjau (10 baris pertama)",
+    "attributesFilled": "Atribut",
+    "complete": "Import Selesai",
+    "successCount": "Berhasil diimpor: {{count}}",
+    "failedCount": "Gagal: {{count}}",
+    "errorDetails": "Detail Kesalahan",
+    "importButton": "Import {{count}} gudang",
+    "successMessage": "Berhasil mengimpor {{count}} gudang",
+    "failedMessage": "Gagal mengimpor {{count}} gudang"
+  }
+}

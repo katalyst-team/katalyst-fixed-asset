@@ -1,0 +1,88 @@
+{
+  "title": "Verification",
+  "filter": {
+    "allStores": "All Stores",
+    "allTypes": "All Types",
+    "entityType": "Entity Type",
+    "store": "Store"
+  },
+  "table": {
+    "header": {
+      "no": "No",
+      "entityType": "Entity Type",
+      "title": "Title",
+      "store": "Store",
+      "status": "Status",
+      "createdAt": "Created At",
+      "editor": "Editor",
+      "section": "Section",
+      "epcName": "EPC Name",
+      "actions": "Actions"
+    },
+    "noData": "No pending verification items"
+  },
+  "entityType": {
+    "STOCK_MOVEMENT_INBOUND": "Inbound Stock",
+    "AUDIT_STOCK_OPNAME": "Stock Audit"
+  },
+  "status": {
+    "DRAFT": "Draft",
+    "SUBMITTED": "Submitted",
+    "VALIDATED": "Validated",
+    "VERIFIED": "Verified",
+    "REJECTED": "Rejected",
+    "CANCELLED": "Cancelled"
+  },
+  "buttons": {
+    "cancel": "Cancel",
+    "confirmReject": "Confirm Reject",
+    "noPermission": "No Permission",
+    "reject": "Reject",
+    "resubmit": "Resubmit",
+    "revoke": "Revoke",
+    "submit": "Submit for Review",
+    "verify": "Verify"
+  },
+  "rejectModal": {
+    "title": "Reject Verification",
+    "description": "Please provide a reason for rejection. This note is required.",
+    "notePlaceholder": "Enter rejection reason...",
+    "noteLabel": "Rejection Note"
+  },
+  "toast": {
+    "submitSuccess": "Submitted for review successfully",
+    "submitError": "Failed to submit for review",
+    "verifySuccess": "Verified successfully",
+    "verifyError": "Failed to verify",
+    "rejectSuccess": "Rejected successfully",
+    "rejectError": "Failed to reject",
+    "revokeSuccess": "Revoked successfully",
+    "revokeError": "Failed to revoke"
+  },
+  "empty": {
+    "title": "No pending verifications",
+    "description": "There are no items awaiting verification"
+  },
+  "pagination": {
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page {{page}}"
+  },
+  "detail": {
+    "toggle": "Show/hide details",
+    "expandHint": "Click row to see details",
+    "collapseHint": "Click row to hide details",
+    "editor": "Editor",
+    "section": "Section",
+    "quantity": "Quantity",
+    "note": "Note",
+    "epcs": "EPCs",
+    "items": "Items",
+    "epc": "EPC",
+    "status": "Status",
+    "category": "Category",
+    "type": "Type",
+    "rfid": "RFID",
+    "attributes": "Attributes"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "title": "Gate Activity Report",
+  "description": "Analyze throughput, violations, and anomalies per gate.",
+  "filters": {
+    "gate": "Gate",
+    "allGates": "All Gates",
+    "period": "Period",
+    "last24h": "Last 24 Hours",
+    "last7d": "Last 7 Days",
+    "last30d": "Last 30 Days"
+  },
+  "summary": {
+    "totalScans": "Total Scans",
+    "violations": "Violations",
+    "uniqueTags": "Unique Tags",
+    "avgRssi": "Avg RSSI"
+  },
+  "byGate": {
+    "title": "Activity per Gate",
+    "scans": "scans",
+    "violations": "violations"
+  },
+  "timeline": {
+    "title": "Activity Timeline",
+    "placeholder": "No activity data yet."
+  },
+  "topEpcs": {
+    "title": "Top EPCs",
+    "epc": "EPC",
+    "count": "Count",
+    "lastSeen": "Last Seen"
+  },
+  "noData": "No gate activity data yet."
+}

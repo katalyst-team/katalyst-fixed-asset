@@ -1,0 +1,116 @@
+{
+  "title": "Cetak RFID",
+  "description": "Cetak label RFID dan buat tag RFID secara langsung. Konfigurasi printer Anda, sesuaikan template, dan generate tag berurutan.",
+
+  "qzTray": {
+    "title": "Koneksi QZ Tray",
+    "connect": "Hubungkan",
+    "disconnect": "Putuskan",
+    "refreshPrinters": "Perbarui Printer",
+    "initSigning": "Inisialisasi Tanda Tangan",
+    "test": "Tes",
+    "messageSigning": "Penandatanganan Pesan",
+    "active": "Aktif",
+    "failed": "Gagal",
+    "certificateLoaded": "Sertifikat dimuat - Pencetakan senyap diaktifkan",
+    "selectPrinter": "Pilih Printer",
+    "choosePrinter": "Pilih printer",
+    "printCopies": "Jumlah Salinan Cetak"
+  },
+
+  "form": {
+    "title": "Konfigurasi RFID",
+    "description": "Konfigurasi tipe RFID, kategori, dan pengaturan penamaan",
+    "quantity": {
+      "label": "Jumlah",
+      "hint": "Jumlah tag RFID yang akan dibuat"
+    },
+    "type": {
+      "label": "Tipe RFID",
+      "reusable": "Dapat Digunakan Kembali",
+      "disposable": "Sekali Pakai"
+    },
+    "category": {
+      "label": "Kategori RFID",
+      "single": "Satuan",
+      "package": "Paket"
+    },
+    "namingMode": {
+      "label": "Mode Penamaan",
+      "system": "Generate oleh Sistem",
+      "custom": "Pola Kustom",
+      "systemHint": "Nama RFID akan di-generate otomatis (sama dengan EPC)"
+    },
+    "store": {
+      "label": "Toko",
+      "allStores": "Semua Toko",
+      "hint": "Pilih toko untuk menetapkan RFID ini, atau biarkan sebagai Semua Toko."
+    },
+    "customPattern": {
+      "label": "Pola Kustom",
+      "placeholder": "contoh: AA001, AA000001, AA001BB",
+      "hint": "Contoh: AA001→AA100, AA000001→AA000100, AA001BB→AA100BB, 001→100",
+      "preview": "Pratinjau",
+      "invalidFormat": "Format pola tidak valid. Gunakan huruf dan angka (contoh: AA001, 001BB)",
+      "insufficientCapacity": "Pola tidak dapat generate jumlah yang diminta. Tambah padding atau kurangi jumlah."
+    }
+  },
+
+  "zpl": {
+    "title": "Konfigurasi Label ZPL",
+    "description": "Konfigurasi template label Anda menggunakan kode ZPL",
+    "preview": {
+      "title": "Pengaturan Pratinjau",
+      "density": "Kepadatan Cetak",
+      "unit": "Satuan",
+      "width": "Lebar",
+      "height": "Tinggi",
+      "index": "Indeks",
+      "generate": "Generate Pratinjau",
+      "generating": "Memproses...",
+      "clear": "Hapus Pratinjau",
+      "previewImage": "Pratinjau Label",
+      "generatingImage": "Membuat pratinjau...",
+      "noPreview": "Tidak ada pratinjau. Masukkan kode ZPL dan klik Generate Pratinjau."
+    },
+    "code": {
+      "label": "Kode ZPL",
+      "uploadFile": "Unggah File ZPL",
+      "orManual": "atau masukkan kode ZPL secara manual di bawah",
+      "placeholder": "Masukkan kode ZPL Anda di sini...\n\nContoh:\n^XA\n^FO50,50\n^ADN,36,20\n^FD{epc}^FS\n^FO50,100\n^ADN,24,12\n^FD{name}^FS\n^XZ",
+      "hint": "Gunakan {epc} atau [epc] untuk kode EPC yang di-generate. Gunakan {name} atau [name] untuk nama RFID."
+    }
+  },
+
+  "terminal": {
+    "title": "Log Aktivitas",
+    "clear": "Bersihkan",
+    "empty": "Belum ada aktivitas..."
+  },
+
+  "actions": {
+    "reset": "Reset Formulir",
+    "printAndCreate": "Cetak & Buat RFID",
+    "processing": "Memproses..."
+  },
+
+  "progress": {
+    "printing": "Mencetak {{count}} label...",
+    "printingComplete": "Label berhasil dicetak!",
+    "creatingRfids": "Membuat {{count}} RFID di database...",
+    "creatingRfid": "Membuat RFID {{current}} dari {{total}}..."
+  },
+
+  "success": {
+    "created": "Berhasil membuat {{count}} tag RFID!",
+    "viewRfids": "Lihat RFID"
+  },
+
+  "errors": {
+    "printerNotConnected": "Printer tidak terhubung. Silakan hubungkan ke QZ Tray terlebih dahulu.",
+    "noPrinterSelected": "Tidak ada printer yang dipilih. Silakan pilih printer.",
+    "noZplCode": "Kode ZPL diperlukan. Silakan masukkan atau unggah template ZPL.",
+    "nameGenerationFailed": "Gagal generate nama RFID dari pola.",
+    "unknownError": "Terjadi kesalahan yang tidak diketahui. Silakan coba lagi."
+  }
+}

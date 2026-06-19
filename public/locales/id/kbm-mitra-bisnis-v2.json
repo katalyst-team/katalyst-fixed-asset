@@ -1,0 +1,17 @@
+{
+  "title": "KBM Mitra Bisnis",
+  "description": "Kelola data master KBM Mitra Bisnis",
+  "table": {
+    "header": {
+      "action": "Aksi",
+      "code": "Kode",
+      "name": "Nama",
+      "no": "No",
+      "sortOrder": "Urutan"
+    }
+  },
+  "empty": {
+    "description": "Tidak ada data mitra bisnis. Mulai dengan menambahkan item pertama.",
+    "title": "Tidak Ada Data Mitra Bisnis"
+  }
+}
