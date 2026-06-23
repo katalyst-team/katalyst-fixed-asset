@@ -1,7 +1,7 @@
-const DEFAULT_BASE_URL = "https://inventory.katalyst.id";
+const DEFAULT_BASE_URL = "https://fixed-asset.katalyst.id";
 
 export const DEFAULT_KEYWORDS =
-  "inventory management, RFID tracking, stock control, warehouse operations, Katalyst Inventory";
+  "fixed asset management, RFID tracking, asset control, warehouse operations, Katalyst Fixed Asset";
 
 export const DEFAULT_OG_IMAGE = "/logo.png";
 
@@ -80,6 +80,6 @@ export const createPageSEO = ({
       path,
       title,
     }),
-    title: `${title} | Katalyst Inventory`,
+    title: `${title} | Katalyst Fixed Asset`,
   };
 };

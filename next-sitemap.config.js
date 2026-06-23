@@ -23,8 +23,8 @@ module.exports = {
   priority: 0.7,
   robotsTxtOptions: {
     additionalSitemaps: [
-      "https://inventory.katalyst.id/sitemap.xml",
-      "https://inventory.katalyst.id/server-sitemap.xml", // For dynamic routes
+      "https://fixed-asset.katalyst.id/sitemap.xml",
+      "https://fixed-asset.katalyst.id/server-sitemap.xml", // For dynamic routes
     ],
     policies: [
       {
@@ -34,7 +34,7 @@ module.exports = {
       },
     ],
   },
-  siteUrl: process.env.SITE_URL || "https://inventory.katalyst.id",
+  siteUrl: process.env.SITE_URL || "https://fixed-asset.katalyst.id",
   sitemapSize: 5000,
   transform: async (config, path) => {
     // Custom priority and changefreq based on path
@@ -54,15 +54,15 @@ module.exports = {
     return {
       alternateRefs: [
         {
-          href: `https://inventory.katalyst.id/en${path}`,
+          href: `https://fixed-asset.katalyst.id/en${path}`,
           hreflang: "en",
         },
         {
-          href: `https://inventory.katalyst.id/id${path}`,
+          href: `https://fixed-asset.katalyst.id/id${path}`,
           hreflang: "id",
         },
         {
-          href: `https://inventory.katalyst.id${path}`,
+          href: `https://fixed-asset.katalyst.id${path}`,
           hreflang: "x-default",
         },
       ],

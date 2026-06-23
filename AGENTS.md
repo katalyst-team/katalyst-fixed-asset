@@ -124,7 +124,7 @@ Filter state **must sync with URL query params** for shareable URLs (40+ modules
 Public vars referenced in code. The first four are present in `.env.local` for local dev; the rest are deployment-only or have fallbacks:
 ```
 NEXT_PUBLIC_ENDPOINT_URL=http://localhost:8000/api   # API base — required
-NEXT_PUBLIC_BASE_URL_FE=http://localhost:7331        # redirects/logout (fallback: katalyst-fe.vercel.app)
+NEXT_PUBLIC_BASE_URL_FE=http://localhost:7331        # redirects/logout (fallback: katalyst-fixed-asset.vercel.app)
 NEXT_PUBLIC_BASE_URL=http://localhost:7331           # src/utils/seo.ts
 NEXT_PUBLIC_ENV=development
 NEXT_PUBLIC_MIXPANEL_TOKEN=<token>

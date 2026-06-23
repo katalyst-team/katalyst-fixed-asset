@@ -1,6 +1,6 @@
-# Inventory Frontend (inventory-fe)
+# Fixed Asset Frontend (katalyst-fixed-asset)
 
-Welcome to the Inventory Frontend project! This document provides a comprehensive guide to understanding, running, and contributing to the project. It's designed to be clear and easy to follow, especially for new team members and interns.
+Welcome to the Fixed Asset Frontend project! This document provides a comprehensive guide to understanding, running, and contributing to the project. It's designed to be clear and easy to follow, especially for new team members and interns.
 
 ## Table of Contents
 
@@ -35,17 +35,17 @@ Welcome to the Inventory Frontend project! This document provides a comprehensiv
 
 ## Overview
 
-This application serves as the user interface for a comprehensive inventory management system. It allows users to manage inventory data, track stock movements, handle inbound/outbound operations, manage SKUs, categories, brands, colors, sizes, and perform various inventory-related tasks. The application is built using modern web technologies with a focus on performance, developer experience, maintainability, and scalability.
+This application serves as the user interface for a comprehensive fixed asset management system. It allows users to manage asset data, track asset movements, handle inbound/outbound operations, manage SKUs, categories, brands, colors, sizes, and perform various asset-related tasks. The application is built using modern web technologies with a focus on performance, developer experience, maintainability, and scalability.
 
 **Key Features:**
 
-- Multi-language support (English/Indonesian)
-- Real-time inventory tracking
-- EPC/RFID integration
-- Stock audit capabilities
-- Barcode/QR code printing
-- Role-based access control
-- Responsive design for mobile and desktop
+ - Multi-language support (English/Indonesian)
+ - Real-time asset tracking
+ - EPC/RFID integration
+ - Asset audit capabilities
+ - Barcode/QR code printing
+ - Role-based access control
+ - Responsive design for mobile and desktop
 
 ## Getting Started
 
@@ -61,10 +61,10 @@ Before you begin, ensure you have the following installed:
 ### Installation
 
 1.  **Clone the repository:**
-    ```bash
-    git clone <repository-url>
-    cd inventory-fe
-    ```
+     ```bash
+     git clone <repository-url>
+     cd katalyst-fixed-asset
+     ```
 2.  **Install dependencies:** Choose the command corresponding to your package manager:
 
     ```bash
@@ -121,7 +121,7 @@ This project utilizes the following technologies:
 The codebase is organized into the following main directories within `src/`:
 
 ```
-inventory-fe/
+katalyst-fixed-asset/
 ├── public/             # Static assets (images, fonts)
 ├── src/
 │   ├── components/     # Shared UI components used across multiple features
@@ -326,10 +326,10 @@ Each feature module follows a consistent structure pattern:
 
 - **Category Management:** Categories, brands, colors, sizes with subcategory support
 - **SKU Management:** Product variants with attribute collections
-- **Inventory Tracking:** Stock levels and item management
+- **Fixed Asset Tracking:** Asset levels and item management
 - **Ledger Operations:** Inbound/outbound transactions
 - **EPC/RFID Management:** Electronic Product Code tracking
-- **Stock Audit:** Inventory verification and auditing
+- **Asset Audit:** Asset verification and auditing
 - **Store Management:** Multi-location support
 - **Employee Management:** User and role management
 - **API Key Management:** Service authentication
@@ -340,14 +340,14 @@ The application includes the following key features:
 
 - **Authentication:** Complete user lifecycle (sign-in, sign-up, password reset, email verification)
 - **Multi-language Support:** English and Indonesian with namespace-based translations
-- **Inventory Management:** Comprehensive CRUD operations for inventory items
+- **Fixed Asset Management:** Comprehensive CRUD operations for fixed asset items
 - **Category Management:** Hierarchical organization with categories, brands, colors, sizes
 - **SKU Management:** Advanced product variant management with attributes
-- **Stock Tracking:** Real-time stock levels, movements, and audit capabilities
+- **Asset Tracking:** Real-time asset levels, movements, and audit capabilities
 - **EPC/RFID Integration:** Electronic Product Code tracking and management
 - **Ledger Operations:** Inbound/outbound transaction management
-- **Nagatech Sync:** Real-time inventory synchronization with organization-based access control
-- **Store Management:** Multi-location inventory management
+- **Nagatech Sync:** Real-time asset synchronization with organization-based access control
+- **Store Management:** Multi-location asset management
 - **Barcode/QR Printing:** QZ Tray integration for direct printer communication
 - **Responsive Design:** Mobile-first approach with desktop optimization
 

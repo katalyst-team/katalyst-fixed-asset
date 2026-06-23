@@ -57,7 +57,7 @@ const processQueue = (error: unknown, token: string | null = null) => {
 const handleLogout = () => {
   clearAuthTokens();
   window.location.href =
-    process.env.NEXT_PUBLIC_BASE_URL_FE ?? "https://katalyst-fe.vercel.app/";
+    process.env.NEXT_PUBLIC_BASE_URL_FE ?? "https://katalyst-fixed-asset.vercel.app/";
 };
 
 const refreshAuthToken = async (

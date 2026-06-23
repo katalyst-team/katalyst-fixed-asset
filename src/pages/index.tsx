@@ -9,9 +9,9 @@ import { createPageSEO } from "@/utils/seo";
 export default function Home() {
   const seo = createPageSEO({
     description:
-      "Sign in to monitor RFID activity, keep stock accurate, and manage every warehouse workflow from one secure dashboard.",
+      "Sign in to monitor RFID activity, keep assets accurate, and manage every warehouse workflow from one secure dashboard.",
     path: "/",
-    title: "Inventory Sign In",
+    title: "Fixed Asset Sign In",
   });
 
   return (

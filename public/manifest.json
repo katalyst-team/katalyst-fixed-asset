@@ -1,7 +1,7 @@
 {
-  "name": "Katalyst - Advanced RFID Inventory Management System",
-  "short_name": "Katalyst Inventory",
-  "description": "Revolutionary RFID-based inventory management platform for modern businesses. Real-time tracking, automated workflows, and comprehensive analytics.",
+  "name": "Katalyst - Advanced RFID Fixed Asset Management System",
+  "short_name": "Katalyst Fixed Asset",
+  "description": "Revolutionary RFID-based fixed asset management platform for modern businesses. Real-time tracking, automated workflows, and comprehensive analytics.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -46,21 +46,21 @@
       "sizes": "1280x720",
       "type": "image/jpeg",
       "platform": "wide",
-      "label": "Inventory Dashboard"
+      "label": "Fixed Asset Dashboard"
     },
     {
       "src": "/images/screenshot-mobile.jpg",
       "sizes": "640x1136",
       "type": "image/jpeg",
       "platform": "narrow",
-      "label": "Mobile Inventory View"
+      "label": "Mobile Fixed Asset View"
     }
   ],
   "shortcuts": [
     {
-      "name": "Inventory Dashboard",
-      "short_name": "Inventory",
-      "description": "Quick access to inventory management",
+      "name": "Fixed Asset Dashboard",
+      "short_name": "Fixed Asset",
+      "description": "Quick access to fixed asset management",
       "url": "/dashboard/inventory",
       "icons": [
         {
@@ -97,7 +97,7 @@
   "related_applications": [
     {
       "platform": "webapp",
-      "url": "https://inventory.katalyst.id/manifest.json"
+      "url": "https://fixed-asset.katalyst.id/manifest.json"
     }
   ],
   "prefer_related_applications": false,

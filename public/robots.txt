@@ -1,5 +1,5 @@
-# Katalyst Inventory Management System - Robots.txt
-# Website: https://inventory.katalyst.id
+# Katalyst Fixed Asset Management System - Robots.txt
+# Website: https://fixed-asset.katalyst.id
 
 User-agent: *
 Allow: /
@@ -23,8 +23,8 @@ Allow: /*.css
 Allow: /*.js
 
 # Sitemap location
-Sitemap: https://inventory.katalyst.id/sitemap.xml
-Sitemap: https://inventory.katalyst.id/sitemap-index.xml
+Sitemap: https://fixed-asset.katalyst.id/sitemap.xml
+Sitemap: https://fixed-asset.katalyst.id/sitemap-index.xml
 
 # Crawl delay (optional)
 Crawl-delay: 1
