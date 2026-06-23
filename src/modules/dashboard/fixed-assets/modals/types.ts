@@ -1,3 +1,5 @@
+import { useUser } from "@/context/user-context";
+import { useGetFAMasterDataQuery } from "@/hooks/api/fixed-assets";
 import type { FaAsset } from "@/types/fixed-assets";
 
 export type FaModalType =
@@ -26,25 +28,26 @@ export interface FaModalContextValue {
   type: FaModalType;
 }
 
-export const FA_PEOPLE = [
-  "Andi Pratama",
-  "Budi Setiawan",
-  "Citra Wijaya",
-  "Dewi Anggraini",
-  "Dr. Ratna Indira",
-  "Eko Pranata",
-  "Galang Tirta",
-  "Rahmat Santoso",
-];
+export function useFaPeopleOptions() {
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { data: peopleResp } = useGetFAMasterDataQuery({
+    organizationId,
+    tab: "cust",
+  });
+  const people =
+    peopleResp?.data?.masterDataSections?.flatMap((s) => s.rows) ?? [];
+  return people.map((p) => ({ label: p.name, value: p.id }));
+}
 
-export const FA_LOCATIONS = [
-  "BDG-Office · Floor 2",
-  "BDG-WH · Bay 1",
-  "JKT-DC · Rack B",
-  "JKT-HQ · Floor 12",
-  "JKT-HQ · Floor 8",
-  "JKT-Lab · Station 3",
-  "JKT-Workshop",
-  "MDN-Office",
-  "SBY-WH",
-];
+export function useFaLocationOptions() {
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { data: locResp } = useGetFAMasterDataQuery({
+    organizationId,
+    tab: "loc",
+  });
+  const locations =
+    locResp?.data?.masterDataSections?.flatMap((s) => s.rows) ?? [];
+  return locations.map((l) => ({ label: l.name, value: l.id }));
+}

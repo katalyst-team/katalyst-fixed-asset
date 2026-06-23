@@ -1,141 +1,113 @@
-import { useQuery } from "@tanstack/react-query";
-
-import {
-  getAssetDetailService,
-  getAssetRegisterService,
-  getAuditService,
-  getCheckOutService,
-  getFADashboardService,
-  getFAMasterDataService,
-  getFAUsersService,
-  getMaintenanceService,
-  getReportsService,
-  getRFIDTagsService,
-  getScanOutService,
-  getSecurityService,
-  getTransferService,
-} from "@/services/fixed-assets";
-
-export const KEY_USE_GET_FA_DASHBOARD = (orgId: string) => ["faDashboard", orgId];
-
-const useGetFADashboardQuery = (organizationId: string) => {
-  return useQuery({
-    enabled: Boolean(organizationId),
-    queryFn: () => getFADashboardService(organizationId),
-    queryKey: [...KEY_USE_GET_FA_DASHBOARD(organizationId)],
-    staleTime: 60_000,
-  });
-};
-
-export default useGetFADashboardQuery;
-
-export const useGetAssetRegisterQuery = (organizationId: string) => {
-  return useQuery({
-    enabled: Boolean(organizationId),
-    queryFn: () => getAssetRegisterService(organizationId),
-    queryKey: ["faRegister", organizationId],
-    staleTime: 60_000,
-  });
-};
-
-export const useGetAssetDetailQuery = (
-  organizationId: string,
-  assetId: string,
-) => {
-  return useQuery({
-    enabled: Boolean(organizationId) && Boolean(assetId),
-    queryFn: () => getAssetDetailService(organizationId, assetId),
-    queryKey: ["faAssetDetail", organizationId, assetId],
-    staleTime: 60_000,
-  });
-};
-
-export const useGetFAMasterDataQuery = (organizationId: string) => {
-  return useQuery({
-    enabled: Boolean(organizationId),
-    queryFn: () => getFAMasterDataService(organizationId),
-    queryKey: ["faMasterData", organizationId],
-    staleTime: 60_000,
-  });
-};
-
-export const useGetRFIDTagsQuery = (organizationId: string) => {
-  return useQuery({
-    enabled: Boolean(organizationId),
-    queryFn: () => getRFIDTagsService(organizationId),
-    queryKey: ["faRfidTags", organizationId],
-    staleTime: 60_000,
-  });
-};
-
-export const useGetScanOutQuery = (organizationId: string) => {
-  return useQuery({
-    enabled: Boolean(organizationId),
-    queryFn: () => getScanOutService(organizationId),
-    queryKey: ["faScanOut", organizationId],
-    staleTime: 60_000,
-  });
-};
-
-export const useGetCheckOutQuery = (organizationId: string) => {
-  return useQuery({
-    enabled: Boolean(organizationId),
-    queryFn: () => getCheckOutService(organizationId),
-    queryKey: ["faCheckOut", organizationId],
-    staleTime: 60_000,
-  });
-};
-
-export const useGetTransferQuery = (organizationId: string) => {
-  return useQuery({
-    enabled: Boolean(organizationId),
-    queryFn: () => getTransferService(organizationId),
-    queryKey: ["faTransfer", organizationId],
-    staleTime: 60_000,
-  });
-};
-
-export const useGetAuditQuery = (organizationId: string) => {
-  return useQuery({
-    enabled: Boolean(organizationId),
-    queryFn: () => getAuditService(organizationId),
-    queryKey: ["faAudit", organizationId],
-    staleTime: 60_000,
-  });
-};
-
-export const useGetMaintenanceQuery = (organizationId: string) => {
-  return useQuery({
-    enabled: Boolean(organizationId),
-    queryFn: () => getMaintenanceService(organizationId),
-    queryKey: ["faMaintenance", organizationId],
-    staleTime: 60_000,
-  });
-};
-
-export const useGetSecurityQuery = (organizationId: string) => {
-  return useQuery({
-    enabled: Boolean(organizationId),
-    queryFn: () => getSecurityService(organizationId),
-    queryKey: ["faSecurity", organizationId],
-    staleTime: 60_000,
-  });
-};
-
-export const useGetReportsQuery = (organizationId: string) => {
-  return useQuery({
-    enabled: Boolean(organizationId),
-    queryFn: () => getReportsService(organizationId),
-    queryKey: ["faReports", organizationId],
-    staleTime: 60_000,
-  });
-};
-
-export const useGetFAUsersQuery = (organizationId: string) => {
-  return useQuery({
-    enabled: Boolean(organizationId),
-    queryFn: () => getFAUsersService(organizationId),
-    queryKey: ["faUsers", organizationId],
-    staleTime: 60_000,
-  });
-};
+export { default as useApproveDisposalMutation } from "./useApproveDisposalMutation";
+export { default as useAuditSignOffMutation } from "./useAuditSignOffMutation";
+export { default as useBulkCreateAssetMutation } from "./useBulkCreateAssetMutation";
+export { default as useBulkUpdateAssetMutation } from "./useBulkUpdateAssetMutation";
+export { default as useConfirmTransferReceiptMutation } from "./useConfirmTransferReceiptMutation";
+export { default as useConnectIntegrationMutation } from "./useConnectIntegrationMutation";
+export { default as useCreateAssetMutation } from "./useCreateAssetMutation";
+export { default as useCreateCheckOutMutation } from "./useCreateCheckOutMutation";
+export { default as useCreateDisposalMutation } from "./useCreateDisposalMutation";
+export { default as useCreateEpcRangeMutation } from "./useCreateEpcRangeMutation";
+export { default as useCreateFAMasterDataMutation } from "./useCreateFAMasterDataMutation";
+export { default as useCreateGeofenceRuleMutation } from "./useCreateGeofenceRuleMutation";
+export { default as useCreatePmRuleMutation } from "./useCreatePmRuleMutation";
+export { default as useCreateReservationMutation } from "./useCreateReservationMutation";
+export { default as useCreateSavedQueryMutation } from "./useCreateSavedQueryMutation";
+export { default as useCreateTransferMutation } from "./useCreateTransferMutation";
+export { default as useCreateWorkOrderMutation } from "./useCreateWorkOrderMutation";
+export { default as useDeleteFAMasterDataMutation } from "./useDeleteFAMasterDataMutation";
+export { default as useDeleteSavedQueryMutation } from "./useDeleteSavedQueryMutation";
+export { default as useDeployScanInMutation } from "./useDeployScanInMutation";
+export { default as useEncodeRFIDTagMutation } from "./useEncodeRFIDTagMutation";
+export { default as useExportDataMutation } from "./useExportDataMutation";
+export { default as useGenerateAllReportsMutation } from "./useGenerateAllReportsMutation";
+export { default as useGenerateBastMutation } from "./useGenerateBastMutation";
+export { default as useGenerateReportMutation } from "./useGenerateReportMutation";
+export { default as useGetAssetDetailQuery } from "./useGetAssetDetailQuery";
+export { KEY_USE_GET_FA_ASSET_DETAIL } from "./useGetAssetDetailQuery";
+export { default as useGetAssetDocDownloadQuery } from "./useGetAssetDocDownloadQuery";
+export { KEY_USE_GET_FA_ASSET_DOC_DOWNLOAD } from "./useGetAssetDocDownloadQuery";
+export { default as useGetAssetRegisterQuery } from "./useGetAssetRegisterQuery";
+export { KEY_USE_GET_FA_ASSET_REGISTER } from "./useGetAssetRegisterQuery";
+export { default as useGetAuditReportMutation } from "./useGetAuditReportMutation";
+export { default as useGetAuditZonesQuery } from "./useGetAuditZonesQuery";
+export { KEY_USE_GET_FA_AUDIT_ZONES } from "./useGetAuditZonesQuery";
+export { default as useGetBillingQuery } from "./useGetBillingQuery";
+export { KEY_USE_GET_FA_BILLING } from "./useGetBillingQuery";
+export { default as useGetCamerasQuery } from "./useGetCamerasQuery";
+export { KEY_USE_GET_FA_CAMERAS } from "./useGetCamerasQuery";
+export { default as useGetCheckOutsQuery } from "./useGetCheckOutsQuery";
+export { KEY_USE_GET_FA_CHECK_OUTS } from "./useGetCheckOutsQuery";
+export { default as useGetDisposalsQuery } from "./useGetDisposalsQuery";
+export { KEY_USE_GET_FA_DISPOSALS } from "./useGetDisposalsQuery";
+export { default as useGetEpcRangesQuery } from "./useGetEpcRangesQuery";
+export { KEY_USE_GET_FA_EPC_RANGES } from "./useGetEpcRangesQuery";
+export { default as useGetFADashboardQuery } from "./useGetFADashboardQuery";
+export { KEY_USE_GET_FA_DASHBOARD } from "./useGetFADashboardQuery";
+export { default as useGetFADocsQuery } from "./useGetFADocsQuery";
+export { KEY_USE_GET_FA_DOCS } from "./useGetFADocsQuery";
+export { default as useGetFAMasterDataQuery } from "./useGetFAMasterDataQuery";
+export { KEY_USE_GET_FA_MASTER_DATA } from "./useGetFAMasterDataQuery";
+export { default as useGetFASettingsQuery } from "./useGetFASettingsQuery";
+export { KEY_USE_GET_FA_SETTINGS } from "./useGetFASettingsQuery";
+export { default as useGetFAUserAuditLogQuery } from "./useGetFAUserAuditLogQuery";
+export { KEY_USE_GET_FA_USER_AUDIT_LOG } from "./useGetFAUserAuditLogQuery";
+export { default as useGetFAUsersQuery } from "./useGetFAUsersQuery";
+export { KEY_USE_GET_FA_USERS } from "./useGetFAUsersQuery";
+export { default as useGetInvoicesQuery } from "./useGetInvoicesQuery";
+export { KEY_USE_GET_FA_INVOICES } from "./useGetInvoicesQuery";
+export { default as useGetMaintenanceQuery } from "./useGetMaintenanceQuery";
+export { KEY_USE_GET_FA_MAINTENANCE } from "./useGetMaintenanceQuery";
+export { default as useGetNotificationTriggersQuery } from "./useGetNotificationTriggersQuery";
+export { KEY_USE_GET_FA_NOTIFICATION_TRIGGERS } from "./useGetNotificationTriggersQuery";
+export { default as useGetPOQuery } from "./useGetPOQuery";
+export { KEY_USE_GET_FA_PO } from "./useGetPOQuery";
+export { default as useGetReportHistoryQuery } from "./useGetReportHistoryQuery";
+export { KEY_USE_GET_FA_REPORT_HISTORY } from "./useGetReportHistoryQuery";
+export { default as useGetReportPreviewQuery } from "./useGetReportPreviewQuery";
+export { KEY_USE_GET_FA_REPORT_PREVIEW } from "./useGetReportPreviewQuery";
+export { default as useGetReportTemplatesQuery } from "./useGetReportTemplatesQuery";
+export { KEY_USE_GET_FA_REPORT_TEMPLATES } from "./useGetReportTemplatesQuery";
+export { default as useGetReservationsQuery } from "./useGetReservationsQuery";
+export { KEY_USE_GET_FA_RESERVATIONS } from "./useGetReservationsQuery";
+export { default as useGetRfidReadersQuery } from "./useGetRfidReadersQuery";
+export { KEY_USE_GET_FA_RFID_READERS } from "./useGetRfidReadersQuery";
+export { default as useGetRFIDTagsQuery } from "./useGetRFIDTagsQuery";
+export { KEY_USE_GET_FA_RFID_TAGS } from "./useGetRFIDTagsQuery";
+export { default as useGetRolesQuery } from "./useGetRolesQuery";
+export { KEY_USE_GET_FA_ROLES } from "./useGetRolesQuery";
+export { default as useGetRTLSFloorPlanQuery } from "./useGetRTLSFloorPlanQuery";
+export { KEY_USE_GET_FA_RTLS_FLOOR_PLAN } from "./useGetRTLSFloorPlanQuery";
+export { default as useGetRTLSPositionsQuery } from "./useGetRTLSPositionsQuery";
+export { KEY_USE_GET_FA_RTLS_POSITIONS } from "./useGetRTLSPositionsQuery";
+export { default as useGetSavedQueriesQuery } from "./useGetSavedQueriesQuery";
+export { KEY_USE_GET_FA_SAVED_QUERIES } from "./useGetSavedQueriesQuery";
+export { default as useGetScanInHistoryQuery } from "./useGetScanInHistoryQuery";
+export { KEY_USE_GET_FA_SCAN_IN_HISTORY } from "./useGetScanInHistoryQuery";
+export { default as useGetSecurityAlertsQuery } from "./useGetSecurityAlertsQuery";
+export { KEY_USE_GET_FA_SECURITY_ALERTS } from "./useGetSecurityAlertsQuery";
+export { default as useGetTransferHistoryQuery } from "./useGetTransferHistoryQuery";
+export { KEY_USE_GET_FA_TRANSFER_HISTORY } from "./useGetTransferHistoryQuery";
+export { default as useGetTransfersQuery } from "./useGetTransfersQuery";
+export { KEY_USE_GET_FA_TRANSFERS } from "./useGetTransfersQuery";
+export { default as useHaltSecurityAlertMutation } from "./useHaltSecurityAlertMutation";
+export { default as useImportFAMasterDataMutation } from "./useImportFAMasterDataMutation";
+export { default as useImportPOMutation } from "./useImportPOMutation";
+export { default as useInviteFAUserMutation } from "./useInviteFAUserMutation";
+export { default as useOrderRFIDTagsMutation } from "./useOrderRFIDTagsMutation";
+export { default as usePostAuditAdjustmentMutation } from "./usePostAuditAdjustmentMutation";
+export { default as usePostDisposalJournalEntryMutation } from "./usePostDisposalJournalEntryMutation";
+export { default as usePrintRFIDTagsMutation } from "./usePrintRFIDTagsMutation";
+export { default as useRejectDisposalMutation } from "./useRejectDisposalMutation";
+export { default as useResolveSecurityAlertMutation } from "./useResolveSecurityAlertMutation";
+export { default as useResumeAuditSweepMutation } from "./useResumeAuditSweepMutation";
+export { default as useReturnCheckOutMutation } from "./useReturnCheckOutMutation";
+export { default as useReviseDisposalMutation } from "./useReviseDisposalMutation";
+export { default as useSubmitPreUseCheckMutation } from "./useSubmitPreUseCheckMutation";
+export { default as useUpdateAssetMutation } from "./useUpdateAssetMutation";
+export { default as useUpdateFAMasterDataMutation } from "./useUpdateFAMasterDataMutation";
+export { default as useUpdateFASettingsMutation } from "./useUpdateFASettingsMutation";
+export { default as useUpdateNotificationTriggersMutation } from "./useUpdateNotificationTriggersMutation";
+export { default as useUpdatePmRuleMutation } from "./useUpdatePmRuleMutation";
+export { default as useUpdateRoleMutation } from "./useUpdateRoleMutation";
+export { default as useUpdateWorkOrderStatusMutation } from "./useUpdateWorkOrderStatusMutation";

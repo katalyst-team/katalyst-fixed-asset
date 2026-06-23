@@ -8,17 +8,27 @@ import {
   Search,
   Shield,
 } from "lucide-react";
+import { useRouter } from "next/router";
 import { toast } from "sonner";
 
+import { useUser } from "@/context/user-context";
+import {
+  useCreateGeofenceRuleMutation,
+  useGetAssetRegisterQuery,
+  useGetCamerasQuery,
+  useGetSecurityAlertsQuery,
+  useHaltSecurityAlertMutation,
+  useResolveSecurityAlertMutation,
+} from "@/hooks/api/fixed-assets";
 import {
   FaKpiStrip,
   FaShellHead,
   FaStat,
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
-import { ASSETS, SECURITY_ALERTS } from "@/services/fixed-assets/mock";
-
-const ASSET_BY_ID = new Map(ASSETS.map((a) => [a.id, a]));
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 
 const SEV_LABEL: Record<string, string> = {
   critical: "Critical",
@@ -35,19 +45,60 @@ const SEV_TONE: Record<string, string> = {
 };
 
 export function FaSecurityPage() {
+  const router = useRouter();
+  const { tokenPayload } = useUser();
+  const { canManage } = useFaPermission();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { data: alertResp, isError, isLoading } = useGetSecurityAlertsQuery({ organizationId });
+  const { data: assetResp } = useGetAssetRegisterQuery({ organizationId });
+  const { data: camerasResp } = useGetCamerasQuery({ organizationId });
+  const { mutateAsync: haltAlert } = useHaltSecurityAlertMutation({
+    organizationId,
+  });
+  const { mutateAsync: resolveAlert } = useResolveSecurityAlertMutation({
+    organizationId,
+  });
+  const { mutateAsync: createGeofenceRule } = useCreateGeofenceRuleMutation({
+    organizationId,
+  });
+  const alerts = alertResp?.data?.alerts ?? [];
+  const assets = assetResp?.data?.assets ?? [];
+  const cameras = camerasResp?.data?.cameras ?? [];
+  const ASSET_BY_ID = new Map(assets.map((a) => [a.id, a]));
+  const CAMERA_BY_NAME = new Map(cameras.map((c) => [c.name, c]));
+
+  const handleOpenCCTV = (cameraName: string) => {
+    const cam = CAMERA_BY_NAME.get(cameraName);
+    if (cam?.stream_url) {
+      safeOpenUrl(cam.stream_url);
+    } else {
+      toast.info("Opening CCTV " + cameraName);
+    }
+  };
+
+  const handleGeofenceRules = async () => {
+    await createGeofenceRule({
+      rules: [
+        { allowed_zones: ["BDG-WH", "JKT-HQ"], asset_category: "veh" },
+      ],
+    });
+  };
+
   return (
     <div>
       <FaShellHead
         actions={
           <>
-            <button
-              className="ks-btn ks-btn-sm"
-              type="button"
-              onClick={() => toast.info("Open geofence rules")}
-            >
-              <Shield size={14} />
-              Geofence rules
-            </button>
+            {canManage && (
+              <button
+                className="ks-btn ks-btn-sm"
+                type="button"
+                onClick={handleGeofenceRules}
+              >
+                <Shield size={14} />
+                Geofence rules
+              </button>
+            )}
             <button
               className="ks-btn ks-btn-sm"
               style={{
@@ -56,7 +107,6 @@ export function FaSecurityPage() {
                 color: "hsl(var(--destructive))",
               }}
               type="button"
-              onClick={() => toast.info("3 active alerts")}
             >
               <AlertTriangle size={14} />3 active alerts
             </button>
@@ -73,6 +123,11 @@ export function FaSecurityPage() {
         <FaStat label="Recovery rate" tone="success" value="94%" />
       </FaKpiStrip>
 
+      <FaQueryState
+        isEmpty={alerts.length === 0}
+        isError={isError}
+        isLoading={isLoading}
+      >
       <div className="ks-card">
         <div className="ks-card-head">
           <div className="ks-card-title">Live alerts</div>
@@ -80,7 +135,7 @@ export function FaSecurityPage() {
         </div>
         <div className="ks-card-body">
           <div className="flex flex-col gap-3">
-            {SECURITY_ALERTS.map((alert) => {
+            {alerts.map((alert) => {
               const asset = ASSET_BY_ID.get(alert.assetId);
               const critical = alert.severity === "critical";
               return (
@@ -132,14 +187,12 @@ export function FaSecurityPage() {
                     </span>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    {critical && (
+                    {critical && canManage && (
                       <button
                         className="ks-btn ks-btn-primary ks-btn-sm"
                         type="button"
                         onClick={() =>
-                          toast.warning(
-                            "Halting " + alert.assetId + " · paging security",
-                          )
+                          haltAlert({ alertId: alert.id })
                         }
                       >
                         <Lock size={13} />
@@ -149,7 +202,7 @@ export function FaSecurityPage() {
                     <button
                       className="ks-btn ks-btn-sm"
                       type="button"
-                      onClick={() => toast.info("Opening CCTV " + alert.camera)}
+                      onClick={() => handleOpenCCTV(alert.camera)}
                     >
                       <Eye size={13} />
                       Review CCTV
@@ -157,19 +210,26 @@ export function FaSecurityPage() {
                     <button
                       className="ks-btn ks-btn-sm"
                       type="button"
-                      onClick={() => toast.info("View asset " + alert.assetId)}
+                      onClick={() => router.push(`/dashboard/fixed-assets/register/${alert.assetId}/`)}
                     >
                       <Search size={13} />
                       View asset
                     </button>
-                    <button
-                      className="ks-btn ks-btn-ghost ks-btn-sm"
-                      type="button"
-                      onClick={() => toast.success("Marked resolved · " + alert.id)}
-                    >
-                      <CheckCircle2 size={13} />
-                      Mark resolved
-                    </button>
+                    {canManage && (
+                      <button
+                        className="ks-btn ks-btn-ghost ks-btn-sm"
+                        type="button"
+                        onClick={() =>
+                          resolveAlert({
+                            alertId: alert.id,
+                            resolution_notes: "Resolved by operator",
+                          })
+                        }
+                      >
+                        <CheckCircle2 size={13} />
+                        Mark resolved
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -177,6 +237,7 @@ export function FaSecurityPage() {
           </div>
         </div>
       </div>
+      </FaQueryState>
     </div>
   );
 }

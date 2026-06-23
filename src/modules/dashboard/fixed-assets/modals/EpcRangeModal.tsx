@@ -2,7 +2,6 @@
 
 import { Radio } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 
 import {
   Dialog,
@@ -21,6 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUser } from "@/context/user-context";
+import { useCreateEpcRangeMutation } from "@/hooks/api/fixed-assets";
 import { cn } from "@/lib/utils";
 
 interface EpcRangeModalProps {
@@ -41,6 +42,11 @@ const CATEGORIES: { code: string; label: string }[] = [
 const ENCODINGS = ["Custom 96-bit", "GS1 SGTIN-96", "ISO 17363"];
 
 export function EpcRangeModal({ onClose, open }: EpcRangeModalProps) {
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { mutateAsync: createEpcRange } = useCreateEpcRangeMutation({
+    organizationId,
+  });
   const [categoryCode, setCategoryCode] = useState("IT");
   const [companyPrefix, setCompanyPrefix] = useState("8990012");
   const [encoding, setEncoding] = useState("GS1 SGTIN-96");
@@ -48,9 +54,19 @@ export function EpcRangeModal({ onClose, open }: EpcRangeModalProps) {
 
   const pattern = `E280-1170-XXXX-${categoryCode}-####`;
 
-  const handleSubmit = () => {
-    toast.success(`EPC range registered · ${pattern}`);
-    onClose();
+  const handleSubmit = async () => {
+    try {
+      await createEpcRange({
+        company_prefix: companyPrefix,
+        encoding_format: encoding,
+        filter_value: categoryCode,
+        range_end: maxAllocation,
+        range_start: "0000",
+      });
+      onClose();
+    } catch {
+      // hook handles toast
+    }
   };
 
   return (

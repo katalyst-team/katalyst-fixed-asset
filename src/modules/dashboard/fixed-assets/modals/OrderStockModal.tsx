@@ -2,7 +2,6 @@
 
 import { PackageCheck } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 
 import {
   Dialog,
@@ -21,6 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUser } from "@/context/user-context";
+import { useOrderRFIDTagsMutation } from "@/hooks/api/fixed-assets";
 import { cn } from "@/lib/utils";
 import { formatIDRShort } from "@/modules/dashboard/fixed-assets/helpers";
 
@@ -50,16 +51,28 @@ const TAG_TYPES: { cost: number; t: string; vendor: string }[] = [
 ];
 
 export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { isPending: isOrdering, mutateAsync: orderTags } =
+    useOrderRFIDTagsMutation({ organizationId });
   const [qty, setQty] = useState("1000");
   const [tagType, setTagType] = useState(TAG_TYPES[0].t);
 
   const selected = TAG_TYPES.find((item) => item.t === tagType) ?? TAG_TYPES[0];
   const total = selected.cost * (parseInt(qty, 10) || 0);
 
-  const handleSubmit = () => {
-    toast.success(
-      `PO created · ${qty} × ${tagType} · ${formatIDRShort(total)}`,
-    );
+  const handleSubmit = async () => {
+    await orderTags({
+      items: [
+        {
+          cat: "it",
+          qty: parseInt(qty, 10) || 0,
+          size: "standard",
+          tag_type: selected.t,
+        },
+      ],
+      supplier: selected.vendor,
+    });
     onClose();
   };
 
@@ -131,6 +144,7 @@ export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
           </button>
           <button
             className="ks-btn ks-btn-primary"
+            disabled={isOrdering}
             type="button"
             onClick={handleSubmit}
           >

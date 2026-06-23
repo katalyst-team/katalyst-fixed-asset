@@ -3,6 +3,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import DashboardLayout from "@/components/layouts/dashboard-layout/DashboardLayout";
 import SEO from "@/components/SEO/SEO";
+import { FaLayout } from "@/modules/dashboard/fixed-assets/FaLayout";
 import { FaRfidTagsPage } from "@/modules/dashboard/fixed-assets/FaRfidTagsPage";
 import { createPageSEO } from "@/utils/seo";
 
@@ -18,7 +19,9 @@ export default function FaRfidTagsRoute() {
     <>
       <SEO {...seo} />
       <DashboardLayout>
-        <FaRfidTagsPage />
+        <FaLayout>
+          <FaRfidTagsPage />
+        </FaLayout>
       </DashboardLayout>
     </>
   );

@@ -1,3 +1,168 @@
 {
-  "title": "Aset Tetap"
+  "title": "Aset Tetap",
+  "actions": {
+    "add": "Tambah Aset",
+    "import": "Impor",
+    "export": "Ekspor",
+    "transfer": "Transfer",
+    "dispose": "Disposisi",
+    "print": "Cetak",
+    "custodian": "Penjaga",
+    "clear": "Hapus",
+    "history": "Riwayat",
+    "newCheckout": "Peminjaman baru",
+    "newTransfer": "Transfer baru",
+    "return": "Kembalikan",
+    "confirmReceipt": "Konfirmasi penerimaan",
+    "orderTags": "Pesan tag",
+    "printQueue": "Antrean cetak",
+    "bastPdf": "PDF BAST",
+    "newDisposal": "Disposisi baru",
+    "revise": "Revisi",
+    "reject": "Tolak",
+    "approve": "Setujui",
+    "postJe": "Kirim JE ke GL",
+    "encode": "Enkode",
+    "selected": "dipilih"
+  },
+  "filters": {
+    "searchPlaceholder": "Cari berdasarkan nama atau ID…",
+    "searchEpcPlaceholder": "Cari EPC / aset",
+    "allCategories": "Semua kategori",
+    "allStatuses": "Semua status",
+    "more": "Lainnya"
+  },
+  "pagination": {
+    "showing": "Menampilkan {{current}} dari {{total}}"
+  },
+  "page": {
+    "register": {
+      "title": "Daftar Aset",
+      "description": "aset · inventaris yang dapat dicari",
+      "noAssetsFound": "Tidak ada aset ditemukan",
+      "noAssetsMatch": "Tidak ada aset yang cocok dengan filter saat ini.",
+      "columns": {
+        "asset": "Aset",
+        "category": "Kategori",
+        "location": "Lokasi",
+        "custodian": "Penjaga",
+        "valueNbv": "Nilai / NBV",
+        "status": "Status",
+        "activity": "Aktivitas"
+      },
+      "filteredOf": "{{filtered}} dari {{total}} aset"
+    },
+    "checkout": {
+      "title": "Check-Out · Peminjaman Aset",
+      "description": "Pinjam alat dan peralatan dengan pelacakan penjagaan RFID",
+      "recordsTitle": "Catatan Check-Out",
+      "recordsDescription": "{{count}} peminjaman · rantai penjagaan terverifikasi RFID",
+      "noCheckouts": "Tidak ada check-out",
+      "noCheckoutsDesc": "Belum ada catatan check-out.",
+      "columns": {
+        "asset": "Aset",
+        "borrower": "Peminjam",
+        "outDate": "Tanggal keluar",
+        "dueDate": "Tanggal jatuh tempo",
+        "purpose": "Tujuan",
+        "condition": "Kondisi",
+        "status": "Status"
+      },
+      "kpi": {
+        "activeLoans": "Peminjaman aktif",
+        "overdue": "Terlambat",
+        "needsAction": "perlu tindakan",
+        "returnRate": "Tingkat pengembalian",
+        "avgDuration": "Durasi rata-rata"
+      },
+      "showing": "Menampilkan {{current}} dari {{total}}"
+    },
+    "transfer": {
+      "title": "Transfer Aset",
+      "activeTitle": "Transfer Aktif",
+      "activeDescription": "{{count}} pergerakan dalam proses · rantai penjagaan terlacak RFID",
+      "noTransfers": "Tidak ada transfer",
+      "noTransfersDesc": "Tidak ada transfer dalam proses.",
+      "stages": {
+        "dispatched": "Dikirim",
+        "inTransit": "Dalam perjalanan",
+        "received": "Diterima"
+      },
+      "late": "Terlambat",
+      "inDispatch": "Dalam pengiriman",
+      "kpi": {
+        "inTransit": "Dalam perjalanan",
+        "awaitingReceipt": "Menunggu penerimaan",
+        "thisMonth": "Bulan ini",
+        "crossSite": "Lintas lokasi"
+      }
+    },
+    "scanout": {
+      "title": "Scan-Out · Disposisi Aset",
+      "description": "Pensiunkan, jual, atau donasikan aset dengan jalur persetujuan + jurnal lengkap",
+      "queueTitle": "Antrean Disposisi",
+      "queueDescription": "{{count}} item dalam alur kerja",
+      "detailTitle": "Detail Disposisi",
+      "detailDescription": "{{id}} · alur kerja persetujuan",
+      "noDisposals": "Tidak ada disposisi",
+      "noDisposalsDesc": "Tidak ada permintaan disposisi dalam antrean.",
+      "noDisposalsInQueue": "Tidak ada permintaan disposisi dalam antrean.",
+      "columns": {
+        "asset": "Aset",
+        "reason": "Alasan",
+        "nbv": "NBV",
+        "recovery": "Pemulihan",
+        "status": "Status"
+      },
+      "kpi": {
+        "thisMonth": "Bulan ini",
+        "disposals": "disposisi",
+        "awaitingApproval": "Menunggu persetujuan",
+        "pending": "tunda",
+        "recoveryYtd": "Pemulihan YTD",
+        "taxImpact": "Dampak pajak",
+        "fiscalDrag": "beban fiskal"
+      },
+      "approvalFlow": "Alur Persetujuan",
+      "journalEntryPreview": "Pratinjau Jurnal Masuk",
+      "netBookValue": "Nilai Buku Bersih",
+      "recoveryValue": "Nilai Pemulihan",
+      "accumDep": "Akumulasi penyusutan",
+      "cashBank": "Kas / Bank",
+      "lossOnDisposal": "Rugi disposisi",
+      "fixedAssetsCost": "Aset tetap (biaya)",
+      "gainOnDisposal": "Laba disposisi"
+    },
+    "rfid": {
+      "title": "Tag RFID · Daftar & Cetak",
+      "description": "Enkode, cetak dan lacak identifier EPC / TID di seluruh armada",
+      "tagsTitle": "Tag RFID",
+      "searchPlaceholder": "Cari EPC / aset",
+      "noTags": "Tidak ada tag ditemukan",
+      "noTagsDesc": "Belum ada tag RFID terdaftar.",
+      "columns": {
+        "epc": "EPC",
+        "asset": "Aset",
+        "format": "Format",
+        "tid": "TID",
+        "lastRead": "Terakhir dibaca",
+        "rssi": "RSSI",
+        "status": "Status",
+        "printStatus": "Status cetak",
+        "actions": "Aksi"
+      },
+      "kpi": {
+        "activeTags": "Tag aktif",
+        "inactive": "Tidak aktif",
+        "lost": "Hilang",
+        "printQueue": "Antrean cetak",
+        "zebraZd621": "Zebra ZD621"
+      },
+      "showing": "Menampilkan {{current}} dari {{total}}",
+      "printed": "Dicetak",
+      "queued": "Diantrekan",
+      "noTagsInQueue": "Tidak ada tag dalam antrean cetak",
+      "dbm": "{{value}} dBm"
+    }
+  }
 }

@@ -2,9 +2,11 @@
 
 import { Calendar, Plus } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 
-import { FaShellHead, FaStat } from "@/modules/dashboard/fixed-assets";
+import { useUser } from "@/context/user-context";
+import { useGetMaintenanceQuery } from "@/hooks/api/fixed-assets";
+import { FaKpiStrip, FaShellHead, FaStat } from "@/modules/dashboard/fixed-assets";
+import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
 
 import { FlowTab, HealthTab } from "./FaMaintenanceTabs";
 import { ScheduleTab, WoTab } from "./FaMaintenanceTabsMore";
@@ -19,7 +21,16 @@ const TABS: { id: Tab; label: string }[] = [
 ];
 
 export function FaMaintenancePage() {
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { data: maintResp } = useGetMaintenanceQuery({ organizationId });
+  const workOrders = maintResp?.data?.workOrders ?? [];
+  const healthData = maintResp?.data?.healthData ?? [];
+  const openWOs = workOrders.filter((w) => w.status === "open" || w.status === "in-progress").length;
+  const overdueFailed = healthData.filter((h) => h.status === "critical" || h.status === "alert").length;
+  const dormant = healthData.filter((h) => h.sinceMaintDays > 30).length;
   const [tab, setTab] = useState<Tab>("flow");
+  const { openModal } = useFaModal();
   return (
     <div>
       <FaShellHead
@@ -32,7 +43,7 @@ export function FaMaintenancePage() {
             <button
               className="ks-btn ks-btn-primary"
               type="button"
-              onClick={() => toast.info("New work order form")}
+              onClick={() => openModal("workOrder")}
             >
               <Plus size={14} />
               Create Work Order
@@ -42,12 +53,12 @@ export function FaMaintenancePage() {
         title="Maintenance · CMMS"
       />
 
-      <div className="ks-kpi-strip" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
-        <FaStat label="Open WOs" tone="brand" value="42" />
-        <FaStat label="Overdue / Failed" sub="needs attention" tone="danger" value="8" />
-        <FaStat label="Dormant > 30d" tone="warn" value="14" />
-        <FaStat label="Fleet MTBF" sub="mean time between" tone="info" value="428h" />
-      </div>
+      <FaKpiStrip>
+        <FaStat label="Open WOs" tone="brand" value={String(openWOs)} />
+        <FaStat label="Overdue / Failed" sub="needs attention" tone="danger" value={String(overdueFailed)} />
+        <FaStat label="Dormant > 30d" tone="warn" value={String(dormant)} />
+        <FaStat label="Fleet MTBF" sub="mean time between" tone="info" value="—" />
+      </FaKpiStrip>
 
       <div className="ks-seg" style={{ marginBottom: 16 }}>
         {TABS.map((t) => (

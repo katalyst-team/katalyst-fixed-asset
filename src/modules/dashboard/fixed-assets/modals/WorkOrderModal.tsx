@@ -21,8 +21,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useUser } from "@/context/user-context";
+import {
+  useCreateWorkOrderMutation,
+  useGetAssetRegisterQuery,
+} from "@/hooks/api/fixed-assets";
 import { cn } from "@/lib/utils";
-import { ASSETS } from "@/services/fixed-assets/mock";
 
 interface WorkOrderModalProps {
   onClose: () => void;
@@ -51,19 +55,31 @@ const SOURCE_OPTIONS = [
 ];
 
 export function WorkOrderModal({ onClose, open }: WorkOrderModalProps) {
-  const [assetId, setAssetId] = useState<string>(ASSETS[0]?.id ?? "");
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { data: resp } = useGetAssetRegisterQuery({ organizationId });
+  const { mutateAsync: createWO } = useCreateWorkOrderMutation({
+    organizationId,
+  });
+  const assets = resp?.data?.assets ?? [];
+  const [assetId, setAssetId] = useState<string>("");
   const [assignedTo, setAssignedTo] = useState<string>(ASSIGN_OPTIONS[0]);
   const [issue, setIssue] = useState<string>("");
   const [priority, setPriority] = useState<string>("Medium");
   const [source, setSource] = useState<string>(SOURCE_OPTIONS[1]);
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!issue.trim()) {
       toast.error("Describe the issue before creating the work order");
       return;
     }
-    const firstName = assignedTo.split(" ")[0];
-    toast.success(`WO created · ${assetId} → ${firstName}`);
+    await createWO({
+      asset_id: assetId,
+      assigned_to: assignedTo,
+      desc: issue,
+      priority: priority.toLowerCase() as "critical" | "high" | "medium" | "low",
+      type: "corrective",
+    });
     onClose();
   }
 
@@ -85,7 +101,7 @@ export function WorkOrderModal({ onClose, open }: WorkOrderModalProps) {
                 <SelectValue placeholder="Select asset" />
               </SelectTrigger>
               <SelectContent>
-                {ASSETS.map((a) => (
+                {assets.map((a) => (
                   <SelectItem key={a.id} value={a.id}>
                     {a.name} · {a.id}
                   </SelectItem>

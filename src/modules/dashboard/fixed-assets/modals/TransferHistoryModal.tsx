@@ -8,6 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useUser } from "@/context/user-context";
+import { useGetTransferHistoryQuery } from "@/hooks/api/fixed-assets";
 import { cn } from "@/lib/utils";
 
 interface TransferHistoryModalProps {
@@ -15,70 +17,15 @@ interface TransferHistoryModalProps {
   open: boolean;
 }
 
-interface TransferRow {
-  by: string;
-  from: string;
-  id: string;
-  name: string;
-  to: string;
-  when: string;
-}
-
-const ROWS: TransferRow[] = [
-  {
-    by: "Dewi A.",
-    from: "JKT-HQ · Floor 8",
-    id: "MUT-2410-0142",
-    name: "8 MacBook Pro · IT batch",
-    to: "BDG-Office · Floor 2",
-    when: "Today · 09:14",
-  },
-  {
-    by: "Andi P.",
-    from: "JKT-WH · Bay 2",
-    id: "MUT-2410-0141",
-    name: "Toyota Hilux Forklift",
-    to: "BDG-WH · Bay 1",
-    when: "Today · 08:02",
-  },
-  {
-    by: "Facilities",
-    from: "JKT · Lobby",
-    id: "MUT-2410-0140",
-    name: "24 Aeron Chairs",
-    to: "JKT-HQ · Floor 12",
-    when: "Yesterday · 16:40",
-  },
-  {
-    by: "Dr. Ratna",
-    from: "BDG-Lab",
-    id: "MUT-2410-0139",
-    name: "Mettler PH Meter",
-    to: "JKT-Lab · Station 3",
-    when: "Yesterday · 11:18",
-  },
-  {
-    by: "Med Eng",
-    from: "RS · ICU-2",
-    id: "MUT-2410-0136",
-    name: "Philips IntelliVue MX450",
-    to: "RS · OR-3",
-    when: "2 days ago · 14:22",
-  },
-  {
-    by: "Eko P.",
-    from: "Mfg-1 · Cell A",
-    id: "MUT-2410-0134",
-    name: "Mazak QTN-200 CNC",
-    to: "Mfg-2 · Cell B",
-    when: "3 days ago · 07:50",
-  },
-];
-
 export function TransferHistoryModal({
   onClose,
   open,
 }: TransferHistoryModalProps) {
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { data: resp } = useGetTransferHistoryQuery({ organizationId });
+  const rows = resp?.data?.history ?? [];
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-2xl">
@@ -100,33 +47,33 @@ export function TransferHistoryModal({
               </tr>
             </thead>
             <tbody>
-              {ROWS.map((row) => (
+              {rows.map((row) => (
                 <tr
                   key={row.id}
                   className={cn("border-b border-border/60", "last:border-0")}
                 >
                   <td className="py-3 pr-3">
-                    <div className="font-medium text-foreground">{row.name}</div>
+                    <div className="font-medium text-foreground">{row.asset_name}</div>
                     <div className="font-mono text-xs text-muted-foreground">
                       {row.id}
                     </div>
                   </td>
                   <td className="px-3 py-3 text-muted-foreground">
                     <span className="inline-flex items-center gap-1.5">
-                      {row.from}
+                      {row.from_loc}
                       <ArrowRight
                         className={cn(
                           "h-3.5 w-3.5 shrink-0",
                           "text-foreground",
                         )}
                       />
-                      {row.to}
+                      {row.to_loc}
                     </span>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3 text-muted-foreground">
-                    {row.when}
+                    {row.received_at ?? row.dispatched_at}
                   </td>
-                  <td className="py-3 pl-3 text-muted-foreground">{row.by}</td>
+                  <td className="py-3 pl-3 text-muted-foreground">{row.cost_center}</td>
                 </tr>
               ))}
             </tbody>

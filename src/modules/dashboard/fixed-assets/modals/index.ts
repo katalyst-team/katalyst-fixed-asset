@@ -5,4 +5,4 @@ export type {
   FaModalPayload,
   FaModalType,
 } from "./types";
-export { FA_LOCATIONS, FA_PEOPLE } from "./types";
+export { useFaLocationOptions, useFaPeopleOptions } from "./types";

@@ -1,3 +1,168 @@
 {
-  "title": "Fixed Assets"
+  "title": "Fixed Assets",
+  "actions": {
+    "add": "Add Assets",
+    "import": "Import",
+    "export": "Export",
+    "transfer": "Transfer",
+    "dispose": "Dispose",
+    "print": "Print",
+    "custodian": "Custodian",
+    "clear": "Clear",
+    "history": "History",
+    "newCheckout": "New check-out",
+    "newTransfer": "New transfer",
+    "return": "Return",
+    "confirmReceipt": "Confirm receipt",
+    "orderTags": "Order tags",
+    "printQueue": "Print queue",
+    "bastPdf": "BAST PDF",
+    "newDisposal": "New disposal",
+    "revise": "Revise",
+    "reject": "Reject",
+    "approve": "Approve",
+    "postJe": "Post JE to GL",
+    "encode": "Encode",
+    "selected": "selected"
+  },
+  "filters": {
+    "searchPlaceholder": "Search by name or ID…",
+    "searchEpcPlaceholder": "Search EPC / asset",
+    "allCategories": "All categories",
+    "allStatuses": "All statuses",
+    "more": "More"
+  },
+  "pagination": {
+    "showing": "Showing {{current}} of {{total}}"
+  },
+  "page": {
+    "register": {
+      "title": "Asset Register",
+      "description": "assets · searchable inventory",
+      "noAssetsFound": "No assets found",
+      "noAssetsMatch": "No assets match the current filters.",
+      "columns": {
+        "asset": "Asset",
+        "category": "Category",
+        "location": "Location",
+        "custodian": "Custodian",
+        "valueNbv": "Value / NBV",
+        "status": "Status",
+        "activity": "Activity"
+      },
+      "filteredOf": "{{filtered}} of {{total}} assets"
+    },
+    "checkout": {
+      "title": "Check-Out · Asset Loans",
+      "description": "Loan tools and equipment with RFID custody tracking",
+      "recordsTitle": "Check-Out Records",
+      "recordsDescription": "{{count}} loans · RFID-verified chain of custody",
+      "noCheckouts": "No check-outs",
+      "noCheckoutsDesc": "No check-out records yet.",
+      "columns": {
+        "asset": "Asset",
+        "borrower": "Borrower",
+        "outDate": "Out date",
+        "dueDate": "Due date",
+        "purpose": "Purpose",
+        "condition": "Condition",
+        "status": "Status"
+      },
+      "kpi": {
+        "activeLoans": "Active loans",
+        "overdue": "Overdue",
+        "needsAction": "needs action",
+        "returnRate": "Return rate",
+        "avgDuration": "Avg duration"
+      },
+      "showing": "Showing {{current}} of {{total}}"
+    },
+    "transfer": {
+      "title": "Asset Transfers",
+      "activeTitle": "Active Transfers",
+      "activeDescription": "{{count}} movements in progress · RFID-tracked chain of custody",
+      "noTransfers": "No transfers",
+      "noTransfersDesc": "No transfers in progress.",
+      "stages": {
+        "dispatched": "Dispatched",
+        "inTransit": "In-transit",
+        "received": "Received"
+      },
+      "late": "Late",
+      "inDispatch": "In dispatch",
+      "kpi": {
+        "inTransit": "In transit",
+        "awaitingReceipt": "Awaiting receipt",
+        "thisMonth": "This month",
+        "crossSite": "Cross-site"
+      }
+    },
+    "scanout": {
+      "title": "Scan-Out · Asset Disposal",
+      "description": "Retire, sell, or donate assets with full approval + journal trail",
+      "queueTitle": "Disposal Queue",
+      "queueDescription": "{{count}} items in workflow",
+      "detailTitle": "Disposal Detail",
+      "detailDescription": "{{id}} · approval workflow",
+      "noDisposals": "No disposals",
+      "noDisposalsDesc": "No disposal requests in the queue.",
+      "noDisposalsInQueue": "No disposal requests in the queue.",
+      "columns": {
+        "asset": "Asset",
+        "reason": "Reason",
+        "nbv": "NBV",
+        "recovery": "Recovery",
+        "status": "Status"
+      },
+      "kpi": {
+        "thisMonth": "This month",
+        "disposals": "disposals",
+        "awaitingApproval": "Awaiting approval",
+        "pending": "pending",
+        "recoveryYtd": "Recovery YTD",
+        "taxImpact": "Tax impact",
+        "fiscalDrag": "fiscal drag"
+      },
+      "approvalFlow": "Approval Flow",
+      "journalEntryPreview": "Journal Entry Preview",
+      "netBookValue": "Net Book Value",
+      "recoveryValue": "Recovery Value",
+      "accumDep": "Accumulated depreciation",
+      "cashBank": "Cash / Bank",
+      "lossOnDisposal": "Loss on disposal",
+      "fixedAssetsCost": "Fixed assets (cost)",
+      "gainOnDisposal": "Gain on disposal"
+    },
+    "rfid": {
+      "title": "RFID Tags · Register & Print",
+      "description": "Encode, print and track EPC / TID identifiers across the fleet",
+      "tagsTitle": "RFID tags",
+      "searchPlaceholder": "Search EPC / asset",
+      "noTags": "No tags found",
+      "noTagsDesc": "No RFID tags registered yet.",
+      "columns": {
+        "epc": "EPC",
+        "asset": "Asset",
+        "format": "Format",
+        "tid": "TID",
+        "lastRead": "Last read",
+        "rssi": "RSSI",
+        "status": "Status",
+        "printStatus": "Print status",
+        "actions": "Actions"
+      },
+      "kpi": {
+        "activeTags": "Active tags",
+        "inactive": "Inactive",
+        "lost": "Lost",
+        "printQueue": "Print queue",
+        "zebraZd621": "Zebra ZD621"
+      },
+      "showing": "Showing {{current}} of {{total}}",
+      "printed": "Printed",
+      "queued": "Queued",
+      "noTagsInQueue": "No tags in the print queue",
+      "dbm": "{{value}} dBm"
+    }
+  }
 }

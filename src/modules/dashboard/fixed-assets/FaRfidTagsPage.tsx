@@ -1,14 +1,28 @@
 "use client";
 
-import { CheckCircle2, Download, Plus, Printer, Search, Tag } from "lucide-react";
+import { CheckCircle2, Download, Plus, Printer, Search, Tag, Zap } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
+import PaginationCursor from "@/components/shared/PaginationCursor";
+import SkeletonTable from "@/components/shared/SkeletonTable";
+import { useUser } from "@/context/user-context";
+import {
+  useEncodeRFIDTagMutation,
+  useExportDataMutation,
+  useGetRFIDTagsQuery,
+  usePrintRFIDTagsMutation,
+} from "@/hooks/api/fixed-assets";
 import {
   FaKpiStrip,
   FaShellHead,
   FaStat,
 } from "@/modules/dashboard/fixed-assets";
-import { RFID_TAGS } from "@/services/fixed-assets/mock";
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
+import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
+import type { FaRfidTag } from "@/types/fixed-assets";
 
 const STATUS_TONE: Record<string, string> = {
   active: "success",
@@ -24,31 +38,97 @@ const rssiTone = (rssi: number): string =>
       : "hsl(var(--destructive))";
 
 export function FaRfidTagsPage() {
+  const { tokenPayload } = useUser();
+  const { canManage } = useFaPermission();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const [cursorStack, setCursorStack] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
+  const PAGE_LIMIT = 20;
+  const { data: resp, isError, isLoading } = useGetRFIDTagsQuery({
+    cursor: cursorStack.length > 0 ? cursorStack[cursorStack.length - 1] : undefined,
+    limit: PAGE_LIMIT,
+    organizationId,
+  });
+  const tags = resp?.data?.tags ?? [];
+  const activeTags = tags.filter((t) => t.status === "active").length;
+  const inactiveTags = tags.filter((t) => t.status === "inactive").length;
+  const lostTags = tags.filter((t) => t.status === "lost").length;
+  const printQueue = tags.filter((t) => !t.printed).length;
+
+  const handleNext = () => {
+    const nextCursor = resp?.pagination?.next_cursor;
+    if (nextCursor) {
+      setCursorStack((prev) => [...prev, nextCursor]);
+      setPage((p) => p + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    setCursorStack((prev) => prev.slice(0, -1));
+    setPage((p) => Math.max(1, p - 1));
+  };
+  const { openModal } = useFaModal();
+  const {
+    isPending: isEncoding,
+    mutateAsync: encodeTag,
+    variables: encodingVars,
+  } = useEncodeRFIDTagMutation({ organizationId });
+  const { isPending: isPrinting, mutateAsync: printTags } =
+    usePrintRFIDTagsMutation({ organizationId });
+  const { isPending: isExporting, mutateAsync: exportData } =
+    useExportDataMutation({ organizationId });
+
+  const handleEncode = async (tag: FaRfidTag) => {
+    await encodeTag({ asset_id: tag.assetId, tag_type: tag.format });
+  };
+
+  const handlePrintQueue = async () => {
+    const queuedIds = tags.filter((t) => !t.printed).map((t) => t.id);
+    if (queuedIds.length === 0) {
+      toast.info("No tags in the print queue");
+      return;
+    }
+    await printTags({ tag_ids: queuedIds });
+  };
+
+  const handleExport = async () => {
+    const resp = await exportData({ format: "csv", source: "rfid-tags" });
+    if (resp?.data?.download_url) {
+      safeOpenUrl(resp.data.download_url);
+    }
+  };
+
   return (
     <div>
       <FaShellHead
         actions={
           <>
-            <button
-              className="ks-btn ks-btn-sm"
-              type="button"
-              onClick={() => toast.info("Print queue · 24 tags")}
-            >
-              <Printer size={14} />
-              Print queue
-            </button>
-            <button
-              className="ks-btn ks-btn-sm"
-              type="button"
-              onClick={() => toast.info("Open tag order form")}
-            >
-              <Plus size={14} />
-              Order tags
-            </button>
+            {canManage && (
+              <button
+                className="ks-btn ks-btn-sm"
+                disabled={isPrinting}
+                type="button"
+                onClick={handlePrintQueue}
+              >
+                <Printer size={14} />
+                Print queue
+              </button>
+            )}
+            {canManage && (
+              <button
+                className="ks-btn ks-btn-sm"
+                type="button"
+                onClick={() => openModal("orderStock")}
+              >
+                <Plus size={14} />
+                Order tags
+              </button>
+            )}
             <button
               className="ks-btn ks-btn-ghost ks-btn-sm"
+              disabled={isExporting}
               type="button"
-              onClick={() => toast.success("Exporting tag register…")}
+              onClick={handleExport}
             >
               <Download size={14} />
               Export
@@ -60,12 +140,20 @@ export function FaRfidTagsPage() {
       />
 
       <FaKpiStrip>
-        <FaStat label="Active tags" tone="brand" value="12,396" />
-        <FaStat label="Inactive" tone="info" value="24" />
-        <FaStat label="Lost" tone="danger" value="18" />
-        <FaStat label="Print queue" sub="Zebra ZD621" tone="warn" value="24" />
+        <FaStat label="Active tags" tone="brand" value={String(activeTags)} />
+        <FaStat label="Inactive" tone="info" value={String(inactiveTags)} />
+        <FaStat label="Lost" tone="danger" value={String(lostTags)} />
+        <FaStat label="Print queue" sub="Zebra ZD621" tone="warn" value={String(printQueue)} />
       </FaKpiStrip>
 
+      <FaQueryState
+        emptyDescription="No RFID tags registered yet."
+        emptyTitle="No tags found"
+        isEmpty={tags.length === 0}
+        isError={isError}
+        isLoading={isLoading}
+        skeleton={<SkeletonTable columns={9} rows={8} />}
+      >
       <div className="ks-card">
         <div className="ks-card-head">
           <div className="flex items-center gap-2">
@@ -105,10 +193,13 @@ export function FaRfidTagsPage() {
                 <th className="p-3 text-left font-medium text-muted-foreground">
                   Print status
                 </th>
+                <th className="p-3 text-left font-medium text-muted-foreground">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
-              {RFID_TAGS.map((tag) => (
+              {tags.map((tag) => (
                 <tr key={tag.id}>
                   <td className="border-t border-border p-3 font-mono text-xs">
                     {tag.epc}
@@ -158,12 +249,43 @@ export function FaRfidTagsPage() {
                       </span>
                     )}
                   </td>
+                  <td className="border-t border-border p-3">
+                    {canManage && (
+                      <button
+                        className="ks-btn ks-btn-ghost ks-btn-sm"
+                        disabled={
+                          isEncoding && encodingVars?.asset_id === tag.assetId
+                        }
+                        type="button"
+                        onClick={() => handleEncode(tag)}
+                      >
+                        <Zap size={13} />
+                        Encode
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        <div
+          className="justify-between text-xs text-muted-foreground flex items-center"
+          style={{ borderTop: "1px solid hsl(var(--border))", padding: "10px 18px" }}
+        >
+          <span>Showing {tags.length} of {resp?.pagination?.count ?? 0}</span>
+          <PaginationCursor
+            currentPage={page}
+            hasNextPage={Boolean(resp?.pagination?.next_cursor)}
+            hasPrevPage={cursorStack.length > 0}
+            limit={PAGE_LIMIT}
+            totalCount={resp?.pagination?.total_count ?? null}
+            onNext={handleNext}
+            onPrev={handlePrev}
+          />
+        </div>
       </div>
+      </FaQueryState>
     </div>
   );
 }

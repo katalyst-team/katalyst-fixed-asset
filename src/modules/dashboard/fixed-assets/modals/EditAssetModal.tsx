@@ -1,8 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Info } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
+import { useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import {
   Dialog,
@@ -12,6 +14,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -21,9 +31,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUser } from "@/context/user-context";
+import { useUpdateAssetMutation } from "@/hooks/api/fixed-assets";
 import { cn } from "@/lib/utils";
-import { FA_LOCATIONS, FA_PEOPLE } from "@/modules/dashboard/fixed-assets/modals/types";
-import type { FaAsset } from "@/types/fixed-assets";
+import {
+  useFaLocationOptions,
+  useFaPeopleOptions,
+} from "@/modules/dashboard/fixed-assets/modals/types";
+import type { AssetStatus, FaAsset } from "@/types/fixed-assets";
 
 interface EditAssetModalProps {
   asset: FaAsset | null;
@@ -40,45 +55,73 @@ const STATUS_OPTIONS: { label: string; value: string }[] = [
   { label: "Retired", value: "retired" },
 ];
 
+const formSchema = z.object({
+  custodian: z.string().optional(),
+  loc: z.string().optional(),
+  name: z.string().min(1, "Asset name is required"),
+  status: z.string(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
 export function EditAssetModal({ asset, onClose, open }: EditAssetModalProps) {
-  const [custodian, setCustodian] = useState<string>(asset?.custodian ?? "");
-  const [loc, setLoc] = useState<string>(asset?.loc ?? "");
-  const [name, setName] = useState<string>(asset?.name ?? "");
-  const [status, setStatus] = useState<string>(asset?.status ?? "deployed");
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { isPending: isSaving, mutateAsync } = useUpdateAssetMutation({
+    organizationId,
+  });
+  const peopleOptions = useFaPeopleOptions();
+  const locationOptions = useFaLocationOptions();
+
+  const form = useForm<FormValues>({
+    defaultValues: {
+      custodian: asset?.custodian ?? "",
+      loc: asset?.loc ?? "",
+      name: asset?.name ?? "",
+      status: asset?.status ?? "deployed",
+    },
+    resolver: zodResolver(formSchema),
+  });
 
   useEffect(() => {
     if (!asset) return;
-    setCustodian(asset.custodian);
-    setLoc(asset.loc);
-    setName(asset.name);
-    setStatus(asset.status);
-  }, [asset]);
+    form.reset({
+      custodian: asset.custodian,
+      loc: asset.loc,
+      name: asset.name,
+      status: asset.status,
+    });
+  }, [asset, form]);
 
   const custodianOptions = useMemo(() => {
-    if (!asset) return FA_PEOPLE;
-    const list = [...FA_PEOPLE];
-    if (asset.custodian && !list.includes(asset.custodian)) {
-      list.unshift(asset.custodian);
+    if (!asset) return peopleOptions;
+    const list = [...peopleOptions];
+    if (asset.custodian && !list.some((p) => p.value === asset.custodian)) {
+      list.unshift({ label: asset.custodian, value: asset.custodian });
     }
     return list;
-  }, [asset]);
+  }, [asset, peopleOptions]);
 
-  const locationOptions = useMemo(() => {
-    if (!asset) return FA_LOCATIONS;
-    const list = [...FA_LOCATIONS];
-    if (asset.loc && !list.includes(asset.loc)) {
-      list.unshift(asset.loc);
+  const locationOptionsWithCurrent = useMemo(() => {
+    if (!asset) return locationOptions;
+    const list = [...locationOptions];
+    if (asset.loc && !list.some((l) => l.value === asset.loc)) {
+      list.unshift({ label: asset.loc, value: asset.loc });
     }
     return list;
-  }, [asset]);
+  }, [asset, locationOptions]);
 
-  function handleSave() {
+  async function handleSave(values: FormValues) {
     if (!asset) return;
-    if (!name.trim()) {
-      toast.error("Asset name is required");
-      return;
-    }
-    toast.success(`Asset updated · ${asset.id}`);
+    await mutateAsync({
+      assetId: asset.id,
+      data: {
+        custodian: values.custodian,
+        loc: values.loc,
+        name: values.name,
+        status: values.status as AssetStatus,
+      },
+    });
     onClose();
   }
 
@@ -94,95 +137,132 @@ export function EditAssetModal({ asset, onClose, open }: EditAssetModalProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn("grid grid-cols-1 gap-4", "sm:grid-cols-2")}>
-          <div className="flex flex-col gap-1.5 sm:col-span-2">
-            <Label htmlFor="ea-name">Asset name</Label>
-            <Input
-              id="ea-name"
-              placeholder="Asset name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+        <Form {...form}>
+          <form className={cn("grid grid-cols-1 gap-4", "sm:grid-cols-2")} onSubmit={form.handleSubmit(handleSave)}>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-2">
+                  <FormLabel htmlFor="ea-name">Asset name</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="ea-name"
+                      placeholder="Asset name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="ea-custodian">Custodian</Label>
-            <Select value={custodian} onValueChange={setCustodian}>
-              <SelectTrigger id="ea-custodian">
-                <SelectValue placeholder="Select custodian" />
-              </SelectTrigger>
-              <SelectContent>
-                {custodianOptions.map((c) => (
-                  <SelectItem key={c} value={c}>
-                    {c}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+            <FormField
+              control={form.control}
+              name="custodian"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="ea-custodian">Custodian</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger id="ea-custodian">
+                        <SelectValue placeholder="Select custodian" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {custodianOptions.map((c: { label: string; value: string }) => (
+                        <SelectItem key={c.value} value={c.value}>
+                          {c.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="ea-location">Location</Label>
-            <Select value={loc} onValueChange={setLoc}>
-              <SelectTrigger id="ea-location">
-                <SelectValue placeholder="Select location" />
-              </SelectTrigger>
-              <SelectContent>
-                {locationOptions.map((l) => (
-                  <SelectItem key={l} value={l}>
-                    {l}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+            <FormField
+              control={form.control}
+              name="loc"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="ea-location">Location</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger id="ea-location">
+                        <SelectValue placeholder="Select location" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {locationOptionsWithCurrent.map((l: { label: string; value: string }) => (
+                        <SelectItem key={l.value} value={l.value}>
+                          {l.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="ea-status">Status</Label>
-            <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger id="ea-status">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                {STATUS_OPTIONS.map((s) => (
-                  <SelectItem key={s.value} value={s.value}>
-                    {s.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="ea-status">Status</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger id="ea-status">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {STATUS_OPTIONS.map((s) => (
+                        <SelectItem key={s.value} value={s.value}>
+                          {s.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="ea-serial">Serial number</Label>
-            <Input disabled={true} id="ea-serial" value={asset.serial} />
-          </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="ea-serial">Serial number</Label>
+              <Input disabled={true} id="ea-serial" value={asset.serial} />
+            </div>
 
-          <div className="flex items-start gap-2 rounded-lg border border-border bg-muted/40 p-3 text-xs text-muted-foreground sm:col-span-2">
-            <Info className="h-3.5 w-3.5 shrink-0" />
-            <span>
-              EPC {asset.epc} is locked to this asset. Re-tag via RFID Tags →
-              Print if the physical tag is damaged.
-            </span>
-          </div>
-        </div>
+            <div className="flex items-start gap-2 rounded-lg border border-border bg-muted/40 p-3 text-xs text-muted-foreground sm:col-span-2">
+              <Info className="h-3.5 w-3.5 shrink-0" />
+              <span>
+                EPC {asset.epc} is locked to this asset. Re-tag via RFID Tags →
+                Print if the physical tag is damaged.
+              </span>
+            </div>
 
-        <DialogFooter>
-          <button
-            className="ks-btn ks-btn-ghost"
-            type="button"
-            onClick={onClose}
-          >
-            Cancel
-          </button>
-          <button
-            className="ks-btn ks-btn-primary"
-            type="button"
-            onClick={handleSave}
-          >
-            Save changes
-          </button>
-        </DialogFooter>
+            <DialogFooter className="sm:col-span-2">
+              <button
+                className="ks-btn ks-btn-ghost"
+                type="button"
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+              <button
+                className="ks-btn ks-btn-primary"
+                disabled={isSaving}
+                type="submit"
+              >
+                Save changes
+              </button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

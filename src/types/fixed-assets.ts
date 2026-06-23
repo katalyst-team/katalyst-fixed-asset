@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* ============================================================
    Fixed Assets — Type Definitions
    ============================================================ */
@@ -277,4 +278,637 @@ export interface FaMasterDataSection {
   label: string;
   rows: FaMasterDataRow[];
   tab: string;
+}
+
+/* ============================================================
+   Detail / Nested Types
+   ============================================================ */
+
+export interface FaDepreciationEntry {
+  cost: number;
+  depreciation: number;
+  nbv: number;
+  year: number;
+}
+
+export interface FaAssetDetail extends FaAsset {
+  activityLog?: FaActivityItem[];
+  depreciationSchedule?: FaDepreciationEntry[];
+  docs?: FaDoc[];
+  maintenanceHistory?: FaWorkOrder[];
+}
+
+export interface FaJournalEntryLine {
+  account: string;
+  credit: number;
+  debit: number;
+  description: string;
+}
+
+export interface FaDisposalJournalEntry {
+  journal_entry_id: string;
+  lines: FaJournalEntryLine[];
+  posted: boolean;
+}
+
+export interface FaPOLine {
+  cat: AssetCategory;
+  id: string;
+  name: string;
+  qty: number;
+  received: number;
+  size: string;
+  tag_type: string;
+  unit_cost: number;
+}
+
+export interface FaPO {
+  date: string;
+  expected: string;
+  id: string;
+  lines: FaPOLine[];
+  status: "pending" | "partial" | "received";
+  supplier: string;
+}
+
+export interface FaRTLSPosition {
+  accuracy_m: number;
+  anchor_ids: string[];
+  asset_id: string;
+  last_seen: string;
+  name: string;
+  x: number;
+  y: number;
+  z?: number;
+}
+
+export interface FaRTLSAnchor {
+  id: string;
+  label: string;
+  x: number;
+  y: number;
+}
+
+export interface FaRTLSFloorPlan {
+  floor_plan_url: string;
+  height: number;
+  width: number;
+}
+
+export interface FaAuditProgress {
+  pct_complete: number;
+  scanned_zones: number;
+  total_zones: number;
+}
+
+export type FaAuditSignOffRole =
+  | "stock_count_lead"
+  | "dept_head"
+  | "internal_audit"
+  | "finance_manager"
+  | "external_accountant";
+
+export type FaDisposalReason =
+  | "sold"
+  | "scrapped"
+  | "donated"
+  | "lost"
+  | "obsolete";
+
+export type FaMasterDataSectionTab =
+  | "cat"
+  | "loc"
+  | "cust"
+  | "cc"
+  | "sup"
+  | "cls";
+
+export type FaMaintenanceTab =
+  | "flow"
+  | "health"
+  | "wo"
+  | "schedule";
+
+export type FaReportFormat = "pdf" | "excel" | "json-ld";
+
+export interface FaReportResult {
+  download_url?: string;
+  report_id: string;
+  status: "generating" | "ready";
+}
+
+export interface FaUserAuditLog {
+  action: string;
+  details?: Record<string, unknown>;
+  entity_id: string;
+  entity_type: string;
+  id: string;
+  ip: string;
+  timestamp: string;
+  user_id: string;
+  user_name: string;
+}
+
+export interface FaDocListItem {
+  category: string;
+  icon: string;
+  id: string;
+  title: string;
+  url: string;
+}
+
+export interface FaSettings {
+  depreciation: {
+    default_useful_life_years: Partial<Record<AssetCategory, number>>;
+    method: "straight-line" | "declining-balance";
+  };
+  integrations: {
+    active_directory: { connected: boolean };
+    email_provider: { connected: boolean };
+    erp: { connected: boolean; type?: "odoo" | "sap" | "oracle" };
+  };
+  notifications: {
+    audit_complete_notify: boolean;
+    disposal_approval_notify: boolean;
+    email_enabled: boolean;
+    maintenance_reminder_days: number[];
+    push_enabled: boolean;
+  };
+  rfid_hardware: {
+    default_tag_type: string;
+    epc_encoding: string;
+    reader_polling_interval_ms: number;
+    rssi_threshold: number;
+  };
+  security: {
+    ip_whitelist: string[];
+    mfa_required: boolean;
+    password_policy: string;
+    session_timeout_min: number;
+  };
+  workspace: {
+    asset_id_prefix: string;
+    company_name: string;
+    currency: string;
+    fiscal_year_start: string;
+    depreciation_standard: string;
+    next_asset_number: number;
+    npwp: string;
+  };
+}
+
+/* ============================================================
+   Query / Filter Param Types
+   ============================================================ */
+
+export interface FaAssetFilterOptions {
+  cat?: AssetCategory;
+  cursor?: string;
+  custodian?: string;
+  limit?: number;
+  loc?: string;
+  q?: string;
+  status?: AssetStatus;
+  store_id?: string;
+}
+
+export interface FaRfidTagFilterOptions {
+  asset_id?: string;
+  cursor?: string;
+  limit?: number;
+  q?: string;
+  status?: "active" | "inactive" | "lost";
+}
+
+export interface FaDisposalFilterOptions {
+  cursor?: string;
+  limit?: number;
+  status?: "pending" | "approved" | "rejected" | "revision" | "completed";
+}
+
+export interface FaCheckOutFilterOptions {
+  cursor?: string;
+  limit?: number;
+  status?: "active" | "returned" | "overdue";
+}
+
+export interface FaTransferFilterOptions {
+  cursor?: string;
+  limit?: number;
+  status?: "dispatched" | "in-transit" | "received";
+}
+
+export interface FaPOFilterOptions {
+  cursor?: string;
+  limit?: number;
+  status?: "pending" | "partial" | "received";
+}
+
+export interface FaSecurityAlertFilterOptions {
+  cursor?: string;
+  limit?: number;
+  severity?: "critical" | "high" | "medium" | "low";
+  status?: "active" | "investigating" | "resolved";
+}
+
+export interface FaUserFilterOptions {
+  cursor?: string;
+  limit?: number;
+  q?: string;
+  role?: "Admin" | "Manager" | "Auditor" | "Operator" | "Viewer";
+  status?: string;
+}
+
+export interface FaUserAuditLogFilterOptions {
+  cursor?: string;
+  date_from?: string;
+  date_to?: string;
+  limit?: number;
+  user_id?: string;
+}
+
+export interface FaRTLSPositionFilterOptions {
+  floor?: string;
+  site_id?: string;
+  zone?: string;
+}
+
+/* ============================================================
+   Request Payload Types
+   ============================================================ */
+
+export interface CreateAssetRequest {
+  cat: AssetCategory;
+  custodian: string;
+  depreciation_method?: "straight-line" | "declining-balance";
+  loc: string;
+  name: string;
+  purchased: string;
+  salvage_value?: number;
+  serial: string;
+  store_id?: string;
+  supplier: string;
+  useful_life_years?: number;
+  val: number;
+  warranty: string;
+}
+
+export interface BulkCreateAssetRequest {
+  assets: Array<{
+    cat: AssetCategory;
+    custodian: string;
+    epc: string;
+    loc: string;
+    name: string;
+    purchased: string;
+    serial: string;
+    supplier: string;
+    val: number;
+    warranty: string;
+  }>;
+  source_po_id?: string;
+}
+
+export interface BulkUpdateAssetRequest {
+  action: "transfer" | "dispose" | "change-custodian" | "change-location";
+  asset_ids: string[];
+  payload: {
+    custodian?: string;
+    loc?: string;
+  };
+}
+
+export interface CreateMasterDataRequest {
+  address?: string;
+  city?: string;
+  code?: string;
+  contact?: string;
+  department?: string;
+  email?: string;
+  employee_id?: string;
+  name: string;
+  parent_id?: string;
+  phone?: string;
+  psak16_code?: string;
+  depreciation_method?: string;
+  useful_life_years?: number;
+}
+
+export interface EncodeRFIDTagRequest {
+  asset_id: string;
+  epc_format?: string;
+  reader_id?: string;
+  tag_type: string;
+}
+
+export interface PrintRFIDTagsRequest {
+  label_size?: string;
+  printer?: string;
+  tag_ids: string[];
+}
+
+export interface OrderRFIDTagsRequest {
+  items: Array<{
+    cat: AssetCategory;
+    qty: number;
+    size: string;
+    tag_type: string;
+  }>;
+  supplier: string;
+}
+
+export interface DeployScanInRequest {
+  assets: Array<{
+    epc: string;
+    line_id: string;
+    name: string;
+    serial: string;
+    tid: string;
+    val: number;
+  }>;
+  cost_center: string;
+  custodian: string;
+  loc: string;
+  po_id: string;
+  qc_passed: boolean;
+}
+
+export interface CreateDisposalRequest {
+  asset_id: string;
+  nbv: number;
+  notes?: string;
+  reason: FaDisposalReason;
+  recovery_value: number;
+}
+
+export interface CreateCheckOutRequest {
+  asset_id: string;
+  borrower: string;
+  condition: "excellent" | "good" | "fair";
+  due_date: string;
+  out_date: string;
+  purpose: string;
+}
+
+export interface ReturnCheckOutRequest {
+  condition: "excellent" | "good" | "fair" | "damaged";
+  notes?: string;
+  return_date: string;
+}
+
+export interface CreateTransferRequest {
+  asset_ids: string[];
+  custodian: string;
+  expected_arrival?: string;
+  from_loc: string;
+  to_loc: string;
+}
+
+export interface PostAuditAdjustmentRequest {
+  lines: FaJournalEntryLine[];
+  zone_id: string;
+}
+
+export interface AuditSignOffRequest {
+  role: FaAuditSignOffRole;
+  signature: string;
+  user_id: string;
+}
+
+export interface CreateWorkOrderRequest {
+  asset_id: string;
+  assigned_to: string;
+  desc: string;
+  priority: "critical" | "high" | "medium" | "low";
+  type: "corrective" | "pm" | "predictive" | "inspection";
+}
+
+export interface UpdateWorkOrderStatusRequest {
+  notes?: string;
+  status: "in-progress" | "on-hold" | "done";
+}
+
+export interface SubmitPreUseCheckRequest {
+  asset_id: string;
+  checker: string;
+  fail_item?: string;
+  overall_result: "pass" | "fail";
+  results: Array<{
+    check: string;
+    passed: boolean;
+  }>;
+}
+
+export interface CreatePmRuleRequest {
+  autoWO: boolean;
+  name: string;
+  remind: string;
+  scope: string;
+  scope_assets?: string[];
+  trigger: string;
+}
+
+export interface GenerateReportRequest {
+  format: FaReportFormat;
+  params?: {
+    category?: AssetCategory;
+    cost_center?: string;
+    date_from?: string;
+    date_to?: string;
+    site_id?: string;
+  };
+  template_id: string;
+}
+
+export interface InviteFAUserRequest {
+  department: string;
+  email: string;
+  role: "Admin" | "Manager" | "Auditor" | "Operator" | "Viewer";
+}
+
+export interface GeofenceRuleRequest {
+  rules: Array<{
+    allowed_zones: string[];
+    asset_category: AssetCategory;
+  }>;
+}
+
+/* ============================================================
+   Gap Endpoints — Types
+   ============================================================ */
+
+export interface FaReservation {
+  asset_id: string;
+  asset_name: string;
+  end_time: string;
+  id: string;
+  reserved_by: string;
+  start_time: string;
+  status: "active" | "cancelled" | "completed" | "upcoming";
+}
+
+export interface CreateReservationRequest {
+  asset_id: string;
+  duration: string;
+  purpose?: string;
+  reserved_by: string;
+  start_time: string;
+}
+
+export interface FaEpcRange {
+  company_prefix: string;
+  encoding_format: string;
+  filter_value: string;
+  range_end: string;
+  range_start: string;
+}
+
+export interface CreateEpcRangeRequest {
+  company_prefix: string;
+  encoding_format: string;
+  filter_value: string;
+  range_end: string;
+  range_start: string;
+}
+
+export interface FaExportRequest {
+  filters?: Record<string, unknown>;
+  format: "csv" | "excel";
+  source:
+    | "assets"
+    | "check-outs"
+    | "dashboard"
+    | "disposals"
+    | "rfid-tags"
+    | "transfers";
+}
+
+export interface FaExportResponse {
+  download_url: string;
+  expires_at: string;
+}
+
+export interface FaScanInHistoryItem {
+  asset_id: string;
+  asset_name: string;
+  deployed_at: string;
+  deployed_by: string;
+  epc: string;
+  id: string;
+  po_id: string;
+}
+
+export interface FaTransferHistoryItem {
+  cost_center: string;
+  dispatched_at: string;
+  from_loc: string;
+  id: string;
+  asset_name: string;
+  received_at: string | null;
+  status: string;
+  to_loc: string;
+}
+
+export interface FaSavedQuery {
+  filters?: Record<string, unknown>;
+  floor: string;
+  id: string;
+  name: string;
+  site_id: string;
+  zone?: string;
+}
+
+export interface CreateSavedQueryRequest {
+  filters?: Record<string, unknown>;
+  floor: string;
+  name: string;
+  site_id: string;
+  zone?: string;
+}
+
+export interface FaBilling {
+  asset_count: number;
+  asset_limit: number;
+  plan: string;
+  renewal_date: string;
+  seat_count: number;
+  seats_used: number;
+  storage_limit_mb: number;
+  storage_used_mb: number;
+}
+
+export interface FaInvoice {
+  amount: number;
+  date: string;
+  download_url: string;
+  id: string;
+  status: "overdue" | "paid" | "pending";
+}
+
+export interface FaRole {
+  description: string;
+  id: string;
+  name: string;
+  permissions: string[];
+  user_count: number;
+}
+
+export interface UpdateRoleRequest {
+  description?: string;
+  name?: string;
+  permissions?: string[];
+}
+
+export interface FaReportHistoryItem {
+  download_url: string;
+  format: string;
+  generated_at: string;
+  generated_by: string;
+  id: string;
+  status: "failed" | "ready";
+  template_id: string;
+  template_name: string;
+}
+
+export interface FaReportPreview {
+  generated_at: string;
+  html: string;
+}
+
+export interface FaRfidReader {
+  antenna_count: number;
+  firmware_version: string;
+  id: string;
+  ip: string;
+  last_heartbeat: string;
+  location: string;
+  model: string;
+  name: string;
+  status: "error" | "offline" | "online";
+}
+
+export interface FaNotificationTrigger {
+  channels: string[];
+  enabled: boolean;
+  event: string;
+}
+
+export interface FaCamera {
+  id: string;
+  name: string;
+  status: "offline" | "online";
+  stream_url?: string;
+  zone: string;
+}
+
+export interface FaAssetDocDownload {
+  content_type: string;
+  download_url: string;
+  file_size: number;
+  uploaded_at: string;
+  uploaded_by: string;
+}
+
+export interface FaSummary {
+  [key: string]: number | string;
 }

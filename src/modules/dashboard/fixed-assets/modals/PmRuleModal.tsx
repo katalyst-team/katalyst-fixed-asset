@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { toast } from "sonner";
 
 import {
   Dialog,
@@ -20,6 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUser } from "@/context/user-context";
+import { useCreatePmRuleMutation } from "@/hooks/api/fixed-assets";
 import { cn } from "@/lib/utils";
 
 interface PmRuleModalProps {
@@ -57,6 +58,9 @@ const ASSIGNEES = [
 ];
 
 export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { mutateAsync } = useCreatePmRuleMutation({ organizationId });
   const [assignTo, setAssignTo] = useState("Maintenance Team");
   const [intervalValue, setIntervalValue] = useState("30 days");
   const [name, setName] = useState("");
@@ -65,11 +69,17 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
 
   const isValid = name.trim().length > 0;
 
-  const handleSubmit = () => {
+  async function handleSubmit() {
     if (!isValid) return;
-    toast.success(`Rule created · "${name.trim()}" · auto-WO enabled`);
+    await mutateAsync({
+      autoWO: true,
+      name: name.trim(),
+      remind: remindAt,
+      scope: assignTo,
+      trigger: `${trigger} · ${intervalValue}`,
+    });
     onClose();
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

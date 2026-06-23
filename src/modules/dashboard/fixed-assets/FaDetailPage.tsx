@@ -2,11 +2,15 @@
 
 import { ArrowLeft, FileText, Pencil, Wrench } from "lucide-react";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { toast } from "sonner";
+import { useEffect, useState } from "react";
 
+import Loading from "@/components/shared/Loading";
 import { useUser } from "@/context/user-context";
-import { useGetAssetDetailQuery } from "@/hooks/api/fixed-assets";
+import {
+  useGetAssetDetailQuery,
+  useGetAssetDocDownloadQuery,
+  useUpdateAssetMutation,
+} from "@/hooks/api/fixed-assets";
 import {
   catToLucide,
   FaMeter,
@@ -15,15 +19,14 @@ import {
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
 import {
-  ASSET_DOCS,
-  ASSETS,
   CAT_LABEL,
-  RECENT_ACTIVITY,
   STATUS_LABEL,
   STATUS_TONE,
-  WORK_ORDERS,
-} from "@/services/fixed-assets/mock";
-import type { FaAsset } from "@/types/fixed-assets";
+} from "@/modules/dashboard/fixed-assets/constants";
+import { FaQueryError } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
+import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
+import type { FaAsset, FaAssetDetail } from "@/types/fixed-assets";
 
 const TABS = ["Overview", "Activity", "Maintenance", "Depreciation", "Documents"] as const;
 type Tab = (typeof TABS)[number];
@@ -98,13 +101,37 @@ function prioBadge(p: string): string {
 
 export function FaDetailPage() {
   const router = useRouter();
+  const { openModal } = useFaModal();
   const assetId = typeof router.query.id === "string" ? router.query.id : "";
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
-  const { data: resp } = useGetAssetDetailQuery(organizationId, assetId);
+  const { data: resp, isError, isLoading } = useGetAssetDetailQuery({ assetId, organizationId });
+  const { mutateAsync: updateAsset } = useUpdateAssetMutation({ organizationId });
   const [tab, setTab] = useState<Tab>("Overview");
+  const [docToDownload, setDocToDownload] = useState("");
+  const { data: docResp } = useGetAssetDocDownloadQuery({
+    assetId,
+    docId: docToDownload,
+    enabled: Boolean(docToDownload),
+    organizationId,
+  });
 
-  const asset: FaAsset | undefined = resp?.data?.asset ?? ASSETS.find((a) => a.id === assetId);
+  useEffect(() => {
+    if (docResp?.data?.download_url) {
+      safeOpenUrl(docResp.data.download_url);
+      setDocToDownload("");
+    }
+  }, [docResp]);
+
+  const asset: FaAssetDetail | undefined = resp?.data?.asset ?? undefined;
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    return <FaQueryError />;
+  }
 
   if (!asset) {
     return (
@@ -128,7 +155,7 @@ export function FaDetailPage() {
   const CatIcon = catToLucide[asset.cat] ?? catToLucide.furn;
   const nbv = asset.val - asset.dep;
   const depPct = Math.round((asset.dep / asset.val) * 100);
-  const relatedWOs = WORK_ORDERS.filter((w) => w.assetId === asset.id);
+  const relatedWOs = asset && "maintenanceHistory" in asset ? (asset.maintenanceHistory ?? []) : [];
   const steps = LIFECYCLE(asset);
 
   return (
@@ -157,10 +184,10 @@ export function FaDetailPage() {
           </div>
         </div>
         <div className="ks-page-actions">
-          <button className="ks-btn ks-btn-sm" type="button" onClick={() => toast("Dispose · opening workflow")}>Dispose</button>
-          <button className="ks-btn ks-btn-sm" type="button" onClick={() => toast("Transfer · opening form")}>Transfer</button>
-          <button className="ks-btn ks-btn-sm" type="button" onClick={() => toast("Service · opening WO")}>Service</button>
-          <button className="ks-btn ks-btn-primary ks-btn-sm" type="button" onClick={() => toast("Edit · opening form")}>
+          <button className="ks-btn ks-btn-sm" type="button" onClick={() => openModal("disposal")}>Dispose</button>
+          <button className="ks-btn ks-btn-sm" type="button" onClick={() => openModal("transfer")}>Transfer</button>
+          <button className="ks-btn ks-btn-sm" type="button" onClick={() => openModal("workOrder")}>Service</button>
+          <button className="ks-btn ks-btn-primary ks-btn-sm" type="button" onClick={() => updateAsset({ assetId: asset.id, data: {} })}>
             <Pencil size={14} />
             Edit
           </button>
@@ -263,7 +290,7 @@ export function FaDetailPage() {
 
             {tab === "Activity" && (
               <div>
-                {RECENT_ACTIVITY.slice(0, 6).map((it, i) => (
+                {(asset && "activityLog" in asset ? (asset.activityLog ?? []) : []).slice(0, 6).map((it, i) => (
                   <div
                     key={i}
                     className="flex items-center gap-3"
@@ -289,7 +316,7 @@ export function FaDetailPage() {
                       className="ks-btn ks-btn-primary ks-btn-sm"
                       style={{ marginTop: 12 }}
                       type="button"
-                      onClick={() => toast("Create WO · opening")}
+                      onClick={() => openModal("workOrder")}
                     >
                       <Wrench size={14} />
                       Create Work Order
@@ -342,13 +369,13 @@ export function FaDetailPage() {
 
             {tab === "Documents" && (
               <div className="grid grid-cols-3 gap-2">
-                {ASSET_DOCS.map((doc, i) => (
+                {(asset && "docs" in asset ? (asset.docs ?? []) : []).map((doc, i) => (
                   <button
                     key={i}
                     className="rounded-lg border border-border p-3 text-left"
                     style={{ background: "hsl(var(--surface))" }}
                     type="button"
-                    onClick={() => toast(`Opening ${doc.n}`)}
+                    onClick={() => setDocToDownload(doc.n)}
                   >
                     <FileText size={20} style={{ color: "hsl(var(--text-3))", marginBottom: 6 }} />
                     <div className="truncate text-sm font-medium">{doc.n}</div>

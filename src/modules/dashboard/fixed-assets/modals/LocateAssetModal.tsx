@@ -1,6 +1,7 @@
 "use client";
 
 import { MapPin, Package, Search, User } from "lucide-react";
+import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -13,8 +14,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useUser } from "@/context/user-context";
+import { useGetAssetRegisterQuery } from "@/hooks/api/fixed-assets";
 import { cn } from "@/lib/utils";
-import { ASSETS } from "@/services/fixed-assets/mock";
 import type { FaAsset } from "@/types/fixed-assets";
 
 interface LocateAssetModalProps {
@@ -23,17 +25,22 @@ interface LocateAssetModalProps {
 }
 
 export function LocateAssetModal({ onClose, open }: LocateAssetModalProps) {
+  const router = useRouter();
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { data: resp } = useGetAssetRegisterQuery({ organizationId });
+  const allAssets = useMemo(() => resp?.data?.assets ?? [], [resp]);
   const [query, setQuery] = useState<string>("");
 
   const results = useMemo<FaAsset[]>(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return ASSETS.slice(0, 6);
-    return ASSETS.filter((a) =>
+    if (!q) return allAssets.slice(0, 6);
+    return allAssets.filter((a) =>
       [a.epc, a.id, a.loc, a.name].some((field) =>
         field.toLowerCase().includes(q),
       ),
     ).slice(0, 6);
-  }, [query]);
+  }, [query, allAssets]);
 
   function handleMap(id: string) {
     onClose();
@@ -42,7 +49,7 @@ export function LocateAssetModal({ onClose, open }: LocateAssetModalProps) {
 
   function handleProfile(id: string) {
     onClose();
-    toast.info(`Opening ${id} profile`);
+    router.push(`/dashboard/fixed-assets/register/${id}/`);
   }
 
   return (

@@ -2,9 +2,20 @@
 
 import { ChevronRight, Download, Filter, Plus, Search, Upload } from "lucide-react";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useTranslation } from "next-i18next";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import PaginationCursor from "@/components/shared/PaginationCursor";
+import SkeletonTable from "@/components/shared/SkeletonTable";
+import { useUser } from "@/context/user-context";
+import {
+  useBulkCreateAssetMutation,
+  useBulkUpdateAssetMutation,
+  useCreateAssetMutation,
+  useExportDataMutation,
+  useGetAssetRegisterQuery,
+} from "@/hooks/api/fixed-assets";
 import {
   avatarColor,
   catToLucide,
@@ -13,11 +24,14 @@ import {
   initials,
 } from "@/modules/dashboard/fixed-assets";
 import {
-  ASSETS,
   CAT_LABEL,
   STATUS_LABEL,
   STATUS_TONE,
-} from "@/services/fixed-assets/mock";
+} from "@/modules/dashboard/fixed-assets/constants";
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
+import type { AssetCategory, AssetStatus } from "@/types/fixed-assets";
 
 function Sparkline({ data }: { data: number[] }) {
   const max = Math.max(...data, 1);
@@ -45,15 +59,41 @@ function Sparkline({ data }: { data: number[] }) {
 }
 
 export function FaRegisterPage() {
+  const { t } = useTranslation("fixed-assets");
   const router = useRouter();
+  const { tokenPayload } = useUser();
+  const { canManage } = useFaPermission();
+  const organizationId = tokenPayload?.organization_id ?? "";
 
   const [cat, setCat] = useState("");
   const [q, setQ] = useState("");
   const [sel, setSel] = useState<Set<string>>(new Set());
   const [status, setStatus] = useState("");
+  const [cursorStack, setCursorStack] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
+  const PAGE_LIMIT = 20;
+
+  const { data: resp, isError, isLoading } = useGetAssetRegisterQuery({
+    cat: (cat || undefined) as AssetCategory | undefined,
+    cursor: cursorStack.length > 0 ? cursorStack[cursorStack.length - 1] : undefined,
+    limit: PAGE_LIMIT,
+    organizationId,
+    q: q || undefined,
+    status: (status || undefined) as AssetStatus | undefined,
+  });
+
+  useEffect(() => {
+    setCursorStack([]);
+    setPage(1);
+  }, [cat, q, status]);
+  const { mutateAsync: createAsset } = useCreateAssetMutation({ organizationId });
+  const { mutateAsync: bulkCreateAsset } = useBulkCreateAssetMutation({ organizationId });
+  const { mutateAsync: bulkUpdateAsset } = useBulkUpdateAssetMutation({ organizationId });
+  const { isPending: isExporting, mutateAsync: exportData } = useExportDataMutation({ organizationId });
+  const assets = useMemo(() => resp?.data?.assets ?? [], [resp]);
 
   const filtered = useMemo(() => {
-    return ASSETS.filter((a) => {
+    return assets.filter((a) => {
       if (q) {
         const ql = q.toLowerCase();
         if (!a.name.toLowerCase().includes(ql) && !a.id.toLowerCase().includes(ql)) {
@@ -64,9 +104,22 @@ export function FaRegisterPage() {
       if (status && a.status !== status) return false;
       return true;
     });
-  }, [q, cat, status]);
+  }, [assets, q, cat, status]);
 
   const allChecked = filtered.length > 0 && filtered.every((a) => sel.has(a.id));
+
+  const handleNext = () => {
+    const nextCursor = resp?.pagination?.next_cursor;
+    if (nextCursor) {
+      setCursorStack((prev) => [...prev, nextCursor]);
+      setPage((p) => p + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    setCursorStack((prev) => prev.slice(0, -1));
+    setPage((p) => Math.max(1, p - 1));
+  };
 
   const toggleAll = () => {
     setSel(allChecked ? new Set() : new Set(filtered.map((a) => a.id)));
@@ -88,38 +141,66 @@ export function FaRegisterPage() {
     router.push(`/dashboard/fixed-assets/register/${id}/`);
   };
 
+  const handleExport = async (assetIds?: string[]) => {
+    const resp = await exportData({
+      filters: { asset_ids: assetIds, cat, q, status },
+      format: "csv",
+      source: "assets",
+    });
+    if (resp?.data?.download_url) {
+      safeOpenUrl(resp.data.download_url);
+    }
+  };
+
   return (
     <div>
       <div className="ks-page-head">
         <div>
-          <h1 className="ks-page-title">Asset Register</h1>
-          <p className="ks-page-desc">{ASSETS.length} assets · searchable inventory</p>
+          <h1 className="ks-page-title">{t("page.register.title")}</h1>
+          <p className="ks-page-desc">{assets.length} {t("page.register.description")}</p>
         </div>
         <div className="ks-page-actions">
+          {canManage && (
+            <button
+              className="ks-btn ks-btn-sm"
+              type="button"
+              onClick={() => bulkCreateAsset({ assets: [] })}
+            >
+              <Upload size={14} />
+              {t("actions.import")}
+            </button>
+          )}
           <button
             className="ks-btn ks-btn-sm"
+            disabled={isExporting}
             type="button"
-            onClick={() => toast("Import · opening CSV uploader")}
-          >
-            <Upload size={14} />
-            Import
-          </button>
-          <button
-            className="ks-btn ks-btn-sm"
-            type="button"
-            onClick={() => toast("Exporting register · CSV")}
+            onClick={() => handleExport()}
           >
             <Download size={14} />
-            Export
+            {t("actions.export")}
           </button>
-          <button
-            className="ks-btn ks-btn-primary ks-btn-sm"
-            type="button"
-            onClick={() => toast("Add asset · opening form")}
-          >
-            <Plus size={14} />
-            Add Assets
-          </button>
+          {canManage && (
+            <button
+              className="ks-btn ks-btn-primary ks-btn-sm"
+              type="button"
+              onClick={() =>
+                createAsset({
+                  cat: "furn",
+                  custodian: "",
+                  loc: "",
+                  name: "",
+                  purchased: "",
+                  serial: "",
+                  supplier: "",
+                  val: 0,
+                  warranty: "",
+                })
+              }
+            >
+              <Plus size={14} />
+              {t("actions.add")}
+            </button>
+          )}
         </div>
       </div>
 
@@ -127,7 +208,7 @@ export function FaRegisterPage() {
         <div className="ks-search-box" style={{ flex: 1, maxWidth: 320 }}>
           <Search size={14} />
           <input
-            placeholder="Search by name or ID…"
+            placeholder={t("filters.searchPlaceholder")}
             style={{
               background: "transparent",
               border: 0,
@@ -147,7 +228,7 @@ export function FaRegisterPage() {
           value={cat}
           onChange={(e) => setCat(e.target.value)}
         >
-          <option value="">All categories</option>
+          <option value="">{t("filters.allCategories")}</option>
           {Object.entries(CAT_LABEL).map(([k, v]) => (
             <option key={k} value={k}>{v}</option>
           ))}
@@ -158,7 +239,7 @@ export function FaRegisterPage() {
           value={status}
           onChange={(e) => setStatus(e.target.value)}
         >
-          <option value="">All statuses</option>
+          <option value="">{t("filters.allStatuses")}</option>
           {Object.entries(STATUS_LABEL).map(([k, v]) => (
             <option key={k} value={k}>{v}</option>
           ))}
@@ -166,13 +247,12 @@ export function FaRegisterPage() {
         <button
           className="ks-btn ks-btn-sm"
           type="button"
-          onClick={() => toast("More filters · opening")}
         >
           <Filter size={14} />
-          More
+          {t("filters.more")}
         </button>
         <span className="text-xs text-muted-foreground" style={{ marginLeft: "auto" }}>
-          {filtered.length} of {ASSETS.length} assets
+          {t("page.register.filteredOf", { filtered: filtered.length, total: assets.length })}
         </span>
       </div>
 
@@ -189,16 +269,24 @@ export function FaRegisterPage() {
         >
           <span className="text-sm font-semibold">{sel.size} selected</span>
           <div className="flex items-center gap-1" style={{ marginLeft: "auto" }}>
-            <button className="ks-btn ks-btn-sm" type="button" onClick={() => toast(`Bulk transfer · ${sel.size} assets`)}>Transfer</button>
-            <button className="ks-btn ks-btn-sm" type="button" onClick={() => toast(`Bulk dispose · ${sel.size} assets`)}>Dispose</button>
+            {canManage && <button className="ks-btn ks-btn-sm" type="button" onClick={() => bulkUpdateAsset({ action: "transfer", asset_ids: [...sel], payload: {} })}>Transfer</button>}
+            {canManage && <button className="ks-btn ks-btn-sm" type="button" onClick={() => bulkUpdateAsset({ action: "dispose", asset_ids: [...sel], payload: {} })}>Dispose</button>}
             <button className="ks-btn ks-btn-sm" type="button" onClick={() => toast(`Print labels · ${sel.size} assets`)}>Print</button>
-            <button className="ks-btn ks-btn-sm" type="button" onClick={() => toast(`Change custodian · ${sel.size} assets`)}>Custodian</button>
-            <button className="ks-btn ks-btn-sm" type="button" onClick={() => toast(`Export · ${sel.size} assets`)}>Export</button>
+            {canManage && <button className="ks-btn ks-btn-sm" type="button" onClick={() => bulkUpdateAsset({ action: "change-custodian", asset_ids: [...sel], payload: {} })}>Custodian</button>}
+            <button className="ks-btn ks-btn-sm" disabled={isExporting} type="button" onClick={() => handleExport([...sel])}>Export</button>
             <button className="ks-btn ks-btn-ghost ks-btn-sm" type="button" onClick={() => setSel(new Set())}>Clear</button>
           </div>
         </div>
       )}
 
+      <FaQueryState
+        emptyDescription={t("page.register.noAssetsMatch")}
+        emptyTitle={t("page.register.noAssetsFound")}
+        isEmpty={filtered.length === 0}
+        isError={isError}
+        isLoading={isLoading}
+        skeleton={<SkeletonTable columns={7} rows={8} />}
+      >
       <div className="ks-card">
         <div style={{ overflowX: "auto" }}>
           <table className="w-full text-sm">
@@ -207,13 +295,13 @@ export function FaRegisterPage() {
                 <th style={{ padding: "10px 12px", textAlign: "left", width: 36 }}>
                   <input checked={allChecked} type="checkbox" onChange={() => toggleAll()} />
                 </th>
-                <th className="font-medium text-muted-foreground p-3 text-left">Asset</th>
-                <th className="font-medium text-muted-foreground p-3 text-left">Category</th>
-                <th className="font-medium text-muted-foreground p-3 text-left">Location</th>
-                <th className="font-medium text-muted-foreground p-3 text-left">Custodian</th>
-                <th className="font-medium text-muted-foreground p-3 text-right">Value / NBV</th>
-                <th className="font-medium text-muted-foreground p-3 text-left">Status</th>
-                <th className="font-medium text-muted-foreground p-3 text-center">Activity</th>
+                <th className="font-medium text-muted-foreground p-3 text-left">{t("page.register.columns.asset")}</th>
+                <th className="font-medium text-muted-foreground p-3 text-left">{t("page.register.columns.category")}</th>
+                <th className="font-medium text-muted-foreground p-3 text-left">{t("page.register.columns.location")}</th>
+                <th className="font-medium text-muted-foreground p-3 text-left">{t("page.register.columns.custodian")}</th>
+                <th className="font-medium text-muted-foreground p-3 text-right">{t("page.register.columns.valueNbv")}</th>
+                <th className="font-medium text-muted-foreground p-3 text-left">{t("page.register.columns.status")}</th>
+                <th className="font-medium text-muted-foreground p-3 text-center">{t("page.register.columns.activity")}</th>
                 <th style={{ padding: "10px 12px", width: 32 }} />
               </tr>
             </thead>
@@ -275,13 +363,6 @@ export function FaRegisterPage() {
                   </tr>
                 );
               })}
-              {filtered.length === 0 && (
-                <tr>
-                  <td className="p-8 text-center text-muted-foreground" colSpan={9}>
-                    No assets match the current filters.
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
@@ -289,10 +370,19 @@ export function FaRegisterPage() {
           className="justify-between text-xs text-muted-foreground flex items-center"
           style={{ borderTop: "1px solid hsl(var(--border))", padding: "10px 18px" }}
         >
-          <span>Showing {filtered.length} of {ASSETS.length}</span>
-          <span>Page 1 of 1</span>
+          <span>{t("pagination.showing", { current: filtered.length, total: resp?.pagination?.count ?? 0 })}</span>
+          <PaginationCursor
+            currentPage={page}
+            hasNextPage={Boolean(resp?.pagination?.next_cursor)}
+            hasPrevPage={cursorStack.length > 0}
+            limit={PAGE_LIMIT}
+            totalCount={resp?.pagination?.total_count ?? null}
+            onNext={handleNext}
+            onPrev={handlePrev}
+          />
         </div>
       </div>
+      </FaQueryState>
     </div>
   );
 }

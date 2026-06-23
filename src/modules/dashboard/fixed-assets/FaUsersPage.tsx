@@ -2,31 +2,18 @@
 
 import { History, Search, UserPlus } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useUser } from "@/context/user-context";
+import {
+  useGetFAUserAuditLogQuery,
+  useGetFAUsersQuery,
+  useInviteFAUserMutation,
+} from "@/hooks/api/fixed-assets";
 import { avatarColor, FaKpiStrip, FaShellHead, FaStat, initials } from "@/modules/dashboard/fixed-assets";
-import { FA_USERS } from "@/services/fixed-assets/mock";
-
-interface UserRow {
-  department: string;
-  email: string;
-  lastLogin: string;
-  mfa: boolean;
-  name: string;
-  role: string;
-  status: "active" | "invited" | "suspended";
-}
-
-const USERS: UserRow[] = [
-  { department: "Finance & Admin", email: "bambang.w@indojaya.id", lastLogin: "2m ago", mfa: true, name: "Bambang Wijaya", role: "Admin", status: "active" },
-  { department: "IT", email: "dewi.a@indojaya.id", lastLogin: "14m ago", mfa: true, name: "Dewi Anggraini", role: "Manager", status: "active" },
-  { department: "Operations", email: "rahmat.s@indojaya.id", lastLogin: "1h ago", mfa: true, name: "Rahmat Santoso", role: "Auditor", status: "active" },
-  { department: "Operations", email: "andi.p@indojaya.id", lastLogin: "3h ago", mfa: false, name: "Andi Pratama", role: "Operator", status: "active" },
-  { department: "Manufacturing", email: "eko.p@indojaya.id", lastLogin: "yesterday", mfa: true, name: "Eko Pranata", role: "Operator", status: "active" },
-  { department: "IT", email: "citra.w@indojaya.id", lastLogin: "—", mfa: false, name: "Citra Wijaya", role: "Viewer", status: "invited" },
-  { department: "Maintenance", email: "galang.t@indojaya.id", lastLogin: "2 weeks", mfa: false, name: "Galang Tirta", role: "Operator", status: "suspended" },
-  { department: "Lab", email: "ratna.i@indojaya.id", lastLogin: "5h ago", mfa: true, name: "Ratna Indira", role: "Manager", status: "active" },
-];
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 
 const ROLES = [
   { count: 4, desc: "Full access to all modules, settings, and user management.", name: "Admin", perms: ["All Modules", "Settings", "Billing", "Users"] },
@@ -37,16 +24,6 @@ const ROLES = [
   { count: 12, desc: "Depreciation, disposals, GL integration, and compliance.", name: "Finance", perms: ["Finance", "PSAK 16", "Disposals"] },
   { count: 14, desc: "RFID hardware config, reader health, and tag management.", name: "IT Support", perms: ["RFID Hardware", "Settings", "Users"] },
   { count: 22, desc: "View dashboards and reports only — no edits.", name: "Read-Only", perms: ["Dashboard", "Reports"] },
-];
-
-const AUDIT_LOG = [
-  { action: "Logged in", ip: "103.18.40.12", resource: "—", time: "14:22", user: "Bambang W." },
-  { action: "Generated report", ip: "103.18.40.12", resource: "Depreciation Schedule", time: "14:08", user: "Bambang W." },
-  { action: "Updated asset", ip: "103.18.40.88", resource: "IT-LP-9847", time: "13:42", user: "Dewi A." },
-  { action: "Created transfer", ip: "103.18.40.91", resource: "MUT-2410-0142", time: "13:18", user: "Dewi A." },
-  { action: "Failed login", ip: "45.127.44.2", resource: "—", time: "12:54", user: "unknown" },
-  { action: "Closed work order", ip: "103.18.40.77", resource: "WO-2410-088", time: "12:20", user: "Eko P." },
-  { action: "Exported EPCIS", ip: "103.18.40.12", resource: "EPCIS JSON-LD", time: "11:48", user: "Bambang W." },
 ];
 
 function Th({ children }: { children: React.ReactNode }) {
@@ -62,11 +39,13 @@ function statusBadge(s: string) {
   return <span className="ks-badge danger">Suspended</span>;
 }
 
-function UsersTab() {
+function UsersTab({ organizationId }: { organizationId: string }) {
   const [q, setQ] = useState("");
   const [role, setRole] = useState("All");
   const roles = ["All", "Admin", "Manager", "Auditor", "Operator", "Viewer"];
-  const rows = USERS.filter((u) => (role === "All" || u.role === role) && (u.name.toLowerCase().includes(q.toLowerCase()) || u.email.includes(q.toLowerCase())));
+  const { data: resp } = useGetFAUsersQuery({ organizationId });
+  const allUsers = resp?.data?.users ?? [];
+  const rows = allUsers.filter((u) => (role === "All" || u.role === role) && (u.name.toLowerCase().includes(q.toLowerCase()) || u.email.includes(q.toLowerCase())));
   return (
     <div className="ks-card">
       <div className="ks-card-head">
@@ -82,7 +61,7 @@ function UsersTab() {
       </div>
       <table className="w-full text-sm">
         <thead>
-          <tr><Th>User</Th><Th>Role</Th><Th>Department</Th><Th>MFA</Th><Th>Last login</Th><Th>Status</Th></tr>
+          <tr><Th>User</Th><Th>Role</Th><Th>Department</Th><Th>Last active</Th><Th>Status</Th></tr>
         </thead>
         <tbody>
           {rows.map((u, idx) => (
@@ -95,8 +74,7 @@ function UsersTab() {
               </Td>
               <Td><span className="ks-badge info">{u.role}</span></Td>
               <Td>{u.department}</Td>
-              <Td>{u.mfa ? <span className="ks-badge success">On</span> : <span className="ks-badge outline">Off</span>}</Td>
-              <Td>{u.lastLogin}</Td>
+              <Td>{u.lastActive}</Td>
               <Td>{statusBadge(u.status)}</Td>
             </tr>
           ))}
@@ -129,7 +107,9 @@ function RolesTab() {
   );
 }
 
-function AuditTab() {
+function AuditTab({ organizationId }: { organizationId: string }) {
+  const { data: resp } = useGetFAUserAuditLogQuery({ organizationId });
+  const logs = resp?.data?.logs ?? [];
   return (
     <div className="ks-card">
       <div className="ks-card-head"><span className="ks-card-title">Audit Log</span></div>
@@ -138,12 +118,12 @@ function AuditTab() {
           <tr><Th>Time</Th><Th>User</Th><Th>Action</Th><Th>Resource</Th><Th>IP</Th></tr>
         </thead>
         <tbody>
-          {AUDIT_LOG.map((a, i) => (
-            <tr key={i}>
-              <Td style={{ fontFamily: "ui-monospace, monospace" }}>{a.time}</Td>
-              <Td>{a.user}</Td>
+          {logs.map((a) => (
+            <tr key={a.id}>
+              <Td style={{ fontFamily: "ui-monospace, monospace" }}>{a.timestamp}</Td>
+              <Td>{a.user_name}</Td>
               <Td>{a.action}</Td>
-              <Td>{a.resource}</Td>
+              <Td>{a.entity_id}</Td>
               <Td style={{ color: "hsl(var(--text-3))", fontFamily: "ui-monospace, monospace", fontSize: 11 }}>{a.ip}</Td>
             </tr>
           ))}
@@ -154,29 +134,45 @@ function AuditTab() {
 }
 
 export function FaUsersPage() {
+  const { tokenPayload } = useUser();
+  const { canManageUsers } = useFaPermission();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { data: usersResp } = useGetFAUsersQuery({ organizationId });
+  const userCount = usersResp?.data?.users?.length ?? 0;
   const [tab, setTab] = useState("users");
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const { mutateAsync: inviteUser } = useInviteFAUserMutation({ organizationId });
   const tabs = [
-    { id: "users", label: "Users", meta: String(FA_USERS.length) },
+    { id: "users", label: "Users", meta: String(userCount) },
     { id: "roles", label: "Roles & Permissions", meta: "8" },
     { id: "audit", label: "Audit Log", meta: "" },
   ];
+  const handleInvite = async () => {
+    if (!inviteEmail) return;
+    await inviteUser({ department: "", email: inviteEmail, role: "Viewer" });
+    setInviteOpen(false);
+    setInviteEmail("");
+  };
   return (
     <div>
       <FaShellHead
         actions={
           <>
-            <button className="ks-btn" type="button" onClick={() => toast("Opening audit log…")}><History size={14} />Audit log</button>
-            <button className="ks-btn ks-btn-primary" type="button" onClick={() => toast("Sending invite…")}><UserPlus size={14} />Invite user</button>
+            {canManageUsers && <button className="ks-btn" type="button" onClick={() => setTab("audit")}><History size={14} />Audit log</button>}
+            {canManageUsers && (
+              <button className="ks-btn ks-btn-primary" type="button" onClick={() => setInviteOpen(true)}><UserPlus size={14} />Invite user</button>
+            )}
           </>
         }
         desc="Manage users, roles, permissions, and audit activity."
         title="User Management"
       />
       <FaKpiStrip>
-        <FaStat label="Total users" tone="brand" value="142" />
-        <FaStat label="MFA enabled" sub="of active users" tone="success" value="88%" />
-        <FaStat label="Pending invite" tone="warn" value="8" />
-        <FaStat label="Failed logins" sub="last 24h" tone="danger" value="3" />
+        <FaStat label="Total users" tone="brand" value={String(userCount)} />
+        <FaStat label="MFA enabled" sub="of active users" tone="success" value="—" />
+        <FaStat label="Pending invite" tone="warn" value={String(usersResp?.data?.users?.filter((u) => u.status === "invited").length ?? 0)} />
+        <FaStat label="Failed logins" sub="last 24h" tone="danger" value="—" />
       </FaKpiStrip>
       <div className="ks-seg" style={{ marginBottom: 16 }}>
         {tabs.map((t) => (
@@ -185,9 +181,27 @@ export function FaUsersPage() {
           </button>
         ))}
       </div>
-      {tab === "users" && <UsersTab />}
+      {tab === "users" && <UsersTab organizationId={organizationId} />}
       {tab === "roles" && <RolesTab />}
-      {tab === "audit" && <AuditTab />}
+      {tab === "audit" && <AuditTab organizationId={organizationId} />}
+      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Invite user</DialogTitle>
+          </DialogHeader>
+          <Input
+            autoFocus
+            placeholder="Enter email address"
+            type="email"
+            value={inviteEmail}
+            onChange={(e) => setInviteEmail(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") handleInvite(); }}
+          />
+          <DialogFooter>
+            <Button onClick={handleInvite}>Send invite</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

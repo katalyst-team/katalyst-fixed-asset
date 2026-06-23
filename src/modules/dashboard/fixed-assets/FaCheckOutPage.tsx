@@ -1,8 +1,16 @@
 "use client";
 
-import { Clock, History, Plus } from "lucide-react";
-import { toast } from "sonner";
+import { Clock, Download, History, Plus } from "lucide-react";
+import { useState } from "react";
 
+import PaginationCursor from "@/components/shared/PaginationCursor";
+import SkeletonTable from "@/components/shared/SkeletonTable";
+import { useUser } from "@/context/user-context";
+import {
+  useExportDataMutation,
+  useGetCheckOutsQuery,
+  useReturnCheckOutMutation,
+} from "@/hooks/api/fixed-assets";
 import {
   avatarColor,
   catToLucide,
@@ -11,10 +19,10 @@ import {
   FaShellHead,
   FaStat,
 } from "@/modules/dashboard/fixed-assets";
-import {
-  CAT_LABEL,
-  CHECK_OUTS,
-} from "@/services/fixed-assets/mock";
+import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
+import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
 
 const STATUS_TONE: Record<string, string> = {
   active: "info",
@@ -33,6 +41,48 @@ function statusLabel(s: string): string {
 }
 
 export function FaCheckOutPage() {
+  const { openModal } = useFaModal();
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const [cursorStack, setCursorStack] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
+  const PAGE_LIMIT = 20;
+  const { data: resp, isError, isLoading } = useGetCheckOutsQuery({
+    cursor: cursorStack.length > 0 ? cursorStack[cursorStack.length - 1] : undefined,
+    limit: PAGE_LIMIT,
+    organizationId,
+  });
+  const { mutateAsync: returnAsset } = useReturnCheckOutMutation({
+    organizationId,
+  });
+  const { isPending: isExporting, mutateAsync: exportData } =
+    useExportDataMutation({ organizationId });
+  const checkOuts = resp?.data?.checkOuts ?? [];
+  const activeLoans = checkOuts.filter((c) => c.status === "active").length;
+  const overdueLoans = checkOuts.filter((c) => c.status === "overdue").length;
+  const returnedLoans = checkOuts.filter((c) => c.status === "returned").length;
+  const returnRate = checkOuts.length > 0 ? Math.round((returnedLoans / checkOuts.length) * 100) : null;
+
+  const handleNext = () => {
+    const nextCursor = resp?.pagination?.next_cursor;
+    if (nextCursor) {
+      setCursorStack((prev) => [...prev, nextCursor]);
+      setPage((p) => p + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    setCursorStack((prev) => prev.slice(0, -1));
+    setPage((p) => Math.max(1, p - 1));
+  };
+
+  const handleExport = async () => {
+    const resp = await exportData({ format: "csv", source: "check-outs" });
+    if (resp?.data?.download_url) {
+      safeOpenUrl(resp.data.download_url);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <FaShellHead
@@ -41,7 +91,6 @@ export function FaCheckOutPage() {
             <button
               className="ks-btn ks-btn-ghost"
               type="button"
-              onClick={() => toast.info("Loading check-out history")}
             >
               <History size={15} />
               History
@@ -49,7 +98,7 @@ export function FaCheckOutPage() {
             <button
               className="ks-btn ks-btn-primary"
               type="button"
-              onClick={() => toast.info("New check-out form")}
+              onClick={() => openModal("checkout")}
             >
               <Plus size={15} />
               New check-out
@@ -61,26 +110,35 @@ export function FaCheckOutPage() {
       />
 
       <FaKpiStrip>
-        <FaStat label="Active loans" tone="info" value="6" />
-        <FaStat label="Overdue" sub="needs action" tone="danger" value="1" />
-        <FaStat label="Return rate" sub="last 90 days" tone="success" value="94%" />
-        <FaStat label="Avg duration" tone="brand" value="2.4d" />
+        <FaStat label="Active loans" tone="info" value={String(activeLoans)} />
+        <FaStat label="Overdue" sub="needs action" tone="danger" value={String(overdueLoans)} />
+        <FaStat label="Return rate" tone="success" value={returnRate !== null ? `${returnRate}%` : "—"} />
+        <FaStat label="Avg duration" tone="brand" value="—" />
       </FaKpiStrip>
 
+      <FaQueryState
+        emptyDescription="No check-out records yet."
+        emptyTitle="No check-outs"
+        isEmpty={checkOuts.length === 0}
+        isError={isError}
+        isLoading={isLoading}
+        skeleton={<SkeletonTable columns={7} rows={6} />}
+      >
       <div className="ks-card">
         <div className="ks-card-head">
           <div>
             <div className="ks-card-title">Check-Out Records</div>
             <div className="ks-card-desc">
-              {CHECK_OUTS.length} loans · RFID-verified chain of custody
+              {checkOuts.length} loans · RFID-verified chain of custody
             </div>
           </div>
           <button
             className="ks-btn ks-btn-sm"
+            disabled={isExporting}
             type="button"
-            onClick={() => toast.info("Exporting check-out log")}
+            onClick={handleExport}
           >
-            <History size={13} />
+            <Download size={13} />
             Export
           </button>
         </div>
@@ -98,7 +156,7 @@ export function FaCheckOutPage() {
               </tr>
             </thead>
             <tbody>
-              {CHECK_OUTS.map((c, i) => {
+              {checkOuts.map((c, i) => {
                 const Icon = catToLucide[
                   c.assetId.startsWith("TL") ? "tool" : c.assetId.startsWith("IT") ? "it" : "furn"
                 ];
@@ -151,7 +209,15 @@ export function FaCheckOutPage() {
                         <button
                           className="ml-2 text-xs text-[hsl(var(--brand))] hover:underline"
                           type="button"
-                          onClick={() => toast.success(`${c.assetId} returned · custody closed`)}
+                          onClick={() =>
+                            returnAsset({
+                              checkOutId: c.id,
+                              data: {
+                                condition: c.condition,
+                                return_date: new Date().toISOString(),
+                              },
+                            })
+                          }
                         >
                           Return
                         </button>
@@ -163,7 +229,23 @@ export function FaCheckOutPage() {
             </tbody>
           </table>
         </div>
+        <div
+          className="justify-between text-xs text-muted-foreground flex items-center"
+          style={{ borderTop: "1px solid hsl(var(--border))", padding: "10px 18px" }}
+        >
+          <span>Showing {checkOuts.length} of {resp?.pagination?.count ?? 0}</span>
+          <PaginationCursor
+            currentPage={page}
+            hasNextPage={Boolean(resp?.pagination?.next_cursor)}
+            hasPrevPage={cursorStack.length > 0}
+            limit={PAGE_LIMIT}
+            totalCount={resp?.pagination?.total_count ?? null}
+            onNext={handleNext}
+            onPrev={handlePrev}
+          />
+        </div>
       </div>
+      </FaQueryState>
     </div>
   );
 }

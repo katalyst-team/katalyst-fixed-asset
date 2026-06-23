@@ -9,8 +9,15 @@ import {
   Plus,
   Truck,
 } from "lucide-react";
-import { toast } from "sonner";
+import { useState } from "react";
 
+import PaginationCursor from "@/components/shared/PaginationCursor";
+import SkeletonTable from "@/components/shared/SkeletonTable";
+import { useUser } from "@/context/user-context";
+import {
+  useConfirmTransferReceiptMutation,
+  useGetTransfersQuery,
+} from "@/hooks/api/fixed-assets";
 import {
   avatarColor,
   FaKpiStrip,
@@ -18,7 +25,8 @@ import {
   FaStat,
   initials,
 } from "@/modules/dashboard/fixed-assets";
-import { TRANSFERS } from "@/services/fixed-assets/mock";
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
 
 const STAGES = ["Dispatched", "In-transit", "Received"];
 
@@ -68,6 +76,36 @@ function StageDots({ stage }: { stage: number }) {
 }
 
 export function FaTransferPage() {
+  const { openModal } = useFaModal();
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const [cursorStack, setCursorStack] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
+  const PAGE_LIMIT = 20;
+  const { data: resp, isError, isLoading } = useGetTransfersQuery({
+    cursor: cursorStack.length > 0 ? cursorStack[cursorStack.length - 1] : undefined,
+    limit: PAGE_LIMIT,
+    organizationId,
+  });
+  const { mutateAsync: confirmReceipt } =
+    useConfirmTransferReceiptMutation({ organizationId });
+  const transfers = resp?.data?.transfers ?? [];
+
+  const handleNext = () => {
+    const nextCursor = resp?.pagination?.next_cursor;
+    if (nextCursor) {
+      setCursorStack((prev) => [...prev, nextCursor]);
+      setPage((p) => p + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    setCursorStack((prev) => prev.slice(0, -1));
+    setPage((p) => Math.max(1, p - 1));
+  };
+  const inTransit = transfers.filter((t) => t.stage < 3).length;
+  const awaitingReceipt = transfers.filter((t) => t.stage === 2).length;
+
   return (
     <div>
       <FaShellHead
@@ -80,7 +118,7 @@ export function FaTransferPage() {
             <button
               className="ks-btn ks-btn-primary"
               type="button"
-              onClick={() => toast.info("New transfer wizard coming soon")}
+              onClick={() => openModal("transfer")}
             >
               <Plus size={14} />
               New transfer
@@ -91,18 +129,26 @@ export function FaTransferPage() {
       />
 
       <FaKpiStrip>
-        <FaStat label="In transit" tone="brand" value="18" />
-        <FaStat label="Awaiting receipt" sub="6 pending" tone="warn" value="6" />
-        <FaStat label="This month" sub="Oct 2025" tone="info" value="142" />
-        <FaStat label="Cross-site" sub="of all moves" tone="success" value="38%" />
+        <FaStat label="In transit" tone="brand" value={String(inTransit)} />
+        <FaStat label="Awaiting receipt" tone="warn" value={String(awaitingReceipt)} />
+        <FaStat label="This month" tone="info" value={String(transfers.length)} />
+        <FaStat label="Cross-site" tone="success" value="—" />
       </FaKpiStrip>
 
+      <FaQueryState
+        emptyDescription="No transfers in progress."
+        emptyTitle="No transfers"
+        isEmpty={transfers.length === 0}
+        isError={isError}
+        isLoading={isLoading}
+        skeleton={<SkeletonTable columns={4} rows={6} />}
+      >
       <div className="ks-card">
         <div className="ks-card-head">
           <div>
             <div className="ks-card-title">Active Transfers</div>
             <div className="ks-card-desc">
-              {TRANSFERS.length} movements in progress · RFID-tracked chain of custody
+              {transfers.length} movements in progress · RFID-tracked chain of custody
             </div>
           </div>
           <button className="ks-btn ks-btn-sm" type="button">
@@ -111,7 +157,7 @@ export function FaTransferPage() {
           </button>
         </div>
         <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {TRANSFERS.map((t, i) => (
+          {transfers.map((t, i) => (
             <div
               key={t.id}
               style={{
@@ -210,9 +256,7 @@ export function FaTransferPage() {
                 <button
                   className="ks-btn ks-btn-primary ks-btn-sm"
                   type="button"
-                  onClick={() =>
-                    toast.success(`Receipt confirmed for ${t.id}`)
-                  }
+                  onClick={() => confirmReceipt({ transferId: t.id })}
                 >
                   <CheckCircle2 size={13} />
                   Confirm receipt
@@ -230,7 +274,19 @@ export function FaTransferPage() {
             </div>
           ))}
         </div>
+        <div className="flex flex-row flex-1 justify-end items-end w-full">
+          <PaginationCursor
+            currentPage={page}
+            hasNextPage={Boolean(resp?.pagination?.next_cursor)}
+            hasPrevPage={cursorStack.length > 0}
+            limit={PAGE_LIMIT}
+            totalCount={resp?.pagination?.total_count ?? null}
+            onNext={handleNext}
+            onPrev={handlePrev}
+          />
+        </div>
       </div>
+      </FaQueryState>
     </div>
   );
 }

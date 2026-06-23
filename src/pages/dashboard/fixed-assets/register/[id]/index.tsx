@@ -4,6 +4,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import DashboardLayout from "@/components/layouts/dashboard-layout/DashboardLayout";
 import SEO from "@/components/SEO/SEO";
 import { FaDetailPage } from "@/modules/dashboard/fixed-assets/FaDetailPage";
+import { FaLayout } from "@/modules/dashboard/fixed-assets/FaLayout";
 import { createPageSEO } from "@/utils/seo";
 
 export default function FaDetailRoute() {
@@ -21,7 +22,9 @@ export default function FaDetailRoute() {
     <>
       <SEO {...seo} />
       <DashboardLayout>
-        <FaDetailPage />
+        <FaLayout>
+          <FaDetailPage />
+        </FaLayout>
       </DashboardLayout>
     </>
   );

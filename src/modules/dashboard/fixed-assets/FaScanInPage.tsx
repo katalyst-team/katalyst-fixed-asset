@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 "use client";
 
 import {
@@ -8,9 +9,16 @@ import {
   Radio,
   Upload,
 } from "lucide-react";
-import { useState } from "react";
+import { type ChangeEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import { useUser } from "@/context/user-context";
+import {
+  useDeployScanInMutation,
+  useGetPOQuery,
+  useGetScanInHistoryQuery,
+  useImportPOMutation,
+} from "@/hooks/api/fixed-assets";
 import {
   catToLucide,
   catToneClass,
@@ -18,10 +26,8 @@ import {
   formatIDR,
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
-import {
-  CAT_LABEL,
-  RFID_ORDER_ITEMS,
-} from "@/services/fixed-assets/mock";
+import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
+import type { DeployScanInRequest } from "@/types/fixed-assets";
 
 interface PoLineItem {
   cat: string;
@@ -49,36 +55,6 @@ interface ScanEntry {
   rssi: number;
   t: string;
 }
-
-const PO_QUEUE: PoRecord[] = [
-  { date: "12 Jan 2025", id: "PO-2025-0042", items: 24, status: "received", supplier: "PT. Apple Indonesia", value: 1209600000 },
-  { date: "10 Jan 2025", id: "PO-2025-0038", items: 18, status: "partial", supplier: "PT. Astra Hilti", value: 176400000 },
-  { date: "08 Jan 2025", id: "PO-2025-0031", items: 48, status: "received", supplier: "PT. Aeron Mebel", value: 1070400000 },
-  { date: "04 Jan 2025", id: "PO-2025-0024", items: 2, status: "received", supplier: "PT. Astra Toyota", value: 890000000 },
-];
-
-const PO_LINES: PoLineItem[] = RFID_ORDER_ITEMS.map((r) => ({
-  cat: r.cat,
-  id: r.id,
-  name: `${CAT_LABEL[r.cat]} · ${r.tagType}`,
-  qty: r.qty,
-  size: r.size,
-  tagType: r.tagType,
-  unit:
-    r.cat === "it"
-      ? 50400000
-      : r.cat === "veh"
-        ? 445000000
-        : r.cat === "furn"
-          ? 22300000
-          : 9800000,
-}));
-
-const RECENT_SCANS: ScanEntry[] = [
-  { epc: "E280-1170-0000-50CA-9847", id: "IT-LP-9847", name: 'MacBook Pro 16" M3 Max', rssi: -48, t: "2s" },
-  { epc: "E280-1170-0000-50CA-0142", id: "TL-DR-0142", name: "Hilti TE 6-A22 Hammer Drill", rssi: -52, t: "5s" },
-  { epc: "E280-1170-0000-50CA-1284", id: "IT-MN-1284", name: 'Dell U3223QE 32" Monitor', rssi: -46, t: "8s" },
-];
 
 const STEPS = ["Select PO", "Tagging RFID", "QC + Deploy"];
 
@@ -137,20 +113,95 @@ function ScanPortal({ scanning }: { scanning: boolean }) {
 }
 
 export function FaScanInPage() {
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { data: poResp } = useGetPOQuery({ organizationId });
+  const { mutateAsync: deployScanIn } = useDeployScanInMutation({
+    organizationId,
+  });
+  const { mutateAsync: importPO } = useImportPOMutation({ organizationId });
+  const { data: historyResp } = useGetScanInHistoryQuery({ organizationId });
+  const RECENT_SCANS: ScanEntry[] = (historyResp?.data?.history ?? []).map((h) => ({
+    epc: h.epc,
+    id: h.asset_id,
+    name: h.asset_name,
+    rssi: 0,
+    t: h.deployed_at,
+  }));
+  const apiPOs = poResp?.data?.purchase_orders ?? [];
+
+  const PO_QUEUE: PoRecord[] = apiPOs.map((p) => ({
+    date: p.date,
+    id: p.id,
+    items: p.lines.length,
+    status: p.status,
+    supplier: p.supplier,
+    value: p.lines.reduce((s, l) => s + l.unit_cost * l.qty, 0),
+  }));
+
   const [step, setStep] = useState(0);
   const [selectedPo, setSelectedPo] = useState(0);
   const [scannedCount, setScannedCount] = useState(0);
   const [scanning, setScanning] = useState(false);
+  const [custodian, setCustodian] = useState("Dewi Anggraini");
+  const [loc, setLoc] = useState("JKT-HQ · Floor 8");
+  const [costCenter, setCostCenter] = useState("CC-8100 · Engineering");
+  const [qcPassed, setQcPassed] = useState(true);
+  const poFileRef = useRef<HTMLInputElement>(null);
+
+  const selectedPO = apiPOs[selectedPo];
+  const PO_LINES: PoLineItem[] = (selectedPO?.lines ?? []).map((l) => ({
+    cat: l.cat,
+    id: l.id,
+    name: `${CAT_LABEL[l.cat] ?? l.cat} · ${l.tag_type}`,
+    qty: l.qty,
+    size: l.size,
+    tagType: l.tag_type,
+    unit: l.unit_cost,
+  }));
 
   const totalItems = PO_LINES.reduce((s, l) => s + l.qty, 0);
   const po = PO_QUEUE[selectedPo];
   const remaining = totalItems - scannedCount;
   const pct = totalItems > 0 ? (scannedCount / totalItems) * 100 : 0;
 
-  const handleDeploy = () => {
-    toast.success(`Deployed ${scannedCount} assets to register`);
+  const handleDeploy = async () => {
+    const assets: DeployScanInRequest["assets"] = [];
+    let count = 0;
+    for (const line of PO_LINES) {
+      for (let i = 0; i < line.qty && count < scannedCount; i++) {
+        assets.push({
+          epc: `E280-${line.id}-${count}`,
+          line_id: line.id,
+          name: line.name,
+          serial: `SN-${line.id}-${count}`,
+          tid: `TID-${line.id}-${count}`,
+          val: line.unit,
+        });
+        count++;
+      }
+    }
+    await deployScanIn({
+      assets,
+      cost_center: costCenter,
+      custodian,
+      loc,
+      po_id: po.id,
+      qc_passed: qcPassed,
+    });
     setScannedCount(0);
     setStep(0);
+  };
+
+  const handleImportPO = () => {
+    poFileRef.current?.click();
+  };
+
+  const handlePOFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    await importPO({ file });
+    e.target.value = "";
   };
 
   const handleScan = () => {
@@ -170,15 +221,21 @@ export function FaScanInPage() {
             <button
               className="ks-btn ks-btn-ghost"
               type="button"
-              onClick={() => toast.info("Opening Import PO dialog")}
+              onClick={handleImportPO}
             >
               <Upload size={15} />
               Import PO
             </button>
+            <input
+              ref={poFileRef}
+              accept=".csv,.xlsx,.xls"
+              className="hidden"
+              type="file"
+              onChange={handlePOFileChange}
+            />
             <button
               className="ks-btn ks-btn-ghost"
               type="button"
-              onClick={() => toast.info("Loading receiving history")}
             >
               <Download size={15} />
               History
@@ -401,15 +458,17 @@ export function FaScanInPage() {
                 <label className="mb-1 block text-xs font-medium text-muted-foreground">Custodian</label>
                 <input
                   className="w-full rounded-lg border border-border bg-transparent px-3 py-2 text-sm outline-none focus:border-[hsl(var(--brand))]"
-                  defaultValue="Dewi Anggraini"
                   placeholder="Search employee"
+                  value={custodian}
+                  onChange={(e) => setCustodian(e.target.value)}
                 />
               </div>
               <div>
                 <label className="mb-1 block text-xs font-medium text-muted-foreground">Location</label>
                 <select
                   className="w-full rounded-lg border border-border bg-transparent px-3 py-2 text-sm outline-none focus:border-[hsl(var(--brand))]"
-                  defaultValue="JKT-HQ · Floor 8"
+                  value={loc}
+                  onChange={(e) => setLoc(e.target.value)}
                 >
                   <option>JKT-HQ · Floor 8</option>
                   <option>JKT-HQ · Floor 12</option>
@@ -421,7 +480,8 @@ export function FaScanInPage() {
                 <label className="mb-1 block text-xs font-medium text-muted-foreground">Cost Center</label>
                 <select
                   className="w-full rounded-lg border border-border bg-transparent px-3 py-2 text-sm outline-none focus:border-[hsl(var(--brand))]"
-                  defaultValue="CC-8100 · Engineering"
+                  value={costCenter}
+                  onChange={(e) => setCostCenter(e.target.value)}
                 >
                   <option>CC-8100 · Engineering</option>
                   <option>CC-8200 · Operations</option>
@@ -429,7 +489,11 @@ export function FaScanInPage() {
                 </select>
               </div>
               <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-border p-3 text-sm">
-                <input defaultChecked type="checkbox" />
+                <input
+                  checked={qcPassed}
+                  type="checkbox"
+                  onChange={(e) => setQcPassed(e.target.checked)}
+                />
                 <span>QC inspection passed — packaging & accessory complete</span>
               </label>
               <button

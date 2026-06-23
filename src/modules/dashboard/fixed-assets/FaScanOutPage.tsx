@@ -5,13 +5,25 @@ import {
   CheckCircle2,
   ChevronRight,
   DollarSign,
+  Download,
   FileText,
   Plus,
   RefreshCw,
 } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 
+import PaginationCursor from "@/components/shared/PaginationCursor";
+import SkeletonTable from "@/components/shared/SkeletonTable";
+import { useUser } from "@/context/user-context";
+import {
+  useApproveDisposalMutation,
+  useExportDataMutation,
+  useGenerateBastMutation,
+  useGetDisposalsQuery,
+  usePostDisposalJournalEntryMutation,
+  useRejectDisposalMutation,
+  useReviseDisposalMutation,
+} from "@/hooks/api/fixed-assets";
 import {
   catToLucide,
   catToneClass,
@@ -20,10 +32,11 @@ import {
   FaStat,
   formatIDR,
 } from "@/modules/dashboard/fixed-assets";
-import {
-  CAT_LABEL,
-  DISPOSALS,
-} from "@/services/fixed-assets/mock";
+import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
+import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 
 interface ApprovalStep {
   date: string;
@@ -55,13 +68,105 @@ function statusBadgeClass(status: string): string {
 }
 
 export function FaScanOutPage() {
+  const { openModal } = useFaModal();
+  const { canManage } = useFaPermission();
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const [cursorStack, setCursorStack] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
+  const PAGE_LIMIT = 20;
+  const { data: resp, isError, isLoading } = useGetDisposalsQuery({
+    cursor: cursorStack.length > 0 ? cursorStack[cursorStack.length - 1] : undefined,
+    limit: PAGE_LIMIT,
+    organizationId,
+  });
+  const { mutateAsync: approveDisposal } = useApproveDisposalMutation({
+    organizationId,
+  });
+  const { mutateAsync: rejectDisposal } = useRejectDisposalMutation({
+    organizationId,
+  });
+  const { mutateAsync: reviseDisposal } = useReviseDisposalMutation({
+    organizationId,
+  });
+  const { mutateAsync: generateBast } = useGenerateBastMutation({
+    organizationId,
+  });
+  const { mutateAsync: postDisposalJE } = usePostDisposalJournalEntryMutation({
+    organizationId,
+  });
+  const { isPending: isExporting, mutateAsync: exportData } =
+    useExportDataMutation({ organizationId });
+  const disposals = resp?.data?.disposals ?? [];
+  const awaitingApproval = disposals.filter((d) => !d.status.toLowerCase().includes("approv") && !d.status.toLowerCase().includes("signed")).length;
+  const recoveryYTD = disposals.reduce((sum, d) => sum + d.rec, 0);
+
   const [selectedIdx, setSelectedIdx] = useState(0);
-  const item = DISPOSALS[selectedIdx];
+  const item = disposals[selectedIdx] ?? disposals[0];
+
+  if (!item) {
+    return (
+      <div className="space-y-4">
+        <FaShellHead
+          actions={
+            canManage ? (
+              <button
+                className="ks-btn ks-btn-primary"
+                type="button"
+                onClick={() => openModal("disposal")}
+              >
+                <Plus size={15} />
+                New disposal
+              </button>
+            ) : null
+          }
+          desc="Retire, sell, or donate assets with full approval + journal trail"
+          title="Scan-Out · Asset Disposal"
+        />
+        <div className="ks-card">
+          <div className="ks-card-body">
+            <p className="text-sm text-muted-foreground">No disposal requests in the queue.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const Icon = catToLucide[item.cat] ?? catToLucide.furn;
   const stage = STAGE_BY_STATUS[item.status] ?? 2;
   const gain = item.rec - item.nbv;
   const costBasis = item.nbv + 64000000;
   const accumDep = costBasis - item.nbv;
+
+  const handleGenerateBast = async () => {
+    await generateBast({ disposalId: item.id });
+  };
+
+  const handlePostJE = async () => {
+    await postDisposalJE({ disposalId: item.id });
+  };
+
+  const handleExport = async () => {
+    const resp = await exportData({ format: "csv", source: "disposals" });
+    if (resp?.data?.download_url) {
+      safeOpenUrl(resp.data.download_url);
+    }
+  };
+
+  const handleNext = () => {
+    const nextCursor = resp?.pagination?.next_cursor;
+    if (nextCursor) {
+      setCursorStack((prev) => [...prev, nextCursor]);
+      setPage((p) => p + 1);
+      setSelectedIdx(0);
+    }
+  };
+
+  const handlePrev = () => {
+    setCursorStack((prev) => prev.slice(0, -1));
+    setPage((p) => Math.max(1, p - 1));
+    setSelectedIdx(0);
+  };
 
   return (
     <div className="space-y-4">
@@ -70,20 +175,31 @@ export function FaScanOutPage() {
           <>
             <button
               className="ks-btn ks-btn-ghost"
+              disabled={isExporting}
               type="button"
-              onClick={() => toast.info("Generating BAST PDF…")}
+              onClick={handleExport}
+            >
+              <Download size={15} />
+              Export
+            </button>
+            <button
+              className="ks-btn ks-btn-ghost"
+              type="button"
+              onClick={handleGenerateBast}
             >
               <FileText size={15} />
               BAST PDF
             </button>
-            <button
-              className="ks-btn ks-btn-primary"
-              type="button"
-              onClick={() => toast.info("New disposal request form")}
-            >
-              <Plus size={15} />
-              New disposal
-            </button>
+            {canManage && (
+              <button
+                className="ks-btn ks-btn-primary"
+                type="button"
+                onClick={() => openModal("disposal")}
+              >
+                <Plus size={15} />
+                New disposal
+              </button>
+            )}
           </>
         }
         desc="Retire, sell, or donate assets with full approval + journal trail"
@@ -91,18 +207,26 @@ export function FaScanOutPage() {
       />
 
       <FaKpiStrip>
-        <FaStat label="This month" sub="disposals" tone="info" value="24" />
-        <FaStat label="Awaiting approval" sub="pending" tone="warn" value="8" />
-        <FaStat label="Recovery YTD" tone="success" value="Rp 42 jt" />
-        <FaStat label="Tax impact" sub="fiscal drag" tone="danger" value="-Rp 18 jt" />
+        <FaStat label="This month" sub="disposals" tone="info" value={String(disposals.length)} />
+        <FaStat label="Awaiting approval" sub="pending" tone="warn" value={String(awaitingApproval)} />
+        <FaStat label="Recovery YTD" tone="success" value={recoveryYTD > 0 ? formatIDR(recoveryYTD) : "—"} />
+        <FaStat label="Tax impact" sub="fiscal drag" tone="danger" value="—" />
       </FaKpiStrip>
 
+      <FaQueryState
+        emptyDescription="No disposal requests in the queue."
+        emptyTitle="No disposals"
+        isEmpty={!item}
+        isError={isError}
+        isLoading={isLoading}
+        skeleton={<SkeletonTable columns={5} rows={6} />}
+      >
       <div className="ks-grid-2">
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
               <div className="ks-card-title">Disposal Queue</div>
-              <div className="ks-card-desc">{DISPOSALS.length} items in workflow</div>
+              <div className="ks-card-desc">{disposals.length} items in workflow</div>
             </div>
           </div>
           <div className="ks-card-body">
@@ -117,7 +241,7 @@ export function FaScanOutPage() {
                 </tr>
               </thead>
               <tbody>
-                {DISPOSALS.map((d, i) => {
+                {disposals.map((d, i) => {
                   const DIcon = catToLucide[d.cat] ?? catToLucide.furn;
                   return (
                     <tr
@@ -145,6 +269,17 @@ export function FaScanOutPage() {
                 })}
               </tbody>
             </table>
+            <div className="flex flex-row flex-1 justify-end items-end w-full">
+              <PaginationCursor
+                currentPage={page}
+                hasNextPage={Boolean(resp?.pagination?.next_cursor)}
+                hasPrevPage={cursorStack.length > 0}
+                limit={PAGE_LIMIT}
+                totalCount={resp?.pagination?.total_count ?? null}
+                onNext={handleNext}
+                onPrev={handlePrev}
+              />
+            </div>
           </div>
         </div>
 
@@ -251,37 +386,52 @@ export function FaScanOutPage() {
                   </div>
                 )}
               </div>
+              <button
+                className="ks-btn ks-btn-ghost mt-3 w-full"
+                type="button"
+                onClick={handlePostJE}
+              >
+                <DollarSign size={15} />
+                Post JE to GL
+              </button>
             </div>
 
             <div className="flex items-center gap-2">
-              <button
-                className="ks-btn ks-btn-ghost"
-                type="button"
-                onClick={() => toast.info("Sending back for revision")}
-              >
-                <RefreshCw size={15} />
-                Revise
-              </button>
-              <button
-                className="ks-btn ks-btn-ghost"
-                type="button"
-                onClick={() => toast.error("Disposal rejected")}
-              >
-                <Ban size={15} />
-                Reject
-              </button>
-              <button
-                className="ks-btn ks-btn-primary"
-                type="button"
-                onClick={() => toast.success(`${item.id} approved — advanced to next stage`)}
-              >
-                <CheckCircle2 size={15} />
-                Approve
-              </button>
+              {canManage && (
+                <button
+                  className="ks-btn ks-btn-ghost"
+                  type="button"
+                  onClick={() => reviseDisposal({ disposalId: item.id, notes: "Revision requested" })}
+                >
+                  <RefreshCw size={15} />
+                  Revise
+                </button>
+              )}
+              {canManage && (
+                <button
+                  className="ks-btn ks-btn-ghost"
+                  type="button"
+                  onClick={() => rejectDisposal({ disposalId: item.id, reason: "Rejected by reviewer" })}
+                >
+                  <Ban size={15} />
+                  Reject
+                </button>
+              )}
+              {canManage && (
+                <button
+                  className="ks-btn ks-btn-primary"
+                  type="button"
+                  onClick={() => approveDisposal({ disposalId: item.id })}
+                >
+                  <CheckCircle2 size={15} />
+                  Approve
+                </button>
+              )}
             </div>
           </div>
         </div>
       </div>
+      </FaQueryState>
     </div>
   );
 }

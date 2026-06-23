@@ -1,14 +1,28 @@
 "use client";
 
-import { Building, MapPin, Search } from "lucide-react";
-import { toast } from "sonner";
+import { Building, MapPin, Search, Trash2 } from "lucide-react";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useUser } from "@/context/user-context";
+import {
+  useCreateSavedQueryMutation,
+  useDeleteSavedQueryMutation,
+  useGetRTLSFloorPlanQuery,
+  useGetRTLSPositionsQuery,
+  useGetSavedQueriesQuery,
+} from "@/hooks/api/fixed-assets";
 import {
   FaKpiStrip,
   FaShellHead,
   FaStat,
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
 
 interface PulseDotProps {
   color: string;
@@ -39,24 +53,6 @@ const ROOMS = [
   { fill: "rgba(100,116,139,0.08)", h: 320, label: "Gate / Lift", w: 140, x: 440, y: 20 },
 ];
 
-const ANCHORS = [
-  { x: 145, y: 90 },
-  { x: 80, y: 205 },
-  { x: 145, y: 295 },
-  { x: 355, y: 95 },
-  { x: 355, y: 260 },
-  { x: 510, y: 180 },
-];
-
-const ASSET_DOTS = [
-  { color: "#10b981", x: 60, y: 70 },
-  { color: "#3b82f6", x: 210, y: 110 },
-  { color: "#f59e0b", x: 90, y: 210 },
-  { color: "#8b5cf6", x: 340, y: 70 },
-  { color: "#ec4899", x: 320, y: 250 },
-  { color: "#10b981", x: 480, y: 300 },
-];
-
 const INFO_ROWS = [
   { k: "Asset", v: 'MacBook Pro 16" M3 Max' },
   { k: "Asset ID", v: "IT-LP-9847" },
@@ -68,15 +64,55 @@ const INFO_ROWS = [
   { k: "Value", v: formatIDRShort(50400000) },
 ];
 
-const SAVED_QUERIES = [
-  "Floor 8 · all laptops",
-  "Missing > 24h",
-  "Engineering zone",
-  "High-value (> Rp 50 jt)",
-  "Out-of-zone alerts",
-];
-
 export function FaRTLSPage() {
+  const router = useRouter();
+  const { openModal } = useFaModal();
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const [siteId, setSiteId] = useState("JKT-HQ");
+  const [floor, setFloor] = useState("8");
+  const [queryOpen, setQueryOpen] = useState(false);
+  const [queryName, setQueryName] = useState("");
+
+  const { data: posResp, isError, isLoading } = useGetRTLSPositionsQuery({
+    floor,
+    organizationId,
+    site_id: siteId,
+  });
+  const { data: fpResp } = useGetRTLSFloorPlanQuery({
+    floor,
+    organizationId,
+    site_id: siteId,
+  });
+  const { data: savedQueriesResp } = useGetSavedQueriesQuery({ organizationId });
+  const { mutateAsync: createSavedQuery } = useCreateSavedQueryMutation({
+    organizationId,
+  });
+  const { mutateAsync: deleteSavedQuery } = useDeleteSavedQueryMutation({
+    organizationId,
+  });
+
+  const positions = posResp?.data?.positions ?? [];
+  const anchors = posResp?.data?.anchors ?? [];
+  const avgAccuracy = positions.length > 0
+    ? (positions.reduce((sum, p) => sum + p.accuracy_m, 0) / positions.length).toFixed(1)
+    : null;
+  const floorPlan = fpResp?.data;
+  const savedQueries = savedQueriesResp?.data?.queries ?? [];
+  const vbW = floorPlan?.width ?? 600;
+  const vbH = floorPlan?.height ?? 360;
+
+  const handleSaveQuery = async () => {
+    if (!queryName) return;
+    await createSavedQuery({ floor, name: queryName, site_id: siteId });
+    setQueryOpen(false);
+    setQueryName("");
+  };
+
+  const handleDeleteQuery = async (queryId: string) => {
+    await deleteSavedQuery({ queryId });
+  };
+
   return (
     <div>
       <FaShellHead
@@ -85,7 +121,7 @@ export function FaRTLSPage() {
             <button
               className="ks-btn ks-btn-sm"
               type="button"
-              onClick={() => toast.info("Open locate bar")}
+              onClick={() => openModal("locateAsset")}
             >
               <Search size={14} />
               Locate asset
@@ -93,10 +129,9 @@ export function FaRTLSPage() {
             <button
               className="ks-btn ks-btn-sm"
               type="button"
-              onClick={() => toast.info("Switch site")}
             >
               <Building size={14} />
-              JKT-HQ
+              {siteId}
             </button>
           </>
         }
@@ -105,24 +140,30 @@ export function FaRTLSPage() {
       />
 
       <FaKpiStrip>
-        <FaStat label="Tracked assets" tone="brand" value="2,420" />
-        <FaStat label="Accuracy" tone="info" value="±0.4 m" />
-        <FaStat label="Zones" tone="success" value="28" />
+        <FaStat label="Tracked assets" tone="brand" value={String(positions.length)} />
+        <FaStat label="Accuracy" tone="info" value={avgAccuracy ? `±${avgAccuracy} m` : "—"} />
+        <FaStat label="Zones" tone="success" value="—" />
         <FaStat
           label="Missing >24h"
           sub="needs attention"
           tone="danger"
-          value="4"
+          value="—"
         />
       </FaKpiStrip>
 
+      <FaQueryState
+        isEmpty={positions.length === 0}
+        isError={isError}
+        isLoading={isLoading}
+      >
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
               <div className="ks-card-title">JKT-HQ · Floor 8</div>
               <div className="ks-card-desc">
-                live · 6 anchors · 142 assets on floor
+                live · {anchors.length} anchors · {positions.length} assets on
+                floor
               </div>
             </div>
             <span className="ks-badge success">● live</span>
@@ -131,7 +172,7 @@ export function FaRTLSPage() {
             <svg
               className="h-auto w-full"
               style={{ color: "hsl(var(--text-2))" }}
-              viewBox="0 0 600 360"
+              viewBox={`0 0 ${vbW} ${vbH}`}
               xmlns="http://www.w3.org/2000/svg"
             >
               <defs>
@@ -150,7 +191,18 @@ export function FaRTLSPage() {
                   />
                 </pattern>
               </defs>
-              <rect fill="url(#rtls-grid)" height="360" width="600" x="0" y="0" />
+              <rect fill="url(#rtls-grid)" height={vbH} width={vbW} x="0" y="0" />
+
+              {floorPlan?.floor_plan_url && (
+                <image
+                  height={vbH}
+                  href={floorPlan.floor_plan_url}
+                  opacity="0.5"
+                  width={vbW}
+                  x="0"
+                  y="0"
+                />
+              )}
 
               {ROOMS.map((r) => (
                 <g key={r.label}>
@@ -178,8 +230,8 @@ export function FaRTLSPage() {
                 </g>
               ))}
 
-              {ANCHORS.map((a, i) => (
-                <g key={"anchor-" + i}>
+              {anchors.map((a) => (
+                <g key={a.id}>
                   <circle cx={a.x} cy={a.y} fill="#22d3ee" r="5" />
                   <circle
                     cx={a.x}
@@ -193,8 +245,8 @@ export function FaRTLSPage() {
                 </g>
               ))}
 
-              {ASSET_DOTS.map((d, i) => (
-                <PulseDot key={"dot-" + i} color={d.color} x={d.x} y={d.y} />
+              {positions.map((p) => (
+                <PulseDot key={p.asset_id} color="#3b82f6" x={p.x} y={p.y} />
               ))}
 
               <g>
@@ -275,7 +327,7 @@ export function FaRTLSPage() {
                 className="ks-btn ks-btn-primary ks-btn-sm"
                 style={{ marginTop: 14 }}
                 type="button"
-                onClick={() => toast.info("Open asset profile · IT-LP-9847")}
+                onClick={() => router.push("/dashboard/fixed-assets/register/IT-LP-9847/")}
               >
                 <Search size={14} />
                 Open profile
@@ -286,26 +338,65 @@ export function FaRTLSPage() {
           <div className="ks-card">
             <div className="ks-card-head">
               <div className="ks-card-title">Saved location queries</div>
+              <button
+                className="ks-btn ks-btn-sm"
+                type="button"
+                onClick={() => setQueryOpen(true)}
+              >
+                Save query
+              </button>
             </div>
             <div className="ks-card-body">
               <div className="flex flex-col gap-2">
-                {SAVED_QUERIES.map((q) => (
-                  <button
-                    key={q}
-                    className="ks-btn ks-btn-ghost ks-btn-sm"
-                    style={{ justifyContent: "flex-start" }}
-                    type="button"
-                    onClick={() => toast.info("Running query: " + q)}
+                {savedQueries.map((q) => (
+                  <div
+                    key={q.id}
+                    className="flex items-center gap-2"
                   >
-                    <MapPin size={13} />
-                    {q}
-                  </button>
+                    <button
+                      className="ks-btn ks-btn-ghost ks-btn-sm"
+                      style={{ flex: 1, justifyContent: "flex-start" }}
+                      type="button"
+                      onClick={() => {
+                        setSiteId(q.site_id);
+                        setFloor(q.floor);
+                      }}
+                    >
+                      <MapPin size={13} />
+                      {q.name}
+                    </button>
+                    <button
+                      className="ks-btn ks-btn-ghost ks-btn-icon ks-btn-sm"
+                      type="button"
+                      onClick={() => handleDeleteQuery(q.id)}
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
           </div>
         </div>
       </div>
+      </FaQueryState>
+      <Dialog open={queryOpen} onOpenChange={setQueryOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Save location query</DialogTitle>
+          </DialogHeader>
+          <Input
+            autoFocus
+            placeholder="Query name"
+            value={queryName}
+            onChange={(e) => setQueryName(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") handleSaveQuery(); }}
+          />
+          <DialogFooter>
+            <Button onClick={handleSaveQuery}>Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

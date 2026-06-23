@@ -5,82 +5,44 @@ import {
   AlertTriangle, BookOpen, Boxes, ChevronRight, Cog, Database, FileText, HelpCircle, Laptop,
   Lock, MapPin, Package, Printer, Radio, Shield, Truck, Wrench, Zap,
 } from "lucide-react";
+import { useMemo } from "react";
 import { toast } from "sonner";
 
+import { useUser } from "@/context/user-context";
+import { useGetFADocsQuery } from "@/hooks/api/fixed-assets";
 import { FaShellHead } from "@/modules/dashboard/fixed-assets";
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import type { FaDocListItem } from "@/types/fixed-assets";
 
-interface DocCard {
-  desc: string;
-  icon: LucideIcon;
-  title: string;
-}
-interface DocGroup {
-  cards: DocCard[];
-  title: string;
-}
+const ICON_MAP: Record<string, LucideIcon> = {
+  alertTriangle: AlertTriangle,
+  bookOpen: BookOpen,
+  boxes: Boxes,
+  cog: Cog,
+  database: Database,
+  fileText: FileText,
+  laptop: Laptop,
+  lock: Lock,
+  mapPin: MapPin,
+  package: Package,
+  printer: Printer,
+  radio: Radio,
+  shield: Shield,
+  truck: Truck,
+  wrench: Wrench,
+  zap: Zap,
+};
 
-const GROUPS: DocGroup[] = [
-  {
-    cards: [
-      { desc: "Get up and running in 15 minutes", icon: Zap, title: "Quick Start" },
-      { desc: "Register and tag your first asset", icon: Package, title: "First Asset" },
-      { desc: "Connect readers and configure gates", icon: Radio, title: "RFID Setup" },
-    ],
-    title: "Getting Started",
-  },
-  {
-    cards: [
-      { desc: "Record asset arrivals and entries", icon: MapPin, title: "Scan-In" },
-      { desc: "Check-out and custody transfer", icon: Truck, title: "Scan-Out" },
-      { desc: "Move assets between sites", icon: Boxes, title: "Transfer" },
-      { desc: "Stock count and reconciliation", icon: FileText, title: "Audit" },
-    ],
-    title: "Daily Operations",
-  },
-  {
-    cards: [
-      { desc: "Create, assign, and close WOs", icon: Wrench, title: "Work Orders" },
-      { desc: "Preventive maintenance scheduling", icon: Cog, title: "PM Rules" },
-      { desc: "Pre-use checks and inspections", icon: Shield, title: "Inspections" },
-    ],
-    title: "Maintenance",
-  },
-  {
-    cards: [
-      { desc: "Indonesian fixed asset standard", icon: BookOpen, title: "PSAK 16" },
-      { desc: "Methods, rates, and journals", icon: Database, title: "Depreciation" },
-      { desc: "Dispose, sell, or retire assets", icon: AlertTriangle, title: "Disposals" },
-      { desc: "ERP posting and roll-forward", icon: FileText, title: "GL Integration" },
-    ],
-    title: "Finance",
-  },
-  {
-    cards: [
-      { desc: "REST + webhook reference", icon: Laptop, title: "API Reference" },
-      { desc: "GS1 EPCIS 2.0 event spec", icon: Radio, title: "EPCIS" },
-      { desc: "ERP, printer, and SSO setup", icon: Printer, title: "Integrations" },
-      { desc: "Roles, MFA, and audit trail", icon: Lock, title: "Security" },
-    ],
-    title: "Advanced",
-  },
-  {
-    cards: [
-      { desc: "Audit-ready documentation bundle", icon: FileText, title: "BPKP" },
-      { desc: "Calibration traceability standard", icon: Shield, title: "ISO 17025" },
-      { desc: "Tax fixed-asset schedule", icon: BookOpen, title: "Form 1771" },
-    ],
-    title: "Compliance",
-  },
-];
-
-function DocCardItem({ card }: { card: DocCard }) {
-  const Icon = card.icon;
+function DocCardItem({ doc }: { doc: FaDocListItem }) {
+  const Icon = ICON_MAP[doc.icon] ?? FileText;
   return (
-    <button
+    <a
       className="ks-card"
+      href={doc.url}
+      rel="noopener noreferrer"
       style={{ alignItems: "flex-start", cursor: "pointer", display: "flex", flexDirection: "column", gap: 10, textAlign: "left" }}
-      type="button"
-      onClick={() => toast(`Opening "${card.title}"…`)}
+      target="_blank"
+      onClick={() => toast(`Opening "${doc.title}"…`)}
     >
       <div className="ks-card-body" style={{ display: "flex", gap: 12, padding: 16, width: "100%" }}>
         <span className="ks-kpi-mini-square brand" style={{ alignItems: "center", borderRadius: 8, display: "flex", flexShrink: 0, height: 38, justifyContent: "center", width: 38 }}>
@@ -88,17 +50,33 @@ function DocCardItem({ card }: { card: DocCard }) {
         </span>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ alignItems: "center", display: "flex", fontSize: 13.5, fontWeight: 600, gap: 6, justifyContent: "space-between" }}>
-            {card.title}
+            {doc.title}
             <ChevronRight size={14} style={{ color: "hsl(var(--text-3))", flexShrink: 0 }} />
           </div>
-          <p style={{ color: "hsl(var(--text-2))", fontSize: 12.5, lineHeight: 1.45, margin: "4px 0 0" }}>{card.desc}</p>
+          <p style={{ color: "hsl(var(--text-2))", fontSize: 12.5, lineHeight: 1.45, margin: "4px 0 0" }}>{doc.category}</p>
         </div>
       </div>
-    </button>
+    </a>
   );
 }
 
 export function FaDocsPage() {
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+
+  const { data: resp, isError, isLoading } = useGetFADocsQuery({ organizationId });
+
+  const groups = useMemo(() => {
+    const docs = resp?.data?.docs ?? [];
+    const map = new Map<string, FaDocListItem[]>();
+    for (const d of docs) {
+      const arr = map.get(d.category) ?? [];
+      arr.push(d);
+      map.set(d.category, arr);
+    }
+    return Array.from(map, ([title, cards]) => ({ cards, title }));
+  }, [resp]);
+
   return (
     <div>
       <FaShellHead
@@ -119,16 +97,24 @@ export function FaDocsPage() {
           </div>
         </div>
       </div>
-      {GROUPS.map((g) => (
-        <div key={g.title} style={{ marginBottom: 24 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 700, letterSpacing: "-0.01em", margin: "0 0 12px" }}>{g.title}</h2>
-          <div style={{ display: "grid", gap: 14, gridTemplateColumns: "repeat(3, 1fr)" }}>
-            {g.cards.map((c) => (
-              <DocCardItem key={c.title} card={c} />
-            ))}
+      <FaQueryState
+        emptyDescription="No documentation available."
+        emptyTitle="No documents"
+        isEmpty={groups.length === 0}
+        isError={isError}
+        isLoading={isLoading}
+      >
+        {groups.map((g) => (
+          <div key={g.title} style={{ marginBottom: 24 }}>
+            <h2 style={{ fontSize: 14, fontWeight: 700, letterSpacing: "-0.01em", margin: "0 0 12px" }}>{g.title}</h2>
+            <div style={{ display: "grid", gap: 14, gridTemplateColumns: "repeat(3, 1fr)" }}>
+              {g.cards.map((c) => (
+                <DocCardItem key={c.id} doc={c} />
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </FaQueryState>
     </div>
   );
 }

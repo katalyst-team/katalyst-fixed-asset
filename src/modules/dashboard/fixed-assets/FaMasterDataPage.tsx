@@ -1,11 +1,24 @@
+/* eslint-disable max-lines */
 "use client";
 
-import { Download, Plus, Search } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { Download, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { type ChangeEvent, useRef, useState } from "react";
 
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useUser } from "@/context/user-context";
+import {
+  useCreateFAMasterDataMutation,
+  useDeleteFAMasterDataMutation,
+  useGetFAMasterDataQuery,
+  useImportFAMasterDataMutation,
+  useUpdateFAMasterDataMutation,
+} from "@/hooks/api/fixed-assets";
 import { avatarColor, FaMeter, FaProtoIcon, FaShellHead, initials } from "@/modules/dashboard/fixed-assets";
-import { MASTER_DATA_SECTIONS } from "@/services/fixed-assets/mock";
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
+import type { FaMasterDataSection, FaMasterDataSectionTab } from "@/types/fixed-assets";
 
 interface TreeItem {
   icon?: string;
@@ -77,11 +90,19 @@ const ASSET_CLASSES = [
   { assets: 14, gl: "1.02.08 · 52.02.08", method: "Straight Line", minCap: 100000000, name: "Buildings (FA)", tax: "Bangunan", ul: 20 },
 ];
 
-function TabBar({ active, onSelect }: { active: string; onSelect: (t: string) => void }) {
+function TabBar({
+  active,
+  onSelect,
+  sections,
+}: {
+  active: FaMasterDataSectionTab;
+  onSelect: (t: FaMasterDataSectionTab) => void;
+  sections: FaMasterDataSection[];
+}) {
   return (
     <div className="ks-card" style={{ overflow: "visible" }}>
       <div style={{ borderBottom: "1px solid hsl(var(--border))", display: "flex" }}>
-        {MASTER_DATA_SECTIONS.map((s) => {
+        {sections.map((s) => {
           const on = s.tab === active;
           return (
             <button
@@ -100,7 +121,7 @@ function TabBar({ active, onSelect }: { active: string; onSelect: (t: string) =>
                 padding: "12px 10px",
               }}
               type="button"
-              onClick={() => onSelect(s.tab)}
+              onClick={() => onSelect(s.tab as FaMasterDataSectionTab)}
             >
               <span style={{ alignItems: "center", display: "flex", fontSize: 13, fontWeight: 600, gap: 6 }}>
                 <FaProtoIcon name={s.icon} size={14} />
@@ -147,7 +168,27 @@ function Td({ children, style }: { children: React.ReactNode; style?: React.CSSP
   return <td className="border-t border-border p-3" style={style}>{children}</td>;
 }
 
-function CategoryTab() {
+interface RowActionProps {
+  canManage: boolean;
+  onDelete: (id: string) => void;
+  onEdit: (id: string, name: string) => void;
+}
+
+function ActionButtons({ canManage, id, name, onDelete, onEdit }: { id: string; name: string } & RowActionProps) {
+  if (!canManage) return null;
+  return (
+    <div style={{ display: "flex", gap: 4 }}>
+      <button className="ks-btn ks-btn-icon ks-btn-ghost" type="button" onClick={() => onEdit(id, name)}>
+        <Pencil size={14} />
+      </button>
+      <button className="ks-btn ks-btn-icon ks-btn-ghost" type="button" onClick={() => onDelete(id)}>
+        <Trash2 size={14} />
+      </button>
+    </div>
+  );
+}
+
+function CategoryTab({ canManage, onDelete, onEdit }: RowActionProps) {
   const [sel, setSel] = useState<{ g: TreeGroup; i: TreeItem } | null>({ g: CAT_TREE[0], i: CAT_TREE[0].items[0] });
   return (
     <div style={{ display: "grid", gap: 16, gridTemplateColumns: "220px 1fr 1fr" }}>
@@ -166,7 +207,10 @@ function CategoryTab() {
       <div className="ks-card">
         <div className="ks-card-head">
           <span className="ks-card-title">{sel?.i.n ?? "Detail"}</span>
-          <span className="ks-badge success">PSAK 16 synced</span>
+          <div style={{ alignItems: "center", display: "flex", gap: 8 }}>
+            <span className="ks-badge success">PSAK 16 synced</span>
+            {sel?.i && <ActionButtons canManage={canManage} id={sel.i.n} name={sel.i.n} onDelete={onDelete} onEdit={onEdit} />}
+          </div>
         </div>
         <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div>
@@ -189,7 +233,7 @@ function CategoryTab() {
   );
 }
 
-function LocationTab() {
+function LocationTab({ canManage, onDelete, onEdit }: RowActionProps) {
   const [sel, setSel] = useState<TreeItem>(LOC_TREE[0].items[0]);
   return (
     <div style={{ display: "grid", gap: 16, gridTemplateColumns: "220px 1fr 1fr" }}>
@@ -206,7 +250,13 @@ function LocationTab() {
         </div>
       </div>
       <div className="ks-card">
-        <div className="ks-card-head"><span className="ks-card-title">{sel.n} · Detail</span><span className="ks-badge success">Online</span></div>
+        <div className="ks-card-head">
+          <span className="ks-card-title">{sel.n} · Detail</span>
+          <div style={{ alignItems: "center", display: "flex", gap: 8 }}>
+            <span className="ks-badge success">Online</span>
+            <ActionButtons canManage={canManage} id={sel.n} name={sel.n} onDelete={onDelete} onEdit={onEdit} />
+          </div>
+        </div>
         <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {[["Site", "JKT-HQ"],["Floor", sel.n],["Total Assets", "4,820"],["Readers", "8 active"],["Geofence", "Enabled"]].map(([k, v]) => (
             <div key={k} style={{ borderTop: "1px solid hsl(var(--border))", color: "hsl(var(--text-2))", display: "flex", fontSize: 13, justifyContent: "space-between", padding: "7px 0" }}>
@@ -219,7 +269,7 @@ function LocationTab() {
   );
 }
 
-function CustodianTab() {
+function CustodianTab({ canManage, onDelete, onEdit }: RowActionProps) {
   const [q, setQ] = useState("");
   const rows = CUSTODIANS.filter((c) => c.name.toLowerCase().includes(q.toLowerCase()) || c.email.includes(q.toLowerCase()));
   return (
@@ -234,7 +284,7 @@ function CustodianTab() {
       <table className="w-full text-sm">
         <thead>
           <tr>
-            <Th>Name</Th><Th>Role</Th><Th>Department</Th><Th>Location</Th><Th>Assets</Th>
+            <Th>Name</Th><Th>Role</Th><Th>Department</Th><Th>Location</Th><Th>Assets</Th><Th>Actions</Th>
           </tr>
         </thead>
         <tbody>
@@ -250,6 +300,7 @@ function CustodianTab() {
               <Td>{c.dept}</Td>
               <Td>{c.loc}</Td>
               <Td><span style={{ fontWeight: 600 }}>{c.assets}</span></Td>
+              <Td><ActionButtons canManage={canManage} id={c.email} name={c.name} onDelete={onDelete} onEdit={onEdit} /></Td>
             </tr>
           ))}
         </tbody>
@@ -258,14 +309,14 @@ function CustodianTab() {
   );
 }
 
-function CostCenterTab() {
+function CostCenterTab({ canManage, onDelete, onEdit }: RowActionProps) {
   return (
     <div className="ks-card">
       <div className="ks-card-head"><span className="ks-card-title">Cost Centers · 28</span></div>
       <table className="w-full text-sm">
         <thead>
           <tr>
-            <Th>Code</Th><Th>Name</Th><Th>PIC</Th><Th>Assets</Th><Th>Budget</Th><Th>Usage</Th><Th>Depr/month</Th>
+            <Th>Code</Th><Th>Name</Th><Th>PIC</Th><Th>Assets</Th><Th>Budget</Th><Th>Usage</Th><Th>Depr/month</Th><Th>Actions</Th>
           </tr>
         </thead>
         <tbody>
@@ -278,6 +329,7 @@ function CostCenterTab() {
               <Td>{"Rp " + (c.budget / 1e6).toFixed(0) + " jt"}</Td>
               <Td style={{ minWidth: 120 }}><FaMeter pct={c.pct} tone={c.pct > 85 ? "warn" : "brand"} /><span style={{ color: "hsl(var(--text-3))", fontSize: 11 }}>{c.pct}%</span></Td>
               <Td>{"Rp " + (c.depr / 1e6).toFixed(1) + " jt"}</Td>
+              <Td><ActionButtons canManage={canManage} id={c.code} name={c.name} onDelete={onDelete} onEdit={onEdit} /></Td>
             </tr>
           ))}
         </tbody>
@@ -286,7 +338,7 @@ function CostCenterTab() {
   );
 }
 
-function SupplierTab() {
+function SupplierTab({ canManage, onDelete, onEdit }: RowActionProps) {
   const [tier, setTier] = useState("All");
   const tiers = ["All", "Gold", "Silver", "Bronze"];
   const rows = tier === "All" ? SUPPLIERS : SUPPLIERS.filter((s) => s.tier === tier);
@@ -303,7 +355,7 @@ function SupplierTab() {
       <table className="w-full text-sm">
         <thead>
           <tr>
-            <Th>Supplier</Th><Th>Tier</Th><Th>Category</Th><Th>Lead time</Th><Th>Active assets</Th><Th>Rating</Th><Th>Last PO</Th>
+            <Th>Supplier</Th><Th>Tier</Th><Th>Category</Th><Th>Lead time</Th><Th>Active assets</Th><Th>Rating</Th><Th>Last PO</Th><Th>Actions</Th>
           </tr>
         </thead>
         <tbody>
@@ -319,6 +371,7 @@ function SupplierTab() {
               <Td>{s.assets}</Td>
               <Td>{"★ " + s.rating.toFixed(1)}</Td>
               <Td>{s.lastPO}</Td>
+              <Td><ActionButtons canManage={canManage} id={s.id} name={s.name} onDelete={onDelete} onEdit={onEdit} /></Td>
             </tr>
           ))}
         </tbody>
@@ -327,14 +380,14 @@ function SupplierTab() {
   );
 }
 
-function AssetClassTab() {
+function AssetClassTab({ canManage, onDelete, onEdit }: RowActionProps) {
   return (
     <div className="ks-card">
       <div className="ks-card-head"><span className="ks-card-title">Asset Classes · PSAK 16</span></div>
       <table className="w-full text-sm">
         <thead>
           <tr>
-            <Th>Class</Th><Th>Useful life</Th><Th>Tax group</Th><Th>Method</Th><Th>Min capitalize</Th><Th>GL accounts</Th><Th>Assets</Th>
+            <Th>Class</Th><Th>Useful life</Th><Th>Tax group</Th><Th>Method</Th><Th>Min capitalize</Th><Th>GL accounts</Th><Th>Assets</Th><Th>Actions</Th>
           </tr>
         </thead>
         <tbody>
@@ -347,6 +400,7 @@ function AssetClassTab() {
               <Td>{"Rp " + (c.minCap / 1e6).toFixed(1) + " jt"}</Td>
               <Td style={{ fontFamily: "ui-monospace, monospace", fontSize: 11 }}>{c.gl}</Td>
               <Td>{c.assets.toLocaleString("id-ID")}</Td>
+              <Td><ActionButtons canManage={canManage} id={c.name} name={c.name} onDelete={onDelete} onEdit={onEdit} /></Td>
             </tr>
           ))}
         </tbody>
@@ -356,28 +410,117 @@ function AssetClassTab() {
 }
 
 export function FaMasterDataPage() {
-  const [tab, setTab] = useState("cat");
+  const { tokenPayload } = useUser();
+  const { canManage } = useFaPermission();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { data: resp, isError, isLoading } = useGetFAMasterDataQuery({ organizationId });
+  const sections = resp?.data?.masterDataSections ?? [];
+  const [tab, setTab] = useState<FaMasterDataSectionTab>("cat");
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  const createMutation = useCreateFAMasterDataMutation({ organizationId });
+  const deleteMutation = useDeleteFAMasterDataMutation({ organizationId });
+  const importMutation = useImportFAMasterDataMutation({ organizationId });
+  const updateMutation = useUpdateFAMasterDataMutation({ organizationId });
+
+  const handleAdd = () => {
+    setEditingId(null);
+    setInputValue("");
+    setDialogOpen(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    await deleteMutation.mutateAsync({ id, section: tab });
+  };
+
+  const handleEdit = (id: string, currentName: string) => {
+    setEditingId(id);
+    setInputValue(currentName);
+    setDialogOpen(true);
+  };
+
+  const handleDialogSubmit = async () => {
+    if (!inputValue) return;
+    if (editingId) {
+      await updateMutation.mutateAsync({ data: { name: inputValue }, id: editingId, section: tab });
+    } else {
+      await createMutation.mutateAsync({ data: { name: inputValue }, section: tab });
+    }
+    setDialogOpen(false);
+  };
+
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    await importMutation.mutateAsync({ file, section: tab });
+    e.target.value = "";
+  };
+
+  const handleImport = () => {
+    fileRef.current?.click();
+  };
+
   return (
     <div>
       <FaShellHead
         actions={
           <>
-            <button className="ks-btn" type="button" onClick={() => toast("Importing CSV…")}><Download size={14} />Import CSV</button>
-            <button className="ks-btn ks-btn-primary" type="button" onClick={() => toast("Opening add form…")}><Plus size={14} />Add</button>
+            {canManage && (
+              <button className="ks-btn" type="button" onClick={handleImport}><Download size={14} />Import CSV</button>
+            )}
+            <input
+              ref={fileRef}
+              accept=".csv,.xlsx,.xls"
+              className="hidden"
+              type="file"
+              onChange={handleFileChange}
+            />
+            {canManage && (
+              <button className="ks-btn ks-btn-primary" type="button" onClick={handleAdd}><Plus size={14} />Add</button>
+            )}
           </>
         }
         desc="Manage categories, locations, custodians, cost centers, suppliers and asset classes."
         title="Master Data"
       />
       <div style={{ marginBottom: 16 }}>
-        <TabBar active={tab} onSelect={setTab} />
+        <TabBar active={tab} sections={sections} onSelect={setTab} />
       </div>
-      {tab === "cat" && <CategoryTab />}
-      {tab === "loc" && <LocationTab />}
-      {tab === "cust" && <CustodianTab />}
-      {tab === "cc" && <CostCenterTab />}
-      {tab === "sup" && <SupplierTab />}
-      {tab === "cls" && <AssetClassTab />}
+      <FaQueryState
+        emptyDescription="No master data rows for this section."
+        emptyTitle="No data"
+        isEmpty={sections.length === 0}
+        isError={isError}
+        isLoading={isLoading}
+      >
+        {tab === "cat" && <CategoryTab canManage={canManage} onDelete={handleDelete} onEdit={handleEdit} />}
+        {tab === "loc" && <LocationTab canManage={canManage} onDelete={handleDelete} onEdit={handleEdit} />}
+        {tab === "cust" && <CustodianTab canManage={canManage} onDelete={handleDelete} onEdit={handleEdit} />}
+        {tab === "cc" && <CostCenterTab canManage={canManage} onDelete={handleDelete} onEdit={handleEdit} />}
+        {tab === "sup" && <SupplierTab canManage={canManage} onDelete={handleDelete} onEdit={handleEdit} />}
+        {tab === "cls" && <AssetClassTab canManage={canManage} onDelete={handleDelete} onEdit={handleEdit} />}
+      </FaQueryState>
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editingId ? "Edit name" : "Add new"}</DialogTitle>
+          </DialogHeader>
+          <Input
+            autoFocus
+            placeholder="Enter name"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") handleDialogSubmit(); }}
+          />
+          <DialogFooter>
+            <Button onClick={handleDialogSubmit}>{editingId ? "Save" : "Add"}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

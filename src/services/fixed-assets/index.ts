@@ -1,159 +1,160 @@
-/* eslint-disable no-unused-vars */
-import fetcher, { ApiResponse } from "..";
-import {
-  ASSETS,
-  AUDIT_ZONES,
-  CATEGORY_STATS,
-  CHECK_OUTS,
-  DISPOSALS,
-  FA_USERS,
-  FINANCIAL_CATEGORIES,
-  HEALTH_DATA,
-  MAINTENANCE_UPCOMING,
-  PM_RULES,
-  PM_SCHEDULE,
-  PRE_USE_ASSETS,
-  RECENT_ACTIVITY,
-  REPORT_TEMPLATES,
-  RFID_READS,
-  RFID_TAGS,
-  SECURITY_ALERTS,
-  SITES,
-  TRANSFERS,
-  WORK_ORDERS,
-} from "./mock";
-
-const mockResponse = <T>(data: T, message = "OK"): ApiResponse<T> => ({
-  data,
-  message,
-  metadata: {
-    code: "200",
-    correlation_id: "mock",
-    message,
-    server_time: Date.now(),
-    success: true,
-  },
-  pagination: {
-    count: Array.isArray(data) ? data.length : 1,
-    next_cursor: "",
-    prev_cursor: "",
-    total_count: Array.isArray(data) ? data.length : 1,
-  },
-});
-
-export const getFADashboardService = async (
-  _organizationId: string,
-): Promise<
-  ApiResponse<{
-    activity: typeof RECENT_ACTIVITY;
-    categoryStats: typeof CATEGORY_STATS;
-    financialCategories: typeof FINANCIAL_CATEGORIES;
-    maintenanceUpcoming: typeof MAINTENANCE_UPCOMING;
-    rfidReads: typeof RFID_READS;
-    sites: typeof SITES;
-  }>
-> => {
-  return mockResponse({
-    activity: RECENT_ACTIVITY,
-    categoryStats: CATEGORY_STATS,
-    financialCategories: FINANCIAL_CATEGORIES,
-    maintenanceUpcoming: MAINTENANCE_UPCOMING,
-    rfidReads: RFID_READS,
-    sites: SITES,
-  });
-};
-
-export const getAssetRegisterService = async (
-  _organizationId: string,
-): Promise<ApiResponse<{ assets: typeof ASSETS }>> => {
-  return mockResponse({ assets: ASSETS });
-};
-
-export const getAssetDetailService = async (
-  _organizationId: string,
-  assetId: string,
-): Promise<ApiResponse<{ asset: (typeof ASSETS)[number] | null }>> => {
-  const asset = ASSETS.find((a) => a.id === assetId) ?? null;
-  return mockResponse({ asset });
-};
-
-export const getFAMasterDataService = async (
-  _organizationId: string,
-): Promise<
-  ApiResponse<{
-    masterDataSections: typeof import("./mock").MASTER_DATA_SECTIONS;
-  }>
-> => {
-  const { MASTER_DATA_SECTIONS } = await import("./mock");
-  return mockResponse({ masterDataSections: MASTER_DATA_SECTIONS });
-};
-
-export const getRFIDTagsService = async (
-  _organizationId: string,
-): Promise<ApiResponse<{ tags: typeof RFID_TAGS }>> => {
-  return mockResponse({ tags: RFID_TAGS });
-};
-
-export const getScanOutService = async (
-  _organizationId: string,
-): Promise<ApiResponse<{ disposals: typeof DISPOSALS }>> => {
-  return mockResponse({ disposals: DISPOSALS });
-};
-
-export const getCheckOutService = async (
-  _organizationId: string,
-): Promise<ApiResponse<{ checkOuts: typeof CHECK_OUTS }>> => {
-  return mockResponse({ checkOuts: CHECK_OUTS });
-};
-
-export const getTransferService = async (
-  _organizationId: string,
-): Promise<ApiResponse<{ transfers: typeof TRANSFERS }>> => {
-  return mockResponse({ transfers: TRANSFERS });
-};
-
-export const getAuditService = async (
-  _organizationId: string,
-): Promise<ApiResponse<{ zones: typeof AUDIT_ZONES }>> => {
-  return mockResponse({ zones: AUDIT_ZONES });
-};
-
-export const getMaintenanceService = async (
-  _organizationId: string,
-): Promise<
-  ApiResponse<{
-    healthData: typeof HEALTH_DATA;
-    pmRules: typeof PM_RULES;
-    pmSchedule: typeof PM_SCHEDULE;
-    preUseAssets: typeof PRE_USE_ASSETS;
-    workOrders: typeof WORK_ORDERS;
-  }>
-> => {
-  return mockResponse({
-    healthData: HEALTH_DATA,
-    pmRules: PM_RULES,
-    pmSchedule: PM_SCHEDULE,
-    preUseAssets: PRE_USE_ASSETS,
-    workOrders: WORK_ORDERS,
-  });
-};
-
-export const getSecurityService = async (
-  _organizationId: string,
-): Promise<ApiResponse<{ alerts: typeof SECURITY_ALERTS }>> => {
-  return mockResponse({ alerts: SECURITY_ALERTS });
-};
-
-export const getReportsService = async (
-  _organizationId: string,
-): Promise<ApiResponse<{ templates: typeof REPORT_TEMPLATES }>> => {
-  return mockResponse({ templates: REPORT_TEMPLATES });
-};
-
-export const getFAUsersService = async (
-  _organizationId: string,
-): Promise<ApiResponse<{ users: typeof FA_USERS }>> => {
-  return mockResponse({ users: FA_USERS });
-};
-
-export { fetcher };
+export type { ApproveDisposalResponse } from "./approveDisposalService";
+export { approveDisposalService } from "./approveDisposalService";
+export type { AuditSignOffResponse } from "./auditSignOffService";
+export { auditSignOffService } from "./auditSignOffService";
+export type { BulkCreateAssetResponse } from "./bulkCreateAssetService";
+export { bulkCreateAssetService } from "./bulkCreateAssetService";
+export type { BulkUpdateAssetResponse } from "./bulkUpdateAssetService";
+export { bulkUpdateAssetService } from "./bulkUpdateAssetService";
+export type { ConfirmTransferReceiptResponse } from "./confirmTransferReceiptService";
+export { confirmTransferReceiptService } from "./confirmTransferReceiptService";
+export type { ConnectIntegrationResponse } from "./connectIntegrationService";
+export { connectIntegrationService } from "./connectIntegrationService";
+export type { CreateAssetResponse } from "./createAssetService";
+export { createAssetService } from "./createAssetService";
+export type { CreateCheckOutResponse } from "./createCheckOutService";
+export { createCheckOutService } from "./createCheckOutService";
+export type { CreateDisposalResponse } from "./createDisposalService";
+export { createDisposalService } from "./createDisposalService";
+export type { CreateEpcRangeResponse } from "./createEpcRangeService";
+export { createEpcRangeService } from "./createEpcRangeService";
+export type { CreateFAMasterDataResponse } from "./createFAMasterDataService";
+export { createFAMasterDataService } from "./createFAMasterDataService";
+export type { CreateGeofenceRuleResponse } from "./createGeofenceRuleService";
+export { createGeofenceRuleService } from "./createGeofenceRuleService";
+export type { CreatePmRuleResponse } from "./createPmRuleService";
+export { createPmRuleService } from "./createPmRuleService";
+export type { CreateReservationResponse } from "./createReservationService";
+export { createReservationService } from "./createReservationService";
+export type { CreateSavedQueryResponse } from "./createSavedQueryService";
+export { createSavedQueryService } from "./createSavedQueryService";
+export type { CreateTransferResponse } from "./createTransferService";
+export { createTransferService } from "./createTransferService";
+export type { CreateWorkOrderResponse } from "./createWorkOrderService";
+export { createWorkOrderService } from "./createWorkOrderService";
+export type { DeleteFAMasterDataResponse } from "./deleteFAMasterDataService";
+export { deleteFAMasterDataService } from "./deleteFAMasterDataService";
+export type { DeleteSavedQueryResponse } from "./deleteSavedQueryService";
+export { deleteSavedQueryService } from "./deleteSavedQueryService";
+export type { DeployScanInResponse } from "./deployScanInService";
+export { deployScanInService } from "./deployScanInService";
+export type { EncodeRFIDTagResponse } from "./encodeRFIDTagService";
+export { encodeRFIDTagService } from "./encodeRFIDTagService";
+export type { ExportDataResponse } from "./exportDataService";
+export { exportDataService } from "./exportDataService";
+export type { GenerateAllReportsResponse } from "./generateAllReportsService";
+export { generateAllReportsService } from "./generateAllReportsService";
+export type { GenerateBastResponse } from "./generateBastService";
+export { generateBastService } from "./generateBastService";
+export type { GenerateReportResponse } from "./generateReportService";
+export { generateReportService } from "./generateReportService";
+export type { GetAssetDetailResponse } from "./getAssetDetailService";
+export { getAssetDetailService } from "./getAssetDetailService";
+export type { GetAssetDocDownloadResponse } from "./getAssetDocDownloadService";
+export { getAssetDocDownloadService } from "./getAssetDocDownloadService";
+export type { GetAssetRegisterResponse } from "./getAssetRegisterService";
+export { getAssetRegisterService } from "./getAssetRegisterService";
+export type { GetAuditReportResponse } from "./getAuditReportService";
+export { getAuditReportService } from "./getAuditReportService";
+export type { GetAuditZonesResponse } from "./getAuditZonesService";
+export { getAuditZonesService } from "./getAuditZonesService";
+export type { GetBillingResponse } from "./getBillingService";
+export { getBillingService } from "./getBillingService";
+export type { GetCamerasResponse } from "./getCamerasService";
+export { getCamerasService } from "./getCamerasService";
+export type { GetCheckOutsResponse } from "./getCheckOutsService";
+export { getCheckOutsService } from "./getCheckOutsService";
+export type { GetDisposalsResponse } from "./getDisposalsService";
+export { getDisposalsService } from "./getDisposalsService";
+export type { GetEpcRangesResponse } from "./getEpcRangesService";
+export { getEpcRangesService } from "./getEpcRangesService";
+export type { GetFADashboardResponse } from "./getFADashboardService";
+export { getFADashboardService } from "./getFADashboardService";
+export type { GetFADocsResponse } from "./getFADocsService";
+export { getFADocsService } from "./getFADocsService";
+export type { GetFAMasterDataResponse } from "./getFAMasterDataService";
+export { getFAMasterDataService } from "./getFAMasterDataService";
+export type { GetFASettingsResponse } from "./getFASettingsService";
+export { getFASettingsService } from "./getFASettingsService";
+export type { GetFAUserAuditLogResponse } from "./getFAUserAuditLogService";
+export { getFAUserAuditLogService } from "./getFAUserAuditLogService";
+export type { GetFAUsersResponse } from "./getFAUsersService";
+export { getFAUsersService } from "./getFAUsersService";
+export type { GetInvoicesResponse } from "./getInvoicesService";
+export { getInvoicesService } from "./getInvoicesService";
+export type { GetMaintenanceResponse } from "./getMaintenanceService";
+export { getMaintenanceService } from "./getMaintenanceService";
+export type { GetNotificationTriggersResponse } from "./getNotificationTriggersService";
+export { getNotificationTriggersService } from "./getNotificationTriggersService";
+export type { GetPOResponse } from "./getPOService";
+export { getPOService } from "./getPOService";
+export type { GetReportHistoryResponse } from "./getReportHistoryService";
+export { getReportHistoryService } from "./getReportHistoryService";
+export type { GetReportPreviewResponse } from "./getReportPreviewService";
+export { getReportPreviewService } from "./getReportPreviewService";
+export type { GetReportTemplatesResponse } from "./getReportTemplatesService";
+export { getReportTemplatesService } from "./getReportTemplatesService";
+export type { GetReservationsResponse } from "./getReservationsService";
+export { getReservationsService } from "./getReservationsService";
+export type { GetRfidReadersResponse } from "./getRfidReadersService";
+export { getRfidReadersService } from "./getRfidReadersService";
+export type { GetRFIDTagsResponse } from "./getRFIDTagsService";
+export { getRFIDTagsService } from "./getRFIDTagsService";
+export type { GetRolesResponse } from "./getRolesService";
+export { getRolesService } from "./getRolesService";
+export type { GetRTLSFloorPlanResponse } from "./getRTLSFloorPlanService";
+export { getRTLSFloorPlanService } from "./getRTLSFloorPlanService";
+export type { GetRTLSPositionsResponse } from "./getRTLSPositionsService";
+export { getRTLSPositionsService } from "./getRTLSPositionsService";
+export type { GetSavedQueriesResponse } from "./getSavedQueriesService";
+export { getSavedQueriesService } from "./getSavedQueriesService";
+export type { GetScanInHistoryResponse } from "./getScanInHistoryService";
+export { getScanInHistoryService } from "./getScanInHistoryService";
+export type { GetSecurityAlertsResponse } from "./getSecurityAlertsService";
+export { getSecurityAlertsService } from "./getSecurityAlertsService";
+export type { GetTransferHistoryResponse } from "./getTransferHistoryService";
+export { getTransferHistoryService } from "./getTransferHistoryService";
+export type { GetTransfersResponse } from "./getTransfersService";
+export { getTransfersService } from "./getTransfersService";
+export type { HaltSecurityAlertResponse } from "./haltSecurityAlertService";
+export { haltSecurityAlertService } from "./haltSecurityAlertService";
+export type { ImportFAMasterDataResponse } from "./importFAMasterDataService";
+export { importFAMasterDataService } from "./importFAMasterDataService";
+export type { ImportPOResponse } from "./importPOService";
+export { importPOService } from "./importPOService";
+export type { InviteFAUserResponse } from "./inviteFAUserService";
+export { inviteFAUserService } from "./inviteFAUserService";
+export type { OrderRFIDTagsResponse } from "./orderRFIDTagsService";
+export { orderRFIDTagsService } from "./orderRFIDTagsService";
+export type { PostAuditAdjustmentResponse } from "./postAuditAdjustmentService";
+export { postAuditAdjustmentService } from "./postAuditAdjustmentService";
+export type { PostDisposalJournalEntryResponse } from "./postDisposalJournalEntryService";
+export { postDisposalJournalEntryService } from "./postDisposalJournalEntryService";
+export type { PrintRFIDTagsResponse } from "./printRFIDTagsService";
+export { printRFIDTagsService } from "./printRFIDTagsService";
+export type { RejectDisposalResponse } from "./rejectDisposalService";
+export { rejectDisposalService } from "./rejectDisposalService";
+export type { ResolveSecurityAlertResponse } from "./resolveSecurityAlertService";
+export { resolveSecurityAlertService } from "./resolveSecurityAlertService";
+export type { ResumeAuditSweepResponse } from "./resumeAuditSweepService";
+export { resumeAuditSweepService } from "./resumeAuditSweepService";
+export type { ReturnCheckOutResponse } from "./returnCheckOutService";
+export { returnCheckOutService } from "./returnCheckOutService";
+export type { ReviseDisposalResponse } from "./reviseDisposalService";
+export { reviseDisposalService } from "./reviseDisposalService";
+export type { SubmitPreUseCheckResponse } from "./submitPreUseCheckService";
+export { submitPreUseCheckService } from "./submitPreUseCheckService";
+export type { UpdateAssetResponse } from "./updateAssetService";
+export { updateAssetService } from "./updateAssetService";
+export type { UpdateFAMasterDataResponse } from "./updateFAMasterDataService";
+export { updateFAMasterDataService } from "./updateFAMasterDataService";
+export type { UpdateFASettingsResponse } from "./updateFASettingsService";
+export { updateFASettingsService } from "./updateFASettingsService";
+export type { UpdateNotificationTriggersResponse } from "./updateNotificationTriggersService";
+export { updateNotificationTriggersService } from "./updateNotificationTriggersService";
+export type { UpdatePmRuleResponse } from "./updatePmRuleService";
+export { updatePmRuleService } from "./updatePmRuleService";
+export type { UpdateRoleResponse } from "./updateRoleService";
+export { updateRoleService } from "./updateRoleService";
+export type { UpdateWorkOrderStatusResponse } from "./updateWorkOrderStatusService";
+export { updateWorkOrderStatusService } from "./updateWorkOrderStatusService";

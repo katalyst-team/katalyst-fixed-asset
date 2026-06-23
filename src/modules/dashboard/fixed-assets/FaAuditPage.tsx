@@ -9,8 +9,15 @@ import {
   Shield,
   User,
 } from "lucide-react";
-import { toast } from "sonner";
 
+import { useUser } from "@/context/user-context";
+import {
+  useAuditSignOffMutation,
+  useGetAuditReportMutation,
+  useGetAuditZonesQuery,
+  usePostAuditAdjustmentMutation,
+  useResumeAuditSweepMutation,
+} from "@/hooks/api/fixed-assets";
 import {
   FaKpiStrip,
   FaMeter,
@@ -18,20 +25,32 @@ import {
   FaStat,
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
-import { AUDIT_ZONES } from "@/services/fixed-assets/mock";
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
+import type {
+  AuditSignOffRequest,
+  FaAuditSignOffRole,
+  FaJournalEntryLine,
+  PostAuditAdjustmentRequest,
+} from "@/types/fixed-assets";
 
 interface SignoffItem {
   done: boolean;
   label: string;
+  role: FaAuditSignOffRole;
   who: string;
 }
 
+const ACTIVE_ZONE_ID = "BDG-WH-Bay-2";
+const AUDIT_ID = "Q4-2025";
+
 const SIGNOFFS: SignoffItem[] = [
-  { done: true, label: "Stock count lead", who: "Rahmat S." },
-  { done: true, label: "Department head", who: "Dewi A." },
-  { done: true, label: "Internal audit", who: "Surya D." },
-  { done: true, label: "Finance manager", who: "Ratna I." },
-  { done: false, label: "External accountant", who: "KAP Tanjung" },
+  { done: true, label: "Stock count lead", role: "stock_count_lead", who: "Rahmat S." },
+  { done: true, label: "Department head", role: "dept_head", who: "Dewi A." },
+  { done: true, label: "Internal audit", role: "internal_audit", who: "Surya D." },
+  { done: true, label: "Finance manager", role: "finance_manager", who: "Ratna I." },
+  { done: false, label: "External accountant", role: "external_accountant", who: "KAP Tanjung" },
 ];
 
 const JOURNAL_LINES = [
@@ -42,23 +61,90 @@ const JOURNAL_LINES = [
 ];
 
 export function FaAuditPage() {
+  const { tokenPayload } = useUser();
+  const { canManage } = useFaPermission();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { data: resp, isError, isLoading } = useGetAuditZonesQuery({ organizationId });
+  const { mutateAsync: signOff } = useAuditSignOffMutation({ organizationId });
+  const { mutateAsync: postAdjustment } = usePostAuditAdjustmentMutation({
+    organizationId,
+  });
+  const { mutateAsync: resumeSweep } = useResumeAuditSweepMutation({
+    organizationId,
+  });
+  const { mutateAsync: getAuditReport } = useGetAuditReportMutation({
+    organizationId,
+  });
+  const zones = resp?.data?.zones ?? [];
+  const countedTotal = zones.reduce((sum, z) => sum + z.f, 0);
+  const varianceCount = zones.filter((z) => typeof z.v === "number" && z.v !== 0).length;
+  const nbvImpact = zones.reduce((sum, z) => sum + (typeof z.nbv === "number" ? z.nbv : 0), 0);
+  const zonesRemaining = zones.filter((z) => z.tone !== "success").length;
+  const signoffDone = SIGNOFFS.filter((s) => s.done).length;
+
+  const handlePostToGl = async () => {
+    const lines: FaJournalEntryLine[] = JOURNAL_LINES.map((l) => {
+      const amount = Math.abs(parseInt(l.amt.replace(/\./g, ""), 10) || 0);
+      return {
+        account: l.acc,
+        credit: l.dr ? 0 : amount,
+        debit: l.dr ? amount : 0,
+        description: "Audit variance adjustment",
+      };
+    });
+    const data: PostAuditAdjustmentRequest = {
+      lines,
+      zone_id: ACTIVE_ZONE_ID,
+    };
+    await postAdjustment({ auditId: AUDIT_ID, data });
+  };
+
+  const handleResumeSweep = async () => {
+    await resumeSweep({ auditId: AUDIT_ID, zone_id: ACTIVE_ZONE_ID });
+  };
+
+  const handleAuditReport = async () => {
+    const reportResp = await getAuditReport({ auditId: AUDIT_ID });
+    if (reportResp?.data?.download_url) {
+      safeOpenUrl(reportResp.data.download_url);
+    }
+  };
+
+  const handleSignOff = async (role: FaAuditSignOffRole) => {
+    const data: AuditSignOffRequest = {
+      role,
+      signature:
+        [tokenPayload?.first_name, tokenPayload?.last_name]
+          .filter(Boolean)
+          .join(" ") || tokenPayload?.email || "",
+      user_id: tokenPayload?.account_id ?? "",
+    };
+    await signOff({ auditId: AUDIT_ID, data });
+  };
+
   return (
     <div>
       <FaShellHead
         actions={
           <>
-            <button className="ks-btn" type="button">
+            <button
+              className="ks-btn"
+              type="button"
+              onClick={handleAuditReport}
+            >
               <FileText size={14} />
               Audit report PDF
             </button>
-            <button
-              className="ks-btn ks-btn-primary"
-              type="button"
-              onClick={() => toast.info("Resuming zone sweep · BDG-WH Bay 2")}
-            >
-              <PlayCircle size={14} />
-              Continue sweep
-            </button>
+            {canManage && (
+              <button
+                className="ks-btn ks-btn-primary"
+                type="button"
+                onClick={handleResumeSweep}
+              >
+                <PlayCircle size={14} />
+                Continue sweep
+              </button>
+            )}
           </>
         }
         title="Stock Audit · Q4 2025"
@@ -134,20 +220,23 @@ export function FaAuditPage() {
       </div>
 
       <FaKpiStrip>
-        <FaStat label="Counted" sub="physical units" tone="brand" value="9,684" />
-        <FaStat label="Variances found" tone="warn" value="14" />
+        <FaStat label="Counted" sub="physical units" tone="brand" value={String(countedTotal)} />
+        <FaStat label="Variances found" tone="warn" value={String(varianceCount)} />
         <FaStat
           label="Impact NBV"
           sub="net book value"
           tone="danger"
-          value={
-            <span style={{ color: "hsl(var(--destructive))" }}>-Rp 14.2 jt</span>
-          }
+          value={nbvImpact !== 0 ? formatIDRShort(nbvImpact) : "—"}
         />
-        <FaStat label="Zones remaining" tone="info" value="6" />
-        <FaStat label="Sign-off" sub="4 of 6 done" tone="success" value="4/6" />
+        <FaStat label="Zones remaining" tone="info" value={String(zonesRemaining)} />
+        <FaStat label="Sign-off" sub={`${signoffDone} of ${SIGNOFFS.length} done`} tone="success" value={`${signoffDone}/${SIGNOFFS.length}`} />
       </FaKpiStrip>
 
+      <FaQueryState
+        isEmpty={zones.length === 0}
+        isError={isError}
+        isLoading={isLoading}
+      >
       <div className="ks-grid-2">
         <div className="ks-card">
           <div className="ks-card-head">
@@ -186,7 +275,7 @@ export function FaAuditPage() {
               </tr>
             </thead>
             <tbody>
-              {AUDIT_ZONES.map((z) => (
+              {zones.map((z) => (
                 <tr key={z.z}>
                   <td className="p-3 border-t border-border">{z.z}</td>
                   <td className="p-3 border-t border-border">{z.s}</td>
@@ -306,14 +395,16 @@ export function FaAuditPage() {
                   </span>
                 </div>
               </div>
-              <button
-                className="ks-btn ks-btn-primary"
-                style={{ marginTop: 12, width: "100%" }}
-                type="button"
-                onClick={() => toast.success("Journal entry JE-2410-018 posted to GL")}
-              >
-                Post to GL
-              </button>
+              {canManage && (
+                <button
+                  className="ks-btn ks-btn-primary"
+                  style={{ marginTop: 12, width: "100%" }}
+                  type="button"
+                  onClick={handlePostToGl}
+                >
+                  Post to GL
+                </button>
+              )}
             </div>
           </div>
 
@@ -356,8 +447,16 @@ export function FaAuditPage() {
                   </div>
                   {s.done ? (
                     <span className="ks-badge success">Signed</span>
+                  ) : canManage ? (
+                    <button
+                      className="ks-btn ks-btn-primary ks-btn-sm"
+                      type="button"
+                      onClick={() => handleSignOff(s.role)}
+                    >
+                      Sign off
+                    </button>
                   ) : (
-                    <span className="ks-badge warn">Awaiting</span>
+                    <span className="ks-badge outline">Pending</span>
                   )}
                 </div>
               ))}
@@ -365,6 +464,7 @@ export function FaAuditPage() {
           </div>
         </div>
       </div>
+      </FaQueryState>
     </div>
   );
 }

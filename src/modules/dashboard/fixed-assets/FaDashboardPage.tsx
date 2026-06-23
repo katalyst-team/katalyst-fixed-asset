@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Download,
   FileText,
@@ -10,10 +11,14 @@ import {
   Wrench,
   Zap,
 } from "lucide-react";
-import { toast } from "sonner";
+import { useRouter } from "next/router";
 
 import { useUser } from "@/context/user-context";
-import useGetFADashboardQuery from "@/hooks/api/fixed-assets";
+import {
+  useExportDataMutation,
+  useGetAssetRegisterQuery,
+  useGetFADashboardQuery,
+} from "@/hooks/api/fixed-assets";
 import {
   avatarColor,
   catToLucide,
@@ -25,15 +30,8 @@ import {
   formatIDRShort,
   initials,
 } from "@/modules/dashboard/fixed-assets";
-import {
-  ASSETS,
-  CATEGORY_STATS,
-  FINANCIAL_CATEGORIES,
-  MAINTENANCE_UPCOMING,
-  RECENT_ACTIVITY,
-  RFID_READS,
-  SITES,
-} from "@/services/fixed-assets/mock";
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -48,12 +46,12 @@ const HEATMAP: number[][] = [
 ];
 
 const QUICK_ACTIONS = [
-  { icon: Download, label: "Scan-In" },
-  { icon: Upload, label: "Scan-Out" },
-  { icon: Truck, label: "Transfer" },
-  { icon: FileText, label: "Audit" },
-  { icon: Wrench, label: "Work Order" },
-  { icon: Plus, label: "Register" },
+  { href: "/dashboard/fixed-assets/scan-in/", icon: Download, label: "Scan-In" },
+  { href: "/dashboard/fixed-assets/scan-out/", icon: Upload, label: "Scan-Out" },
+  { href: "/dashboard/fixed-assets/transfer/", icon: Truck, label: "Transfer" },
+  { href: "/dashboard/fixed-assets/audit/", icon: FileText, label: "Audit" },
+  { href: "/dashboard/fixed-assets/maintenance/", icon: Wrench, label: "Work Order" },
+  { href: "/dashboard/fixed-assets/register/", icon: Plus, label: "Register" },
 ];
 
 function heatOpacity(v: number): string {
@@ -67,17 +65,32 @@ function rowBorder(isLast: boolean): string | undefined {
 export function FaDashboardPage() {
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
-  const { data: resp } = useGetFADashboardQuery(organizationId);
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { data: resp, isError, isLoading } = useGetFADashboardQuery({ organizationId });
+  const { data: assetResp } = useGetAssetRegisterQuery({ organizationId });
+  const { isPending: isExporting, mutateAsync: exportData } =
+    useExportDataMutation({ organizationId });
+
+  const handleExport = async () => {
+    const exportResp = await exportData({ format: "csv", source: "dashboard" });
+    if (exportResp?.data?.download_url) {
+      safeOpenUrl(exportResp.data.download_url);
+    }
+  };
 
   const d = resp?.data;
-  const activity = d?.activity ?? RECENT_ACTIVITY;
-  const categoryStats = d?.categoryStats ?? CATEGORY_STATS;
-  const financialCategories = d?.financialCategories ?? FINANCIAL_CATEGORIES;
-  const maintenanceUpcoming = d?.maintenanceUpcoming ?? MAINTENANCE_UPCOMING;
-  const rfidReads = d?.rfidReads ?? RFID_READS;
-  const sites = d?.sites ?? SITES;
+  const activity = d?.activity ?? [];
+  const categoryStats = d?.categoryStats ?? [];
+  const financialCategories = d?.financialCategories ?? [];
+  const maintenanceUpcoming = d?.maintenanceUpcoming ?? [];
+  const rfidReads = d?.rfidReads ?? [];
+  const sites = d?.sites ?? [];
 
-  const topValue = ASSETS
+  const allAssets = assetResp?.data?.assets ?? [];
+  const totalAssets = categoryStats.reduce((sum, cs) => sum + cs.v, 0);
+  const capitalValue = financialCategories.reduce((sum, fc) => sum + fc.nbv, 0);
+  const topValue = allAssets
     .filter((a) => a.val > 100_000_000)
     .sort((a, b) => b.val - a.val)
     .slice(0, 6);
@@ -90,15 +103,16 @@ export function FaDashboardPage() {
             <button
               className="ks-btn ks-btn-sm"
               type="button"
-              onClick={() => toast("Data refreshed · 12,420 assets")}
+              onClick={() => queryClient.invalidateQueries({ queryKey: ["fa"] })}
             >
               <RefreshCw size={14} />
               Refresh
             </button>
             <button
               className="ks-btn ks-btn-sm"
+              disabled={isExporting}
               type="button"
-              onClick={() => toast("Exporting dashboard · CSV")}
+              onClick={handleExport}
             >
               <Download size={14} />
               Export
@@ -106,7 +120,7 @@ export function FaDashboardPage() {
             <button
               className="ks-btn ks-btn-primary ks-btn-sm"
               type="button"
-              onClick={() => toast("Register new asset · opening form")}
+              onClick={() => router.push("/dashboard/fixed-assets/register/")}
             >
               <Plus size={14} />
               Add Assets
@@ -118,13 +132,18 @@ export function FaDashboardPage() {
       />
 
       <FaKpiStrip>
-        <FaStat label="Total assets" sub="4 net new today" tone="brand" value="12,420" />
-        <FaStat label="Capital value" sub="PSAK 16 net book" tone="info" value={formatIDRShort(14_800_000_000)} />
-        <FaStat label="Utilization" sub="+3.2% vs last wk" tone="success" value="72%" />
-        <FaStat label="Active alerts" sub="3 critical" tone="danger" value="28" />
-        <FaStat label="Audit progress" sub="Zone B3 done" tone="warn" value="78%" />
+        <FaStat label="Total assets" tone="brand" value={String(totalAssets)} />
+        <FaStat label="Capital value" sub="PSAK 16 net book" tone="info" value={formatIDRShort(capitalValue)} />
+        <FaStat label="Utilization" tone="success" value="—" />
+        <FaStat label="Active alerts" tone="danger" value="—" />
+        <FaStat label="Audit progress" tone="warn" value="—" />
       </FaKpiStrip>
 
+      <FaQueryState
+        isEmpty={!d}
+        isError={isError}
+        isLoading={isLoading}
+      >
       <div className="ks-grid-2" style={{ marginBottom: 16 }}>
         <div className="ks-card">
           <div className="ks-card-head">
@@ -143,7 +162,7 @@ export function FaDashboardPage() {
                     className="ks-btn"
                     style={{ justifyContent: "flex-start" }}
                     type="button"
-                    onClick={() => toast(`${qa.label} · opening…`)}
+                    onClick={() => router.push(qa.href)}
                   >
                     <Icon size={14} />
                     {qa.label}
@@ -415,6 +434,7 @@ export function FaDashboardPage() {
           </div>
         </div>
       </div>
+      </FaQueryState>
     </div>
   );
 }

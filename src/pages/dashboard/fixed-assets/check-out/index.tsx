@@ -4,6 +4,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import DashboardLayout from "@/components/layouts/dashboard-layout/DashboardLayout";
 import SEO from "@/components/SEO/SEO";
 import { FaCheckOutPage } from "@/modules/dashboard/fixed-assets/FaCheckOutPage";
+import { FaLayout } from "@/modules/dashboard/fixed-assets/FaLayout";
 import { createPageSEO } from "@/utils/seo";
 
 export default function FaCheckOutRoute() {
@@ -18,7 +19,9 @@ export default function FaCheckOutRoute() {
     <>
       <SEO {...seo} />
       <DashboardLayout>
-        <FaCheckOutPage />
+        <FaLayout>
+          <FaCheckOutPage />
+        </FaLayout>
       </DashboardLayout>
     </>
   );

@@ -23,7 +23,7 @@ import {
   Zap,
 } from "lucide-react";
 
-import { CAT_TONE } from "@/services/fixed-assets/mock";
+import { CAT_TONE } from "@/modules/dashboard/fixed-assets/constants";
 
 export const formatIDR = (n: number): string =>
   "Rp " + Math.round(n).toLocaleString("id-ID");
