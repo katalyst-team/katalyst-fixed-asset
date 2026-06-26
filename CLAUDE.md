@@ -1,6 +1,8 @@
-# Agent Guidelines
+# CLAUDE.md
 
-> `CLAUDE.md` and `GEMINI.md` are **symlinks to this file** — editing `AGENTS.md` updates all three. (Note: a separate user-level `~/.claude/CLAUDE.md` also loads; where it conflicts with this repo file, this file is authoritative for this codebase.)
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+> `AGENTS.md` and `GEMINI.md` are **synced copies of this file** (byte-identical duplicates, **not symlinks** — verified). When you edit `CLAUDE.md`, **manually copy the change to `AGENTS.md` and `GEMINI.md`** so they don't drift. (A separate user-level `~/.claude/CLAUDE.md` also loads; where it conflicts with this repo file, this file is authoritative for this codebase.)
 
 ## Commands
 
@@ -131,6 +133,26 @@ NEXT_PUBLIC_MIXPANEL_TOKEN=<token>
 NEXT_PUBLIC_API_URL_DESKTOP_READER=<url>             # optional, desktop reader services
 NEXT_PUBLIC_VERCEL_ENV                               # auto-set by Vercel; read to detect deploy context
 ```
+
+## Fixed Assets Module (Primary Feature)
+
+This repo's primary feature is `src/modules/dashboard/fixed-assets/`. All work in this codebase likely involves this module.
+
+**Layout wrapper**: Every FA page wraps its content in `<FaLayout>` (from `FaLayout.tsx`), which provides `FaModalProvider` + `FaErrorBoundary`. Never render an FA page without this wrapper.
+
+**Modal system**: FA uses a single centralized modal context (`useFaModal` from `modals/FaModalContext.tsx`). Open modals with `openModal(type, payload)` where `type` is a `FaModalType` value (`"disposal"`, `"transfer"`, `"editAsset"`, etc.). `FaModalRoot` reads `type` and renders the correct modal. Do not use ad-hoc `useState` for modal visibility inside FA pages.
+
+**Permission hook**: `useFaPermission` (`useFaPermission.ts`) exposes `isAdmin`, `isManager`, `canDelete`, `canManage`, `canManageSettings`, `canManageUsers`, `hasPermission(name)`, `hasAnyPermission(names[])`. Admin automatically bypasses all permission checks.
+
+**Query state helpers**: Use `<FaQueryState>` (loading/error/empty gate) and `<FaQueryError>` (error-only with retry) from `FaQueryState.tsx`. Do not inline isLoading/isError branching in FA page JSX.
+
+**Shell components** (`FaShell.tsx`): `FaShellHead` (page title + actions row), `FaStat` (KPI spark card), `FaKpiStrip` (horizontal KPI row), `FaMeter` (mini progress bar), `FaProtoIcon` (icon by name string via `protoIcon()` from `helpers.ts`). Use these for consistent FA page UI.
+
+**Constants** (`constants.ts`): `CAT_ICON` / `CAT_TONE` / `CAT_LABEL` map asset category slugs (`it`, `furn`, `veh`, `lab`, `med`, `mach`, `tool`). `STATUS_TONE` / `STATUS_LABEL` map asset status slugs (`deployed`, `in-service`, `checked-out`, `maint`, `idle`, `retired`).
+
+**Types**: All FA types live in `src/types/fixed-assets.ts` — `FaAsset`, `AssetCategory`, `AssetStatus`, `FaSite`, `FaCategoryStat`, etc. Always import from there.
+
+**Scale**: 80+ service files in `src/services/fixed-assets/`, matching React Query hooks in `src/hooks/api/fixed-assets/`, and 20 sub-routes under `src/pages/dashboard/fixed-assets/`. All follow the repo-wide naming conventions.
 
 ## Key Gotchas
 
