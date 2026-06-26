@@ -18,17 +18,17 @@ export const KEY_USE_GET_FA_RFID_TAGS = (
 
 const useGetRFIDTagsQuery = ({
   asset_id,
-  cursor,
   enabled = true,
   limit,
   organizationId,
+  page,
   q,
   status,
 }: UseGetRFIDTagsQueryParams) => {
   const filters: FaRfidTagFilterOptions = {
     asset_id,
-    cursor,
     limit,
+    page,
     q,
     status,
   };

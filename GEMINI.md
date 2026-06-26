@@ -1,6 +1,6 @@
 # Agent Guidelines
 
-> `CLAUDE.md` and `GEMINI.md` are **synced copies of this file** (byte-identical duplicates, **not symlinks** — verified). When you edit `AGENTS.md`, **manually copy the change to `CLAUDE.md` and `GEMINI.md`** so they don't drift; they are checked in as separate files. (A separate user-level `~/.claude/CLAUDE.md` also loads; where it conflicts with this repo file, this file is authoritative for this codebase.)
+> `CLAUDE.md` and `AGENTS.md` are **synced copies of this file** (**not symlinks** — checked in as separate files). Their bodies are identical; **only the title + this sync-note header differ** (each references its own siblings). When you edit `GEMINI.md`, **manually copy the change to `CLAUDE.md` and `AGENTS.md`** so they don't drift. (A separate user-level `~/.claude/CLAUDE.md` also loads; where it conflicts with this repo file, this file is authoritative for this codebase.)
 
 ## Commands
 
@@ -9,7 +9,7 @@
 - **Lint**: `bun run lint` — **always run after changes**
 - **Typecheck**: `bun tsc --noEmit`
 
-**Always use `bun`** — never npm/yarn/pnpm. Lockfile is `bun.lockb`. **No tests are configured** (no test runner, no test files) — verify with `lint` + `tsc --noEmit`.
+**Always use `bun`** — never npm/yarn/pnpm. Lockfile is `bun.lockb`. A stale `package-lock.json` is also checked in — **ignore it; do not run npm against it.** **No tests are configured** (no test runner, no test files) — verify with `lint` + `tsc --noEmit`.
 
 **No build/lint/typecheck in CI.** The only GitHub workflows are Claude code review (`pull_request`), Claude on `@claude` mentions, and a malware scanner. Quality gates are **local-only** — always run lint + typecheck yourself before considering work done.
 

@@ -10,8 +10,8 @@ export interface StockMovementType {
 
 export interface StockMovementTypesFilters {
   direction?: StockMovementDirection;
-  cursor?: string;
   limit?: number;
+  page?: number;
 }
 
 export type GetStockMovementTypesResponse = ApiResponse<{
@@ -25,7 +25,7 @@ export const getStockMovementTypesService = async (
   const params = new URLSearchParams();
 
   if (filters?.direction) params.append("direction", filters.direction);
-  if (filters?.cursor) params.append("cursor", filters.cursor);
+  if (filters?.page) params.append("page", filters.page.toString());
   if (filters?.limit) params.append("limit", filters.limit.toString());
 
   const url = `/v1/organizations/${organizationId}/stock-movement-types`;

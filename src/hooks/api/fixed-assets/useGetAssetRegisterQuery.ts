@@ -18,22 +18,22 @@ export const KEY_USE_GET_FA_ASSET_REGISTER = (
 
 const useGetAssetRegisterQuery = ({
   cat,
-  cursor,
   custodian,
   enabled = true,
   limit,
   loc,
   organizationId,
+  page,
   q,
   status,
   store_id,
 }: UseGetAssetRegisterQueryParams) => {
   const filters: FaAssetFilterOptions = {
     cat,
-    cursor,
     custodian,
     limit,
     loc,
+    page,
     q,
     status,
     store_id,

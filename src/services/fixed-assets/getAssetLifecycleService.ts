@@ -8,20 +8,20 @@ export type GetAssetLifecycleResponse = ApiResponse<{
 }>;
 
 interface GetAssetLifecycleParams {
-  cursor?: string;
   limit?: number;
   organizationId: string;
+  page?: number;
   stage?: string;
 }
 
 export const getAssetLifecycleService = async ({
-  cursor,
   limit,
   organizationId,
+  page,
   stage,
 }: GetAssetLifecycleParams): Promise<GetAssetLifecycleResponse> => {
   const params = new URLSearchParams();
-  if (cursor) params.set("cursor", cursor);
+  if (page) params.set("page", String(page));
   if (limit) params.set("limit", String(limit));
   if (stage) params.set("stage", stage);
   const qs = params.toString() ? `?${params.toString()}` : "";

@@ -463,7 +463,7 @@ export interface FaSettings {
 
 export interface FaAssetFilterOptions {
   cat?: AssetCategory;
-  cursor?: string;
+  page?: number;
   custodian?: string;
   limit?: number;
   loc?: string;
@@ -474,45 +474,45 @@ export interface FaAssetFilterOptions {
 
 export interface FaRfidTagFilterOptions {
   asset_id?: string;
-  cursor?: string;
+  page?: number;
   limit?: number;
   q?: string;
   status?: "active" | "inactive" | "lost";
 }
 
 export interface FaDisposalFilterOptions {
-  cursor?: string;
+  page?: number;
   limit?: number;
   status?: "pending" | "approved" | "rejected" | "revision" | "completed";
 }
 
 export interface FaCheckOutFilterOptions {
-  cursor?: string;
+  page?: number;
   limit?: number;
   status?: "active" | "returned" | "overdue";
 }
 
 export interface FaTransferFilterOptions {
-  cursor?: string;
+  page?: number;
   limit?: number;
   status?: "dispatched" | "in-transit" | "received";
 }
 
 export interface FaPOFilterOptions {
-  cursor?: string;
+  page?: number;
   limit?: number;
   status?: "pending" | "partial" | "received";
 }
 
 export interface FaSecurityAlertFilterOptions {
-  cursor?: string;
+  page?: number;
   limit?: number;
   severity?: "critical" | "high" | "medium" | "low";
   status?: "active" | "investigating" | "resolved";
 }
 
 export interface FaUserFilterOptions {
-  cursor?: string;
+  page?: number;
   limit?: number;
   q?: string;
   role?: "Admin" | "Manager" | "Auditor" | "Operator" | "Viewer";
@@ -520,7 +520,7 @@ export interface FaUserFilterOptions {
 }
 
 export interface FaUserAuditLogFilterOptions {
-  cursor?: string;
+  page?: number;
   date_from?: string;
   date_to?: string;
   limit?: number;

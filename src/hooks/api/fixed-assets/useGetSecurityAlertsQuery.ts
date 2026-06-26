@@ -18,16 +18,16 @@ export const KEY_USE_GET_FA_SECURITY_ALERTS = (
 ) => ["faSecurityAlerts", organizationId, JSON.stringify(filters ?? {})];
 
 const useGetSecurityAlertsQuery = ({
-  cursor,
   enabled = true,
   limit,
   organizationId,
+  page,
   severity,
   status,
 }: UseGetSecurityAlertsQueryParams) => {
   const filters: FaSecurityAlertFilterOptions = {
-    cursor,
     limit,
+    page,
     severity,
     status,
   };

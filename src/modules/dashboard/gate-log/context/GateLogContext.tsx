@@ -46,18 +46,17 @@ export const GateLogProvider: React.FC<{
   const { tokenPayload } = useUser();
 
   const {
-    currentCursor,
+    currentPage,
     hasNextPage,
     hasPrevPage,
     filters,
     totalItems,
     localItemsPerPage,
     gateLogData,
-    setNextCursor,
-    setPrevCursor,
     setHasNextPage,
     setHasPrevPage,
     setTotalItems,
+    setTotalPages,
     setLocalItemsPerPage,
     setGateLogData,
     setFilters,
@@ -66,7 +65,7 @@ export const GateLogProvider: React.FC<{
     resetPagination,
   } = useGateLogStore(
     useShallow((state) => ({
-      currentCursor: state.currentCursor,
+      currentPage: state.currentPage,
       filters: state.filters,
       gateLogData: state.gateLogData,
       goToNextPage: state.goToNextPage,
@@ -80,9 +79,8 @@ export const GateLogProvider: React.FC<{
       setHasNextPage: state.setHasNextPage,
       setHasPrevPage: state.setHasPrevPage,
       setLocalItemsPerPage: state.setLocalItemsPerPage,
-      setNextCursor: state.setNextCursor,
-      setPrevCursor: state.setPrevCursor,
       setTotalItems: state.setTotalItems,
+      setTotalPages: state.setTotalPages,
       totalItems: state.totalItems,
     }))
   );
@@ -96,8 +94,8 @@ export const GateLogProvider: React.FC<{
 
   const queryFilters = {
     ...filters,
-    cursor: currentCursor,
     limit: localItemsPerPage,
+    page: currentPage,
   };
 
   const { data, isLoading, isSuccess, isFetching } = useGetGateLogListQuery({
@@ -109,26 +107,21 @@ export const GateLogProvider: React.FC<{
   useEffect(() => {
     if (isSuccess && data) {
       setGateLogData(data.data?.gate_log || []);
-      setNextCursor(data.pagination?.next_cursor || null);
-      setPrevCursor(data.pagination?.prev_cursor || null);
-      setHasNextPage(!!data.pagination?.next_cursor);
-      setHasPrevPage(!!data.pagination?.prev_cursor);
+      setHasNextPage(currentPage < (data.pagination?.total_pages ?? 1));
+      setHasPrevPage(currentPage > 1);
       setTotalItems(data.pagination?.count || 0);
+      setTotalPages(data.pagination?.total_pages ?? 1);
     }
   }, [
+    currentPage,
     data,
     isSuccess,
     setGateLogData,
-    setNextCursor,
-    setPrevCursor,
     setHasNextPage,
     setHasPrevPage,
     setTotalItems,
+    setTotalPages,
   ]);
-
-  const handleGoToPrevPage = useCallback(() => {
-    goToPrevPage(data?.pagination?.prev_cursor);
-  }, [data?.pagination?.prev_cursor, goToPrevPage]);
 
   const handleSetFilters = useCallback(
     (newFilters: GateLogFilterOptions) => {
@@ -151,7 +144,7 @@ export const GateLogProvider: React.FC<{
     filters,
     gateLogList: gateLogData,
     goToNextPage,
-    goToPrevPage: handleGoToPrevPage,
+    goToPrevPage,
     hasNextPage,
     hasPrevPage,
     itemsPerPage: localItemsPerPage,

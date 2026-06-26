@@ -28,17 +28,16 @@ const StockMovementTypes: React.FC = () => {
 
   // Use Zustand store
   const {
-    currentCursor,
+    currentPage,
     hasNextPage,
     hasPrevPage,
     filters,
     localItemsPerPage,
     stockMovementTypesData,
-    setNextCursor,
-    setPrevCursor,
     setHasNextPage,
     setHasPrevPage,
     setTotalItems,
+    setTotalPages,
     setLocalItemsPerPage,
     setStockMovementTypesData,
     goToNextPage,
@@ -46,7 +45,7 @@ const StockMovementTypes: React.FC = () => {
     resetPagination,
   } = useStockMovementTypesStore(
     useShallow((state) => ({
-      currentCursor: state.currentCursor,
+      currentPage: state.currentPage,
       filters: state.filters,
       goToNextPage: state.goToNextPage,
       goToPrevPage: state.goToPrevPage,
@@ -57,10 +56,9 @@ const StockMovementTypes: React.FC = () => {
       setHasNextPage: state.setHasNextPage,
       setHasPrevPage: state.setHasPrevPage,
       setLocalItemsPerPage: state.setLocalItemsPerPage,
-      setNextCursor: state.setNextCursor,
-      setPrevCursor: state.setPrevCursor,
       setStockMovementTypesData: state.setStockMovementTypesData,
       setTotalItems: state.setTotalItems,
+      setTotalPages: state.setTotalPages,
       stockMovementTypesData: state.stockMovementTypesData,
     }))
   );
@@ -75,8 +73,8 @@ const StockMovementTypes: React.FC = () => {
 
   const queryFilters = {
     ...filters,
-    cursor: currentCursor,
     limit: localItemsPerPage,
+    page: currentPage,
   };
 
   const { data, isLoading, isSuccess, isFetching } =
@@ -89,26 +87,21 @@ const StockMovementTypes: React.FC = () => {
   useEffect(() => {
     if (isSuccess && data) {
       setStockMovementTypesData(data.data?.stock_movement_types || []);
-      setNextCursor(data.pagination?.next_cursor || null);
-      setPrevCursor(data.pagination?.prev_cursor || null);
-      setHasNextPage(!!data.pagination?.next_cursor);
-      setHasPrevPage(!!data.pagination?.prev_cursor);
+      setHasNextPage(currentPage < (data.pagination?.total_pages ?? 1));
+      setHasPrevPage(currentPage > 1);
       setTotalItems(data.pagination?.count || 0);
+      setTotalPages(data.pagination?.total_pages ?? 1);
     }
   }, [
+    currentPage,
     data,
     isSuccess,
-    setStockMovementTypesData,
-    setNextCursor,
-    setPrevCursor,
     setHasNextPage,
     setHasPrevPage,
+    setStockMovementTypesData,
     setTotalItems,
+    setTotalPages,
   ]);
-
-  const handleGoToPrevPage = useCallback(() => {
-    goToPrevPage(data?.pagination?.prev_cursor);
-  }, [data?.pagination?.prev_cursor, goToPrevPage]);
 
   const handleSetItemsPerPage = useCallback(
     (limit: number) => {
@@ -142,7 +135,7 @@ const StockMovementTypes: React.FC = () => {
       <StockMovementTypesHeader
         directionFilter={directionFilter}
         goToNextPage={goToNextPage}
-        goToPrevPage={handleGoToPrevPage}
+        goToPrevPage={goToPrevPage}
         hasNextPage={hasNextPage}
         hasPrevPage={hasPrevPage}
         itemsPerPage={localItemsPerPage}

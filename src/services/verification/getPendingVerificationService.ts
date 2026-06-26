@@ -5,27 +5,27 @@ import {
 } from "@/types/verification";
 
 interface GetPendingVerificationParams {
-  cursor?: string;
   entityType: VerificationEntityType;
   limit?: number;
   module?: string;
   organizationId: string;
+  page?: number;
   storeId: string;
 }
 
 export const getPendingVerificationService = async ({
-  cursor,
   entityType,
   limit = 20,
   module,
   organizationId,
+  page,
   storeId,
 }: GetPendingVerificationParams): Promise<
   ApiResponse<VerificationPendingResponse>
 > => {
   return fetcher({
     method: "GET",
-    params: { cursor, limit, module },
+    params: { limit, module, page },
     url: `/v1/organizations/${organizationId}/stores/${storeId}/verification/${entityType}/pending`,
   });
 };

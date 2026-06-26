@@ -9,14 +9,14 @@ interface GetDisposalsParams extends FaDisposalFilterOptions {
 }
 
 export const getDisposalsService = async ({
-  cursor,
   limit,
   organizationId,
+  page,
   status,
 }: GetDisposalsParams): Promise<GetDisposalsResponse> => {
   const params = new URLSearchParams();
   if (status) params.append("status", status);
-  if (cursor) params.append("cursor", cursor);
+  if (page) params.append("page", page.toString());
   if (limit) params.append("limit", limit.toString());
   const queryString = params.toString() ? `?${params.toString()}` : "";
 

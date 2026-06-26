@@ -17,15 +17,15 @@ export const KEY_USE_GET_FA_USERS = (
 ) => ["faUsers", organizationId, JSON.stringify(filters ?? {})];
 
 const useGetFAUsersQuery = ({
-  cursor,
   enabled = true,
   limit,
   organizationId,
+  page,
   q,
   role,
   status,
 }: UseGetFAUsersQueryParams) => {
-  const filters: FaUserFilterOptions = { cursor, limit, q, role, status };
+  const filters: FaUserFilterOptions = { limit, page, q, role, status };
 
   return useQuery<GetFAUsersResponse, Error>({
     enabled: Boolean(organizationId && enabled),

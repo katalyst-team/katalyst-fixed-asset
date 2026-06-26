@@ -10,11 +10,11 @@ interface GetAssetRegisterParams extends FaAssetFilterOptions {
 
 export const getAssetRegisterService = async ({
   cat,
-  cursor,
   custodian,
   limit,
   loc,
   organizationId,
+  page,
   q,
   status,
   store_id,
@@ -26,7 +26,7 @@ export const getAssetRegisterService = async ({
   if (loc) params.append("loc", loc);
   if (custodian) params.append("custodian", custodian);
   if (store_id) params.append("store_id", store_id);
-  if (cursor) params.append("cursor", cursor);
+  if (page) params.append("page", page.toString());
   if (limit) params.append("limit", limit.toString());
   const queryString = params.toString() ? `?${params.toString()}` : "";
 

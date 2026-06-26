@@ -19,8 +19,8 @@ export interface DeleteStockMovementResponse {
   };
   pagination: {
     count: number;
-    next_cursor: string;
-    prev_cursor: string;
+    page: number;
+    total_pages: number;
   };
 }
 

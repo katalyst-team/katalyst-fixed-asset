@@ -141,8 +141,8 @@ export interface GateLogDetailResponse extends ApiResponse {
 }
 
 export interface GateLogFilterOptions {
-  storeID?: string;
-  sectionID?: string;
   limit?: number;
-  cursor?: string;
+  page?: number;
+  sectionID?: string;
+  storeID?: string;
 }

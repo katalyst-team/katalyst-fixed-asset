@@ -44,13 +44,12 @@ export function FaCheckOutPage() {
   const { openModal } = useFaModal();
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
-  const [cursorStack, setCursorStack] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const PAGE_LIMIT = 20;
   const { data: resp, isError, isLoading } = useGetCheckOutsQuery({
-    cursor: cursorStack.length > 0 ? cursorStack[cursorStack.length - 1] : undefined,
     limit: PAGE_LIMIT,
     organizationId,
+    page,
   });
   const { mutateAsync: returnAsset } = useReturnCheckOutMutation({
     organizationId,
@@ -64,15 +63,12 @@ export function FaCheckOutPage() {
   const returnRate = checkOuts.length > 0 ? Math.round((returnedLoans / checkOuts.length) * 100) : null;
 
   const handleNext = () => {
-    const nextCursor = resp?.pagination?.next_cursor;
-    if (nextCursor) {
-      setCursorStack((prev) => [...prev, nextCursor]);
+    if (page < (resp?.pagination?.total_pages ?? 1)) {
       setPage((p) => p + 1);
     }
   };
 
   const handlePrev = () => {
-    setCursorStack((prev) => prev.slice(0, -1));
     setPage((p) => Math.max(1, p - 1));
   };
 
@@ -236,10 +232,11 @@ export function FaCheckOutPage() {
           <span>Showing {checkOuts.length} of {resp?.pagination?.count ?? 0}</span>
           <PaginationCursor
             currentPage={page}
-            hasNextPage={Boolean(resp?.pagination?.next_cursor)}
-            hasPrevPage={cursorStack.length > 0}
+            hasNextPage={page < (resp?.pagination?.total_pages ?? 1)}
+            hasPrevPage={page > 1}
             limit={PAGE_LIMIT}
             totalCount={resp?.pagination?.total_count ?? null}
+            totalPages={resp?.pagination?.total_pages}
             onNext={handleNext}
             onPrev={handlePrev}
           />

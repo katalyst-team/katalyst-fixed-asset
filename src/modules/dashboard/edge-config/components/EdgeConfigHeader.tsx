@@ -28,8 +28,9 @@ const EdgeConfigHeader = () => {
     goToPrevPage,
     itemLimit,
     setCurrentPage,
-    setFilters,
     setItemLimit,
+    setTotalPages,
+    totalPages,
   } = useEdgeConfigStore(
     useShallow((state) => ({
       currentPage: state.currentPage,
@@ -38,15 +39,20 @@ const EdgeConfigHeader = () => {
       goToPrevPage: state.goToPrevPage,
       itemLimit: state.itemLimit,
       setCurrentPage: state.setCurrentPage,
-      setFilters: state.setFilters,
       setItemLimit: state.setItemLimit,
+      setTotalPages: state.setTotalPages,
+      totalPages: state.totalPages,
     }))
   );
 
   const { data: edgeConfigData } = useGetEdgeConfigDataQuery({
-    filters: filters,
+    filters: { ...filters, limit: itemLimit, page: currentPage },
     organizationId: tokenPayload?.organization_id ?? "",
   });
+
+  if (edgeConfigData?.pagination?.total_pages !== undefined) {
+    setTotalPages(edgeConfigData.pagination.total_pages);
+  }
 
   return (
     <div className="flex flex-col mt-4 lg:flex-row w-full justify-between">
@@ -66,7 +72,6 @@ const EdgeConfigHeader = () => {
           onValueChange={(value) => {
             setItemLimit(Number(value));
             setCurrentPage(1);
-            setFilters((prev) => ({ ...prev, cursor: undefined }));
           }}
         >
           <SelectTrigger className="h-8 w-[80px]">
@@ -84,24 +89,13 @@ const EdgeConfigHeader = () => {
         </Select>
         <PaginationCursor
           currentPage={currentPage}
-          hasNextPage={Boolean(edgeConfigData?.pagination?.next_cursor)}
-          hasPrevPage={Boolean(edgeConfigData?.pagination?.prev_cursor)}
+          hasNextPage={currentPage < totalPages}
+          hasPrevPage={currentPage > 1}
           limit={itemLimit}
           totalCount={edgeConfigData?.pagination?.total_count ?? undefined}
-          onNext={() => {
-            goToNextPage();
-            setFilters((prev) => ({
-              ...prev,
-              cursor: edgeConfigData?.pagination?.next_cursor,
-            }));
-          }}
-          onPrev={() => {
-            goToPrevPage();
-            setFilters((prev) => ({
-              ...prev,
-              cursor: edgeConfigData?.pagination?.prev_cursor,
-            }));
-          }}
+          totalPages={totalPages}
+          onNext={goToNextPage}
+          onPrev={goToPrevPage}
         />
       </div>
     </div>

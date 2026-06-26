@@ -31,8 +31,8 @@ export interface ApiResponse<T = any> {
   };
   pagination: {
     count: number;
-    next_cursor: string;
-    prev_cursor: string;
+    page: number;
+    total_pages: number;
     total_count?: number | null;
   };
 }

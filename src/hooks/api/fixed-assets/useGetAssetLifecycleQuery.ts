@@ -6,10 +6,10 @@ import {
 } from "@/services/fixed-assets/getAssetLifecycleService";
 
 interface UseGetAssetLifecycleQueryParams {
-  cursor?: string;
   enabled?: boolean;
   limit?: number;
   organizationId: string;
+  page?: number;
   stage?: string;
 }
 
@@ -19,16 +19,16 @@ export const KEY_USE_GET_FA_LIFECYCLE = (
 ) => ["faLifecycle", organizationId, stage];
 
 const useGetAssetLifecycleQuery = ({
-  cursor,
   enabled = true,
   limit,
   organizationId,
+  page,
   stage,
 }: UseGetAssetLifecycleQueryParams) => {
   return useQuery<GetAssetLifecycleResponse, Error>({
     enabled: Boolean(organizationId && enabled),
     queryFn: () =>
-      getAssetLifecycleService({ cursor, limit, organizationId, stage }),
+      getAssetLifecycleService({ limit, organizationId, page, stage }),
     queryKey: KEY_USE_GET_FA_LIFECYCLE(organizationId, stage),
     staleTime: 60 * 1000,
   });

@@ -14,8 +14,8 @@ export const getGateLogListService = (
 
   if (filters?.storeID) params.append("storeID", filters.storeID);
   if (filters?.sectionID) params.append("sectionID", filters.sectionID);
+  if (filters?.page) params.append("page", filters.page.toString());
   if (filters?.limit) params.append("limit", filters.limit.toString());
-  if (filters?.cursor) params.append("cursor", filters.cursor);
 
   return fetcher({
     method: "GET",

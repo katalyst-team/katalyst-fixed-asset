@@ -33,8 +33,8 @@ export interface EdgeConfigItemType {
 }
 
 export interface EdgeConfigFilterOptions {
-  cursor?: string;
   limit?: number;
+  page?: number;
 }
 
 export interface EdgeConfigResponse {

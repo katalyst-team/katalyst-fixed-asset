@@ -11,36 +11,36 @@ export const KEY_USE_GET_PENDING_VERIFICATION = (
   organizationId: string,
   storeId: string,
   entityType: VerificationEntityType,
-  cursor?: string,
+  page?: number,
   module?: string,
-) => ["verification-pending", organizationId, storeId, entityType, cursor, module];
+) => ["verification-pending", organizationId, storeId, entityType, page, module];
 
 interface UseGetPendingVerificationQueryProps {
-  cursor?: string;
   enabled?: boolean;
   entityType: VerificationEntityType;
   module?: string;
   organizationId: string;
+  page?: number;
   storeId: string;
 }
 
 const useGetPendingVerificationQuery = ({
-  cursor,
   enabled = true,
   entityType,
   module,
   organizationId,
+  page,
   storeId,
 }: UseGetPendingVerificationQueryProps) => {
   return useQuery<ApiResponse<VerificationPendingResponse>>({
     enabled: !!organizationId && !!storeId && !!entityType && enabled,
     queryFn: () =>
-      getPendingVerificationService({ cursor, entityType, module, organizationId, storeId }),
+      getPendingVerificationService({ entityType, module, organizationId, page, storeId }),
     queryKey: KEY_USE_GET_PENDING_VERIFICATION(
       organizationId,
       storeId,
       entityType,
-      cursor,
+      page,
       module,
     ),
   });

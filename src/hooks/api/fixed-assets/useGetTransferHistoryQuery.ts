@@ -6,24 +6,24 @@ import {
 } from "@/services/fixed-assets/getTransferHistoryService";
 
 interface UseGetTransferHistoryQueryParams {
-  cursor?: string;
   enabled?: boolean;
   limit?: number;
   organizationId: string;
+  page?: number;
 }
 
 export const KEY_USE_GET_FA_TRANSFER_HISTORY = (
   organizationId: string,
-  filters?: { cursor?: string; limit?: number },
+  filters?: { limit?: number; page?: number },
 ) => ["faTransferHistory", organizationId, JSON.stringify(filters ?? {})];
 
 const useGetTransferHistoryQuery = ({
-  cursor,
   enabled = true,
   limit,
   organizationId,
+  page,
 }: UseGetTransferHistoryQueryParams) => {
-  const filters = { cursor, limit };
+  const filters = { limit, page };
 
   return useQuery<GetTransferHistoryResponse, Error>({
     enabled: Boolean(organizationId && enabled),

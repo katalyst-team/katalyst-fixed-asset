@@ -9,9 +9,9 @@ interface GetFAUsersParams extends FaUserFilterOptions {
 }
 
 export const getFAUsersService = async ({
-  cursor,
   limit,
   organizationId,
+  page,
   q,
   role,
   status,
@@ -20,7 +20,7 @@ export const getFAUsersService = async ({
   if (q) params.append("q", q);
   if (role) params.append("role", role);
   if (status) params.append("status", status);
-  if (cursor) params.append("cursor", cursor);
+  if (page) params.append("page", page.toString());
   if (limit) params.append("limit", limit.toString());
   const queryString = params.toString() ? `?${params.toString()}` : "";
 

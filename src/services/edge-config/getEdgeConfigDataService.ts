@@ -19,8 +19,8 @@ export const getEdgeConfigDataService = async ({
 
   const params = new URLSearchParams();
 
-  if (filters?.cursor) {
-    params.append("cursor", filters.cursor);
+  if (filters?.page) {
+    params.append("page", filters.page.toString());
   }
 
   if (filters?.limit) {

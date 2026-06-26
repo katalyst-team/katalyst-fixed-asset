@@ -72,13 +72,12 @@ export function FaScanOutPage() {
   const { canManage } = useFaPermission();
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
-  const [cursorStack, setCursorStack] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const PAGE_LIMIT = 20;
   const { data: resp, isError, isLoading } = useGetDisposalsQuery({
-    cursor: cursorStack.length > 0 ? cursorStack[cursorStack.length - 1] : undefined,
     limit: PAGE_LIMIT,
     organizationId,
+    page,
   });
   const { mutateAsync: approveDisposal } = useApproveDisposalMutation({
     organizationId,
@@ -154,16 +153,13 @@ export function FaScanOutPage() {
   };
 
   const handleNext = () => {
-    const nextCursor = resp?.pagination?.next_cursor;
-    if (nextCursor) {
-      setCursorStack((prev) => [...prev, nextCursor]);
+    if (page < (resp?.pagination?.total_pages ?? 1)) {
       setPage((p) => p + 1);
       setSelectedIdx(0);
     }
   };
 
   const handlePrev = () => {
-    setCursorStack((prev) => prev.slice(0, -1));
     setPage((p) => Math.max(1, p - 1));
     setSelectedIdx(0);
   };
@@ -272,10 +268,11 @@ export function FaScanOutPage() {
             <div className="flex flex-row flex-1 justify-end items-end w-full">
               <PaginationCursor
                 currentPage={page}
-                hasNextPage={Boolean(resp?.pagination?.next_cursor)}
-                hasPrevPage={cursorStack.length > 0}
+                hasNextPage={page < (resp?.pagination?.total_pages ?? 1)}
+                hasPrevPage={page > 1}
                 limit={PAGE_LIMIT}
                 totalCount={resp?.pagination?.total_count ?? null}
+                totalPages={resp?.pagination?.total_pages}
                 onNext={handleNext}
                 onPrev={handlePrev}
               />

@@ -17,13 +17,13 @@ export const KEY_USE_GET_FA_TRANSFERS = (
 ) => ["faTransfers", organizationId, JSON.stringify(filters ?? {})];
 
 const useGetTransfersQuery = ({
-  cursor,
   enabled = true,
   limit,
   organizationId,
+  page,
   status,
 }: UseGetTransfersQueryParams) => {
-  const filters: FaTransferFilterOptions = { cursor, limit, status };
+  const filters: FaTransferFilterOptions = { limit, page, status };
 
   return useQuery<GetTransfersResponse, Error>({
     enabled: Boolean(organizationId && enabled),

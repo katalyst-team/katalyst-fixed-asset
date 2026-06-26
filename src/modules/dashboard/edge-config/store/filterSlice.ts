@@ -1,6 +1,6 @@
 import { EdgeConfigFilterOptions } from "@/types/edge-config";
 
-type FilterState = Omit<EdgeConfigFilterOptions, "limit" | "cursor">;
+type FilterState = Omit<EdgeConfigFilterOptions, "limit" | "page">;
 
 export interface FilterSlice {
   filters: FilterState;

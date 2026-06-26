@@ -6,28 +6,28 @@ import {
 } from "@/services/fixed-assets/getReportHistoryService";
 
 interface UseGetReportHistoryQueryParams {
-  cursor?: string;
   enabled?: boolean;
   limit?: number;
   organizationId: string;
+  page?: number;
 }
 
 export const KEY_USE_GET_FA_REPORT_HISTORY = (
   organizationId: string,
-  cursor?: string,
+  page?: number,
   limit?: number,
-) => ["faReportHistory", organizationId, cursor, limit];
+) => ["faReportHistory", organizationId, page, limit];
 
 const useGetReportHistoryQuery = ({
-  cursor,
   enabled = true,
   limit,
   organizationId,
+  page,
 }: UseGetReportHistoryQueryParams) => {
   return useQuery<GetReportHistoryResponse, Error>({
     enabled: Boolean(organizationId && enabled),
-    queryFn: () => getReportHistoryService({ cursor, limit, organizationId }),
-    queryKey: KEY_USE_GET_FA_REPORT_HISTORY(organizationId, cursor, limit),
+    queryFn: () => getReportHistoryService({ limit, organizationId, page }),
+    queryKey: KEY_USE_GET_FA_REPORT_HISTORY(organizationId, page, limit),
     staleTime: 60 * 1000,
   });
 };

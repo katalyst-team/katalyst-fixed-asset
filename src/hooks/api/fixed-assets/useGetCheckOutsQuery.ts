@@ -17,13 +17,13 @@ export const KEY_USE_GET_FA_CHECK_OUTS = (
 ) => ["faCheckOuts", organizationId, JSON.stringify(filters ?? {})];
 
 const useGetCheckOutsQuery = ({
-  cursor,
   enabled = true,
   limit,
   organizationId,
+  page,
   status,
 }: UseGetCheckOutsQueryParams) => {
-  const filters: FaCheckOutFilterOptions = { cursor, limit, status };
+  const filters: FaCheckOutFilterOptions = { limit, page, status };
 
   return useQuery<GetCheckOutsResponse, Error>({
     enabled: Boolean(organizationId && enabled),

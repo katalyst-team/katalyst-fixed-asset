@@ -10,9 +10,9 @@ interface GetRFIDTagsParams extends FaRfidTagFilterOptions {
 
 export const getRFIDTagsService = async ({
   asset_id,
-  cursor,
   limit,
   organizationId,
+  page,
   q,
   status,
 }: GetRFIDTagsParams): Promise<GetRFIDTagsResponse> => {
@@ -20,7 +20,7 @@ export const getRFIDTagsService = async ({
   if (q) params.append("q", q);
   if (status) params.append("status", status);
   if (asset_id) params.append("asset_id", asset_id);
-  if (cursor) params.append("cursor", cursor);
+  if (page) params.append("page", page.toString());
   if (limit) params.append("limit", limit.toString());
   const queryString = params.toString() ? `?${params.toString()}` : "";
 

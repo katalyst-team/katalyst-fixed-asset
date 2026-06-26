@@ -17,13 +17,13 @@ export const KEY_USE_GET_FA_PO = (
 ) => ["faPO", organizationId, JSON.stringify(filters ?? {})];
 
 const useGetPOQuery = ({
-  cursor,
   enabled = true,
   limit,
   organizationId,
+  page,
   status,
 }: UseGetPOQueryParams) => {
-  const filters: FaPOFilterOptions = { cursor, limit, status };
+  const filters: FaPOFilterOptions = { limit, page, status };
 
   return useQuery<GetPOResponse, Error>({
     enabled: Boolean(organizationId && enabled),

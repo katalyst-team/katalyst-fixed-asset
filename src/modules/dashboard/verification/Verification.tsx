@@ -23,11 +23,8 @@ const Verification = () => {
     VerificationEntityType.STOCK_MOVEMENT_INBOUND,
   );
   const [storeFilter, setStoreFilter] = useState<string | undefined>(undefined);
-  const [cursor, setCursor] = useState<string | undefined>(undefined);
-  const [pageIndex, setPageIndex] = useState(0);
-  const [cursorHistory, setCursorHistory] = useState<(string | undefined)[]>([undefined]);
+  const [page, setPage] = useState(1);
 
-  // Initialize from URL once
   useEffect(() => {
     if (!router.isReady || urlInitialized.current) return;
     urlInitialized.current = true;
@@ -49,18 +46,14 @@ const Verification = () => {
 
   const handleEntityTypeChange = (val: VerificationEntityType) => {
     setEntityTypeFilter(val);
-    setCursor(undefined);
-    setPageIndex(0);
-    setCursorHistory([undefined]);
+    setPage(1);
     const nextQuery = { ...router.query, entity_type: val };
     void router.replace({ pathname: router.pathname, query: nextQuery }, undefined, { shallow: true });
   };
 
   const handleStoreChange = (val: string | undefined) => {
     setStoreFilter(val);
-    setCursor(undefined);
-    setPageIndex(0);
-    setCursorHistory([undefined]);
+    setPage(1);
     const nextQuery = { ...router.query };
     if (val) {
       nextQuery.store_id = val;
@@ -73,31 +66,26 @@ const Verification = () => {
   const storeId = storeFilter ?? "";
 
   const { data, isLoading, refetch } = useGetPendingVerificationQuery({
-    cursor,
     enabled: !!organizationId && !!storeId,
     entityType: entityTypeFilter,
     organizationId,
+    page,
     storeId,
   });
 
   const items = data?.data?.items ?? [];
-  const nextCursor = data?.pagination?.next_cursor ?? null;
-  const prevCursor = data?.pagination?.prev_cursor ?? null;
+  const totalPages = data?.pagination?.total_pages ?? 1;
 
   const handleNext = () => {
-    if (!nextCursor) return;
-    const newHistory = [...cursorHistory, nextCursor];
-    setCursorHistory(newHistory);
-    setCursor(nextCursor);
-    setPageIndex((p) => p + 1);
+    if (page < totalPages) {
+      setPage((p) => p + 1);
+    }
   };
 
   const handlePrev = () => {
-    if (pageIndex === 0) return;
-    const newHistory = cursorHistory.slice(0, -1);
-    setCursorHistory(newHistory);
-    setCursor(newHistory[newHistory.length - 1]);
-    setPageIndex((p) => p - 1);
+    if (page > 1) {
+      setPage((p) => p - 1);
+    }
   };
 
   return (
@@ -113,7 +101,7 @@ const Verification = () => {
 
       {isLoading ? (
         <Loading />
-      ) : items.length === 0 && pageIndex === 0 ? (
+      ) : items.length === 0 && page === 1 ? (
         <EmptyState
           description={t("empty.description")}
           title={t("empty.title")}
@@ -124,23 +112,23 @@ const Verification = () => {
             entityTypeFilter={entityTypeFilter}
             items={items}
             limit={LIMIT}
-            pageIndex={pageIndex}
+            pageIndex={page - 1}
             onRefresh={refetch}
           />
           <div className="flex items-center justify-end gap-2">
             <button
               className="rounded border px-3 py-1 text-sm disabled:opacity-40"
-              disabled={pageIndex === 0}
+              disabled={page === 1}
               onClick={handlePrev}
             >
               {t("pagination.prev")}
             </button>
             <span className="text-sm text-muted-foreground">
-              {t("pagination.page", { page: pageIndex + 1 })}
+              {t("pagination.page", { page })}
             </span>
             <button
               className="rounded border px-3 py-1 text-sm disabled:opacity-40"
-              disabled={!nextCursor && !prevCursor ? true : !nextCursor}
+              disabled={page >= totalPages}
               onClick={handleNext}
             >
               {t("pagination.next")}

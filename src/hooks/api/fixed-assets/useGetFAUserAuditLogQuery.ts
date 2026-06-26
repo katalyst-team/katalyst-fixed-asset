@@ -18,19 +18,19 @@ export const KEY_USE_GET_FA_USER_AUDIT_LOG = (
 ) => ["faUserAuditLog", organizationId, JSON.stringify(filters ?? {})];
 
 const useGetFAUserAuditLogQuery = ({
-  cursor,
   date_from,
   date_to,
   enabled = true,
   limit,
   organizationId,
+  page,
   user_id,
 }: UseGetFAUserAuditLogQueryParams) => {
   const filters: FaUserAuditLogFilterOptions = {
-    cursor,
     date_from,
     date_to,
     limit,
+    page,
     user_id,
   };
 

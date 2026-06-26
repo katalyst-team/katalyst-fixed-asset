@@ -9,14 +9,14 @@ interface GetCheckOutsParams extends FaCheckOutFilterOptions {
 }
 
 export const getCheckOutsService = async ({
-  cursor,
   limit,
   organizationId,
+  page,
   status,
 }: GetCheckOutsParams): Promise<GetCheckOutsResponse> => {
   const params = new URLSearchParams();
   if (status) params.append("status", status);
-  if (cursor) params.append("cursor", cursor);
+  if (page) params.append("page", page.toString());
   if (limit) params.append("limit", limit.toString());
   const queryString = params.toString() ? `?${params.toString()}` : "";
 

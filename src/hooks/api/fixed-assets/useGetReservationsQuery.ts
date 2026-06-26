@@ -6,24 +6,24 @@ import {
 } from "@/services/fixed-assets/getReservationsService";
 
 interface UseGetReservationsQueryParams {
-  cursor?: string;
   enabled?: boolean;
   limit?: number;
   organizationId: string;
+  page?: number;
 }
 
 export const KEY_USE_GET_FA_RESERVATIONS = (
   organizationId: string,
-  filters?: { cursor?: string; limit?: number },
+  filters?: { limit?: number; page?: number },
 ) => ["faReservations", organizationId, JSON.stringify(filters ?? {})];
 
 const useGetReservationsQuery = ({
-  cursor,
   enabled = true,
   limit,
   organizationId,
+  page,
 }: UseGetReservationsQueryParams) => {
-  const filters = { cursor, limit };
+  const filters = { limit, page };
 
   return useQuery<GetReservationsResponse, Error>({
     enabled: Boolean(organizationId && enabled),

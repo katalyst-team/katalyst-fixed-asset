@@ -17,13 +17,13 @@ export const KEY_USE_GET_FA_DISPOSALS = (
 ) => ["faDisposals", organizationId, JSON.stringify(filters ?? {})];
 
 const useGetDisposalsQuery = ({
-  cursor,
   enabled = true,
   limit,
   organizationId,
+  page,
   status,
 }: UseGetDisposalsQueryParams) => {
-  const filters: FaDisposalFilterOptions = { cursor, limit, status };
+  const filters: FaDisposalFilterOptions = { limit, page, status };
 
   return useQuery<GetDisposalsResponse, Error>({
     enabled: Boolean(organizationId && enabled),

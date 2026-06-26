@@ -17,20 +17,19 @@ export const useEdgeConfig = (): UseEdgeConfigResult => {
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
 
-  const { filters, itemLimit, nextCursor, prevCursor } =
+  const { currentPage, filters, itemLimit } =
     useEdgeConfigStore(
       useShallow((state) => ({
+        currentPage: state.currentPage,
         filters: state.filters,
         itemLimit: state.itemLimit,
-        nextCursor: state.nextCursor,
-        prevCursor: state.prevCursor,
       }))
     );
 
   const queryFilters = {
     ...filters,
-    cursor: nextCursor ?? prevCursor ?? undefined,
     limit: itemLimit,
+    page: currentPage,
   };
 
   const { data, isLoading } = useGetEdgeConfigDataQuery({

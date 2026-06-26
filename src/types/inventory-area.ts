@@ -97,9 +97,4 @@ export interface InventoryAreaDetailResponse extends ApiResponse {
     section: SectionInventorySummary;
     total_quantity: number;
   };
-  pagination: {
-    count: number;
-    next_cursor: string;
-    prev_cursor: string;
-  };
 }

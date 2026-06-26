@@ -9,16 +9,16 @@ interface GetFAUserAuditLogParams extends FaUserAuditLogFilterOptions {
 }
 
 export const getFAUserAuditLogService = async ({
-  cursor,
   date_from,
   date_to,
   limit,
   organizationId,
+  page,
   user_id,
 }: GetFAUserAuditLogParams): Promise<GetFAUserAuditLogResponse> => {
   const params = new URLSearchParams();
   if (user_id) params.append("user_id", user_id);
-  if (cursor) params.append("cursor", cursor);
+  if (page) params.append("page", page.toString());
   if (limit) params.append("limit", limit.toString());
   if (date_from) params.append("date_from", date_from);
   if (date_to) params.append("date_to", date_to);
