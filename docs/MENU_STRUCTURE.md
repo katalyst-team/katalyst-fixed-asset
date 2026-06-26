@@ -1,37 +1,62 @@
 # Menu Structure Reference
 
-Complete list of all registered web menus, organized by parent-child hierarchy.
-Hierarchy is determined by the backend API (`/accounts/me/menus`), but the suggested grouping below is based on menu naming conventions and domain.
+Complete list of all registered web menus, derived from `src/lib/menu-utils.ts` (`MENU_CONFIG`) and `src/types/menu.ts` (`MenuName` / `MENU_ROUTE_MAP`).
+
+Hierarchy is determined by the backend API (`/accounts/me/menus`). `MENU_CONFIG` supplies icon and url; parent vs. leaf is resolved at runtime from the API tree.
 
 ---
 
 ## Parent Menus (Icon Only, No URL)
 
-These menus act as collapsible group headers in the sidebar.
+These act as collapsible group headers in the sidebar. URL is set to `"#"` at runtime when they have API children.
 
-| Menu Name | Icon | Suggested Children |
-|-----------|------|-------------------|
+| Menu Name | Icon | Notes |
+|-----------|------|-------|
 | `WEB_CATEGORY_MENU` | Book | Category & Attribute pages |
 | `WEB_HARDWARE` | Radio | Gate & Device pages |
 | `WEB_INVENTORY_MENU` | Warehouse | Inventory pages |
-| `WEB_KBM_BATANG_MANUAL` | — | KBM dimension pages |
-| `WEB_KBM_LAMINA_MASTER` | Package | KBM Lamina pages |
+| `WEB_KBM_BATANG_MANUAL` | — | KBM dimension pages (no icon configured) |
 | `WEB_LAMINA` | Package | Lamina log pages |
 | `WEB_LEDGER_V2` | Book | Ledger V2 pages |
 | `WEB_MASTER_DATA` | BookOpen | Master data pages |
-| `WEB_PENERIMAAN_LOG` | Package | Penerimaan Log pages |
 | `WEB_ST_BASAH` | Package | ST Basah pages |
 | `WEB_ST_KERING` | Package | ST Kering pages |
 | `WEB_ST_PENERIMAAN_LOG` | Package | ST Penerimaan Log pages |
 
-## Standalone Menus (Have Both Icon + URL)
+## Standalone Menus (Icon + URL)
 
-These appear as top-level sidebar items with their own page.
+These appear as top-level sidebar items with their own page (or can act as parents if the API returns children).
+
+### Fixed Assets (`WEB_FA_*`)
+
+| Menu Name | Icon | Route |
+|-----------|------|-------|
+| `WEB_FA_DASHBOARD` | LayoutDashboard | `/dashboard/fixed-assets` |
+| `WEB_FA_REGISTER` | Package | `/dashboard/fixed-assets/register` |
+| `WEB_FA_MASTER_DATA` | Boxes | `/dashboard/fixed-assets/master-data` |
+| `WEB_FA_RFID_TAGS` | Tags | `/dashboard/fixed-assets/rfid-tags` |
+| `WEB_FA_SCAN_IN` | Download | `/dashboard/fixed-assets/scan-in` |
+| `WEB_FA_SCAN_OUT` | ShoppingCart | `/dashboard/fixed-assets/scan-out` |
+| `WEB_FA_CHECK_OUT` | Truck | `/dashboard/fixed-assets/check-out` |
+| `WEB_FA_TRANSFER` | Radio | `/dashboard/fixed-assets/transfer` |
+| `WEB_FA_AUDIT` | ClipboardCheck | `/dashboard/fixed-assets/audit` |
+| `WEB_FA_MAINTENANCE` | Wrench | `/dashboard/fixed-assets/maintenance` |
+| `WEB_FA_RTLS` | MapPin | `/dashboard/fixed-assets/rtls` |
+| `WEB_FA_SECURITY` | Shield | `/dashboard/fixed-assets/security` |
+| `WEB_FA_REPORTS` | FileText | `/dashboard/fixed-assets/reports` |
+| `WEB_FA_USERS` | Users | `/dashboard/fixed-assets/users` |
+| `WEB_FA_SETTINGS` | Settings | `/dashboard/fixed-assets/settings` |
+| `WEB_FA_DOCS` | BookOpen | `/dashboard/fixed-assets/docs` |
+
+### Other Standalone
 
 | Menu Name | Icon | Route |
 |-----------|------|-------|
 | `WEB_LEDGER` | Book | `/dashboard/ledger` |
 | `WEB_OVERVIEW` | Gauge | `/dashboard/overview` |
+| `WEB_PENERIMAAN_LOG` | Package | `/dashboard/penerimaan-log` |
+| `WEB_KBM_LAMINA_MASTER` | Package | `/dashboard/kbm-lamina-grade` |
+| `WEB_KBM_ST_KERING_GRADE` | Package | `/dashboard/kbm-st-kering-grade` |
 | `WEB_VALIDATION_PENERIMAAN_LOG` | ClipboardCheck | `/dashboard/validation-penerimaan-log` |
 | `WEB_VERIFICATION` | ClipboardCheck | `/dashboard/verification` |
 | `WEB_VERIFICATION_PENERIMAAN_LOG` | ClipboardCheck | `/dashboard/verification-penerimaan-log` |
@@ -41,11 +66,6 @@ These appear as top-level sidebar items with their own page.
 ## Leaf Menus (URL Only, No Icon)
 
 Grouped by suggested parent.
-
-### WEB_OVERVIEW (root)
-
-| Menu Name | Route |
-|-----------|-------|
 
 ### WEB_INVENTORY_MENU
 
@@ -57,8 +77,6 @@ Grouped by suggested parent.
 | `WEB_STOCK_AUDIT` | `/dashboard/stock-audit` |
 | `WEB_STOCK_AUDIT_AREA` | `/dashboard/stock-audit-area` |
 | `WEB_STOCK_AUDIT_TOTAL` | `/dashboard/stock-audit-total` |
-| `WEB_KBM_STOCK_AUDIT` | `/dashboard/kbm-stock-audit` |
-| `WEB_KBM_STOCK_AUDIT_AREA` | `/dashboard/kbm-stock-audit-area` |
 | `WEB_STOCK_MOVEMENT_TYPES` | `/dashboard/stock-movement-types` |
 | `WEB_STORE` | `/dashboard/store` |
 
@@ -72,7 +90,6 @@ Grouped by suggested parent.
 | `WEB_INBOUND_PENERIMAAN_LOG` | `/dashboard/inbound-penerimaan-log` |
 | `WEB_INBOUND_ST_BASAH` | `/dashboard/inbound-st-basah` |
 | `WEB_PACKING` | `/dashboard/packing` |
-| `WEB_INBOUND_PACKING` | `/dashboard/inbound-packing` |
 
 ### WEB_OUTBOUND / Outbound
 
@@ -84,20 +101,11 @@ Grouped by suggested parent.
 | `WEB_OUTBOUND_PENERIMAAN_LOG` | `/dashboard/outbound-penerimaan-log` |
 | `WEB_OUTBOUND_ST_BASAH` | `/dashboard/outbound-st-basah` |
 
-### WEB_LEDGER / WEB_LEDGER_V2
+### WEB_LEDGER_V2
 
 | Menu Name | Route |
 |-----------|-------|
-| `WEB_LEDGER` | `/dashboard/ledger` |
 | `WEB_LEDGER_PRODUCT` | `/dashboard/ledger-product` |
-
-### WEB_PENERIMAAN_LOG
-
-| Menu Name | Route |
-|-----------|-------|
-| `WEB_PENERIMAAN_LOG_MASTER` | `/dashboard/kbm-penerimaan-log-master` |
-| `WEB_INBOUND_PENERIMAAN_LOG` | `/dashboard/inbound-penerimaan-log` |
-| `WEB_OUTBOUND_PENERIMAAN_LOG` | `/dashboard/outbound-penerimaan-log` |
 
 ### WEB_ST_KERING
 
@@ -105,7 +113,6 @@ Grouped by suggested parent.
 |-----------|-------|
 | `WEB_ST_KERING_LOG` | `/dashboard/st-kering-log` |
 | `WEB_ST_KERING_MASTER` | `/dashboard/kbm-grade-st-susun` |
-| `WEB_KBM_ST_KERING_GRADE` | `/dashboard/kbm-st-kering-grade` |
 | `WEB_KBM_DEPARTMENT_ST_KERING` | `/dashboard/kbm-department-st-kering` |
 | `WEB_KBM_MESIN_KELUAR_ST_KERING` | `/dashboard/kbm-mesin-keluar-st-kering` |
 | `WEB_KBM_MESIN_MASUK_ST_KERING` | `/dashboard/kbm-mesin-masuk-st-kering` |
@@ -147,7 +154,7 @@ Grouped by suggested parent.
 | `WEB_LAMINA_INBOUND_LOG` | `/dashboard/lamina-inbound-log` |
 | `WEB_LAMINA_OUTBOUND_LOG` | `/dashboard/lamina-outbound-log` |
 
-### WEB_KBM_LAMINA_MASTER
+### WEB_KBM_LAMINA_MASTER (children when used as parent)
 
 | Menu Name | Route |
 |-----------|-------|
@@ -216,6 +223,7 @@ Grouped by suggested parent.
 | `WEB_KBM_GUDANG` | `/dashboard/kbm-gudang` |
 | `WEB_KBM_KAYU_BULAT` | `/dashboard/kbm-kayu-bulat` |
 | `WEB_KBM_KAYU_BULAT_GRADE` | `/dashboard/kbm-kayu-bulat-grade` |
+| `WEB_KBM_KAYU_ST_KERING` | `/dashboard/kbm-kayu-st-kering` |
 | `WEB_KBM_MESIN` | `/dashboard/kbm-mesin` |
 | `WEB_KBM_MESIN_V2` | `/dashboard/kbm-mesin-v2` |
 | `WEB_KBM_MITRA_BISNIS` | `/dashboard/kbm-mitra-bisnis` |
@@ -223,6 +231,7 @@ Grouped by suggested parent.
 | `WEB_KBM_SUPPLIER_V2` | `/dashboard/kbm-supplier-v2` |
 | `WEB_KBM_PROSES_V2` | `/dashboard/kbm-proses-v2` |
 | `WEB_KBM_SHIFT_V2` | `/dashboard/kbm-shift-v2` |
+| `WEB_KBM_PENERIMAAN_LOG_MASTER` | `/dashboard/kbm-penerimaan-log-master` |
 
 ### RFID
 
@@ -234,7 +243,7 @@ Grouped by suggested parent.
 | `WEB_DISPOSABLE_EPC` | `/dashboard/disposable-epc` |
 | `WEB_REUSABLE_EPC` | `/dashboard/reusable-epc` |
 
-### WEB_REPORTS
+### Reports
 
 | Menu Name | Route |
 |-----------|-------|
@@ -244,11 +253,10 @@ Grouped by suggested parent.
 
 ## Unassigned / Root-Level
 
-These menus have no obvious parent group — they sit at the sidebar root level.
-
 | Menu Name | Route |
 |-----------|-------|
 | `WEB_KBM_MASTER` | `/dashboard/kbm-grade-st-susun` |
+| `WEB_PENERIMAAN_LOG_MASTER` | `/dashboard/kbm-penerimaan-log-master` |
 
 ---
 
@@ -256,7 +264,8 @@ These menus have no obvious parent group — they sit at the sidebar root level.
 
 | Type | Count |
 |------|-------|
-| Parent menus (icon, no url) | 12 |
-| Standalone (icon + url) | 6 |
-| Leaf menus (url only) | ~100 |
-| **Total registered** | **~118** |
+| Parent menus (icon only, no url) | 10 |
+| Fixed Assets standalone (`WEB_FA_*`) | 16 |
+| Other standalone (icon + url) | 10 |
+| Leaf menus (url only) | ~107 |
+| **Total registered in MENU_CONFIG** | **~143** |
