@@ -1,5 +1,9 @@
-import { AttributeCollectionItemDetails } from "@/modules/dashboard/sku/components/AttributeCollectionSelector";
 import { AttributeItemType } from "@/types/attribute";
+
+export interface AttributeCollectionItemDetails {
+  attribute: AttributeItemType;
+  values: string[];
+}
 
 export interface CategoryStoreType {
   id: string;

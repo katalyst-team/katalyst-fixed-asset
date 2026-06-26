@@ -1,1 +1,0 @@
-export { useOutboundPenerimaanLogStore } from "./OutboundPenerimaanLogStore";

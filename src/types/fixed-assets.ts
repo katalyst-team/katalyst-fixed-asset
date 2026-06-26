@@ -912,3 +912,299 @@ export interface FaAssetDocDownload {
 export interface FaSummary {
   [key: string]: number | string;
 }
+
+/* ============================================================
+   Approval Workflows
+   ============================================================ */
+
+export type ApprovalType =
+  | "disposal"
+  | "transfer"
+  | "maintenance"
+  | "acquisition"
+  | "write-off"
+  | "revaluation";
+
+export type ApprovalStatus =
+  | "pending"
+  | "in-review"
+  | "approved"
+  | "rejected"
+  | "withdrawn"
+  | "escalated";
+
+export type ApprovalPriority = "low" | "medium" | "high" | "critical";
+
+export interface FaApprovalStep {
+  approverName: string;
+  approverRole: string;
+  comment?: string;
+  decidedAt: string | null;
+  name: string;
+  order: number;
+  role: string;
+  status: "pending" | "approved" | "rejected" | "skipped";
+}
+
+export interface FaApprovalRequest {
+  amount: number;
+  assetId: string;
+  assetName: string;
+  createdAt: string;
+  currentStep: number;
+  description: string;
+  id: string;
+  priority: ApprovalPriority;
+  requesterName: string;
+  steps: FaApprovalStep[];
+  status: ApprovalStatus;
+  totalSteps: number;
+  type: ApprovalType;
+  updatedAt: string;
+}
+
+export interface FaApprovalRule {
+  appliesTo: ApprovalType;
+  conditions: string;
+  escalationAfterHours: number;
+  id: string;
+  isActive: boolean;
+  minAmount: number;
+  name: string;
+  steps: { approverRole: string; name: string; order: number }[];
+  thresholdDays: number;
+}
+
+export interface FaApprovalStats {
+  avgApprovalHours: number;
+  escalated: number;
+  pending: number;
+  pendingCritical: number;
+  rejectedThisMonth: number;
+  SLACompliance: number;
+}
+
+/* ============================================================
+   Asset Lifecycle
+   ============================================================ */
+
+export type LifecycleStage =
+  | "planning"
+  | "procurement"
+  | "received"
+  | "tagged"
+  | "deployed"
+  | "in-use"
+  | "maintenance"
+  | "checked-out"
+  | "transfer"
+  | "audit"
+  | "disposal"
+  | "retired";
+
+export interface FaLifecycleEvent {
+  actor: string;
+  detail: string;
+  eventId: string;
+  fromStage: LifecycleStage | null;
+  metadata?: Record<string, string>;
+  notes?: string;
+  stage: LifecycleStage;
+  timestamp: string;
+  type: string;
+}
+
+export interface FaLifecycleAsset {
+  acquisitionDate: string;
+  acquisitionValue: number;
+  ageDays: number;
+  cat: AssetCategory;
+  currentValue: number;
+  currentStage: LifecycleStage;
+  custodian: string;
+  depreciationRate: number;
+  epc: string;
+  events: FaLifecycleEvent[];
+  id: string;
+  lifecycleProgress: number;
+  loc: string;
+  name: string;
+  netBookValue: number;
+  serial: string;
+  status: AssetStatus;
+  totalEvents: number;
+  warrantyExpiry: string;
+}
+
+export interface FaLifecycleSummary {
+  acquiring: number;
+  disposed: number;
+  inUse: number;
+  retired: number;
+  totalAssets: number;
+}
+
+/* ============================================================
+   Predictive Maintenance Analytics
+   ============================================================ */
+
+export type PredictionSeverity = "critical" | "warning" | "watch" | "healthy";
+
+export interface FaPredictionResult {
+  accuracy: number;
+  assetCat: AssetCategory;
+  assetId: string;
+  assetName: string;
+  confidence: number;
+  currentHealth: number;
+  daysToFailure: number;
+  estimatedCost: number;
+  failedPart: string;
+  failureMode: string;
+  lastUpdated: string;
+  loc: string;
+  modelName: string;
+  recommendedAction: string;
+  recommendedActionDate: string;
+  rul: number;
+  runHours: number;
+  severity: PredictionSeverity;
+  trendData: number[];
+}
+
+export interface FaPredictiveModel {
+  accuracy: number;
+  active: boolean;
+  assetCount: number;
+  assetScope: string;
+  avgConfidence: number;
+  createdAt: string;
+  features: string[];
+  falsePositives: number;
+  id: string;
+  lastTrained: string;
+  modelType: string;
+  name: string;
+  pendingRetrain: boolean;
+  precision: number;
+  predictions: number;
+  recall: number;
+  status: "active" | "training" | "stale" | "disabled";
+  truePositives: number;
+  version: string;
+}
+
+export interface FaPredictiveSummary {
+  avgAccuracy: number;
+  avgConfidence: number;
+  criticalPredictions: number;
+  healthy: number;
+  modelsActive: number;
+  totalAssetsMonitored: number;
+  totalPredictions: number;
+  watchItems: number;
+  warningItems: number;
+}
+
+/* ============================================================
+   Financial Integration
+   ============================================================ */
+
+export type JournalType =
+  | "acquisition"
+  | "depreciation"
+  | "disposal"
+  | "revaluation"
+  | "transfer"
+  | "maintenance"
+  | "write-off";
+
+export type JournalStatus = "draft" | "posted" | "reversed" | "pending";
+
+export interface FaJournalEntry {
+  accountCode: string;
+  accountName: string;
+  amount: number;
+  assetId: string;
+  assetName: string;
+  createdAt: string;
+  createdBy: string;
+  credit: number;
+  debit: number;
+  description: string;
+  id: string;
+  postedAt: string | null;
+  reference: string;
+  source: string;
+  status: JournalStatus;
+  type: JournalType;
+}
+
+export interface FaDepreciationSchedule {
+  accumulatedDepreciation: number;
+  ageMonths: number;
+  ageYears: number;
+  assetId: string;
+  assetName: string;
+  cat: AssetCategory;
+  currentValue: number;
+  depreciationMethod: string;
+  depreciableBase: number;
+  depreciationRate: number;
+  estimatedLife: number;
+  fullyDepreciatedDate: string | null;
+  monthlyDepreciation: number;
+  netBookValue: number;
+  remainingLife: number;
+  residualValue: number;
+  salvageValue: number;
+  schedule: {
+    depreciation: number;
+    month: string;
+    nbv: number;
+    year: number;
+  }[];
+  status: "active" | "fully-depreciated" | "disposed";
+  usefulLife: number;
+}
+
+export interface FaBastDocument {
+  assetId: string;
+  assetName: string;
+  createdAt: string;
+  disposalId: string;
+  documentId: string;
+  downloadUrl: string;
+  handoverDate: string;
+  recipientName: string;
+  recipientRole: string;
+  signedAt: string | null;
+  signerName: string;
+  status: "draft" | "pending-signature" | "signed" | "voided";
+  type: string;
+}
+
+export interface FaFinanceSummary {
+  accumulatedDepreciation: number;
+  bastsGenerated: number;
+  glIntegrationStatus: "connected" | "disconnected" | "error";
+  journalEntriesPending: number;
+  journalEntriesPosted: number;
+  netBookValue: number;
+  pendingPostings: number;
+  postSuccessRate: number;
+  totalAcquisitionValue: number;
+  totalAssets: number;
+}
+
+export interface FaInsurancePolicy {
+  assetCount: number;
+  coverageAmount: number;
+  expiryDate: string;
+  id: string;
+  insurer: string;
+  policyNumber: string;
+  premium: number;
+  status: "active" | "expiring-soon" | "expired" | "renewing";
+  type: string;
+}
