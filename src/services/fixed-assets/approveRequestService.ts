@@ -2,11 +2,13 @@ import type { FaApprovalRequest } from "@/types/fixed-assets";
 
 import fetcher, { ApiResponse } from "..";
 
-export type ApproveRequestResponse = ApiResponse<{
-  nextStep?: string;
+export type ApprovalActionResponse = ApiResponse<{
+  message: string;
+  next_status: string;
   request: FaApprovalRequest;
-  workflowComplete: boolean;
 }>;
+
+export type ApproveRequestResponse = ApprovalActionResponse;
 
 interface ApproveRequestParams {
   comment?: string;

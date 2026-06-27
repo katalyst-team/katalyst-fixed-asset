@@ -10,11 +10,11 @@ import type {
 import fetcher, { ApiResponse } from "..";
 
 export type GetMaintenanceResponse = ApiResponse<{
-  healthData: FaHealthItem[];
-  pmRules: FaPmRule[];
+  health_data: FaHealthItem[];
+  pm_rules: FaPmRule[];
   pmSchedule: FaPmScheduleItem[];
-  preUseAssets: FaPreUseAsset[];
-  workOrders: FaWorkOrder[];
+  pre_use_assets: FaPreUseAsset[];
+  work_orders: FaWorkOrder[];
 }>;
 
 interface GetMaintenanceParams {

@@ -74,7 +74,7 @@ function UsersTab({ organizationId }: { organizationId: string }) {
               </Td>
               <Td><span className="ks-badge info">{u.role}</span></Td>
               <Td>{u.department}</Td>
-              <Td>{u.lastActive}</Td>
+              <Td>{u.last_active}</Td>
               <Td>{statusBadge(u.status)}</Td>
             </tr>
           ))}

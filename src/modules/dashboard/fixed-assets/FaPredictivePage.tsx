@@ -88,14 +88,14 @@ export function FaPredictivePage() {
                 const SevIcon = SEV_ICON[pred.severity] ?? Eye;
                 const tone = SEV_TONE[pred.severity] ?? "outline";
                 return (
-                  <div key={pred.assetId} className="rounded-lg border border-border p-3">
+                  <div key={pred.ext_id} className="rounded-lg border border-border p-3">
                     <div className="flex items-center gap-3 mb-2">
                       <span className={`ks-kpi-mini-square ${tone}`} style={{ alignItems: "center", borderRadius: 6, display: "flex", height: 30, justifyContent: "center", width: 30 }}>
                         <SevIcon size={14} />
                       </span>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div className="font-semibold text-sm">{pred.assetName}</div>
-                        <div className="text-xs text-muted-foreground font-mono">{pred.assetId} · {pred.loc}</div>
+                        <div className="font-semibold text-sm">{pred.asset_name}</div>
+                        <div className="text-xs text-muted-foreground font-mono">{pred.asset_code}</div>
                       </div>
                       <span className={`ks-badge ${tone}`}>{pred.severity}</span>
                     </div>
@@ -103,11 +103,11 @@ export function FaPredictivePage() {
                     <div className="grid grid-cols-4 gap-2 mb-2">
                       <div>
                         <div className="text-xs text-muted-foreground">Health</div>
-                        <div className="font-mono font-semibold text-sm">{pred.currentHealth}/100</div>
+                        <div className="font-mono font-semibold text-sm">{pred.current_health}/100</div>
                       </div>
                       <div>
-                        <div className="text-xs text-muted-foreground">RUL</div>
-                        <div className="font-mono font-semibold text-sm">{pred.rul}d</div>
+                        <div className="text-xs text-muted-foreground">Days to Failure</div>
+                        <div className="font-mono font-semibold text-sm">{pred.days_to_failure}d</div>
                       </div>
                       <div>
                         <div className="text-xs text-muted-foreground">Confidence</div>
@@ -115,16 +115,16 @@ export function FaPredictivePage() {
                       </div>
                       <div>
                         <div className="text-xs text-muted-foreground">Est. Cost</div>
-                        <div className="font-mono font-semibold text-sm">{formatIDRShort(pred.estimatedCost)}</div>
+                        <div className="font-mono font-semibold text-sm">{formatIDRShort(pred.estimated_cost)}</div>
                       </div>
                     </div>
 
                     <div className="mb-2">
                       <div className="flex items-center justify-between text-xs mb-1">
-                        <span className="text-muted-foreground">Failure: {pred.failureMode}</span>
-                        <span className="text-muted-foreground">Part: {pred.failedPart}</span>
+                        <span className="text-muted-foreground">Failure: {pred.failure_mode ?? "—"}</span>
+                        <span className="text-muted-foreground">Part: {pred.failed_part ?? "—"}</span>
                       </div>
-                      <FaMeter pct={pred.currentHealth} tone={pred.currentHealth >= 70 ? "success" : pred.currentHealth >= 40 ? "warn" : "danger"} />
+                      <FaMeter pct={pred.current_health} tone={pred.current_health >= 70 ? "success" : pred.current_health >= 40 ? "warn" : "danger"} />
                     </div>
 
                     <div className="rounded border border-border-soft p-2" style={{ background: "hsl(var(--surface-2))" }}>
@@ -132,8 +132,8 @@ export function FaPredictivePage() {
                         <Zap size={11} />
                         Recommended Action
                       </div>
-                      <div className="text-xs text-muted-foreground">{pred.recommendedAction}</div>
-                      <div className="text-xs text-muted-foreground mt-1">By: {pred.recommendedActionDate}</div>
+                      <div className="text-xs text-muted-foreground">{pred.recommended_action ?? "—"}</div>
+                      <div className="text-xs text-muted-foreground mt-1">By: {pred.recommended_action_date ?? "—"}</div>
                     </div>
                   </div>
                 );
@@ -155,36 +155,43 @@ export function FaPredictivePage() {
             </div>
             <div className="ks-card-body">
               <div className="space-y-3">
-                {models.map((model) => (
-                  <div key={model.id} className="rounded-lg border border-border p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <div className="font-semibold text-sm">{model.name}</div>
-                        <div className="text-xs text-muted-foreground">{model.modelType} · v{model.version}</div>
+                {models.map((model) => {
+                  const status = model.pending_retrain
+                    ? "training"
+                    : model.is_active
+                      ? "active"
+                      : "disabled";
+                  return (
+                    <div key={model.ext_id} className="rounded-lg border border-border p-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <div className="font-semibold text-sm">{model.name}</div>
+                          <div className="text-xs text-muted-foreground">{model.model_type} · v{model.version}</div>
+                        </div>
+                        <span className={`ks-badge ${status === "active" ? "success" : status === "training" ? "warn" : "outline"}`}>
+                          {status}
+                        </span>
                       </div>
-                      <span className={`ks-badge ${model.status === "active" ? "success" : model.status === "training" ? "warn" : "outline"}`}>
-                        {model.status}
-                      </span>
+                      <div className="grid grid-cols-3 gap-2 mb-2">
+                        <div>
+                          <div className="text-xs text-muted-foreground">Accuracy</div>
+                          <div className="font-mono font-semibold">{model.accuracy}%</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-muted-foreground">Predictions</div>
+                          <div className="font-mono font-semibold">{model.total_predictions}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-muted-foreground">Assets</div>
+                          <div className="font-mono font-semibold">{model.asset_count}</div>
+                        </div>
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Trained: {model.last_trained_at ?? "—"} · Scope: {model.asset_scope}
+                      </div>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 mb-2">
-                      <div>
-                        <div className="text-xs text-muted-foreground">Accuracy</div>
-                        <div className="font-mono font-semibold">{model.accuracy}%</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-muted-foreground">Predictions</div>
-                        <div className="font-mono font-semibold">{model.predictions}</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-muted-foreground">Assets</div>
-                        <div className="font-mono font-semibold">{model.assetCount}</div>
-                      </div>
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      Trained: {model.lastTrained} · Scope: {model.assetScope}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>

@@ -1,24 +1,21 @@
-import type { FaApprovalRequest } from "@/types/fixed-assets";
+import fetcher from "..";
+import type { ApprovalActionResponse } from "./approveRequestService";
 
-import fetcher, { ApiResponse } from "..";
-
-export type RejectRequestResponse = ApiResponse<{
-  request: FaApprovalRequest;
-}>;
+export type RejectRequestResponse = ApprovalActionResponse;
 
 interface RejectRequestParams {
-  comment?: string;
   organizationId: string;
+  reason: string;
   requestId: string;
 }
 
 export const rejectRequestService = async ({
-  comment,
   organizationId,
+  reason,
   requestId,
 }: RejectRequestParams): Promise<RejectRequestResponse> => {
   return fetcher({
-    data: { comment },
+    data: { reason },
     method: "POST",
     url: `/v1/organizations/${organizationId}/fa/approvals/${requestId}/reject`,
   });

@@ -52,7 +52,7 @@ export function WoTab() {
   const { mutateAsync: updateWoStatus } = useUpdateWorkOrderStatusMutation({
     organizationId,
   });
-  const WORK_ORDERS = resp?.data?.workOrders ?? [];
+  const WORK_ORDERS = resp?.data?.work_orders ?? [];
   const [filter, setFilter] = useState("All");
   const [selectedId, setSelectedId] = useState("");
   const queue = WORK_ORDERS.filter((w) => {
@@ -116,7 +116,7 @@ export function WoTab() {
                   </TD>
                   <TD>
                     <div style={{ fontSize: 12, fontWeight: 600 }}>{w.asset}</div>
-                    <div style={{ ...muted, fontSize: 11 }}>{w.assetId}</div>
+                    <div style={{ ...muted, fontSize: 11 }}>{w.asset_id}</div>
                   </TD>
                   <TD>
                     <span className="ks-badge outline">
@@ -171,9 +171,9 @@ export function WoTab() {
 
             <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
               {[
-                ["Assigned", wo.assignedTo],
+                ["Assigned", wo.assigned_to],
                 ["ETA", wo.eta],
-                ["Created", wo.createdAt],
+                ["Created", wo.created_at],
               ].map(([k, v]) => (
                 <div key={k}>
                   <div style={{ ...muted, fontSize: 11 }}>{k}</div>
@@ -191,7 +191,7 @@ export function WoTab() {
                 </div>
                 <div style={{ ...flexRow, fontSize: 12, gap: 8 }}>
                   <Clock size={12} style={{ color: "hsl(var(--text-3))" }} />
-                  Pre-use check flagged · {wo.createdAt}
+                  Pre-use check flagged · {wo.created_at}
                 </div>
               </div>
             </div>
@@ -240,9 +240,9 @@ export function ScheduleTab() {
   const { mutateAsync: updatePmRule } = useUpdatePmRuleMutation({
     organizationId,
   });
-  const PRE_USE_ASSETS = resp?.data?.preUseAssets ?? [];
+  const PRE_USE_ASSETS = resp?.data?.pre_use_assets ?? [];
   const PM_SCHEDULE = resp?.data?.pmSchedule ?? [];
-  const PM_RULES = resp?.data?.pmRules ?? [];
+  const PM_RULES = resp?.data?.pm_rules ?? [];
   const [view, setView] = useState<"preuse" | "pm">("preuse");
   const [selAsset, setSelAsset] = useState("");
   const asset = PRE_USE_ASSETS.find((a) => a.id === selAsset) ?? PRE_USE_ASSETS[0];
@@ -317,9 +317,9 @@ export function ScheduleTab() {
                     </TD>
                     <TD style={mono}>{a.streak}x</TD>
                     <TD>
-                      <span className={`ks-badge ${a.lastResult === "pass" ? "success" : "danger"}`}>
-                        {a.lastResult === "pass" ? <CheckCircle2 size={11} /> : <Ban size={11} />}
-                        {a.lastResult}
+                      <span className={`ks-badge ${a.last_result === "pass" ? "success" : "danger"}`}>
+                        {a.last_result === "pass" ? <CheckCircle2 size={11} /> : <Ban size={11} />}
+                        {a.last_result}
                       </span>
                     </TD>
                   </tr>
@@ -333,13 +333,13 @@ export function ScheduleTab() {
               <div>
                 <div className="ks-card-title">{asset.asset}</div>
                 <div className="ks-card-desc">
-                  {asset.interval} · last by {asset.lastChecker} ({asset.lastCheckLabel})
+                  {asset.interval} · last by {asset.last_checker} ({asset.lastCheckLabel})
                 </div>
               </div>
               {asset.critical && <span className="ks-badge danger">Critical</span>}
             </div>
             <div className="ks-card-body">
-              {asset.failItem && (
+              {asset.fail_item && (
                 <div
                   style={{
                     alignItems: "center",
@@ -354,7 +354,7 @@ export function ScheduleTab() {
                   }}
                 >
                   <Ban size={14} />
-                  {asset.failItem}
+                  {asset.fail_item}
                 </div>
               )}
               <div style={{ ...muted, marginBottom: 8 }}>
@@ -375,12 +375,12 @@ export function ScheduleTab() {
                 onClick={() =>
                   submitCheck({
                     asset_id: asset.id,
-                    checker: asset.lastChecker,
-                    fail_item: asset.failItem,
-                    overall_result: asset.failItem ? "fail" : "pass",
+                    checker: asset.last_checker,
+                    fail_item: asset.fail_item,
+                    overall_result: asset.fail_item ? "fail" : "pass",
                     results: asset.checks.map((check) => ({
                       check,
-                      passed: !asset.failItem,
+                      passed: !asset.fail_item,
                     })),
                   })
                 }
@@ -440,17 +440,17 @@ export function ScheduleTab() {
                       {r.scope}
                     </span>
                     <button
-                      className={`ks-btn ks-btn-sm ${r.autoWO ? "ks-btn-primary" : ""}`}
+                      className={`ks-btn ks-btn-sm ${r.auto_wo ? "ks-btn-primary" : ""}`}
                       type="button"
                       onClick={() =>
                         updatePmRule({
-                          data: { autoWO: !r.autoWO },
+                          data: { auto_wo: !r.auto_wo },
                           pmRuleId: r.name,
                         })
                       }
                     >
                       <Zap size={12} />
-                      {r.autoWO ? "Auto-WO" : "Manual"}
+                      {r.auto_wo ? "Auto-WO" : "Manual"}
                     </button>
                   </div>
                   <div style={{ ...flexRow, ...muted, gap: 12, marginTop: 6 }}>

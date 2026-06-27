@@ -2,20 +2,27 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { toastError } from "@/services";
-import { rejectRequestService } from "@/services/fixed-assets/rejectRequestService";
+import { escalateRequestService } from "@/services/fixed-assets/escalateRequestService";
 
 import { KEY_USE_GET_FA_APPROVAL_REQUESTS } from "./useGetApprovalRequestsQuery";
 
-interface UseRejectRequestMutationParams {
+interface UseEscalateRequestMutationParams {
   organizationId: string;
 }
 
-const useRejectRequestMutation = ({ organizationId }: UseRejectRequestMutationParams) => {
+const useEscalateRequestMutation = ({
+  organizationId,
+}: UseEscalateRequestMutationParams) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (params: { reason: string; requestId: string }) =>
-      rejectRequestService({
+    mutationFn: (params: {
+      escalateToId: string;
+      reason: string;
+      requestId: string;
+    }) =>
+      escalateRequestService({
+        escalateToId: params.escalateToId,
         organizationId,
         reason: params.reason,
         requestId: params.requestId,
@@ -27,9 +34,9 @@ const useRejectRequestMutation = ({ organizationId }: UseRejectRequestMutationPa
       queryClient.invalidateQueries({
         queryKey: KEY_USE_GET_FA_APPROVAL_REQUESTS(organizationId),
       });
-      toast.success("Request rejected");
+      toast.success("Request escalated");
     },
   });
 };
 
-export default useRejectRequestMutation;
+export default useEscalateRequestMutation;

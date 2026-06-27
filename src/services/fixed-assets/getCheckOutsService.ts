@@ -2,7 +2,7 @@ import type { FaCheckOutFilterOptions, FaCheckOutRecord } from "@/types/fixed-as
 
 import fetcher, { ApiResponse } from "..";
 
-export type GetCheckOutsResponse = ApiResponse<{ checkOuts: FaCheckOutRecord[] }>;
+export type GetCheckOutsResponse = ApiResponse<{ check_outs: FaCheckOutRecord[] }>;
 
 interface GetCheckOutsParams extends FaCheckOutFilterOptions {
   organizationId: string;

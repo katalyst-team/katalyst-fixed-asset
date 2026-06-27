@@ -36,7 +36,7 @@ export function useFaPeopleOptions() {
     tab: "cust",
   });
   const people =
-    peopleResp?.data?.masterDataSections?.flatMap((s) => s.rows) ?? [];
+    peopleResp?.data?.master_data_sections?.flatMap((s) => s.rows) ?? [];
   return people.map((p) => ({ label: p.name, value: p.id }));
 }
 
@@ -48,6 +48,6 @@ export function useFaLocationOptions() {
     tab: "loc",
   });
   const locations =
-    locResp?.data?.masterDataSections?.flatMap((s) => s.rows) ?? [];
+    locResp?.data?.master_data_sections?.flatMap((s) => s.rows) ?? [];
   return locations.map((l) => ({ label: l.name, value: l.id }));
 }

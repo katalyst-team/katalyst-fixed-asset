@@ -81,14 +81,14 @@ export function FaDashboardPage() {
 
   const d = resp?.data;
   const activity = d?.activity ?? [];
-  const categoryStats = d?.categoryStats ?? [];
+  const category_stats = d?.category_stats ?? [];
   const financialCategories = d?.financialCategories ?? [];
   const maintenanceUpcoming = d?.maintenanceUpcoming ?? [];
   const rfidReads = d?.rfidReads ?? [];
   const sites = d?.sites ?? [];
 
   const allAssets = assetResp?.data?.assets ?? [];
-  const totalAssets = categoryStats.reduce((sum, cs) => sum + cs.v, 0);
+  const totalAssets = category_stats.reduce((sum, cs) => sum + cs.v, 0);
   const capitalValue = financialCategories.reduce((sum, fc) => sum + fc.nbv, 0);
   const topValue = allAssets
     .filter((a) => a.val > 100_000_000)
@@ -233,7 +233,7 @@ export function FaDashboardPage() {
             <div className="ks-card-title">Category distribution</div>
           </div>
           <div className="ks-card-body">
-            {categoryStats.map((cs) => {
+            {category_stats.map((cs) => {
               const Icon = catToLucide[cs.cat] ?? catToLucide.furn;
               return (
                 <div key={cs.cat} style={{ marginBottom: 12 }}>

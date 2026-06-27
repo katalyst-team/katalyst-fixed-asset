@@ -72,7 +72,7 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
   async function handleSubmit() {
     if (!isValid) return;
     await mutateAsync({
-      autoWO: true,
+      auto_wo: true,
       name: name.trim(),
       remind: remindAt,
       scope: assignTo,

@@ -24,11 +24,11 @@ export function FaMaintenancePage() {
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: maintResp } = useGetMaintenanceQuery({ organizationId });
-  const workOrders = maintResp?.data?.workOrders ?? [];
-  const healthData = maintResp?.data?.healthData ?? [];
-  const openWOs = workOrders.filter((w) => w.status === "open" || w.status === "in-progress").length;
-  const overdueFailed = healthData.filter((h) => h.status === "critical" || h.status === "alert").length;
-  const dormant = healthData.filter((h) => h.sinceMaintDays > 30).length;
+  const work_orders = maintResp?.data?.work_orders ?? [];
+  const health_data = maintResp?.data?.health_data ?? [];
+  const openWOs = work_orders.filter((w) => w.status === "open" || w.status === "in-progress").length;
+  const overdueFailed = health_data.filter((h) => h.status === "critical" || h.status === "alert").length;
+  const dormant = health_data.filter((h) => h.since_maint_days > 30).length;
   const [tab, setTab] = useState<Tab>("flow");
   const { openModal } = useFaModal();
   return (

@@ -11,7 +11,7 @@ import fetcher, { ApiResponse } from "..";
 
 export type GetFADashboardResponse = ApiResponse<{
   activity: FaActivityItem[];
-  categoryStats: FaCategoryStat[];
+  category_stats: FaCategoryStat[];
   financialCategories: FaFinancialCategory[];
   maintenanceUpcoming: FaMaintenanceUpcoming[];
   rfidReads: FaRfidRead[];

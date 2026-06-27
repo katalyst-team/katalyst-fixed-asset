@@ -335,7 +335,7 @@ export function FaDetailPage() {
                       <div className="flex-1">
                         <div className="text-sm">{wo.desc}</div>
                         <div className="font-mono text-xs text-muted-foreground">
-                          {wo.id} · {wo.assignedTo} · ETA {wo.eta}
+                          {wo.id} · {wo.assigned_to} · ETA {wo.eta}
                         </div>
                       </div>
                       <span className={`ks-badge ${woBadge(wo.status)}`}>{wo.status}</span>

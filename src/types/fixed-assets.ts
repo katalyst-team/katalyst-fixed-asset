@@ -126,16 +126,16 @@ export interface FaHealthItem {
   cat: AssetCategory;
   cycles: number;
   custodian: string;
-  healthScore: number;
+  health_score: number;
   id: string;
   lastSeenLabel: string;
   lastSeenMin: number;
   loc: string;
-  mtbfDays: number;
+  mtbf_days: number;
   name: string;
-  nextPMDays: number;
-  runHours: number;
-  sinceMaintDays: number;
+  next_pm_days: number;
+  run_hours: number;
+  since_maint_days: number;
   status: "critical" | "alert" | "watch" | "ok";
 }
 
@@ -145,12 +145,12 @@ export interface FaPreUseAsset {
   checks: string[];
   critical: boolean;
   dueIn: string;
-  failItem?: string;
+  fail_item?: string;
   id: string;
   interval: string;
   lastCheckLabel: string;
-  lastChecker: string;
-  lastResult: "pass" | "fail";
+  last_checker: string;
+  last_result: "pass" | "fail";
   overdue: boolean;
   streak: number;
 }
@@ -168,7 +168,7 @@ export interface FaPmScheduleItem {
 }
 
 export interface FaPmRule {
-  autoWO: boolean;
+  auto_wo: boolean;
   name: string;
   remind: string;
   scope: string;
@@ -178,10 +178,10 @@ export interface FaPmRule {
 
 export interface FaWorkOrder {
   asset: string;
-  assetId: string;
-  assignedTo: string;
+  asset_id: string;
+  assigned_to: string;
   cat: AssetCategory;
-  createdAt: string;
+  created_at: string;
   desc: string;
   eta: string;
   id: string;
@@ -193,7 +193,7 @@ export interface FaWorkOrder {
 export interface FaSecurityAlert {
   action: string;
   asset: string;
-  assetId: string;
+  asset_id: string;
   camera: string;
   desc: string;
   id: string;
@@ -227,14 +227,14 @@ export interface FaRfidOrderItem {
 
 export interface FaCheckOutRecord {
   asset: string;
-  assetId: string;
+  asset_id: string;
   by: string;
   condition: "excellent" | "good" | "fair";
-  dueDate: string;
+  due_date: string;
   id: string;
-  outDate: string;
+  out_date: string;
   purpose: string;
-  returnDate: string | null;
+  return_date: string | null;
   status: "active" | "returned" | "overdue";
 }
 
@@ -247,7 +247,7 @@ export interface FaReportTemplate {
   desc: string;
   icon: string;
   id: string;
-  lastRun: string;
+  last_run: string;
   name: string;
   tone: string;
 }
@@ -263,7 +263,7 @@ export interface FaUser {
   department: string;
   email: string;
   id: string;
-  lastActive: string;
+  last_active: string;
   name: string;
   role: "Admin" | "Manager" | "Auditor" | "Operator" | "Viewer";
   status: "active" | "invited" | "suspended";
@@ -700,7 +700,7 @@ export interface SubmitPreUseCheckRequest {
 }
 
 export interface CreatePmRuleRequest {
-  autoWO: boolean;
+  auto_wo: boolean;
   name: string;
   remind: string;
   scope: string;
@@ -935,53 +935,63 @@ export type ApprovalStatus =
 
 export type ApprovalPriority = "low" | "medium" | "high" | "critical";
 
+export type ApprovalScope =
+  | "organization"
+  | "category"
+  | "cost_center"
+  | "store";
+
 export interface FaApprovalStep {
-  approverName: string;
-  approverRole: string;
-  comment?: string;
-  decidedAt: string | null;
-  name: string;
-  order: number;
-  role: string;
-  status: "pending" | "approved" | "rejected" | "skipped";
+  acted_at: string | null;
+  approver_id: string | null;
+  approver_name: string | null;
+  assigned_at: string;
+  decision_notes: string | null;
+  escalated_at: string | null;
+  escalated_to_id: string | null;
+  id: string;
+  status: string;
+  step_name: string;
+  step_order: number;
 }
 
 export interface FaApprovalRequest {
-  amount: number;
-  assetId: string;
-  assetName: string;
-  createdAt: string;
-  currentStep: number;
-  description: string;
+  completed_at: string | null;
+  current_step: number;
+  description: string | null;
   id: string;
-  priority: ApprovalPriority;
-  requesterName: string;
-  steps: FaApprovalStep[];
+  requester_id: string;
+  source_entity_id: number;
+  source_entity_type: string | null;
   status: ApprovalStatus;
-  totalSteps: number;
+  steps: FaApprovalStep[];
+  submitted_at: string;
+  title: string;
+  tone: string;
   type: ApprovalType;
-  updatedAt: string;
 }
 
 export interface FaApprovalRule {
-  appliesTo: ApprovalType;
-  conditions: string;
-  escalationAfterHours: number;
+  approval_type: ApprovalType;
+  conditions: Record<string, unknown>;
+  created_at: string;
   id: string;
-  isActive: boolean;
-  minAmount: number;
+  is_active: boolean;
   name: string;
-  steps: { approverRole: string; name: string; order: number }[];
-  thresholdDays: number;
+  priority: number;
+  scope: ApprovalScope;
+  scope_value: string | null;
+  updated_at: string;
+  workflow_steps: Record<string, unknown>[];
 }
 
 export interface FaApprovalStats {
-  avgApprovalHours: number;
+  approved: number;
   escalated: number;
+  in_review: number;
   pending: number;
-  pendingCritical: number;
-  rejectedThisMonth: number;
-  SLACompliance: number;
+  rejected: number;
+  withdrawn: number;
 }
 
 /* ============================================================
@@ -1003,45 +1013,26 @@ export type LifecycleStage =
   | "retired";
 
 export interface FaLifecycleEvent {
-  actor: string;
+  actor_name: string;
+  asset_code: string;
+  asset_id: number;
+  asset_name: string;
   detail: string;
-  eventId: string;
-  fromStage: LifecycleStage | null;
-  metadata?: Record<string, string>;
-  notes?: string;
-  stage: LifecycleStage;
+  event_type: string;
+  ext_id: string;
+  from_stage: string | null;
+  metadata: Record<string, unknown>;
+  notes: string | null;
+  stage: string;
   timestamp: string;
-  type: string;
-}
-
-export interface FaLifecycleAsset {
-  acquisitionDate: string;
-  acquisitionValue: number;
-  ageDays: number;
-  cat: AssetCategory;
-  currentValue: number;
-  currentStage: LifecycleStage;
-  custodian: string;
-  depreciationRate: number;
-  epc: string;
-  events: FaLifecycleEvent[];
-  id: string;
-  lifecycleProgress: number;
-  loc: string;
-  name: string;
-  netBookValue: number;
-  serial: string;
-  status: AssetStatus;
-  totalEvents: number;
-  warrantyExpiry: string;
 }
 
 export interface FaLifecycleSummary {
   acquiring: number;
   disposed: number;
-  inUse: number;
+  in_use: number;
   retired: number;
-  totalAssets: number;
+  total_assets: number;
 }
 
 /* ============================================================
@@ -1051,60 +1042,47 @@ export interface FaLifecycleSummary {
 export type PredictionSeverity = "critical" | "warning" | "watch" | "healthy";
 
 export interface FaPredictionResult {
-  accuracy: number;
-  assetCat: AssetCategory;
-  assetId: string;
-  assetName: string;
+  asset_code: string;
+  asset_id: number;
+  asset_name: string;
   confidence: number;
-  currentHealth: number;
-  daysToFailure: number;
-  estimatedCost: number;
-  failedPart: string;
-  failureMode: string;
-  lastUpdated: string;
-  loc: string;
-  modelName: string;
-  recommendedAction: string;
-  recommendedActionDate: string;
-  rul: number;
-  runHours: number;
+  current_health: number;
+  days_to_failure: number;
+  estimated_cost: number;
+  ext_id: string;
+  failed_part: string | null;
+  failure_mode: string | null;
+  last_updated: string;
+  model_id: number;
+  model_name: string;
+  recommended_action: string | null;
+  recommended_action_date: string | null;
   severity: PredictionSeverity;
-  trendData: number[];
+  trend_data: Record<string, unknown>;
 }
 
 export interface FaPredictiveModel {
   accuracy: number;
-  active: boolean;
-  assetCount: number;
-  assetScope: string;
-  avgConfidence: number;
-  createdAt: string;
+  asset_count: number;
+  asset_scope: string;
+  avg_confidence: number;
+  created_at: string;
+  ext_id: string;
+  false_positives: number;
   features: string[];
-  falsePositives: number;
-  id: string;
-  lastTrained: string;
-  modelType: string;
+  is_active: boolean;
+  last_trained_at: string | null;
+  model_type: string;
   name: string;
-  pendingRetrain: boolean;
+  pending_retrain: boolean;
   precision: number;
-  predictions: number;
   recall: number;
-  status: "active" | "training" | "stale" | "disabled";
-  truePositives: number;
+  total_predictions: number;
+  true_positives: number;
   version: string;
 }
 
-export interface FaPredictiveSummary {
-  avgAccuracy: number;
-  avgConfidence: number;
-  criticalPredictions: number;
-  healthy: number;
-  modelsActive: number;
-  totalAssetsMonitored: number;
-  totalPredictions: number;
-  watchItems: number;
-  warningItems: number;
-}
+export type FaPredictiveSummary = Record<string, number>;
 
 /* ============================================================
    Financial Integration
@@ -1169,19 +1147,19 @@ export interface FaDepreciationSchedule {
 }
 
 export interface FaBastDocument {
-  assetId: string;
-  assetName: string;
-  createdAt: string;
-  disposalId: string;
-  documentId: string;
-  downloadUrl: string;
-  handoverDate: string;
-  recipientName: string;
-  recipientRole: string;
-  signedAt: string | null;
-  signerName: string;
-  status: "draft" | "pending-signature" | "signed" | "voided";
-  type: string;
+  created_at: string;
+  document_type: string;
+  ext_id: string;
+  file_size: number;
+  file_url: string;
+  handover_date: string | null;
+  recipient_name: string;
+  recipient_role: string;
+  reference_id: number;
+  reference_type: string;
+  signed_at: string | null;
+  signer_name: string | null;
+  status: string;
 }
 
 export interface FaFinanceSummary {
@@ -1198,13 +1176,20 @@ export interface FaFinanceSummary {
 }
 
 export interface FaInsurancePolicy {
-  assetCount: number;
-  coverageAmount: number;
-  expiryDate: string;
-  id: string;
-  insurer: string;
-  policyNumber: string;
+  asset_count: number;
+  contact_email: string | null;
+  contact_person: string | null;
+  contact_phone: string | null;
+  coverage_amount: number;
+  created_at: string;
+  document_url: string | null;
+  expiry_date: string | null;
+  ext_id: string;
+  insurer_name: string;
+  next_renewal_date: string | null;
+  policy_number: string;
+  policy_type: string;
   premium: number;
-  status: "active" | "expiring-soon" | "expired" | "renewing";
-  type: string;
+  renewal_reminder_days: number;
+  status: string;
 }

@@ -131,22 +131,21 @@ function BastTab({ organizationId }: { organizationId: string }) {
     <FaQueryState isEmpty={documents.length === 0} isError={isError} isLoading={isLoading}>
       <div className="space-y-2">
         {documents.map((doc) => (
-          <div key={doc.documentId} className="rounded-lg border border-border p-3 flex items-center gap-3">
+          <div key={doc.ext_id} className="rounded-lg border border-border p-3 flex items-center gap-3">
             <span className="ks-kpi-mini-square brand" style={{ alignItems: "center", borderRadius: 6, display: "flex", height: 30, justifyContent: "center", width: 30 }}>
               <FileText size={14} />
             </span>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div className="font-semibold text-sm">{doc.assetName}</div>
-              <div className="text-xs text-muted-foreground font-mono">{doc.documentId} · {doc.assetId}</div>
+              <div className="font-semibold text-sm">{doc.document_type} · {doc.reference_type}</div>
               <div className="text-xs text-muted-foreground">
-                Recipient: {doc.recipientName} · Handover: {doc.handoverDate}
+                Recipient: {doc.recipient_name} ({doc.recipient_role}) · Handover: {doc.handover_date ?? "—"}
               </div>
             </div>
             <span className={`ks-badge ${doc.status === "signed" ? "success" : doc.status === "pending-signature" ? "warn" : "outline"}`}>
               {doc.status}
             </span>
-            {doc.downloadUrl && (
-              <button className="ks-btn ks-btn-sm" type="button" onClick={() => safeOpenUrl(doc.downloadUrl)}>
+            {doc.file_url && (
+              <button className="ks-btn ks-btn-sm" type="button" onClick={() => safeOpenUrl(doc.file_url)}>
                 <Download size={12} />
                 Download
               </button>
@@ -166,11 +165,11 @@ function InsuranceTab({ organizationId }: { organizationId: string }) {
     <FaQueryState isEmpty={policies.length === 0} isError={isError} isLoading={isLoading}>
       <div className="grid grid-cols-2 gap-3">
         {policies.map((policy) => (
-          <div key={policy.id} className="rounded-lg border border-border p-3">
+          <div key={policy.ext_id} className="rounded-lg border border-border p-3">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <Shield className="text-muted-foreground" size={14} />
-                <span className="font-semibold text-sm">{policy.insurer}</span>
+                <span className="font-semibold text-sm">{policy.insurer_name}</span>
               </div>
               <span className={`ks-badge ${policy.status === "active" ? "success" : policy.status === "expiring-soon" ? "warn" : policy.status === "expired" ? "danger" : "info"}`}>
                 {policy.status}
@@ -179,15 +178,15 @@ function InsuranceTab({ organizationId }: { organizationId: string }) {
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div>
                 <div className="text-xs text-muted-foreground">Policy</div>
-                <div className="font-mono">{policy.policyNumber}</div>
+                <div className="font-mono">{policy.policy_number}</div>
               </div>
               <div>
                 <div className="text-xs text-muted-foreground">Type</div>
-                <div>{policy.type}</div>
+                <div>{policy.policy_type}</div>
               </div>
               <div>
                 <div className="text-xs text-muted-foreground">Coverage</div>
-                <div className="font-mono">{formatIDRShort(policy.coverageAmount)}</div>
+                <div className="font-mono">{formatIDRShort(policy.coverage_amount)}</div>
               </div>
               <div>
                 <div className="text-xs text-muted-foreground">Premium</div>
@@ -197,12 +196,12 @@ function InsuranceTab({ organizationId }: { organizationId: string }) {
                 <div className="text-xs text-muted-foreground">Expiry</div>
                 <div className="flex items-center gap-1">
                   <Calendar size={11} />
-                  {policy.expiryDate}
+                  {policy.expiry_date ?? "—"}
                 </div>
               </div>
               <div>
                 <div className="text-xs text-muted-foreground">Assets</div>
-                <div>{policy.assetCount}</div>
+                <div>{policy.asset_count}</div>
               </div>
             </div>
           </div>

@@ -414,7 +414,7 @@ export function FaMasterDataPage() {
   const { canManage } = useFaPermission();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp, isError, isLoading } = useGetFAMasterDataQuery({ organizationId });
-  const sections = resp?.data?.masterDataSections ?? [];
+  const sections = resp?.data?.master_data_sections ?? [];
   const [tab, setTab] = useState<FaMasterDataSectionTab>("cat");
   const fileRef = useRef<HTMLInputElement>(null);
 

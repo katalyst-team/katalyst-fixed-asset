@@ -136,7 +136,7 @@ export function FaSecurityPage() {
         <div className="ks-card-body">
           <div className="flex flex-col gap-3">
             {alerts.map((alert) => {
-              const asset = ASSET_BY_ID.get(alert.assetId);
+              const asset = ASSET_BY_ID.get(alert.asset_id);
               const critical = alert.severity === "critical";
               return (
                 <div
@@ -166,7 +166,7 @@ export function FaSecurityPage() {
                     {alert.asset}
                     <span className="font-normal text-muted-foreground">
                       {" · "}
-                      {alert.assetId}
+                      {alert.asset_id}
                     </span>
                   </div>
                   <div className="mt-1 text-sm text-muted-foreground">
@@ -210,7 +210,7 @@ export function FaSecurityPage() {
                     <button
                       className="ks-btn ks-btn-sm"
                       type="button"
-                      onClick={() => router.push(`/dashboard/fixed-assets/register/${alert.assetId}/`)}
+                      onClick={() => router.push(`/dashboard/fixed-assets/register/${alert.asset_id}/`)}
                     >
                       <Search size={13} />
                       View asset

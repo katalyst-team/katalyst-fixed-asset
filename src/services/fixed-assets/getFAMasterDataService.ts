@@ -3,7 +3,7 @@ import type { FaMasterDataSection, FaMasterDataSectionTab } from "@/types/fixed-
 import fetcher, { ApiResponse } from "..";
 
 export type GetFAMasterDataResponse = ApiResponse<{
-  masterDataSections: FaMasterDataSection[];
+  master_data_sections: FaMasterDataSection[];
 }>;
 
 interface GetFAMasterDataParams {

@@ -14,7 +14,6 @@ import {
   FaKpiStrip,
   FaShellHead,
   FaStat,
-  formatIDR,
 } from "@/modules/dashboard/fixed-assets";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import type { ApprovalStatus, FaApprovalRequest } from "@/types/fixed-assets";
@@ -48,8 +47,8 @@ const STATUS_TONE: Record<string, string> = {
 };
 
 function stepProgress(req: FaApprovalRequest): number {
-  if (req.totalSteps === 0) return 0;
-  return Math.round((req.currentStep / req.totalSteps) * 100);
+  if (req.steps.length === 0) return 0;
+  return Math.round((req.current_step / req.steps.length) * 100);
 }
 
 export function FaApprovalsPage() {
@@ -66,7 +65,7 @@ export function FaApprovalsPage() {
   const { mutateAsync: approve } = useApproveRequestMutation({ organizationId });
   const { mutateAsync: reject } = useRejectRequestMutation({ organizationId });
 
-  const stats = resp?.data?.stats;
+  const summary = resp?.data?.summary;
   const requests = resp?.data?.requests ?? [];
   const rules = rulesResp?.data?.rules ?? [];
 
@@ -74,7 +73,7 @@ export function FaApprovalsPage() {
     await approve({ requestId });
   };
   const handleReject = async (requestId: string) => {
-    await reject({ comment: "Rejected from approval center", requestId });
+    await reject({ reason: "Rejected from approval center", requestId });
   };
 
   return (
@@ -85,10 +84,10 @@ export function FaApprovalsPage() {
       />
 
       <FaKpiStrip>
-        <FaStat label="Pending" tone="brand" value={String(stats?.pending ?? 0)} />
-        <FaStat label="Critical" sub="needs immediate action" tone="danger" value={String(stats?.pendingCritical ?? 0)} />
-        <FaStat label="Avg Approval" sub="hours per request" tone="info" value={String(stats?.avgApprovalHours ?? 0)} />
-        <FaStat label="SLA Compliance" tone={stats && stats.SLACompliance >= 90 ? "success" : "warn"} value={`${stats?.SLACompliance ?? 0}%`} />
+        <FaStat label="Pending" tone="brand" value={String(summary?.pending ?? 0)} />
+        <FaStat label="In Review" tone="warn" value={String(summary?.in_review ?? 0)} />
+        <FaStat label="Approved" tone="success" value={String(summary?.approved ?? 0)} />
+        <FaStat label="Escalated" sub="needs attention" tone="danger" value={String(summary?.escalated ?? 0)} />
       </FaKpiStrip>
 
       <div className="ks-seg" style={{ marginBottom: 16 }}>
@@ -111,9 +110,8 @@ export function FaApprovalsPage() {
             <thead>
               <tr style={{ borderBottom: "1px solid hsl(var(--border))" }}>
                 <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Type</th>
-                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Asset</th>
+                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Title</th>
                 <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Requester</th>
-                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Amount</th>
                 <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Progress</th>
                 <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Status</th>
                 <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Actions</th>
@@ -126,11 +124,10 @@ export function FaApprovalsPage() {
                     <span className="ks-badge outline">{TYPE_LABEL[req.type] ?? req.type}</span>
                   </td>
                   <td className="p-3">
-                    <div className="font-semibold text-sm">{req.assetName}</div>
-                    <div className="font-mono text-muted-foreground text-xs">{req.assetId}</div>
+                    <div className="font-semibold text-sm">{req.title}</div>
+                    {req.description && <div className="text-muted-foreground text-xs">{req.description}</div>}
                   </td>
-                  <td className="p-3 text-sm">{req.requesterName}</td>
-                  <td className="p-3 font-mono text-sm">{formatIDR(req.amount)}</td>
+                  <td className="p-3 font-mono text-xs">{req.requester_id}</td>
                   <td className="p-3">
                     <div className="flex items-center gap-2">
                       <div style={{ flex: 1, minWidth: 60 }}>
@@ -138,7 +135,7 @@ export function FaApprovalsPage() {
                           <div style={{ background: "hsl(var(--brand))", borderRadius: 4, height: "100%", width: `${stepProgress(req)}%` }} />
                         </div>
                       </div>
-                      <span className="text-muted-foreground text-xs">{req.currentStep}/{req.totalSteps}</span>
+                      <span className="text-muted-foreground text-xs">{req.current_step}/{req.steps.length}</span>
                     </div>
                   </td>
                   <td className="p-3">
@@ -178,13 +175,12 @@ export function FaApprovalsPage() {
                   <div key={rule.id} className="border border-border p-3 rounded-lg">
                     <div className="mb-2 flex items-center justify-between">
                       <span className="font-semibold text-sm">{rule.name}</span>
-                      <span className={`ks-badge ${rule.isActive ? "success" : "outline"}`}>{rule.isActive ? "Active" : "Inactive"}</span>
+                      <span className={`ks-badge ${rule.is_active ? "success" : "outline"}`}>{rule.is_active ? "Active" : "Inactive"}</span>
                     </div>
-                    <div className="mb-2 text-muted-foreground text-xs">{TYPE_LABEL[rule.appliesTo] ?? rule.appliesTo}</div>
+                    <div className="mb-2 text-muted-foreground text-xs">{TYPE_LABEL[rule.approval_type] ?? rule.approval_type}</div>
                     <div className="flex flex-wrap gap-1">
-                      {rule.steps.map((step) => (
-                        <span key={step.order} className="ks-badge info">{step.order}. {step.name}</span>
-                      ))}
+                      <span className="ks-badge info">{rule.scope}</span>
+                      <span className="ks-badge outline">{rule.workflow_steps.length} steps</span>
                     </div>
                   </div>
                 ))}

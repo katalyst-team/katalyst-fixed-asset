@@ -50,7 +50,7 @@ function ReportCard({
             <span key={f} className="ks-badge outline">{f}</span>
           ))}
           <span style={{ color: "hsl(var(--text-3))", fontSize: 11, marginLeft: "auto" }}>
-            <Clock size={11} style={{ display: "inline", marginRight: 3 }} />{tpl.lastRun}
+            <Clock size={11} style={{ display: "inline", marginRight: 3 }} />{tpl.last_run}
           </span>
         </div>
         <div style={{ display: "flex", gap: 8 }}>

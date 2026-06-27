@@ -56,11 +56,11 @@ export function FaCheckOutPage() {
   });
   const { isPending: isExporting, mutateAsync: exportData } =
     useExportDataMutation({ organizationId });
-  const checkOuts = resp?.data?.checkOuts ?? [];
-  const activeLoans = checkOuts.filter((c) => c.status === "active").length;
-  const overdueLoans = checkOuts.filter((c) => c.status === "overdue").length;
-  const returnedLoans = checkOuts.filter((c) => c.status === "returned").length;
-  const returnRate = checkOuts.length > 0 ? Math.round((returnedLoans / checkOuts.length) * 100) : null;
+  const check_outs = resp?.data?.check_outs ?? [];
+  const activeLoans = check_outs.filter((c) => c.status === "active").length;
+  const overdueLoans = check_outs.filter((c) => c.status === "overdue").length;
+  const returnedLoans = check_outs.filter((c) => c.status === "returned").length;
+  const returnRate = check_outs.length > 0 ? Math.round((returnedLoans / check_outs.length) * 100) : null;
 
   const handleNext = () => {
     if (page < (resp?.pagination?.total_pages ?? 1)) {
@@ -115,7 +115,7 @@ export function FaCheckOutPage() {
       <FaQueryState
         emptyDescription="No check-out records yet."
         emptyTitle="No check-outs"
-        isEmpty={checkOuts.length === 0}
+        isEmpty={check_outs.length === 0}
         isError={isError}
         isLoading={isLoading}
         skeleton={<SkeletonTable columns={7} rows={6} />}
@@ -125,7 +125,7 @@ export function FaCheckOutPage() {
           <div>
             <div className="ks-card-title">Check-Out Records</div>
             <div className="ks-card-desc">
-              {checkOuts.length} loans · RFID-verified chain of custody
+              {check_outs.length} loans · RFID-verified chain of custody
             </div>
           </div>
           <button
@@ -152,9 +152,9 @@ export function FaCheckOutPage() {
               </tr>
             </thead>
             <tbody>
-              {checkOuts.map((c, i) => {
+              {check_outs.map((c, i) => {
                 const Icon = catToLucide[
-                  c.assetId.startsWith("TL") ? "tool" : c.assetId.startsWith("IT") ? "it" : "furn"
+                  c.asset_id.startsWith("TL") ? "tool" : c.asset_id.startsWith("IT") ? "it" : "furn"
                 ];
                 return (
                   <tr key={c.id} className="hover:bg-muted">
@@ -164,9 +164,9 @@ export function FaCheckOutPage() {
                         <div>
                           <div className="font-medium">{c.asset}</div>
                           <div className="flex items-center gap-1.5">
-                            <span className="text-xs text-muted-foreground">{c.assetId}</span>
-                            <span className={`ks-badge ${catToneClass(c.assetId.startsWith("TL") ? "tool" : c.assetId.startsWith("IT") ? "it" : "furn")}`}>
-                              {CAT_LABEL[c.assetId.startsWith("TL") ? "tool" : c.assetId.startsWith("IT") ? "it" : "furn"]}
+                            <span className="text-xs text-muted-foreground">{c.asset_id}</span>
+                            <span className={`ks-badge ${catToneClass(c.asset_id.startsWith("TL") ? "tool" : c.asset_id.startsWith("IT") ? "it" : "furn")}`}>
+                              {CAT_LABEL[c.asset_id.startsWith("TL") ? "tool" : c.asset_id.startsWith("IT") ? "it" : "furn"]}
                             </span>
                           </div>
                         </div>
@@ -184,11 +184,11 @@ export function FaCheckOutPage() {
                         <span>{c.by}</span>
                       </div>
                     </td>
-                    <td className="p-3 border-t border-border text-muted-foreground">{c.outDate}</td>
+                    <td className="p-3 border-t border-border text-muted-foreground">{c.out_date}</td>
                     <td className="p-3 border-t border-border">
                       <span className={c.status === "overdue" ? "font-medium text-[hsl(var(--destructive))]" : "text-muted-foreground"}>
                         {c.status === "overdue" && <Clock className="mr-1 inline" size={12} />}
-                        {c.dueDate}
+                        {c.due_date}
                       </span>
                     </td>
                     <td className="p-3 border-t border-border text-muted-foreground">{c.purpose}</td>
@@ -229,7 +229,7 @@ export function FaCheckOutPage() {
           className="justify-between text-xs text-muted-foreground flex items-center"
           style={{ borderTop: "1px solid hsl(var(--border))", padding: "10px 18px" }}
         >
-          <span>Showing {checkOuts.length} of {resp?.pagination?.count ?? 0}</span>
+          <span>Showing {check_outs.length} of {resp?.pagination?.count ?? 0}</span>
           <PaginationCursor
             currentPage={page}
             hasNextPage={page < (resp?.pagination?.total_pages ?? 1)}

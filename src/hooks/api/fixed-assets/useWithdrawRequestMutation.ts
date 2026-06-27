@@ -2,22 +2,24 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { toastError } from "@/services";
-import { rejectRequestService } from "@/services/fixed-assets/rejectRequestService";
+import { withdrawRequestService } from "@/services/fixed-assets/withdrawRequestService";
 
 import { KEY_USE_GET_FA_APPROVAL_REQUESTS } from "./useGetApprovalRequestsQuery";
 
-interface UseRejectRequestMutationParams {
+interface UseWithdrawRequestMutationParams {
   organizationId: string;
 }
 
-const useRejectRequestMutation = ({ organizationId }: UseRejectRequestMutationParams) => {
+const useWithdrawRequestMutation = ({
+  organizationId,
+}: UseWithdrawRequestMutationParams) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (params: { reason: string; requestId: string }) =>
-      rejectRequestService({
+    mutationFn: (params: { comment?: string; requestId: string }) =>
+      withdrawRequestService({
+        comment: params.comment,
         organizationId,
-        reason: params.reason,
         requestId: params.requestId,
       }),
     onError: (error) => {
@@ -27,9 +29,9 @@ const useRejectRequestMutation = ({ organizationId }: UseRejectRequestMutationPa
       queryClient.invalidateQueries({
         queryKey: KEY_USE_GET_FA_APPROVAL_REQUESTS(organizationId),
       });
-      toast.success("Request rejected");
+      toast.success("Request withdrawn");
     },
   });
 };
 
-export default useRejectRequestMutation;
+export default useWithdrawRequestMutation;

@@ -85,15 +85,15 @@ export function FlowTab() {
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp, isError, isLoading } = useGetMaintenanceQuery({ organizationId });
-  const HEALTH_DATA = resp?.data?.healthData ?? [];
+  const HEALTH_DATA = resp?.data?.health_data ?? [];
   const alerts = HEALTH_DATA.filter(
     (h) => h.status === "critical" || h.status === "alert",
   );
   const buckets = [
-    { label: "Critical (<40)", n: HEALTH_DATA.filter((h) => h.healthScore < 40).length, tone: "danger" },
-    { label: "Alert (40-59)", n: HEALTH_DATA.filter((h) => h.healthScore >= 40 && h.healthScore < 60).length, tone: "warn" },
-    { label: "Watch (60-79)", n: HEALTH_DATA.filter((h) => h.healthScore >= 60 && h.healthScore < 80).length, tone: "brand" },
-    { label: "Healthy (80+)", n: HEALTH_DATA.filter((h) => h.healthScore >= 80).length, tone: "success" },
+    { label: "Critical (<40)", n: HEALTH_DATA.filter((h) => h.health_score < 40).length, tone: "danger" },
+    { label: "Alert (40-59)", n: HEALTH_DATA.filter((h) => h.health_score >= 40 && h.health_score < 60).length, tone: "warn" },
+    { label: "Watch (60-79)", n: HEALTH_DATA.filter((h) => h.health_score >= 60 && h.health_score < 80).length, tone: "brand" },
+    { label: "Healthy (80+)", n: HEALTH_DATA.filter((h) => h.health_score >= 80).length, tone: "success" },
   ];
   return (
     <div style={{ ...flexCol, gap: 16 }}>
@@ -218,7 +218,7 @@ export function HealthTab() {
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp, isError, isLoading } = useGetMaintenanceQuery({ organizationId });
-  const HEALTH_DATA = resp?.data?.healthData ?? [];
+  const HEALTH_DATA = resp?.data?.health_data ?? [];
   const [filter, setFilter] = useState("All");
   const rows = HEALTH_DATA.filter((h) => {
     if (filter === "All") return true;
@@ -226,8 +226,8 @@ export function HealthTab() {
     if (filter === "Alert") return h.status === "alert";
     if (filter === "Watch") return h.status === "watch";
     if (filter === "Dormant") return h.lastSeenMin > 120;
-    if (filter === "No maint") return h.sinceMaintDays > 180;
-    if (filter === "PM due") return h.nextPMDays <= 0;
+    if (filter === "No maint") return h.since_maint_days > 180;
+    if (filter === "PM due") return h.next_pm_days <= 0;
     return true;
   });
   const cols = ["Asset", "Age", "Last seen", "No maint", "Next PM", "Cycles/Hours", "MTBF", "Health", "Status"];
@@ -274,18 +274,18 @@ export function HealthTab() {
                 </TD>
                 <TD style={mono}>{formatAge(h.ageDays)}</TD>
                 <TD>{h.lastSeenLabel}</TD>
-                <TD style={mono}>{h.sinceMaintDays}d</TD>
-                <TD style={{ ...mono, color: h.nextPMDays < 0 ? "hsl(var(--destructive))" : "inherit", fontWeight: h.nextPMDays < 0 ? 600 : 400 }}>
-                  {h.nextPMDays <= 0 ? `${Math.abs(h.nextPMDays)}d over` : `${h.nextPMDays}d`}
+                <TD style={mono}>{h.since_maint_days}d</TD>
+                <TD style={{ ...mono, color: h.next_pm_days < 0 ? "hsl(var(--destructive))" : "inherit", fontWeight: h.next_pm_days < 0 ? 600 : 400 }}>
+                  {h.next_pm_days <= 0 ? `${Math.abs(h.next_pm_days)}d over` : `${h.next_pm_days}d`}
                 </TD>
-                <TD style={mono}>{h.cycles > 0 ? `${h.cycles}c` : `${h.runHours}h`}</TD>
-                <TD style={mono}>{h.mtbfDays > 0 ? `${h.mtbfDays}d` : "—"}</TD>
+                <TD style={mono}>{h.cycles > 0 ? `${h.cycles}c` : `${h.run_hours}h`}</TD>
+                <TD style={mono}>{h.mtbf_days > 0 ? `${h.mtbf_days}d` : "—"}</TD>
                 <TD style={{ minWidth: 110 }}>
                   <div style={{ ...flexRow, gap: 8 }}>
                     <div style={{ flex: 1 }}>
-                      <FaMeter pct={h.healthScore} tone={healthBarTone(h.healthScore)} />
+                      <FaMeter pct={h.health_score} tone={healthBarTone(h.health_score)} />
                     </div>
-                    <span style={{ ...mono, fontSize: 12, fontWeight: 600 }}>{h.healthScore}</span>
+                    <span style={{ ...mono, fontSize: 12, fontWeight: 600 }}>{h.health_score}</span>
                   </div>
                 </TD>
                 <TD>
