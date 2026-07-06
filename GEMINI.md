@@ -9,7 +9,7 @@
 - **Lint**: `bun run lint` — **always run after changes**
 - **Typecheck**: `bun tsc --noEmit`
 
-**Always use `bun`** — never npm/yarn/pnpm. Lockfile is `bun.lockb`. A stale `package-lock.json` is also checked in — **ignore it; do not run npm against it.** **No tests are configured** (no test runner, no test files) — verify with `lint` + `tsc --noEmit`.
+**Always use `bun`** — never npm/yarn/pnpm. Lockfile is `bun.lockb`. **No tests are configured** (no test runner, no test files) — verify with `lint` + `tsc --noEmit`.
 
 **No build/lint/typecheck in CI.** The only GitHub workflows are Claude code review (`pull_request`), Claude on `@claude` mentions, and a malware scanner. Quality gates are **local-only** — always run lint + typecheck yourself before considering work done.
 
@@ -150,7 +150,7 @@ This repo's primary feature is `src/modules/dashboard/fixed-assets/`. All work i
 
 **Types**: All FA types live in `src/types/fixed-assets.ts` — `FaAsset`, `AssetCategory`, `AssetStatus`, `FaSite`, `FaCategoryStat`, etc. Always import from there.
 
-**Scale**: 80+ service files in `src/services/fixed-assets/`, matching React Query hooks in `src/hooks/api/fixed-assets/`, and 20 sub-routes under `src/pages/dashboard/fixed-assets/`. All follow the repo-wide naming conventions.
+**Scale**: ~105 service files in `src/services/fixed-assets/`, matching React Query hooks in `src/hooks/api/fixed-assets/`, and 20 sub-routes under `src/pages/dashboard/fixed-assets/`. All follow the repo-wide naming conventions.
 
 ## Key Gotchas
 
