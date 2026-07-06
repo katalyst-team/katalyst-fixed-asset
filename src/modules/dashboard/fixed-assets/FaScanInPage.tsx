@@ -161,7 +161,7 @@ export function FaScanInPage() {
   }));
 
   const totalItems = PO_LINES.reduce((s, l) => s + l.qty, 0);
-  const po = PO_QUEUE[selectedPo];
+  const po = PO_QUEUE[selectedPo] ?? { date: "", id: "", items: 0, status: "", supplier: "", value: 0 };
   const remaining = totalItems - scannedCount;
   const pct = totalItems > 0 ? (scannedCount / totalItems) * 100 : 0;
 
