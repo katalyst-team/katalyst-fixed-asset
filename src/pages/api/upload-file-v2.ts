@@ -14,7 +14,8 @@ export const config = {
     bodyParser: false, // Disable Next.js body parser to use formidable
   },
   // Maximum allowed duration for this function to execute (in seconds)
-  maxDuration: 120,
+  // ponytail: Vercel hobby plan caps at 60s; upgrade plan to raise
+  maxDuration: 60,
 };
 
 export default async function handler(
