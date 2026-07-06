@@ -1,4 +1,4 @@
-import { GetStaticProps } from "next";
+import type { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import DashboardLayout from "@/components/layouts/dashboard-layout/DashboardLayout";
@@ -30,7 +30,9 @@ export default function FaDetailRoute() {
   );
 }
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { locale } = context;
+
   return {
     props: {
       ...(await serverSideTranslations(locale ?? "en", [
