@@ -267,5 +267,5 @@ Grouped by suggested parent.
 | Parent menus (icon only, no url) | 10 |
 | Fixed Assets standalone (`WEB_FA_*`) | 16 |
 | Other standalone (icon + url) | 10 |
-| Leaf menus (url only) | ~107 |
-| **Total registered in MENU_CONFIG** | **~143** |
+| Leaf menus (url only) | 104 |
+| **Total registered in MENU_CONFIG** | **140** |
