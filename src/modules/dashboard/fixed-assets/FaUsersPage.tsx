@@ -48,8 +48,8 @@ function UsersTab({ organizationId }: { organizationId: string }) {
   const rows = allUsers.filter((u) => (role === "All" || u.role === role) && (u.name.toLowerCase().includes(q.toLowerCase()) || u.email.includes(q.toLowerCase())));
   return (
     <div className="ks-card">
-      <div className="ks-card-head">
-        <div className="ks-search-box" style={{ width: 240 }}>
+      <div className="ks-card-head" style={{ flexWrap: "wrap" }}>
+        <div className="ks-search-box" style={{ maxWidth: 240, width: "100%" }}>
           <Search size={14} />
           <input placeholder="Search users…" style={{ background: "transparent", border: 0, color: "hsl(var(--text))", fontFamily: "inherit", fontSize: 13, outline: "none", width: "100%" }} onChange={(e) => setQ(e.target.value)} />
         </div>
@@ -59,6 +59,7 @@ function UsersTab({ organizationId }: { organizationId: string }) {
           ))}
         </div>
       </div>
+      <div style={{ overflowX: "auto" }}>
       <table className="w-full text-sm">
         <thead>
           <tr><Th>User</Th><Th>Role</Th><Th>Department</Th><Th>Last active</Th><Th>Status</Th></tr>
@@ -80,6 +81,7 @@ function UsersTab({ organizationId }: { organizationId: string }) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
@@ -113,6 +115,7 @@ function AuditTab({ organizationId }: { organizationId: string }) {
   return (
     <div className="ks-card">
       <div className="ks-card-head"><span className="ks-card-title">Audit Log</span></div>
+      <div style={{ overflowX: "auto" }}>
       <table className="w-full text-sm">
         <thead>
           <tr><Th>Time</Th><Th>User</Th><Th>Action</Th><Th>Resource</Th><Th>IP</Th></tr>
@@ -129,6 +132,7 @@ function AuditTab({ organizationId }: { organizationId: string }) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

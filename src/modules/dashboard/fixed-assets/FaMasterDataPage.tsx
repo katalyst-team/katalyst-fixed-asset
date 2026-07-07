@@ -101,7 +101,7 @@ function TabBar({
 }) {
   return (
     <div className="ks-card" style={{ overflow: "visible" }}>
-      <div style={{ borderBottom: "1px solid hsl(var(--border))", display: "flex" }}>
+      <div style={{ borderBottom: "1px solid hsl(var(--border))", display: "flex", overflowX: "auto" }}>
         {sections.map((s) => {
           const on = s.tab === active;
           return (
@@ -114,7 +114,7 @@ function TabBar({
                 color: on ? "hsl(var(--brand))" : "hsl(var(--text-2))",
                 cursor: "pointer",
                 display: "flex",
-                flex: 1,
+                flex: "1 0 140px",
                 flexDirection: "column",
                 fontFamily: "inherit",
                 gap: 2,
@@ -127,7 +127,7 @@ function TabBar({
                 <FaProtoIcon name={s.icon} size={14} />
                 {s.label}
               </span>
-              <span style={{ color: "hsl(var(--text-3))", fontSize: 11 }}>{s.rows[0].desc}</span>
+              <span style={{ color: "hsl(var(--text-3))", fontSize: 11 }}>{s?.rows?.[0]?.desc}</span>
             </button>
           );
         })}
@@ -191,7 +191,7 @@ function ActionButtons({ canManage, id, name, onDelete, onEdit }: { id: string; 
 function CategoryTab({ canManage, onDelete, onEdit }: RowActionProps) {
   const [sel, setSel] = useState<{ g: TreeGroup; i: TreeItem } | null>({ g: CAT_TREE[0], i: CAT_TREE[0].items[0] });
   return (
-    <div style={{ display: "grid", gap: 16, gridTemplateColumns: "220px 1fr 1fr" }}>
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[220px_1fr_1fr]">
       <TreeColumn groups={CAT_TREE} onSelect={(g, i) => setSel({ g, i })} />
       <div className="ks-card">
         <div className="ks-card-head"><span className="ks-card-title">Sub-Categories</span><span className="ks-badge outline">{sel?.g.n}</span></div>
@@ -236,7 +236,7 @@ function CategoryTab({ canManage, onDelete, onEdit }: RowActionProps) {
 function LocationTab({ canManage, onDelete, onEdit }: RowActionProps) {
   const [sel, setSel] = useState<TreeItem>(LOC_TREE[0].items[0]);
   return (
-    <div style={{ display: "grid", gap: 16, gridTemplateColumns: "220px 1fr 1fr" }}>
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[220px_1fr_1fr]">
       <TreeColumn groups={LOC_TREE} onSelect={(_g, i) => setSel(i)} />
       <div className="ks-card">
         <div className="ks-card-head"><span className="ks-card-title">Zones &amp; Gates</span><span className="ks-badge info">{sel.n}</span></div>
@@ -276,11 +276,12 @@ function CustodianTab({ canManage, onDelete, onEdit }: RowActionProps) {
     <div className="ks-card">
       <div className="ks-card-head">
         <span className="ks-card-title">Custodians · {CUSTODIANS.length}</span>
-        <div className="ks-search-box" style={{ width: 260 }}>
+        <div className="ks-search-box" style={{ maxWidth: 260, width: "100%" }}>
           <Search size={14} />
           <input placeholder="Search name or email…" style={{ background: "transparent", border: 0, color: "hsl(var(--text))", fontFamily: "inherit", fontSize: 13, outline: "none", width: "100%" }} onChange={(e) => setQ(e.target.value)} />
         </div>
       </div>
+      <div style={{ overflowX: "auto" }}>
       <table className="w-full text-sm">
         <thead>
           <tr>
@@ -305,6 +306,7 @@ function CustodianTab({ canManage, onDelete, onEdit }: RowActionProps) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
@@ -313,6 +315,7 @@ function CostCenterTab({ canManage, onDelete, onEdit }: RowActionProps) {
   return (
     <div className="ks-card">
       <div className="ks-card-head"><span className="ks-card-title">Cost Centers · 28</span></div>
+      <div style={{ overflowX: "auto" }}>
       <table className="w-full text-sm">
         <thead>
           <tr>
@@ -334,6 +337,7 @@ function CostCenterTab({ canManage, onDelete, onEdit }: RowActionProps) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
@@ -352,6 +356,7 @@ function SupplierTab({ canManage, onDelete, onEdit }: RowActionProps) {
           ))}
         </div>
       </div>
+      <div style={{ overflowX: "auto" }}>
       <table className="w-full text-sm">
         <thead>
           <tr>
@@ -376,6 +381,7 @@ function SupplierTab({ canManage, onDelete, onEdit }: RowActionProps) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
@@ -384,6 +390,7 @@ function AssetClassTab({ canManage, onDelete, onEdit }: RowActionProps) {
   return (
     <div className="ks-card">
       <div className="ks-card-head"><span className="ks-card-title">Asset Classes · PSAK 16</span></div>
+      <div style={{ overflowX: "auto" }}>
       <table className="w-full text-sm">
         <thead>
           <tr>
@@ -405,6 +412,7 @@ function AssetClassTab({ canManage, onDelete, onEdit }: RowActionProps) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

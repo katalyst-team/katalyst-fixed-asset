@@ -135,7 +135,7 @@ export function FaReportsPage() {
         isError={isError}
         isLoading={isLoading}
       >
-      <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(3, 1fr)" }}>
+      <div className="ks-grid-3">
         {templates.map((tpl) => (
           <ReportCard
             key={tpl.id}

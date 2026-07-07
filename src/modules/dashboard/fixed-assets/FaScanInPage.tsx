@@ -133,10 +133,10 @@ export function FaScanInPage() {
   const PO_QUEUE: PoRecord[] = apiPOs.map((p) => ({
     date: p.date,
     id: p.id,
-    items: p.lines.length,
+    items: (p.lines ?? []).length,
     status: p.status,
     supplier: p.supplier,
-    value: p.lines.reduce((s, l) => s + l.unit_cost * l.qty, 0),
+    value: (p.lines ?? []).reduce((s, l) => s + l.unit_cost * l.qty, 0),
   }));
 
   const [step, setStep] = useState(0);
