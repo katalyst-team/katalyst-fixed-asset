@@ -158,7 +158,7 @@ const MENU_CONFIG: Record<string, { icon?: LucideIcon; url?: string }> = {
   WEB_OUTBOUND_PACKING: { url: "/dashboard/outbound-packing" },
   WEB_OUTBOUND_PENERIMAAN_LOG: { url: "/dashboard/outbound-penerimaan-log" },
   WEB_OUTBOUND_ST_BASAH: { url: "/dashboard/outbound-st-basah" },
-  WEB_OVERVIEW: { icon: Gauge, url: "/dashboard/overview" },
+  WEB_OVERVIEW: { icon: Gauge, url: "/dashboard/fixed-assets/" },
   WEB_PACKING: { url: "/dashboard/packing" },
   WEB_PACKING_COLLECTION: { url: "/dashboard/packing-collection" },
   WEB_PENERIMAAN_LOG: { icon: Package, url: "/dashboard/penerimaan-log" },

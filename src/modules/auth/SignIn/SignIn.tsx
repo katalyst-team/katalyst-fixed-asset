@@ -59,7 +59,7 @@ const SignIn = ({
         persistAuthTokens(resp.data.access_token, resp.data.refresh_token);
         queryClient.clear();
         toast.success("Login successful");
-        router.push("/dashboard/overview");
+        router.push("/dashboard/fixed-assets/");
       })
       .catch((err) => {
         toastError(err);

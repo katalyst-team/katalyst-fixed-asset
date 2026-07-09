@@ -227,7 +227,7 @@ export enum MenuName {
  * Maps menu names to their corresponding sidebar routes.
  */
 export const MENU_ROUTE_MAP: Record<string, string> = {
-  [MenuName.WEB_OVERVIEW]: "/dashboard/overview",
+  [MenuName.WEB_OVERVIEW]: "/dashboard/fixed-assets/",
   [MenuName.WEB_LEDGER]: "/dashboard/ledger",
   [MenuName.WEB_LEDGER_V2]: "/dashboard/ledger-v2",
   [MenuName.WEB_PRINT_RFID]: "/dashboard/print-rfid",
