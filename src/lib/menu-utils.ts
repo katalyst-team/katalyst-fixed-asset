@@ -64,7 +64,7 @@ const MENU_CONFIG: Record<string, { icon?: LucideIcon; url?: string }> = {
   WEB_FA_MAINTENANCE: { icon: Wrench, url: "/dashboard/fixed-assets/maintenance" },
   WEB_FA_MASTER_DATA: { icon: Boxes, url: "/dashboard/fixed-assets/master-data" },
   WEB_FA_MOVEMENT: { icon: ArrowLeftRight },
-  WEB_FA_OPERATIONS: { icon: ClipboardCheck },
+  WEB_FA_OPERATIONS: { icon: Boxes },
   WEB_FA_REGISTER: { icon: Package, url: "/dashboard/fixed-assets/register" },
   WEB_FA_REPORTS: { icon: FileText, url: "/dashboard/fixed-assets/reports" },
   WEB_FA_RFID_TAGS: { icon: Tags, url: "/dashboard/fixed-assets/rfid-tags" },

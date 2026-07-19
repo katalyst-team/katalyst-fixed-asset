@@ -3,8 +3,11 @@
 Request to backend: group the 16 current flat `WEB_FA_*` menus under
 collapsible parent headers so the sidebar is easier to navigate.
 
-Frontend is ready — no UI code needed. `buildNavTreeFromApi()`
-(`src/lib/menu-utils.ts`) renders any nesting depth from the API tree.
+**Status: frontend done, waiting on backend.** The 4 parent entries below are
+already in `MENU_CONFIG` + `MenuName` — nothing else to do on the frontend.
+`buildNavTreeFromApi()` (`src/lib/menu-utils.ts`) renders any nesting depth
+from the API tree, so grouping appears automatically once the API returns the
+tree below — no redeploy needed on the frontend side.
 This doc defines the parent menu names and the tree the API must return.
 
 ---
@@ -81,11 +84,10 @@ WEB_FA_ADMIN                              (parent — icon-only)
 
 ## New parent menus (must be created in backend DB)
 
-These names **do not exist yet** — backend must create them. Frontend will add
-matching icon-only entries in `MENU_CONFIG` + `MenuName` enum (see
-"Frontend changes" below).
+These names **do not exist yet in the API** — backend must create them.
+Frontend already has matching icon-only entries in `MENU_CONFIG` + `MenuName`.
 
-| New menu name | Icon (frontend will set) | Purpose |
+| New menu name | Icon (frontend) | Purpose |
 |---------------|--------------------------|---------|
 | `WEB_FA_OPERATIONS` | Boxes | Asset lifecycle: register, master data, audit, maintenance |
 | `WEB_FA_MOVEMENT` | ArrowLeftRight | Asset movement: scan in/out, check-out, transfer, RTLS |
@@ -194,12 +196,12 @@ inserts:
 
 ---
 
-## Frontend changes (do AFTER backend creates the parents)
+## Frontend changes (done)
 
-Once the parent menu names exist in the backend, frontend adds 4 icon-only
-entries. No other UI work.
+The 4 icon-only entries are already in place — no further UI work needed once
+the API returns the tree.
 
-**1. `src/lib/menu-utils.ts` — `MENU_CONFIG`** (add alphabetically):
+`src/lib/menu-utils.ts` — `MENU_CONFIG`:
 
 ```ts
 WEB_FA_ADMIN: { icon: ShieldCheck },
@@ -208,11 +210,7 @@ WEB_FA_OPERATIONS: { icon: Boxes },
 WEB_FA_TAGS: { icon: Tags },
 ```
 
-> Note: `Boxes` is already imported. `ShieldCheck` and `ArrowLeftRight` need
-> adding to the `lucide-react` import block at the top of the file. `Tags` is
-> already imported.
-
-**2. `src/types/menu.ts` — `MenuName` enum** (add):
+`src/types/menu.ts` — `MenuName` enum:
 
 ```ts
 WEB_FA_ADMIN = "WEB_FA_ADMIN",
@@ -224,18 +222,14 @@ WEB_FA_TAGS = "WEB_FA_TAGS",
 No `MENU_ROUTE_MAP` entries needed — parents have no route (url forced to `#`
 when they have children).
 
-**3. `docs/MENU_STRUCTURE.md`** — move the 4 groups from "Standalone" to a new
-"FA Grouped" section, matching the final tree.
-
 ---
 
 ## Rollout order
 
-1. **Backend** creates the 4 parent menu rows + sets `parent_id` on children.
-2. **Frontend** adds the 4 icon-only entries to `MENU_CONFIG` + `MenuName`.
-3. Verify sidebar renders the collapsible groups.
+1. ~~**Frontend** adds the 4 icon-only entries to `MENU_CONFIG` + `MenuName`.~~ Done.
+2. **Backend** creates the 4 parent menu rows + sets `parent_id` on children (in progress).
+3. Verify sidebar renders the collapsible groups once the API ships the tree.
 
-If backend ships first (before frontend update), the new parents are silently
-dropped by the frontend (unknown menu name guard at `menu-utils.ts:204`) — no
-crash, but grouping won't appear until frontend catches up. Safe to deploy in
-either order.
+Until backend ships, the new parent names are silently dropped by the
+frontend (unknown menu name guard at `menu-utils.ts:204`) — no crash, current
+flat `WEB_FA_*` menus keep rendering as-is.
