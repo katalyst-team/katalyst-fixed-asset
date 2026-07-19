@@ -162,4 +162,4 @@ This repo's primary feature is `src/modules/dashboard/fixed-assets/`. All work i
 - shadcn/ui config (`components.json`): `rsc: false`, style `default`, base color `slate`, icon library `lucide`
 - `cn()` utility from `@/lib/utils` for Tailwind class merging
 - `reactStrictMode: true` is on
-- **Printing (QZ Tray)**: direct-printer integration via `jsprintmanager`. Entry points: `usePrintV5` (`src/hooks/usePrintV5.ts`, wraps `window.qz`), signing via `useQZSigning` / `src/pages/api/qz/sign-message.ts`, and `<script src="/js/qz-tray.js">` loaded in `src/pages/_document.tsx`. Used by `PrintRfid.tsx` and `PrintModalV5.tsx`.
+- **Printing (QZ Tray)**: direct-printer integration via `jsprintmanager`. Entry points: `usePrintV5` (`src/hooks/usePrintV5.ts`, wraps `window.qz`), signing via `useQZSigning` / `src/pages/api/qz/sign-message.ts`, and `<script src="/js/qz-tray.js">` loaded in `src/pages/_document.tsx`. Used by `PrintRfid.tsx` and `PrintModalV5.tsx`. Flow: TLJ template → ThermalLabel API → ZPL → QZ Tray → printer. Requires QZ Tray running on the client machine.

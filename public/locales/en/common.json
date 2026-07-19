@@ -154,7 +154,9 @@
     "faReports": "Reports",
     "faUsers": "Users",
     "faSettings": "Settings",
-    "faDocs": "Docs"
+    "faDocs": "Docs",
+    "settings": "Settings",
+    "verificationMethodSettings": "Verification Method"
   },
   "notification": {
     "title": "Notification",

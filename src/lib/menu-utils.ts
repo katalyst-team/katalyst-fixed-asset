@@ -168,6 +168,7 @@ const MENU_CONFIG: Record<string, { icon?: LucideIcon; url?: string }> = {
   WEB_REFERENCE: { url: "/dashboard/reference" },
   WEB_REPORTS: { url: "/dashboard/report" },
   WEB_REUSABLE_EPC: { url: "/dashboard/reusable-epc" },
+  WEB_SETTINGS: { icon: Settings },
   WEB_SKU: { url: "/dashboard/sku" },
   WEB_STOCK_ALERT_CONFIG: { url: "/dashboard/stock-alert-config" },
   WEB_STOCK_AUDIT: { url: "/dashboard/stock-audit" },
@@ -186,6 +187,8 @@ const MENU_CONFIG: Record<string, { icon?: LucideIcon; url?: string }> = {
   WEB_USER_MENU: { url: "/dashboard/user-menu" },
   WEB_VALIDATION_PENERIMAAN_LOG: { icon: ClipboardCheck, url: "/dashboard/validation-penerimaan-log" },
   WEB_VERIFICATION: { icon: ClipboardCheck, url: "/dashboard/verification" },
+  // ponytail: no dedicated page yet, points at FA settings until the real page exists
+  WEB_VERIFICATION_METHOD_SETTINGS: { icon: Shield, url: "/dashboard/fixed-assets/settings" },
   WEB_VERIFICATION_PENERIMAAN_LOG: { icon: ClipboardCheck, url: "/dashboard/verification-penerimaan-log" },
   WEB_VERIFICATION_ST_BASAH: { icon: ClipboardCheck, url: "/dashboard/verification-st-basah" },
   WEB_VERIFICATION_ST_KERING: { icon: ClipboardCheck, url: "/dashboard/verification-st-kering" },

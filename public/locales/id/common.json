@@ -156,7 +156,9 @@
     "faReports": "Laporan",
     "faUsers": "Pengguna",
     "faSettings": "Pengaturan",
-    "faDocs": "Dokumentasi"
+    "faDocs": "Dokumentasi",
+    "settings": "Pengaturan",
+    "verificationMethodSettings": "Metode Verifikasi"
   },
   "notification": {
     "title": "Notifikasi",
