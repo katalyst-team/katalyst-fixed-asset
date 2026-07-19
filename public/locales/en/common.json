@@ -17,6 +17,14 @@
     "item": "Item"
   },
   "sidebar": {
+    "section": {
+      "overview": "Overview",
+      "assets": "Assets",
+      "dailyOperations": "Daily Operations",
+      "auditMaintenance": "Audit & Maintenance",
+      "live": "Live",
+      "system": "System"
+    },
     "overview": "Overview",
     "inventory": "Fixed asset",
     "inventoryMenu": "Web fixed asset",

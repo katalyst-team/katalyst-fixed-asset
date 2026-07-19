@@ -17,6 +17,14 @@
     "item": "Item"
   },
   "sidebar": {
+    "section": {
+      "overview": "Ikhtisar",
+      "assets": "Aset",
+      "dailyOperations": "Operasi Harian",
+      "auditMaintenance": "Audit & Pemeliharaan",
+      "live": "Live",
+      "system": "Sistem"
+    },
     "overview": "Ikhtisar",
     "inventory": "Aset tetap",
     "inventoryMenu": "Web fixed asset",
