@@ -21,12 +21,30 @@ Next.js 15 **Pages Router** (not App Router). `trailingSlash: true` in `next.con
 
 ### Layer Pattern
 
-1. **Services** (`src/services/[domain]/`): pure async functions calling `fetcher()` (axios wrapper in `src/services/index.ts`). Return shape: `ApiResponse<T>` with `data`, `metadata`, `pagination` (cursor-based: `next_cursor` / `prev_cursor`), and top-level `message`.
+1. **Services** (`src/services/[domain]/`): pure async functions calling `fetcher()` (axios wrapper in `src/services/index.ts`). Return shape: `ApiResponse<T>` with `data`, `metadata`, and page-based pagination. FA endpoints use the `page_pagination` key; other domains use `pagination`. There is no top-level `message` — it lives in `metadata.message`.
 2. **React Query Hooks** (`src/hooks/api/[domain]/`): wrap service calls with `useQuery`/`useMutation`; query key factories like `KEY_USE_GET_LEDGER_DATA`.
 3. **Feature Module** (`src/modules/dashboard/[feature]/`): one `Fa*Page.tsx` component per route, local `useState` for view state, `useFaModal` for dialogs. There are no per-feature Zustand stores or feature Context providers left in this repo (the dep is still installed; don't add one without reason).
 4. **Pages** (`src/pages/dashboard/[feature]/index.tsx`): thin wrappers composing `<DashboardLayout>`, `<FaLayout>`, and SEO via `createPageSEO()` from `@/utils/seo`.
 
 **Only two dashboard modules exist**: `fixed-assets/` (everything) and `profile/`. All inventory/log/SKU modules were deleted in commit `02b5cb4` — if you find a doc or import referencing them, it's stale.
+
+### Backend (katalyst-core)
+
+The backend lives in a **separate sibling repo** at `../katalyst-core/` (same parent
+directory, outside this repo). Stack: **Go 1.26 + Fiber + GORM + PostgreSQL + Redis +
+MinIO**, migrations via Atlas. See that repo's `AGENTS.md` for architecture, commands
+(`make run`, `make pre-pr`), and the layered domain pattern.
+
+**Fixed Assets backend** (`core/fixed_asset/`): ~75 endpoints under
+`/v1/organizations/:organizationID/fa/`, ~31 `fa_*` tables. Runs locally on `:8000`
+(matches `NEXT_PUBLIC_ENDPOINT_URL`).
+
+**Roles/permissions** come from the JWT and use backend enum values verbatim —
+roles `APP_SUPERADMIN`, `APP_ADMIN`, `ORGANIZATION_OWNER`, `ORGANIZATION_ADMIN`,
+`ORGANIZATION_MEMBER`, `ORGANIZATION_OPERATOR`, `ORGANIZATION_VERIFIER`,
+`ORGANIZATION_HO`; permissions `ORGANIZATION_{CREATE,READ,UPDATE,DELETE}_ALL` etc.
+Never invent lowercase shorthands like `"admin"` or `"fa.delete"` — see
+`useFaPermission.ts`.
 
 ### Cloud Functions (`cloud-functions/`)
 
@@ -50,7 +68,7 @@ Middleware (`src/middleware.ts`) gates `/dashboard/*`. **Its own default locale 
 
 ### Pagination
 
-Server-side, **cursor-based** (`next_cursor` / `prev_cursor` in `ApiResponse.pagination`). Keep the cursor history in local component state (a stack of previous cursors) to support Prev. Use `<PaginationCursor>` from `@/components/shared/PaginationCursor` for UI.
+Server-side, **page-based** — despite the component name, no endpoint this app calls uses cursor pagination. (A few orphaned files under `src/types/` still declare `next_cursor`/`prev_cursor`; nothing reads them.) Requests send `page` + `limit`. Fixed-assets endpoints return `page_pagination` (`page`, `limit`, `total_pages`, `total_records`, `count`, `has_next`, `has_prev`, `next_page`, `prev_page`); other domains return `pagination`. Keep the current page in local `useState` and drive nav from `has_next` / `has_prev`. Use `<PaginationCursor>` from `@/components/shared/PaginationCursor` for UI.
 
 ### State Management Split
 
@@ -75,7 +93,7 @@ All use CSS variables (`--text`, `--border`, `--surface`, `--brand`, etc.) so th
 
 ## Shared Components (`src/components/shared/`)
 
-Reusable components — check here before building new ones: `ButtonDelete` (AlertDialog confirm), `ButtonAdd`, `ButtonEdit`, `ButtonDetail`, `PaginationCursor` (cursor-based pagination), `EmptyState`, `Loading`, `SkeletonTable`, `FilterBar`, `FilterBadge`, `BadgeStatus`, `ColumnVisibility`, `TableExportButton`, `DensitySwitcher`, `ColorThemeSwitcher`.
+Reusable components — check here before building new ones: `ButtonDelete` (AlertDialog confirm), `ButtonAdd`, `ButtonEdit`, `ButtonDetail`, `PaginationCursor` (page-based pagination, despite the name), `EmptyState`, `Loading`, `SkeletonTable`, `FilterBar`, `FilterBadge`, `BadgeStatus`, `ColumnVisibility`, `TableExportButton`, `DensitySwitcher`, `ColorThemeSwitcher`.
 
 ## Forms
 
