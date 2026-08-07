@@ -63,7 +63,7 @@ export function FaCheckOutPage() {
   const returnRate = check_outs.length > 0 ? Math.round((returnedLoans / check_outs.length) * 100) : null;
 
   const handleNext = () => {
-    if (page < (resp?.pagination?.total_pages ?? 1)) {
+    if (resp?.page_pagination?.has_next) {
       setPage((p) => p + 1);
     }
   };
@@ -229,14 +229,14 @@ export function FaCheckOutPage() {
           className="justify-between text-xs text-muted-foreground flex items-center"
           style={{ borderTop: "1px solid hsl(var(--border))", padding: "10px 18px" }}
         >
-          <span>Showing {check_outs.length} of {resp?.pagination?.count ?? 0}</span>
+          <span>Showing {check_outs.length} of {resp?.page_pagination?.total_records ?? 0}</span>
           <PaginationCursor
             currentPage={page}
-            hasNextPage={page < (resp?.pagination?.total_pages ?? 1)}
-            hasPrevPage={page > 1}
+            hasNextPage={resp?.page_pagination?.has_next ?? false}
+            hasPrevPage={resp?.page_pagination?.has_prev ?? false}
             limit={PAGE_LIMIT}
-            totalCount={resp?.pagination?.total_count ?? null}
-            totalPages={resp?.pagination?.total_pages}
+            totalCount={resp?.page_pagination?.total_records ?? null}
+            totalPages={resp?.page_pagination?.total_pages}
             onNext={handleNext}
             onPrev={handlePrev}
           />

@@ -20,7 +20,6 @@ import { decodeToken } from "../lib/jwt";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ApiResponse<T = any> {
-  message: string;
   data: T;
   metadata: {
     code: string;
@@ -29,11 +28,22 @@ export interface ApiResponse<T = any> {
     server_time: number;
     success: boolean;
   };
-  pagination: {
+  pagination?: {
     count: number;
     page: number;
     total_pages: number;
     total_count?: number | null;
+  };
+  page_pagination?: {
+    page: number;
+    limit: number;
+    total_pages: number;
+    total_records: number;
+    count: number;
+    has_next: boolean;
+    has_prev: boolean;
+    next_page: number | null;
+    prev_page: number | null;
   };
 }
 
