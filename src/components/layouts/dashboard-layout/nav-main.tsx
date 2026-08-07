@@ -54,7 +54,7 @@ function NavMenuItem({
   const [isOpen, setIsOpen] = React.useState(item.isActive || hasActiveChild);
 
   React.useEffect(() => {
-    setIsOpen(item.isActive || hasActiveChild);
+    if (item.isActive || hasActiveChild) setIsOpen(true);
   }, [item.isActive, hasActiveChild]);
 
   if (hasChildren) {
@@ -70,7 +70,7 @@ function NavMenuItem({
           <SidebarMenuItem>
             <CollapsibleTrigger asChild>
               <SidebarMenuButton
-                className={item.isActive ? "bg-gray-200 font-bold" : ""}
+                isActive={item.isActive}
                 tooltip={item.title}
               >
                 {item.icon && <item.icon />}
@@ -99,18 +99,15 @@ function NavMenuItem({
         open={isOpen}
         onOpenChange={setIsOpen}
       >
-         <CollapsibleTrigger asChild>
-            <SidebarMenuSubButton
-              asChild
-              className={item.isActive ? "bg-gray-200 font-bold" : ""}
-            >
-              <button className="w-full min-w-0" title={item.title} type="button">
-                {item.icon && <item.icon className="shrink-0" />}
-                <span className="whitespace-nowrap">{item.title}</span>
-                <ChevronRight className="ml-auto h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-              </button>
-            </SidebarMenuSubButton>
-         </CollapsibleTrigger>
+        <CollapsibleTrigger asChild>
+          <SidebarMenuSubButton asChild isActive={item.isActive}>
+            <button className="w-full min-w-0" title={item.title} type="button">
+              {item.icon && <item.icon className="shrink-0" />}
+              <span>{item.title}</span>
+              <ChevronRight className="ml-auto h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+            </button>
+          </SidebarMenuSubButton>
+        </CollapsibleTrigger>
         <CollapsibleContent>
           <SidebarMenuSub>
             {item.children!.map((childItem) => (
@@ -128,29 +125,27 @@ function NavMenuItem({
   // Root: SidebarMenuButton renders as <button>, so <Link><button> is fine (no <a><a>)
   if (isRoot) {
     return (
-      <SidebarMenuButton
-        asChild
-        className={item.isActive ? "bg-gray-200 font-bold" : ""}
-        tooltip={item.title}
-      >
-        <Link href={item.url} locale={i18n.language}>
-          {item.icon && <item.icon />}
-          <span>{item.title}</span>
-        </Link>
-      </SidebarMenuButton>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          asChild
+          isActive={item.isActive}
+          tooltip={item.title}
+        >
+          <Link href={item.url} locale={i18n.language}>
+            {item.icon && <item.icon />}
+            <span>{item.title}</span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
     );
   }
 
   // Non-root: SidebarMenuSubButton renders as <a> by default → use asChild to avoid <a><a>
   return (
-    <SidebarMenuSubButton
-      asChild
-      className={item.isActive ? "bg-gray-200 font-bold" : ""}
-      title={item.title}
-    >
+    <SidebarMenuSubButton asChild isActive={item.isActive} title={item.title}>
       <Link href={item.url} locale={i18n.language}>
         {item.icon && <item.icon className="shrink-0" />}
-        <span className="whitespace-nowrap">{item.title}</span>
+        <span>{item.title}</span>
       </Link>
     </SidebarMenuSubButton>
   );
