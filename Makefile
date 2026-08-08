@@ -1,6 +1,6 @@
-.PHONY: dev pre-pr
+.PHONY: run pre-pr
 
-dev:
+run:
 	bun run dev
 
 pre-pr:
