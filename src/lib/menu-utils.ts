@@ -241,50 +241,6 @@ export function buildNavTreeFromApi(apiMenus: MeMenuItem[]): BaseNavItem[] {
 }
 
 /**
- * Static top-level → section-header grouping for the sidebar (client-side only,
- * independent of the API tree). Once backend ships the WEB_FA_OPERATIONS /
- * WEB_FA_MOVEMENT / WEB_FA_TAGS / WEB_FA_ADMIN parents (see
- * docs/FA_MENU_GROUPING.md), those collapsibles absorb most of these entries
- * and this map can shrink — kept as a plain lookup so it's cheap to prune then.
- */
-const MENU_SECTION_MAP: Record<string, string> = {
-  WEB_FA_AUDIT: "auditMaintenance",
-  WEB_FA_CHECK_OUT: "dailyOperations",
-  WEB_FA_DASHBOARD: "overview",
-  WEB_FA_DOCS: "system",
-  WEB_FA_MAINTENANCE: "auditMaintenance",
-  WEB_FA_MASTER_DATA: "assets",
-  WEB_FA_REGISTER: "assets",
-  WEB_FA_REPORTS: "system",
-  WEB_FA_RFID_TAGS: "assets",
-  WEB_FA_RTLS: "live",
-  WEB_FA_SCAN_IN: "dailyOperations",
-  WEB_FA_SCAN_OUT: "dailyOperations",
-  WEB_FA_SECURITY: "live",
-  WEB_FA_SETTINGS: "system",
-  WEB_FA_TRANSFER: "dailyOperations",
-  WEB_FA_USERS: "system",
-  WEB_OVERVIEW: "overview",
-};
-
-export const MENU_SECTION_ORDER = [
-  "overview",
-  "assets",
-  "dailyOperations",
-  "auditMaintenance",
-  "live",
-  "system",
-] as const;
-
-/**
- * Gets the section key for a top-level menu name, or undefined if unmapped
- * (unmapped items render without a section header).
- */
-export function getMenuSection(menuName: string): string | undefined {
-  return MENU_SECTION_MAP[menuName];
-}
-
-/**
  * Gets the route for a menu name from MENU_CONFIG or MENU_ROUTE_MAP.
  */
 export function getMenuRoute(menuName: string): string {

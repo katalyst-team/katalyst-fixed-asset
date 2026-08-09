@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -20,7 +19,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { type BaseNavItem, getMenuSection, MENU_SECTION_ORDER } from "@/lib/menu-utils";
+import { type BaseNavItem } from "@/lib/menu-utils";
 
 interface NavMainProps {
   items: BaseNavItem[];
@@ -152,47 +151,13 @@ function NavMenuItem({
 }
 
 export function NavMain({ items }: NavMainProps) {
-  const { t } = useTranslation("common");
-
-  const { sections, ungrouped } = React.useMemo(() => {
-    const grouped = new Map<string, BaseNavItem[]>();
-    const rest: BaseNavItem[] = [];
-
-    items.forEach((item) => {
-      const section = getMenuSection(item.menuName);
-      if (!section) {
-        rest.push(item);
-        return;
-      }
-      grouped.set(section, [...(grouped.get(section) ?? []), item]);
-    });
-
-    return { sections: grouped, ungrouped: rest };
-  }, [items]);
-
   return (
-    <>
-      {MENU_SECTION_ORDER.filter((section) => sections.has(section)).map(
-        (section) => (
-          <SidebarGroup key={section}>
-            <SidebarGroupLabel>{t(`sidebar.section.${section}`)}</SidebarGroupLabel>
-            <SidebarMenu>
-              {sections.get(section)!.map((item) => (
-                <NavMenuItem key={item.menuName} depth={0} item={item} />
-              ))}
-            </SidebarMenu>
-          </SidebarGroup>
-        ),
-      )}
-      {ungrouped.length > 0 && (
-        <SidebarGroup>
-          <SidebarMenu>
-            {ungrouped.map((item) => (
-              <NavMenuItem key={item.menuName} depth={0} item={item} />
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-      )}
-    </>
+    <SidebarGroup>
+      <SidebarMenu>
+        {items.map((item) => (
+          <NavMenuItem key={item.menuName} depth={0} item={item} />
+        ))}
+      </SidebarMenu>
+    </SidebarGroup>
   );
 }
