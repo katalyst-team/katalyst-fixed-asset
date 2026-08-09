@@ -253,10 +253,21 @@ export interface FaReportTemplate {
 }
 
 export interface FaMasterDataRow {
+  address?: string;
+  city?: string;
+  code?: string;
+  contact?: string;
   count: number;
+  department?: string;
+  depreciation_method?: string;
   desc: string;
+  email?: string;
+  employee_id?: string;
   id: string;
   name: string;
+  phone?: string;
+  psak16_code?: string;
+  useful_life_years?: number;
 }
 
 export interface FaUser {

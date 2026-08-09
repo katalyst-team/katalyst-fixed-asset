@@ -6,6 +6,14 @@ import { type ChangeEvent, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useUser } from "@/context/user-context";
 import {
   useCreateFAMasterDataMutation,
@@ -18,7 +26,83 @@ import { FaProtoIcon, FaShellHead } from "@/modules/dashboard/fixed-assets";
 import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
-import type { FaMasterDataRow, FaMasterDataSection, FaMasterDataSectionTab } from "@/types/fixed-assets";
+import type {
+  CreateMasterDataRequest,
+  FaMasterDataRow,
+  FaMasterDataSection,
+  FaMasterDataSectionTab,
+} from "@/types/fixed-assets";
+
+type ExtraFieldKey = Exclude<keyof CreateMasterDataRequest, "name" | "parent_id">;
+
+interface FieldDef {
+  key: ExtraFieldKey;
+  label: string;
+  options?: { label: string; value: string }[];
+  type?: "text" | "number" | "select";
+}
+
+const SECTION_FIELDS: Partial<Record<FaMasterDataSectionTab, FieldDef[]>> = {
+  cc: [
+    { key: "code", label: "Code" },
+    { key: "department", label: "Department" },
+  ],
+  cls: [
+    { key: "psak16_code", label: "PSAK 16 code" },
+    {
+      key: "depreciation_method",
+      label: "Depreciation method",
+      options: [
+        { label: "Straight Line", value: "straight-line" },
+        { label: "Declining Balance", value: "declining-balance" },
+      ],
+      type: "select",
+    },
+    { key: "useful_life_years", label: "Useful life (years)", type: "number" },
+  ],
+  cust: [
+    { key: "email", label: "Email" },
+    { key: "department", label: "Department" },
+    { key: "employee_id", label: "Employee ID" },
+  ],
+  loc: [
+    { key: "address", label: "Address" },
+    { key: "city", label: "City" },
+  ],
+  sup: [
+    { key: "contact", label: "Contact person" },
+    { key: "phone", label: "Phone" },
+    { key: "email", label: "Email" },
+  ],
+};
+
+type FormState = Record<string, string>;
+
+function rowToFormState(row: FaMasterDataRow | null): FormState {
+  if (!row) return { name: "" };
+  return {
+    address: row.address ?? "",
+    city: row.city ?? "",
+    code: row.code ?? "",
+    contact: row.contact ?? "",
+    department: row.department ?? "",
+    depreciation_method: row.depreciation_method ?? "",
+    email: row.email ?? "",
+    employee_id: row.employee_id ?? "",
+    name: row.name,
+    phone: row.phone ?? "",
+    psak16_code: row.psak16_code ?? "",
+    useful_life_years: row.useful_life_years != null ? String(row.useful_life_years) : "",
+  };
+}
+
+function formStateToRequest(form: FormState): CreateMasterDataRequest {
+  return {
+    ...form,
+    name: form.name ?? "",
+    useful_life_years: form.useful_life_years ? Number(form.useful_life_years) : undefined,
+  };
+}
 
 function TabBar({
   active,
@@ -85,7 +169,7 @@ function RowsTab({
 }: {
   canManage: boolean;
   onDelete: (id: string) => void;
-  onEdit: (id: string, name: string) => void;
+  onEdit: (row: FaMasterDataRow) => void;
   section: FaMasterDataSection;
 }) {
   const [q, setQ] = useState("");
@@ -120,7 +204,7 @@ function RowsTab({
                 <Td>
                   {canManage && r.id && (
                     <div style={{ display: "flex", gap: 4 }}>
-                      <button className="ks-btn ks-btn-icon ks-btn-ghost" type="button" onClick={() => onEdit(r.id, r.name)}>
+                      <button className="ks-btn ks-btn-icon ks-btn-ghost" type="button" onClick={() => onEdit(r)}>
                         <Pencil size={14} />
                       </button>
                       <button className="ks-btn ks-btn-icon ks-btn-ghost" type="button" onClick={() => onDelete(r.id)}>
@@ -148,7 +232,7 @@ export function FaMasterDataPage() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [form, setForm] = useState<FormState>({ name: "" });
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const createMutation = useCreateFAMasterDataMutation({ organizationId });
@@ -157,10 +241,11 @@ export function FaMasterDataPage() {
   const updateMutation = useUpdateFAMasterDataMutation({ organizationId });
 
   const activeSection = sections.find((s) => s.tab === tab);
+  const extraFields = SECTION_FIELDS[tab] ?? [];
 
   const handleAdd = () => {
     setEditingId(null);
-    setInputValue("");
+    setForm(rowToFormState(null));
     setDialogOpen(true);
   };
 
@@ -168,18 +253,19 @@ export function FaMasterDataPage() {
     await deleteMutation.mutateAsync({ id, section: tab });
   };
 
-  const handleEdit = (id: string, currentName: string) => {
-    setEditingId(id);
-    setInputValue(currentName);
+  const handleEdit = (row: FaMasterDataRow) => {
+    setEditingId(row.id);
+    setForm(rowToFormState(row));
     setDialogOpen(true);
   };
 
   const handleDialogSubmit = async () => {
-    if (!inputValue) return;
+    if (!form.name) return;
+    const data = formStateToRequest(form);
     if (editingId) {
-      await updateMutation.mutateAsync({ data: { name: inputValue }, id: editingId, section: tab });
+      await updateMutation.mutateAsync({ data, id: editingId, section: tab });
     } else {
-      await createMutation.mutateAsync({ data: { name: inputValue }, section: tab });
+      await createMutation.mutateAsync({ data, section: tab });
     }
     setDialogOpen(false);
   };
@@ -235,15 +321,47 @@ export function FaMasterDataPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingId ? "Edit name" : "Add new"}</DialogTitle>
+            <DialogTitle>{editingId ? `Edit ${activeSection?.label ?? ""}` : `Add ${activeSection?.label ?? ""}`}</DialogTitle>
           </DialogHeader>
-          <Input
-            autoFocus
-            placeholder="Enter name"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") handleDialogSubmit(); }}
-          />
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="md-name">Name</Label>
+              <Input
+                autoFocus
+                id="md-name"
+                placeholder="Enter name"
+                value={form.name ?? ""}
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+              />
+            </div>
+            {extraFields.map((field) => (
+              <div key={field.key} className="flex flex-col gap-1.5">
+                <Label htmlFor={`md-${field.key}`}>{field.label}</Label>
+                {field.type === "select" ? (
+                  <Select
+                    value={form[field.key] ?? ""}
+                    onValueChange={(v) => setForm((f) => ({ ...f, [field.key]: v }))}
+                  >
+                    <SelectTrigger id={`md-${field.key}`}>
+                      <SelectValue placeholder={`Select ${field.label.toLowerCase()}`} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {field.options?.map((o) => (
+                        <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    id={`md-${field.key}`}
+                    type={field.type === "number" ? "number" : "text"}
+                    value={form[field.key] ?? ""}
+                    onChange={(e) => setForm((f) => ({ ...f, [field.key]: e.target.value }))}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
           <DialogFooter>
             <Button onClick={handleDialogSubmit}>{editingId ? "Save" : "Add"}</Button>
           </DialogFooter>
