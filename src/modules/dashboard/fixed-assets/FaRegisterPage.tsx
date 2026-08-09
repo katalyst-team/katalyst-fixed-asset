@@ -12,7 +12,6 @@ import { useUser } from "@/context/user-context";
 import {
   useBulkCreateAssetMutation,
   useBulkUpdateAssetMutation,
-  useCreateAssetMutation,
   useExportDataMutation,
   useGetAssetRegisterQuery,
 } from "@/hooks/api/fixed-assets";
@@ -29,6 +28,7 @@ import {
   STATUS_TONE,
 } from "@/modules/dashboard/fixed-assets/constants";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { useFaModal } from "@/modules/dashboard/fixed-assets/modals/FaModalContext";
 import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
 import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 import type { AssetCategory, AssetStatus } from "@/types/fixed-assets";
@@ -84,7 +84,7 @@ export function FaRegisterPage() {
   useEffect(() => {
     setPage(1);
   }, [cat, q, status]);
-  const { mutateAsync: createAsset } = useCreateAssetMutation({ organizationId });
+  const { openModal } = useFaModal();
   const { mutateAsync: bulkCreateAsset } = useBulkCreateAssetMutation({ organizationId });
   const { mutateAsync: bulkUpdateAsset } = useBulkUpdateAssetMutation({ organizationId });
   const { isPending: isExporting, mutateAsync: exportData } = useExportDataMutation({ organizationId });
@@ -178,19 +178,7 @@ export function FaRegisterPage() {
             <button
               className="ks-btn ks-btn-primary ks-btn-sm"
               type="button"
-              onClick={() =>
-                createAsset({
-                  cat: "furn",
-                  custodian: "",
-                  loc: "",
-                  name: "",
-                  purchased: "",
-                  serial: "",
-                  supplier: "",
-                  val: 0,
-                  warranty: "",
-                })
-              }
+              onClick={() => openModal("createAsset")}
             >
               <Plus size={14} />
               {t("actions.add")}

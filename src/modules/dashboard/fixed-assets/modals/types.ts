@@ -9,6 +9,7 @@ export type FaModalType =
   | "transfer"
   | "transferHistory"
   | "workOrder"
+  | "createAsset"
   | "editAsset"
   | "locateAsset"
   | "epcRange"
