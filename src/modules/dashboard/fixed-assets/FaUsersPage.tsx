@@ -15,15 +15,17 @@ import {
 import { avatarColor, FaKpiStrip, FaShellHead, FaStat, initials } from "@/modules/dashboard/fixed-assets";
 import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 
-const ROLES = [
-  { count: 4, desc: "Full access to all modules, settings, and user management.", name: "Admin", perms: ["All Modules", "Settings", "Billing", "Users"] },
-  { count: 18, desc: "Manage assets, transfers, disposals, and maintenance schedules.", name: "Asset Manager", perms: ["Assets", "Transfers", "Disposals", "Reports"] },
-  { count: 42, desc: "Day-to-day custody of assigned assets and check-outs.", name: "Custodian", perms: ["My Assets", "Check-out", "Return"] },
-  { count: 8, desc: "Read-only access to registers, reports, and audit trails.", name: "Auditor", perms: ["Reports", "Audit Log", "Read-only"] },
-  { count: 22, desc: "Create and close work orders, manage PM schedules.", name: "Maintenance", perms: ["Work Orders", "PM Rules", "Health"] },
-  { count: 12, desc: "Depreciation, disposals, GL integration, and compliance.", name: "Finance", perms: ["Finance", "PSAK 16", "Disposals"] },
-  { count: 14, desc: "RFID hardware config, reader health, and tag management.", name: "IT Support", perms: ["RFID Hardware", "Settings", "Users"] },
-  { count: 22, desc: "View dashboards and reports only — no edits.", name: "Read-Only", perms: ["Dashboard", "Reports"] },
+// Real system roles (see CLAUDE.md / useFaPermission.ts) — the backend enum
+// this app actually authorizes against, not an invented business-role list.
+const ROLE_CATALOG: { desc: string; perms: string[]; role: string }[] = [
+  { desc: "Full access across every organization on the platform.", perms: ["ORGANIZATION_CREATE_ALL", "ORGANIZATION_READ_ALL", "ORGANIZATION_UPDATE_ALL", "ORGANIZATION_DELETE_ALL"], role: "APP_SUPERADMIN" },
+  { desc: "Full access across every organization on the platform.", perms: ["ORGANIZATION_CREATE_ALL", "ORGANIZATION_READ_ALL", "ORGANIZATION_UPDATE_ALL", "ORGANIZATION_DELETE_ALL"], role: "APP_ADMIN" },
+  { desc: "Full access to this organization's modules, settings, and users.", perms: ["ORGANIZATION_CREATE_ALL", "ORGANIZATION_READ_ALL", "ORGANIZATION_UPDATE_ALL", "ORGANIZATION_DELETE_ALL"], role: "ORGANIZATION_OWNER" },
+  { desc: "Manage assets, transfers, disposals, and settings.", perms: ["ORGANIZATION_CREATE_ALL", "ORGANIZATION_READ_ALL", "ORGANIZATION_UPDATE_ALL"], role: "ORGANIZATION_ADMIN" },
+  { desc: "Day-to-day custody of assigned assets and check-outs.", perms: ["ORGANIZATION_READ_ALL"], role: "ORGANIZATION_MEMBER" },
+  { desc: "Create and process asset transactions (scan-in/out, transfers).", perms: ["ORGANIZATION_CREATE_ALL", "ORGANIZATION_READ_ALL", "ORGANIZATION_UPDATE_ALL"], role: "ORGANIZATION_OPERATOR" },
+  { desc: "Verify and approve pending asset transactions.", perms: ["ORGANIZATION_READ_ALL", "ORGANIZATION_UPDATE_ALL"], role: "ORGANIZATION_VERIFIER" },
+  { desc: "Head-office oversight — read access across sites.", perms: ["ORGANIZATION_READ_ALL"], role: "ORGANIZATION_HO" },
 ];
 
 function Th({ children }: { children: React.ReactNode }) {
@@ -86,15 +88,27 @@ function UsersTab({ organizationId }: { organizationId: string }) {
   );
 }
 
-function RolesTab() {
+function roleLabel(role: string): string {
+  return role
+    .toLowerCase()
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+function RolesTab({ organizationId }: { organizationId: string }) {
+  const { data: resp } = useGetFAUsersQuery({ organizationId });
+  const users = resp?.data?.users ?? [];
   return (
     <div className="ks-grid-2">
-      {ROLES.map((r) => (
-        <div key={r.name} className="ks-card">
+      {ROLE_CATALOG.map((r) => {
+        const count = users.filter((u) => u.role.toUpperCase() === r.role).length;
+        return (
+        <div key={r.role} className="ks-card">
           <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             <div style={{ alignItems: "center", display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontSize: 14, fontWeight: 600 }}>{r.name}</span>
-              <span className="ks-badge brand">{r.count} users</span>
+              <span style={{ fontSize: 14, fontWeight: 600 }}>{roleLabel(r.role)}</span>
+              <span className="ks-badge brand">{count} users</span>
             </div>
             <p style={{ color: "hsl(var(--text-2))", fontSize: 12.5, lineHeight: 1.5, margin: 0 }}>{r.desc}</p>
             <div className="ks-chips">
@@ -104,7 +118,8 @@ function RolesTab() {
             </div>
           </div>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -149,7 +164,7 @@ export function FaUsersPage() {
   const { mutateAsync: inviteUser } = useInviteFAUserMutation({ organizationId });
   const tabs = [
     { id: "users", label: "Users", meta: String(userCount) },
-    { id: "roles", label: "Roles & Permissions", meta: "8" },
+    { id: "roles", label: "Roles & Permissions", meta: String(ROLE_CATALOG.length) },
     { id: "audit", label: "Audit Log", meta: "" },
   ];
   const handleInvite = async () => {
@@ -186,7 +201,7 @@ export function FaUsersPage() {
         ))}
       </div>
       {tab === "users" && <UsersTab organizationId={organizationId} />}
-      {tab === "roles" && <RolesTab />}
+      {tab === "roles" && <RolesTab organizationId={organizationId} />}
       {tab === "audit" && <AuditTab organizationId={organizationId} />}
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent>
