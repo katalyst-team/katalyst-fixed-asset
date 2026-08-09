@@ -30,6 +30,7 @@ import {
   formatIDRShort,
   initials,
 } from "@/modules/dashboard/fixed-assets";
+import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
 
@@ -82,14 +83,14 @@ export function FaDashboardPage() {
   const d = resp?.data;
   const activity = d?.activity ?? [];
   const category_stats = d?.category_stats ?? [];
-  const financialCategories = d?.financialCategories ?? [];
+  const financialCategories = d?.financial_categories ?? [];
   const maintenanceUpcoming = d?.maintenanceUpcoming ?? [];
   const rfidReads = d?.rfidReads ?? [];
   const sites = d?.sites ?? [];
 
   const allAssets = assetResp?.data?.assets ?? [];
-  const totalAssets = category_stats.reduce((sum, cs) => sum + cs.v, 0);
-  const capitalValue = financialCategories.reduce((sum, fc) => sum + fc.nbv, 0);
+  const totalAssets = d?.total_assets ?? 0;
+  const capitalValue = d?.net_book_value ?? 0;
   const topValue = allAssets
     .filter((a) => a.val > 100_000_000)
     .sort((a, b) => b.val - a.val)
@@ -127,16 +128,20 @@ export function FaDashboardPage() {
             </button>
           </>
         }
-        desc="12,420 assets · 12 sites · last sync 2s ago"
-        title="Good afternoon, Bambang"
+        desc={`${totalAssets.toLocaleString()} assets · ${sites.length} sites`}
+        title={`Good afternoon, ${tokenPayload?.first_name ?? ""}`}
       />
 
       <FaKpiStrip>
         <FaStat label="Total assets" tone="brand" value={String(totalAssets)} />
         <FaStat label="Capital value" sub="PSAK 16 net book" tone="info" value={formatIDRShort(capitalValue)} />
         <FaStat label="Utilization" tone="success" value="—" />
-        <FaStat label="Active alerts" tone="danger" value="—" />
-        <FaStat label="Audit progress" tone="warn" value="—" />
+        <FaStat label="Active alerts" tone="danger" value={String(d?.active_alerts ?? 0)} />
+        <FaStat
+          label="Audit progress"
+          tone="warn"
+          value={d ? `${Math.round(d.audit_progress_pct)}%` : "—"}
+        />
       </FaKpiStrip>
 
       <FaQueryState
@@ -391,9 +396,9 @@ export function FaDashboardPage() {
           </div>
           <div className="ks-card-body">
             {financialCategories.map((fc) => (
-              <div key={fc.n} style={{ marginBottom: 14 }}>
+              <div key={fc.cat} style={{ marginBottom: 14 }}>
                 <div className="mb-1 flex items-center justify-between">
-                  <span className="text-sm">{fc.n}</span>
+                  <span className="text-sm">{CAT_LABEL[fc.cat] ?? fc.cat}</span>
                   <span className="font-mono text-xs text-muted-foreground">
                     {formatIDRShort(fc.nbv)} / {formatIDRShort(fc.cost)}
                   </span>

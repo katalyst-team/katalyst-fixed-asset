@@ -10,12 +10,16 @@ import type {
 import fetcher, { ApiResponse } from "..";
 
 export type GetFADashboardResponse = ApiResponse<{
+  active_alerts: number;
   activity: FaActivityItem[];
+  audit_progress_pct: number;
   category_stats: FaCategoryStat[];
-  financialCategories: FaFinancialCategory[];
+  financial_categories: FaFinancialCategory[];
   maintenanceUpcoming: FaMaintenanceUpcoming[];
+  net_book_value: number;
   rfidReads: FaRfidRead[];
   sites: FaSite[];
+  total_assets: number;
 }>;
 
 interface GetFADashboardParams {

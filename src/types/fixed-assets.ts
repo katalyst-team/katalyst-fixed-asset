@@ -58,9 +58,9 @@ export interface FaCategoryStat {
 }
 
 export interface FaFinancialCategory {
+  cat: AssetCategory;
   cost: number;
   nbv: number;
-  n: string;
   pct: number;
 }
 
