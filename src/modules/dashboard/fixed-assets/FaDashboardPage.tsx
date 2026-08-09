@@ -245,7 +245,7 @@ export function FaDashboardPage() {
                   <div className="mb-1 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Icon size={14} style={{ color: "hsl(var(--text-3))" }} />
-                      <span className="text-sm">{cs.n}</span>
+                      <span className="text-sm">{CAT_LABEL[cs.cat] ?? cs.cat}</span>
                     </div>
                     <span className="font-mono text-xs text-muted-foreground">
                       {cs.v.toLocaleString()} · {cs.pct}%
