@@ -7,6 +7,12 @@ import fetcher, { ApiResponse } from "..";
 
 export type GetSecurityAlertsResponse = ApiResponse<{
   alerts: FaSecurityAlert[];
+  summary?: {
+    critical: number;
+    investigating: number;
+    resolution_rate: number;
+    total: number;
+  };
 }>;
 
 interface GetSecurityAlertsParams extends FaSecurityAlertFilterOptions {
