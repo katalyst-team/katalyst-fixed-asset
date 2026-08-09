@@ -11,6 +11,7 @@ import { useUser } from "@/context/user-context";
 import {
   useCreateSavedQueryMutation,
   useDeleteSavedQueryMutation,
+  useGetAssetRegisterQuery,
   useGetRTLSFloorPlanQuery,
   useGetRTLSPositionsQuery,
   useGetSavedQueriesQuery,
@@ -53,17 +54,6 @@ const ROOMS = [
   { fill: "rgba(100,116,139,0.08)", h: 320, label: "Gate / Lift", w: 140, x: 440, y: 20 },
 ];
 
-const INFO_ROWS = [
-  { k: "Asset", v: 'MacBook Pro 16" M3 Max' },
-  { k: "Asset ID", v: "IT-LP-9847" },
-  { k: "Zone", v: "Open Workstations" },
-  { k: "Floor", v: "JKT-HQ · Floor 8" },
-  { k: "Custodian", v: "Dewi A." },
-  { k: "Last seen", v: "live · 2s ago" },
-  { k: "Battery", v: "84%" },
-  { k: "Value", v: formatIDRShort(50400000) },
-];
-
 export function FaRTLSPage() {
   const router = useRouter();
   const { openModal } = useFaModal();
@@ -85,12 +75,14 @@ export function FaRTLSPage() {
     site_id: siteId,
   });
   const { data: savedQueriesResp } = useGetSavedQueriesQuery({ organizationId });
+  const { data: assetResp } = useGetAssetRegisterQuery({ organizationId });
   const { mutateAsync: createSavedQuery } = useCreateSavedQueryMutation({
     organizationId,
   });
   const { mutateAsync: deleteSavedQuery } = useDeleteSavedQueryMutation({
     organizationId,
   });
+  const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
 
   const positions = posResp?.data?.positions ?? [];
   const anchors = posResp?.data?.anchors ?? [];
@@ -99,8 +91,24 @@ export function FaRTLSPage() {
     : null;
   const floorPlan = fpResp?.data;
   const savedQueries = savedQueriesResp?.data?.queries ?? [];
+  const assets = assetResp?.data?.assets ?? [];
+  const assetById = new Map(assets.map((a) => [a.id, a]));
   const vbW = floorPlan?.width ?? 600;
   const vbH = floorPlan?.height ?? 360;
+
+  const selectedPosition = positions.find((p) => p.asset_id === selectedAssetId) ?? positions[0] ?? null;
+  const selectedAsset = selectedPosition ? assetById.get(selectedPosition.asset_id) : undefined;
+  const infoRows = selectedPosition
+    ? [
+        { k: "Asset", v: selectedPosition.name },
+        { k: "Asset ID", v: selectedPosition.asset_id },
+        { k: "Site / Floor", v: `${siteId} · Floor ${floor}` },
+        { k: "Custodian", v: selectedAsset?.custodian ?? "—" },
+        { k: "Last seen", v: selectedPosition.last_seen },
+        { k: "Accuracy", v: `±${selectedPosition.accuracy_m.toFixed(1)} m` },
+        { k: "Value", v: selectedAsset ? formatIDRShort(selectedAsset.val) : "—" },
+      ]
+    : [];
 
   const handleSaveQuery = async () => {
     if (!queryName) return;
@@ -246,38 +254,14 @@ export function FaRTLSPage() {
               ))}
 
               {positions.map((p) => (
-                <PulseDot key={p.asset_id} color="#3b82f6" x={p.x} y={p.y} />
-              ))}
-
-              <g>
-                <circle cx="465" cy="100" fill="#ef4444" opacity="0.3" r="8">
-                  <animate
-                    attributeName="r"
-                    dur="1.6s"
-                    repeatCount="indefinite"
-                    values="8;18;8"
-                  />
-                  <animate
-                    attributeName="opacity"
-                    dur="1.6s"
-                    repeatCount="indefinite"
-                    values="0.3;0;0.3"
-                  />
-                </circle>
-                <circle cx="465" cy="100" fill="#ef4444" r="6" />
-                <rect fill="#ef4444" height="14" rx="3" width="66" x="432" y="76" />
-                <text
-                  dominantBaseline="middle"
-                  fill="#fff"
-                  fontSize="9"
-                  fontWeight="700"
-                  textAnchor="middle"
-                  x="465"
-                  y="83"
+                <g
+                  key={p.asset_id}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setSelectedAssetId(p.asset_id)}
                 >
-                  IT-LP-9847
-                </text>
-              </g>
+                  <PulseDot color={p.asset_id === selectedPosition?.asset_id ? "#ef4444" : "#3b82f6"} x={p.x} y={p.y} />
+                </g>
+              ))}
             </svg>
 
             <div className="ks-chart-legend" style={{ marginTop: 12 }}>
@@ -309,12 +293,16 @@ export function FaRTLSPage() {
         <div className="grid gap-4">
           <div className="ks-card">
             <div className="ks-card-head">
-              <div className="ks-card-title">Selected · IT-LP-9847</div>
+              <div className="ks-card-title">
+                {selectedPosition ? `Selected · ${selectedPosition.asset_id}` : "Selected"}
+              </div>
               <MapPin size={14} />
             </div>
             <div className="ks-card-body">
+              {selectedPosition ? (
+                <>
               <div className="grid grid-cols-2 gap-3">
-                {INFO_ROWS.map((row) => (
+                {infoRows.map((row) => (
                   <div key={row.k}>
                     <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
                       {row.k}
@@ -327,11 +315,15 @@ export function FaRTLSPage() {
                 className="ks-btn ks-btn-primary ks-btn-sm"
                 style={{ marginTop: 14 }}
                 type="button"
-                onClick={() => router.push("/dashboard/fixed-assets/register/IT-LP-9847/")}
+                onClick={() => router.push(`/dashboard/fixed-assets/register/${selectedPosition.asset_id}/`)}
               >
                 <Search size={14} />
                 Open profile
               </button>
+                </>
+              ) : (
+                <p className="text-sm text-muted-foreground">No assets tracked on this floor.</p>
+              )}
             </div>
           </div>
 
