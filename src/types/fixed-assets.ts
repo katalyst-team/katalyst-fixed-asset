@@ -115,6 +115,7 @@ export interface FaAuditZone {
   f: number;
   nbv: number | string;
   s: number;
+  status?: string;
   tone: string;
   v: number | string;
   z: string;
@@ -378,6 +379,21 @@ export type FaAuditSignOffRole =
   | "internal_audit"
   | "finance_manager"
   | "external_accountant";
+
+export interface FaAuditSignOffEntry {
+  role: FaAuditSignOffRole;
+  signed_at: string;
+  user_name: string;
+}
+
+export interface FaAuditSession {
+  id: string;
+  name: string;
+  required_sign_off: number;
+  sign_off_count: number;
+  sign_offs: FaAuditSignOffEntry[];
+  status: string;
+}
 
 export type FaDisposalReason =
   | "sold"

@@ -1,9 +1,10 @@
-import type { FaAuditProgress, FaAuditZone } from "@/types/fixed-assets";
+import type { FaAuditProgress, FaAuditSession, FaAuditZone } from "@/types/fixed-assets";
 
 import fetcher, { ApiResponse } from "..";
 
 export type GetAuditZonesResponse = ApiResponse<{
   audit_progress?: FaAuditProgress;
+  audit_session?: FaAuditSession;
   zones: FaAuditZone[];
 }>;
 
