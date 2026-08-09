@@ -39,7 +39,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useUser } from "@/context/user-context";
-import { KEY_USE_GET_LEDGER_DATA } from "@/hooks/api/ledger/useGetLedgerDataQuery";
 import useCreateStoreAreaDataMutation from "@/hooks/api/store/useCreateStoreAreaDataMutation";
 import useCreateStoreDataMutation from "@/hooks/api/store/useCreateStoreDataMutation";
 import { KEY_USE_GET_STORE_DATA } from "@/hooks/api/store/useGetStoreDataQuery";
@@ -167,12 +166,6 @@ export function TeamSwitcher({
                   key={team.name}
                   className="gap-2 p-2"
                   onClick={() => {
-                    queryClient.invalidateQueries({
-                      queryKey: KEY_USE_GET_LEDGER_DATA(
-                        tokenPayload?.organization_id ?? "",
-                        selectedTeam
-                      ),
-                    });
                     setActiveTeam(team);
                     setSelectedTeam(team.id); // This now automatically persists to localStorage
                   }}
