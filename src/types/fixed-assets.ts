@@ -90,8 +90,17 @@ export interface FaMaintenanceUpcoming {
   tone: string;
 }
 
+export interface FaDisposalApprovalHistoryItem {
+  acted_at: string;
+  action: string;
+  approver: string;
+  notes?: string;
+  stage: string;
+}
+
 export interface FaDisposalItem {
   a: string;
+  approval_history?: FaDisposalApprovalHistoryItem[];
   cat: AssetCategory;
   id: string;
   nbv: number;
