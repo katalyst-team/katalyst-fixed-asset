@@ -174,3 +174,7 @@ This repo's primary feature is `src/modules/dashboard/fixed-assets/`. All work i
 - `cn()` utility from `@/lib/utils` for Tailwind class merging
 - `reactStrictMode: true` is on
 - **Printing (QZ Tray)**: only the plumbing survives — `useQZSigning` (`src/hooks/useQZSigning.ts`), the signing endpoint `src/pages/api/qz/sign-message.ts`, and `<script src="/js/qz-tray.js">` in `src/pages/_document.tsx`. The print hooks/components that used them were deleted; wire new label printing on top of `useQZSigning` + `window.qz`. Requires QZ Tray running on the client machine.
+
+## Git Workflow
+
+- **Default branch for work**: `develop`. Single-developer repo — do **not** create a new branch unless the user explicitly asks; commit straight to `develop`.
