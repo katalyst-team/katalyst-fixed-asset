@@ -4,16 +4,19 @@
 
 ## Commands
 
-## Commands
-
 - **Dev**: `bun run dev` (Turbopack, port **7331** — NOT 3000)
 - **Build**: `bun run build` (Next.js build + sitemap via `postbuild` → `next-sitemap`)
 - **Lint**: `bun run lint` — **always run after changes**
 - **Typecheck**: `bun tsc --noEmit`
+- **Pre-PR gate**: `make pre-pr` (runs `bun run lint && bun run build`)
 
 **Always use `bun`** — never npm/yarn/pnpm. Lockfile is `bun.lockb`. **No tests are configured** (no test runner, no test files) — verify with `lint` + `tsc --noEmit`.
 
 **No build/lint/typecheck in CI.** The only GitHub workflows are Claude code review (`pull_request`), Claude on `@claude` mentions, and a malware scanner. Quality gates are **local-only** — always run lint + typecheck yourself before considering work done.
+
+## No Fabricated Data (hard rule)
+
+Never hardcode, invent, or mock data to fill a UI panel, KPI, table, or chart. Every number and list must come from a real API call. If an endpoint doesn't exist yet, render the empty/loading state (`<FaQueryState>`/`<EmptyState>`) — do not fabricate placeholders that look real. A long cleanup effort (see git history: "Roles & Permissions tab was a fully invented role catalog", "Settings page had multiple fabricated panels", etc.) removed pages of invented data; reintroducing it is the worst regression in this repo. Same rule for permission checks: use `useFaPermission` with real backend enums, never invented role names.
 
 ## Architecture
 
@@ -23,10 +26,10 @@ Next.js 15 **Pages Router** (not App Router). `trailingSlash: true` in `next.con
 
 1. **Services** (`src/services/[domain]/`): pure async functions calling `fetcher()` (axios wrapper in `src/services/index.ts`). Return shape: `ApiResponse<T>` with `data`, `metadata`, and page-based pagination. FA endpoints use the `page_pagination` key; other domains use `pagination`. There is no top-level `message` — it lives in `metadata.message`.
 2. **React Query Hooks** (`src/hooks/api/[domain]/`): wrap service calls with `useQuery`/`useMutation`; query key factories like `KEY_USE_GET_LEDGER_DATA`.
-3. **Feature Module** (`src/modules/dashboard/[feature]/`): one `Fa*Page.tsx` component per route, local `useState` for view state, `useFaModal` for dialogs. There are no per-feature Zustand stores or feature Context providers left in this repo (the dep is still installed; don't add one without reason).
+3. **Feature Module** (`src/modules/dashboard/[feature]/`): one `Fa*Page.tsx` component per route, local `useState` for view state, `useFaModal` for dialogs. There are no per-feature Zustand stores or feature Context providers left in this repo (only remaining usage is `src/hooks/useBypassHardware.ts`; don't add more without reason).
 4. **Pages** (`src/pages/dashboard/[feature]/index.tsx`): thin wrappers composing `<DashboardLayout>`, `<FaLayout>`, and SEO via `createPageSEO()` from `@/utils/seo`.
 
-**Only two dashboard modules exist**: `fixed-assets/` (everything) and `profile/`. All inventory/log/SKU modules were deleted in commit `02b5cb4` — if you find a doc or import referencing them, it's stale.
+**Only two dashboard modules exist**: `fixed-assets/` (everything) and `profile/`. All inventory/log/SKU modules were deleted in commit `02b5cb4` — if you find a doc or import referencing them, it's stale. (Parts of `README.md` and `docs/PAGES_SPECIAL_LOGIC_AND_HARDCODE.md` still reference those deleted modules.) FA-specific docs worth reading: `docs/FA_API_GAPS.md`, `docs/FA_API_REQUIREMENTS.md`, `docs/FA_MENU_GROUPING.md`.
 
 ### Backend (katalyst-core)
 
@@ -173,7 +176,8 @@ This repo's primary feature is `src/modules/dashboard/fixed-assets/`. All work i
 - shadcn/ui config (`components.json`): `rsc: false`, style `default`, base color `slate`, icon library `lucide`
 - `cn()` utility from `@/lib/utils` for Tailwind class merging
 - `reactStrictMode: true` is on
-- **Printing (QZ Tray)**: only the plumbing survives — `useQZSigning` (`src/hooks/useQZSigning.ts`), the signing endpoint `src/pages/api/qz/sign-message.ts`, and `<script src="/js/qz-tray.js">` in `src/pages/_document.tsx`. The print hooks/components that used them were deleted; wire new label printing on top of `useQZSigning` + `window.qz`. Requires QZ Tray running on the client machine.
+- **Printing (QZ Tray)**: only the plumbing survives — `useQZSigning` (`src/hooks/useQZSigning.ts`), the signing endpoint `src/pages/api/qz/sign-message.ts`, and `<script src="/js/qz-tray.js">` in `src/pages/_document.tsx`. The print hooks/components that used them were deleted; wire new label printing on top of `useQZSigning` + `window.qz`. Requires QZ Tray running on the client machine. (The `jsprintmanager` dep is installed but unused in `src/` — ignore the README's claim about it.)
+- `Katalyst Fixed Assets/` at the repo root is a standalone static prototype (`app.jsx`/`modals.jsx`/`index.html`), not part of the Next.js app or the build — reference only, do not import from it.
 
 ## Git Workflow
 
