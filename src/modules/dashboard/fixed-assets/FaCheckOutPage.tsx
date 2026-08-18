@@ -57,10 +57,7 @@ export function FaCheckOutPage() {
   const { isPending: isExporting, mutateAsync: exportData } =
     useExportDataMutation({ organizationId });
   const check_outs = resp?.data?.check_outs ?? [];
-  const activeLoans = check_outs.filter((c) => c.status === "active").length;
-  const overdueLoans = check_outs.filter((c) => c.status === "overdue").length;
-  const returnedLoans = check_outs.filter((c) => c.status === "returned").length;
-  const returnRate = check_outs.length > 0 ? Math.round((returnedLoans / check_outs.length) * 100) : null;
+  const summary = resp?.data?.summary;
 
   const handleNext = () => {
     if (resp?.page_pagination?.has_next) {
@@ -106,10 +103,10 @@ export function FaCheckOutPage() {
       />
 
       <FaKpiStrip>
-        <FaStat label="Active loans" tone="info" value={String(activeLoans)} />
-        <FaStat label="Overdue" sub="needs action" tone="danger" value={String(overdueLoans)} />
-        <FaStat label="Return rate" tone="success" value={returnRate !== null ? `${returnRate}%` : "—"} />
-        <FaStat label="Avg duration" tone="brand" value="—" />
+        <FaStat label="Active loans" tone="info" value={String(summary?.active ?? "—")} />
+        <FaStat label="Overdue" sub="needs action" tone="danger" value={String(summary?.overdue ?? "—")} />
+        <FaStat label="On-time rate" tone="success" value={summary ? `${Math.round(summary.on_time_rate)}%` : "—"} />
+        <FaStat label="Avg duration" sub="out to return" tone="brand" value={summary ? `${summary.avg_duration_days.toFixed(1)} d` : "—"} />
       </FaKpiStrip>
 
       <FaQueryState

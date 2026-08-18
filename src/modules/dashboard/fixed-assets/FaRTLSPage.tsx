@@ -86,6 +86,7 @@ export function FaRTLSPage() {
 
   const positions = posResp?.data?.positions ?? [];
   const anchors = posResp?.data?.anchors ?? [];
+  const rtlsSummary = posResp?.data?.summary;
   const avgAccuracy = positions.length > 0
     ? (positions.reduce((sum, p) => sum + p.accuracy_m, 0) / positions.length).toFixed(1)
     : null;
@@ -150,7 +151,7 @@ export function FaRTLSPage() {
       <FaKpiStrip>
         <FaStat label="Tracked assets" tone="brand" value={String(positions.length)} />
         <FaStat label="Accuracy" tone="info" value={avgAccuracy ? `±${avgAccuracy} m` : "—"} />
-        <FaStat label="Zones" tone="success" value="—" />
+        <FaStat label="Zones" tone="success" value={String(rtlsSummary?.zones_active ?? "—")} />
         <FaStat
           label="Missing >24h"
           sub="needs attention"

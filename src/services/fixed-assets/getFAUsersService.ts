@@ -1,8 +1,15 @@
-import type { FaUser, FaUserFilterOptions } from "@/types/fixed-assets";
+import type {
+  FaUser,
+  FaUserFilterOptions,
+  FaUserSummary,
+} from "@/types/fixed-assets";
 
 import fetcher, { ApiResponse } from "..";
 
-export type GetFAUsersResponse = ApiResponse<{ users: FaUser[] }>;
+export type GetFAUsersResponse = ApiResponse<{
+  summary?: FaUserSummary;
+  users: FaUser[];
+}>;
 
 interface GetFAUsersParams extends FaUserFilterOptions {
   organizationId: string;

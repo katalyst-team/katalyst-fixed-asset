@@ -248,6 +248,13 @@ export interface FaCheckOutRecord {
   status: "active" | "returned" | "overdue";
 }
 
+export interface FaCheckOutSummary {
+  active: number;
+  avg_duration_days: number;
+  on_time_rate: number;
+  overdue: number;
+}
+
 export interface FaDoc {
   d: string;
   n: string;
@@ -286,8 +293,15 @@ export interface FaUser {
   id: string;
   last_active: string;
   name: string;
-  role: "Admin" | "Manager" | "Auditor" | "Operator" | "Viewer";
-  status: "active" | "invited" | "suspended";
+  role: string;
+  status: "active" | "inactive" | "suspended";
+}
+
+export interface FaUserSummary {
+  active_rate: number;
+  pending_invites: number;
+  roles_count: number;
+  total_users: number;
 }
 
 export interface FaPmRuleRow extends FaPmRule {
@@ -368,6 +382,13 @@ export interface FaRTLSAnchor {
   label: string;
   x: number;
   y: number;
+}
+
+export interface FaRtlsSummary {
+  avg_accuracy_m: number;
+  online_readers: number;
+  tracked_assets: number;
+  zones_active: number;
 }
 
 export interface FaRTLSFloorPlan {
@@ -759,7 +780,7 @@ export interface GenerateReportRequest {
 export interface InviteFAUserRequest {
   department: string;
   email: string;
-  role: "Admin" | "Manager" | "Auditor" | "Operator" | "Viewer";
+  role: string;
 }
 
 export interface GeofenceRuleRequest {

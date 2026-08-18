@@ -10,23 +10,12 @@ import { useUser } from "@/context/user-context";
 import {
   useGetFAUserAuditLogQuery,
   useGetFAUsersQuery,
+  useGetRolesQuery,
   useInviteFAUserMutation,
 } from "@/hooks/api/fixed-assets";
 import { avatarColor, FaKpiStrip, FaShellHead, FaStat, initials } from "@/modules/dashboard/fixed-assets";
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
-
-// Real system roles (see CLAUDE.md / useFaPermission.ts) — the backend enum
-// this app actually authorizes against, not an invented business-role list.
-const ROLE_CATALOG: { desc: string; perms: string[]; role: string }[] = [
-  { desc: "Full access across every organization on the platform.", perms: ["ORGANIZATION_CREATE_ALL", "ORGANIZATION_READ_ALL", "ORGANIZATION_UPDATE_ALL", "ORGANIZATION_DELETE_ALL"], role: "APP_SUPERADMIN" },
-  { desc: "Full access across every organization on the platform.", perms: ["ORGANIZATION_CREATE_ALL", "ORGANIZATION_READ_ALL", "ORGANIZATION_UPDATE_ALL", "ORGANIZATION_DELETE_ALL"], role: "APP_ADMIN" },
-  { desc: "Full access to this organization's modules, settings, and users.", perms: ["ORGANIZATION_CREATE_ALL", "ORGANIZATION_READ_ALL", "ORGANIZATION_UPDATE_ALL", "ORGANIZATION_DELETE_ALL"], role: "ORGANIZATION_OWNER" },
-  { desc: "Manage assets, transfers, disposals, and settings.", perms: ["ORGANIZATION_CREATE_ALL", "ORGANIZATION_READ_ALL", "ORGANIZATION_UPDATE_ALL"], role: "ORGANIZATION_ADMIN" },
-  { desc: "Day-to-day custody of assigned assets and check-outs.", perms: ["ORGANIZATION_READ_ALL"], role: "ORGANIZATION_MEMBER" },
-  { desc: "Create and process asset transactions (scan-in/out, transfers).", perms: ["ORGANIZATION_CREATE_ALL", "ORGANIZATION_READ_ALL", "ORGANIZATION_UPDATE_ALL"], role: "ORGANIZATION_OPERATOR" },
-  { desc: "Verify and approve pending asset transactions.", perms: ["ORGANIZATION_READ_ALL", "ORGANIZATION_UPDATE_ALL"], role: "ORGANIZATION_VERIFIER" },
-  { desc: "Head-office oversight — read access across sites.", perms: ["ORGANIZATION_READ_ALL"], role: "ORGANIZATION_HO" },
-];
 
 function Th({ children }: { children: React.ReactNode }) {
   return <th className="p-3 text-left font-medium text-muted-foreground">{children}</th>;
@@ -37,16 +26,16 @@ function Td({ children, style }: { children: React.ReactNode; style?: React.CSSP
 
 function statusBadge(s: string) {
   if (s === "active") return <span className="ks-badge success">Active</span>;
-  if (s === "invited") return <span className="ks-badge warn">Invited</span>;
+  if (s === "inactive") return <span className="ks-badge warn">Invited</span>;
   return <span className="ks-badge danger">Suspended</span>;
 }
 
 function UsersTab({ organizationId }: { organizationId: string }) {
   const [q, setQ] = useState("");
   const [role, setRole] = useState("All");
-  const roles = ["All", "Admin", "Manager", "Auditor", "Operator", "Viewer"];
   const { data: resp } = useGetFAUsersQuery({ organizationId });
   const allUsers = resp?.data?.users ?? [];
+  const roles = ["All", ...Array.from(new Set(allUsers.map((u) => u.role).filter(Boolean)))];
   const rows = allUsers.filter((u) => (role === "All" || u.role === role) && (u.name.toLowerCase().includes(q.toLowerCase()) || u.email.includes(q.toLowerCase())));
   return (
     <div className="ks-card">
@@ -88,39 +77,36 @@ function UsersTab({ organizationId }: { organizationId: string }) {
   );
 }
 
-function roleLabel(role: string): string {
-  return role
-    .toLowerCase()
-    .split("_")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
-}
-
 function RolesTab({ organizationId }: { organizationId: string }) {
-  const { data: resp } = useGetFAUsersQuery({ organizationId });
-  const users = resp?.data?.users ?? [];
+  const { data: resp, isError, isLoading } = useGetRolesQuery({ organizationId });
+  const roles = resp?.data?.roles ?? [];
   return (
-    <div className="ks-grid-2">
-      {ROLE_CATALOG.map((r) => {
-        const count = users.filter((u) => u.role.toUpperCase() === r.role).length;
-        return (
-        <div key={r.role} className="ks-card">
-          <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <div style={{ alignItems: "center", display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontSize: 14, fontWeight: 600 }}>{roleLabel(r.role)}</span>
-              <span className="ks-badge brand">{count} users</span>
-            </div>
-            <p style={{ color: "hsl(var(--text-2))", fontSize: 12.5, lineHeight: 1.5, margin: 0 }}>{r.desc}</p>
-            <div className="ks-chips">
-              {r.perms.map((p) => (
-                <span key={p} className="ks-badge outline">{p}</span>
-              ))}
+    <FaQueryState
+      emptyDescription="No roles are configured for this organization yet."
+      emptyTitle="No roles"
+      isEmpty={roles.length === 0}
+      isError={isError}
+      isLoading={isLoading}
+    >
+      <div className="ks-grid-2">
+        {roles.map((r) => (
+          <div key={r.id} className="ks-card">
+            <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                <span style={{ fontSize: 14, fontWeight: 600 }}>{r.name}</span>
+                <span className="ks-badge brand">{r.user_count} users</span>
+              </div>
+              <p style={{ color: "hsl(var(--text-2))", fontSize: 12.5, lineHeight: 1.5, margin: 0 }}>{r.description}</p>
+              <div className="ks-chips">
+                {r.permissions.map((p) => (
+                  <span key={p} className="ks-badge outline">{p}</span>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-        );
-      })}
-    </div>
+        ))}
+      </div>
+    </FaQueryState>
   );
 }
 
@@ -157,14 +143,16 @@ export function FaUsersPage() {
   const { canManageUsers } = useFaPermission();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: usersResp } = useGetFAUsersQuery({ organizationId });
-  const userCount = usersResp?.data?.users?.length ?? 0;
+  const { data: rolesResp } = useGetRolesQuery({ organizationId });
+  const summary = usersResp?.data?.summary;
+  const userCount = summary?.total_users ?? usersResp?.data?.users?.length ?? 0;
   const [tab, setTab] = useState("users");
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const { mutateAsync: inviteUser } = useInviteFAUserMutation({ organizationId });
   const tabs = [
     { id: "users", label: "Users", meta: String(userCount) },
-    { id: "roles", label: "Roles & Permissions", meta: String(ROLE_CATALOG.length) },
+    { id: "roles", label: "Roles & Permissions", meta: String(rolesResp?.data?.roles?.length ?? 0) },
     { id: "audit", label: "Audit Log", meta: "" },
   ];
   const handleInvite = async () => {
@@ -189,8 +177,8 @@ export function FaUsersPage() {
       />
       <FaKpiStrip>
         <FaStat label="Total users" tone="brand" value={String(userCount)} />
-        <FaStat label="MFA enabled" sub="of active users" tone="success" value="—" />
-        <FaStat label="Pending invite" tone="warn" value={String(usersResp?.data?.users?.filter((u) => u.status === "invited").length ?? 0)} />
+        <FaStat label="Active rate" sub="of all users" tone="success" value={summary ? `${Math.round(summary.active_rate)}%` : "—"} />
+        <FaStat label="Pending invite" tone="warn" value={String(summary?.pending_invites ?? "—")} />
         <FaStat label="Failed logins" sub="last 24h" tone="danger" value="—" />
       </FaKpiStrip>
       <div className="ks-seg" style={{ marginBottom: 16 }}>
