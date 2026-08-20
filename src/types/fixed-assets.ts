@@ -407,9 +407,29 @@ export interface FaRtlsSummary {
   zones_active: number;
 }
 
+export interface FaRTLSFloorPlanRoom {
+  h: number;
+  id: string;
+  label: string;
+  type: "gate" | "room" | "zone";
+  w: number;
+  x: number;
+  y: number;
+}
+
 export interface FaRTLSFloorPlan {
   floor_plan_url: string;
   height: number;
+  rooms?: FaRTLSFloorPlanRoom[];
+  width: number;
+}
+
+export interface UpsertRTLSFloorPlanRequest {
+  floor: string;
+  floor_plan_url?: string;
+  height: number;
+  rooms: FaRTLSFloorPlanRoom[];
+  site_id: string;
   width: number;
 }
 

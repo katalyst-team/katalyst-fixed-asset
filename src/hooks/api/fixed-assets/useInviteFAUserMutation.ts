@@ -22,8 +22,12 @@ const useInviteFAUserMutation = ({
     onError: (error) => {
       toastError(error);
     },
-    onSuccess: () => {
-      toast.success("User invited successfully");
+    onSuccess: (response) => {
+      if (response.data?.status === "already-member") {
+        toast.info("That user is already a member of this organization");
+      } else {
+        toast.success("User invited successfully");
+      }
       queryClient.invalidateQueries({
         queryKey: ["faUsers", organizationId],
       });

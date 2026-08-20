@@ -1,6 +1,6 @@
 "use client";
 
-import { Building, MapPin, Search, Trash2 } from "lucide-react";
+import { Building, MapPin, Pencil, Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -23,6 +23,7 @@ import {
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { FloorPlanEditor, ROOM_TONE } from "@/modules/dashboard/fixed-assets/FaRTLSFloorPlanEditor";
 import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
 
 interface PulseDotProps {
@@ -44,15 +45,6 @@ function PulseDot({ color, dur = "2.4s", x, y }: PulseDotProps) {
   );
 }
 
-const ROOMS = [
-  { fill: "rgba(59,130,246,0.07)", h: 140, label: "Open Workstations", w: 250, x: 20, y: 20 },
-  { fill: "rgba(6,182,212,0.07)", h: 70, label: "Meeting 8A", w: 120, x: 20, y: 170 },
-  { fill: "rgba(6,182,212,0.07)", h: 70, label: "Meeting 8B", w: 120, x: 150, y: 170 },
-  { fill: "rgba(245,158,11,0.07)", h: 90, label: "IT room", w: 250, x: 20, y: 250 },
-  { fill: "rgba(16,185,129,0.07)", h: 150, label: "Engineering", w: 150, x: 280, y: 20 },
-  { fill: "rgba(139,92,246,0.07)", h: 160, label: "Design", w: 150, x: 280, y: 180 },
-  { fill: "rgba(100,116,139,0.08)", h: 320, label: "Gate / Lift", w: 140, x: 440, y: 20 },
-];
 
 export function FaRTLSPage() {
   const router = useRouter();
@@ -83,6 +75,7 @@ export function FaRTLSPage() {
     organizationId,
   });
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
+  const [editorOpen, setEditorOpen] = useState(false);
 
   const positions = posResp?.data?.positions ?? [];
   const anchors = posResp?.data?.anchors ?? [];
@@ -91,6 +84,7 @@ export function FaRTLSPage() {
     ? (positions.reduce((sum, p) => sum + p.accuracy_m, 0) / positions.length).toFixed(1)
     : null;
   const floorPlan = fpResp?.data;
+  const rooms = floorPlan?.rooms ?? [];
   const savedQueries = savedQueriesResp?.data?.queries ?? [];
   const assets = assetResp?.data?.assets ?? [];
   const assetById = new Map(assets.map((a) => [a.id, a]));
@@ -169,13 +163,19 @@ export function FaRTLSPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">JKT-HQ · Floor 8</div>
+              <div className="ks-card-title">{siteId} · Floor {floor}</div>
               <div className="ks-card-desc">
                 live · {anchors.length} anchors · {positions.length} assets on
                 floor
               </div>
             </div>
-            <span className="ks-badge success">● live</span>
+            <div style={{ alignItems: "center", display: "flex", gap: 8 }}>
+              <button className="ks-btn ks-btn-sm" type="button" onClick={() => setEditorOpen(true)}>
+                <Pencil size={13} />
+                Edit layout
+              </button>
+              <span className="ks-badge success">● live</span>
+            </div>
           </div>
           <div className="ks-card-body">
             <svg
@@ -213,10 +213,10 @@ export function FaRTLSPage() {
                 />
               )}
 
-              {ROOMS.map((r) => (
-                <g key={r.label}>
+              {rooms.map((r) => (
+                <g key={r.id}>
                   <rect
-                    fill={r.fill}
+                    fill={ROOM_TONE[r.type] ?? ROOM_TONE.room}
                     height={r.h}
                     rx="4"
                     stroke="currentColor"
@@ -390,6 +390,16 @@ export function FaRTLSPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <FloorPlanEditor
+        floor={floor}
+        height={vbH}
+        open={editorOpen}
+        organizationId={organizationId}
+        rooms={rooms}
+        siteId={siteId}
+        width={vbW}
+        onDone={() => setEditorOpen(false)}
+      />
     </div>
   );
 }

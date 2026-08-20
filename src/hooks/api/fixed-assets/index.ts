@@ -147,4 +147,5 @@ export { default as useUpdateNotificationTriggersMutation } from "./useUpdateNot
 export { default as useUpdatePmRuleMutation } from "./useUpdatePmRuleMutation";
 export { default as useUpdateRoleMutation } from "./useUpdateRoleMutation";
 export { default as useUpdateWorkOrderStatusMutation } from "./useUpdateWorkOrderStatusMutation";
+export { default as useUpsertRTLSFloorPlanMutation } from "./useUpsertRTLSFloorPlanMutation";
 export { default as useWithdrawRequestMutation } from "./useWithdrawRequestMutation";

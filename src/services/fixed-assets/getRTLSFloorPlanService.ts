@@ -1,13 +1,23 @@
-import type { FaRTLSFloorPlan } from "@/types/fixed-assets";
+import type {
+  FaRTLSFloorPlan,
+  UpsertRTLSFloorPlanRequest,
+} from "@/types/fixed-assets";
 
 import fetcher, { ApiResponse } from "..";
 
 export type GetRTLSFloorPlanResponse = ApiResponse<FaRTLSFloorPlan>;
 
+export type UpsertRTLSFloorPlanResponse = ApiResponse<FaRTLSFloorPlan>;
+
 interface GetRTLSFloorPlanParams {
   floor: string;
   organizationId: string;
   site_id: string;
+}
+
+interface UpsertRTLSFloorPlanParams {
+  data: UpsertRTLSFloorPlanRequest;
+  organizationId: string;
 }
 
 export const getRTLSFloorPlanService = async ({
@@ -22,5 +32,16 @@ export const getRTLSFloorPlanService = async ({
   return fetcher({
     method: "GET",
     url: `/v1/organizations/${organizationId}/fa/rtls/floor-plan?${params.toString()}`,
+  });
+};
+
+export const upsertRTLSFloorPlanService = async ({
+  data,
+  organizationId,
+}: UpsertRTLSFloorPlanParams): Promise<UpsertRTLSFloorPlanResponse> => {
+  return fetcher({
+    data,
+    method: "PUT",
+    url: `/v1/organizations/${organizationId}/fa/rtls/floor-plan`,
   });
 };

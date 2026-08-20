@@ -57,9 +57,22 @@ Also fixed in the same pass (katalyst-core):
 - Kept intentionally: default role catalog seed and default billing plan seed (editable
   config, not fake stats).
 
-Still stubs (need product/infra decisions, documented openly):
-- `InviteUser` returns `invited` but creates nothing (needs real account-creation + email flow)
-- `GetRtlsFloorPlan` rooms are demo data (needs a floor-plan table + management UI)
+Remaining open (product/infra decisions):
+- `failed_logins_24h` KPI — no auth-event source yet
+- Reports "Scheduled monthly" / "Compliance status" KPIs — need scheduler/compliance concepts
+- Transfer "Cross-site" KPI — needs site-pair derivation
+- CCTV feed viewer (§3b) — needs stream-format decision
+
+**Invite + floor plan — implemented (Aug 2026)**:
+- `InviteUser` now creates real records: finds the account by email, creates a PENDING
+  account (random hashed password, name derived from email) if new, then links an
+  INACTIVE AOR with the requested role; duplicate membership short-circuits to
+  `already-member`. FE surfaces that status. Email delivery of the invite itself is
+  still pending (no mail pipeline on this endpoint).
+- RTLS floor plan: new `fa_rtls_floor_plans` table (org+site+floor unique, rooms JSONB),
+  `GET` returns the stored plan or an empty canvas, `PUT /fa/rtls/floor-plan` saves it.
+  FE renders rooms from the API (invented `ROOMS` constant deleted) and adds a layout
+  editor dialog (add/edit/remove room/zone/gate, save via PUT).
 
 **Report pipeline — implemented (Aug 2026)**: `GenerateReport`/`generate-all` now render
 real data per template (asset register, depreciation schedule, disposal summary, audit
@@ -122,4 +135,4 @@ messaging) can be surfaced without schema changes.
 2. ~~§3a Roles tab wiring~~ — ✅ done
 3. ~~§3c CheckOut/RTLS/Users pages read the summary block~~ — ✅ done
 4. ~~§2 derivable keys~~ — ✅ `utilization_pct`, `total_nbv` tax impact, `missing_24h` done; invite modal now sends a role from the roles API
-5. **Open (product/infra decisions)**: `failed_logins_24h`, reports scheduler/compliance, `cross_site`, CCTV feed viewer (§3b), integrations surface (§3d), and the invite/report-generation/floor-plan stubs listed in §2
+5. **Open (product/infra decisions)**: `failed_logins_24h`, reports scheduler/compliance, `cross_site`, CCTV feed viewer (§3b), integrations surface (§3d)
