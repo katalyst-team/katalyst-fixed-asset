@@ -33,21 +33,33 @@ Definitions chosen (confirm if semantics should differ):
 
 ---
 
-## 2. Backend: summary keys not provided at all
+## 2. Backend: summary keys not provided at all — partially fixed (Aug 2026)
 
-Frontend renders these `FaStat` cards as `"—"` because no endpoint returns the field.
-
-| Page | FaStat label | Suggested key / home |
+| Page | FaStat label | Status |
 |---|---|---|
-| `FaUsersPage` | ~~MFA enabled~~ | Card replaced with "Active rate" (real data); re-add only when `mfa_enabled` exists |
-| `FaUsersPage` | Failed logins (24h) | `failed_logins_24h` in users summary |
-| `FaDashboardPage` | Utilization | `utilization_pct` in dashboard response (`utilization_pct` exists only on asset detail, `response.go:40`) |
-| `FaScanOutPage` | Tax impact (fiscal drag) | `tax_impact` in scan-out/disposal summary |
-| `FaMaintenancePage` | Fleet MTBF | ✅ provided as `mtbf_days` (fleet AVG of `fa_asset_healths.mtbf_days`) in maintenance summary |
-| `FaReportsPage` | Scheduled monthly | `scheduled_monthly` in reports/templates summary |
-| `FaReportsPage` | Compliance status | `compliance_status` in reports/templates summary |
-| `FaTransferPage` | Cross-site | `cross_site` in transfer summary |
-| `FaRTLSPage` | Zones | ✅ provided as `zones_active` (COUNT DISTINCT zone) — see §3c |
+| `FaUsersPage` | Failed logins (24h) | still open — no auth-event source |
+| `FaDashboardPage` | Utilization | ✅ `utilization_pct` on dashboard response = deployed+in-service+checked-out ÷ non-retired fleet |
+| `FaScanOutPage` | Tax impact | ✅ bound to disposals `summary.total_nbv` (NBV write-off) |
+| `FaRTLSPage` | Missing >24h | ✅ `missing_24h` in RTLS summary = positions with `last_seen_at` older than 24h |
+| `FaReportsPage` | Scheduled monthly | still open — needs report scheduler concept |
+| `FaReportsPage` | Compliance status | still open — needs definition |
+| `FaTransferPage` | Cross-site | still open — needs site-pair derivation |
+
+Also fixed in the same pass (katalyst-core):
+- **Removed fake seed-on-read blocks**: billing invoices (3× Rp25M "paid"), report history
+  records, RFID readers (fake IPs), CCTV cameras (fake RTSP URLs). Empty list now returns
+  empty — hardware/invoices must be created by real flows.
+- `ConnectIntegration` now persists `{connected:true}` into `fa_settings.integrations`
+  (key-mapped: erp / active_directory / email_provider) instead of returning success
+  without writing anything.
+- `GetUserAuditLog` resolves real user names via AOR lookup (was `"User"` placeholder).
+- Kept intentionally: default role catalog seed and default billing plan seed (editable
+  config, not fake stats).
+
+Still stubs (need product/infra decisions, documented openly):
+- `InviteUser` returns `invited` but creates nothing (needs real account-creation + email flow)
+- `GenerateReport` returns `generating` but renders nothing (needs a report pipeline)
+- `GetRtlsFloorPlan` rooms are demo data (needs a floor-plan table + management UI)
 
 ---
 
@@ -65,8 +77,9 @@ Note: the backend seeds 6 default business roles on first `GET /fa/roles` call.
 
 `FaSecurityPage.tsx` `handleOpenCCTV` (~72) only fires `toast.info("Opening CCTV…")`.
 `GET /fa/security/cameras` is wired (camera list gates the alert buttons), but
-`GET /fa/security/cameras/{cameraID}/feed` is never called. Needs a feed viewer
-(stream URL / embed) — coordinate on what the feed endpoint actually returns.
+`GET /fa/security/cameras/{cameraID}/feed` is never called. Camera list now returns
+only real rows (fake camera seed removed) — a feed viewer still needs a product
+decision on stream format.
 
 ### 3c. Pages that don't read the summary block they already get — ✅ FIXED
 
@@ -95,6 +108,5 @@ messaging) can be surfaced without schema changes.
 1. ~~§1 hardcoded summary values~~ — ✅ done in katalyst-core
 2. ~~§3a Roles tab wiring~~ — ✅ done
 3. ~~§3c CheckOut/RTLS/Users pages read the summary block~~ — ✅ done
-4. **§2 remaining summary keys** (`failed_logins_24h`, `utilization_pct`, `tax_impact`, `scheduled_monthly`, `compliance_status`, `cross_site`, RTLS `missing_24h`) — no data source exists yet; needs product decisions
-5. **§3b CCTV feed viewer** — needs product decision on feed format
-6. **§3d integrations surface area** — optional
+4. ~~§2 derivable keys~~ — ✅ `utilization_pct`, `total_nbv` tax impact, `missing_24h` done; invite modal now sends a role from the roles API
+5. **Open (product/infra decisions)**: `failed_logins_24h`, reports scheduler/compliance, `cross_site`, CCTV feed viewer (§3b), integrations surface (§3d), and the invite/report-generation/floor-plan stubs listed in §2

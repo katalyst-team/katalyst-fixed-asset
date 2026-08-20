@@ -20,6 +20,7 @@ export type GetFADashboardResponse = ApiResponse<{
   rfidReads: FaRfidRead[];
   sites: FaSite[];
   total_assets: number;
+  utilization_pct: number;
 }>;
 
 interface GetFADashboardParams {

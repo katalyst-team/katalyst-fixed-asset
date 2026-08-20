@@ -110,6 +110,13 @@ export interface FaDisposalItem {
   tone: string;
 }
 
+export interface FaDisposalSummary {
+  approved: number;
+  pending: number;
+  total_nbv: number;
+  total_recovery: number;
+}
+
 export interface FaTransferItem {
   by: string;
   from: string;
@@ -386,6 +393,7 @@ export interface FaRTLSAnchor {
 
 export interface FaRtlsSummary {
   avg_accuracy_m: number;
+  missing_24h: number;
   online_readers: number;
   tracked_assets: number;
   zones_active: number;

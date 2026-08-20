@@ -74,6 +74,7 @@ export function FaScanOutPage() {
   const { isPending: isExporting, mutateAsync: exportData } =
     useExportDataMutation({ organizationId });
   const disposals = resp?.data?.disposals ?? [];
+  const summary = resp?.data?.summary;
   const awaitingApproval = disposals.filter((d) => !d.status.toLowerCase().includes("approv") && !d.status.toLowerCase().includes("signed")).length;
   const recoveryYTD = disposals.reduce((sum, d) => sum + d.rec, 0);
 
@@ -184,7 +185,7 @@ export function FaScanOutPage() {
         <FaStat label="This month" sub="disposals" tone="info" value={String(disposals.length)} />
         <FaStat label="Awaiting approval" sub="pending" tone="warn" value={String(awaitingApproval)} />
         <FaStat label="Recovery YTD" tone="success" value={recoveryYTD > 0 ? formatIDR(recoveryYTD) : "—"} />
-        <FaStat label="Tax impact" sub="fiscal drag" tone="danger" value="—" />
+        <FaStat label="Tax impact" sub="NBV write-off" tone="danger" value={summary && summary.total_nbv > 0 ? formatIDR(summary.total_nbv) : "—"} />
       </FaKpiStrip>
 
       <FaQueryState

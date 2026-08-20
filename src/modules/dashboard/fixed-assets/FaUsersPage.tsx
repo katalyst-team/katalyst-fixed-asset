@@ -6,6 +6,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useUser } from "@/context/user-context";
 import {
   useGetFAUserAuditLogQuery,
@@ -149,15 +156,17 @@ export function FaUsersPage() {
   const [tab, setTab] = useState("users");
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState("");
+  const inviteRoles = rolesResp?.data?.roles ?? [];
   const { mutateAsync: inviteUser } = useInviteFAUserMutation({ organizationId });
   const tabs = [
     { id: "users", label: "Users", meta: String(userCount) },
-    { id: "roles", label: "Roles & Permissions", meta: String(rolesResp?.data?.roles?.length ?? 0) },
+    { id: "roles", label: "Roles & Permissions", meta: String(inviteRoles.length) },
     { id: "audit", label: "Audit Log", meta: "" },
   ];
   const handleInvite = async () => {
-    if (!inviteEmail) return;
-    await inviteUser({ department: "", email: inviteEmail, role: "Viewer" });
+    if (!inviteEmail || !inviteRole) return;
+    await inviteUser({ department: "", email: inviteEmail, role: inviteRole });
     setInviteOpen(false);
     setInviteEmail("");
   };
@@ -204,8 +213,21 @@ export function FaUsersPage() {
             onChange={(e) => setInviteEmail(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") handleInvite(); }}
           />
+          <Select
+            value={inviteRole}
+            onValueChange={setInviteRole}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select role" />
+            </SelectTrigger>
+            <SelectContent>
+              {inviteRoles.map((r) => (
+                <SelectItem key={r.id} value={r.name}>{r.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <DialogFooter>
-            <Button onClick={handleInvite}>Send invite</Button>
+            <Button disabled={!inviteEmail || !inviteRole} onClick={handleInvite}>Send invite</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

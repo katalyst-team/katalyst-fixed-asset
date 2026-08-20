@@ -135,7 +135,7 @@ export function FaDashboardPage() {
       <FaKpiStrip>
         <FaStat label="Total assets" tone="brand" value={String(totalAssets)} />
         <FaStat label="Capital value" sub="PSAK 16 net book" tone="info" value={formatIDRShort(capitalValue)} />
-        <FaStat label="Utilization" tone="success" value="—" />
+        <FaStat label="Utilization" sub="deployed · in-service · checked-out" tone="success" value={d ? `${Math.round(d.utilization_pct)}%` : "—"} />
         <FaStat label="Active alerts" tone="danger" value={String(d?.active_alerts ?? 0)} />
         <FaStat
           label="Audit progress"

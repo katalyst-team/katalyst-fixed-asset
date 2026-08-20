@@ -156,7 +156,7 @@ export function FaRTLSPage() {
           label="Missing >24h"
           sub="needs attention"
           tone="danger"
-          value="—"
+          value={String(rtlsSummary?.missing_24h ?? "—")}
         />
       </FaKpiStrip>
 
