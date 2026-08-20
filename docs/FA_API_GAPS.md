@@ -59,8 +59,15 @@ Also fixed in the same pass (katalyst-core):
 
 Still stubs (need product/infra decisions, documented openly):
 - `InviteUser` returns `invited` but creates nothing (needs real account-creation + email flow)
-- `GenerateReport` returns `generating` but renders nothing (needs a report pipeline)
 - `GetRtlsFloorPlan` rooms are demo data (needs a floor-plan table + management UI)
+
+**Report pipeline — implemented (Aug 2026)**: `GenerateReport`/`generate-all` now render
+real data per template (asset register, depreciation schedule, disposal summary, audit
+reconciliation, maintenance log, fiscal-year movement, insurance schedule) as CSV
+(csv/excel) or PDF (gofpdf), upload to MinIO (`fa-reports/{orgID}/`), and persist a
+`FaReportRecord` (ready/failed, real download URL, generated-by resolved from the JWT
+AOR). Report history, preview (record metadata HTML), and per-template `last_run` all
+read real records now.
 
 Transaction coverage note (Aug 2026): all ~50 FA write endpoints are now wired FE↔BE,
 including the last two — `POST /fa/depreciation/run` (Run Depreciation button, confirm

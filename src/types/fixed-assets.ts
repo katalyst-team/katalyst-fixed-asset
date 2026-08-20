@@ -467,7 +467,7 @@ export type FaReportFormat = "pdf" | "excel" | "json-ld";
 export interface FaReportResult {
   download_url?: string;
   report_id: string;
-  status: "generating" | "ready";
+  status: "failed" | "generating" | "ready";
 }
 
 export interface FaUserAuditLog {
