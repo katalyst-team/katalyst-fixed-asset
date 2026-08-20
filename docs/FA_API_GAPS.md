@@ -41,6 +41,7 @@ Definitions chosen (confirm if semantics should differ):
 | `FaDashboardPage` | Utilization | ✅ `utilization_pct` on dashboard response = deployed+in-service+checked-out ÷ non-retired fleet |
 | `FaScanOutPage` | Tax impact | ✅ bound to disposals `summary.total_nbv` (NBV write-off) |
 | `FaRTLSPage` | Missing >24h | ✅ `missing_24h` in RTLS summary = positions with `last_seen_at` older than 24h |
+| `FaMaintenancePage` | Fleet MTBF | ✅ wired to maintenance summary `mtbf_days` (org-wide `open_wo` also replaces the page-local count) |
 | `FaReportsPage` | Scheduled monthly | still open — needs report scheduler concept |
 | `FaReportsPage` | Compliance status | still open — needs definition |
 | `FaTransferPage` | Cross-site | still open — needs site-pair derivation |

@@ -26,7 +26,8 @@ export function FaMaintenancePage() {
   const { data: maintResp } = useGetMaintenanceQuery({ organizationId });
   const work_orders = maintResp?.data?.work_orders ?? [];
   const health_data = maintResp?.data?.health_data ?? [];
-  const openWOs = work_orders.filter((w) => w.status === "open" || w.status === "in-progress").length;
+  const maintSummary = maintResp?.data?.summary;
+  const openWOs = maintSummary?.open_wo ?? work_orders.filter((w) => w.status === "open" || w.status === "in-progress").length;
   const overdueFailed = health_data.filter((h) => h.status === "critical" || h.status === "alert").length;
   const dormant = health_data.filter((h) => h.since_maint_days > 30).length;
   const [tab, setTab] = useState<Tab>("flow");
@@ -57,7 +58,7 @@ export function FaMaintenancePage() {
         <FaStat label="Open WOs" tone="brand" value={String(openWOs)} />
         <FaStat label="Overdue / Failed" sub="needs attention" tone="danger" value={String(overdueFailed)} />
         <FaStat label="Dormant > 30d" tone="warn" value={String(dormant)} />
-        <FaStat label="Fleet MTBF" sub="mean time between" tone="info" value="—" />
+        <FaStat label="Fleet MTBF" sub="mean time between" tone="info" value={maintSummary ? `${Math.round(maintSummary.mtbf_days)} d` : "—"} />
       </FaKpiStrip>
 
       <div className="ks-seg" style={{ marginBottom: 16 }}>

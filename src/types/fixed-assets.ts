@@ -117,6 +117,14 @@ export interface FaDisposalSummary {
   total_recovery: number;
 }
 
+export interface FaMaintenanceSummary {
+  avg_run_hours: number;
+  critical_alerts: number;
+  mtbf_days: number;
+  open_wo: number;
+  overdue_pm: number;
+}
+
 export interface FaTransferItem {
   by: string;
   from: string;
