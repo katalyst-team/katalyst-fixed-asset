@@ -62,6 +62,11 @@ Still stubs (need product/infra decisions, documented openly):
 - `GenerateReport` returns `generating` but renders nothing (needs a report pipeline)
 - `GetRtlsFloorPlan` rooms are demo data (needs a floor-plan table + management UI)
 
+Transaction coverage note (Aug 2026): all ~50 FA write endpoints are now wired FE↔BE,
+including the last two — `POST /fa/depreciation/run` (Run Depreciation button, confirm
+dialog, invalidates schedule/journal/dashboard) and `POST /fa/journal-entries/:id/post`
+(per-row Post button on pending entries in the Journal tab).
+
 ---
 
 ## 3. Frontend: wiring gaps (no backend work needed)

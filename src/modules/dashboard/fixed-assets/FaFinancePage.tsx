@@ -1,14 +1,27 @@
 "use client";
 
-import { Calendar, Download, FileText, Shield } from "lucide-react";
+import { Calendar, Download, FileText, Play, Shield } from "lucide-react";
 import { useState } from "react";
 
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/user-context";
 import {
   useGetBastDocumentsQuery,
   useGetDepreciationScheduleQuery,
   useGetInsurancePoliciesQuery,
   useGetJournalEntriesQuery,
+  usePostJournalEntryMutation,
+  useRunDepreciationMutation,
 } from "@/hooks/api/fixed-assets";
 import {
   FaKpiStrip,
@@ -34,9 +47,43 @@ const TABS: { id: Tab; label: string }[] = [
 function DepreciationTab({ organizationId }: { organizationId: string }) {
   const { data: resp, isError, isLoading } = useGetDepreciationScheduleQuery({ organizationId });
   const schedules = resp?.data?.schedules ?? [];
+  const { isPending: isRunning, mutateAsync: runDepreciation } = useRunDepreciationMutation({ organizationId });
+
+  const handleRunDepreciation = async () => {
+    await runDepreciation();
+  };
 
   return (
     <FaQueryState isEmpty={schedules.length === 0} isError={isError} isLoading={isLoading}>
+      <div style={{ alignItems: "center", display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+        <div className="text-xs text-muted-foreground">
+          {schedules.length} schedules · straight-line PSAK 16
+        </div>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button
+              className="ks-btn ks-btn-sm ks-btn-primary"
+              disabled={isRunning}
+              type="button"
+            >
+              <Play size={12} />
+              {isRunning ? "Posting…" : "Run depreciation"}
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Post depreciation for this fiscal year?</AlertDialogTitle>
+              <AlertDialogDescription>
+                All unposted depreciation schedules for the current year will be posted, asset net book values updated, and a journal entry created. This cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <Button onClick={handleRunDepreciation}>Run depreciation</Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
       <table className="w-full">
         <thead>
           <tr style={{ borderBottom: "1px solid hsl(var(--border))" }}>
@@ -80,6 +127,11 @@ function DepreciationTab({ organizationId }: { organizationId: string }) {
 function JournalTab({ organizationId }: { organizationId: string }) {
   const { data: resp, isError, isLoading } = useGetJournalEntriesQuery({ organizationId });
   const entries = resp?.data?.entries ?? [];
+  const { isPending: isPosting, mutateAsync: postJournalEntry } = usePostJournalEntryMutation({ organizationId });
+
+  const handlePost = async (journalEntryId: string) => {
+    await postJournalEntry({ journalEntryId });
+  };
 
   return (
     <FaQueryState isEmpty={entries.length === 0} isError={isError} isLoading={isLoading}>
@@ -92,6 +144,7 @@ function JournalTab({ organizationId }: { organizationId: string }) {
             <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Debit</th>
             <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Credit</th>
             <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
+            <th className="text-right p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -114,6 +167,18 @@ function JournalTab({ organizationId }: { organizationId: string }) {
                 <span className={`ks-badge ${entry.status === "posted" ? "success" : entry.status === "pending" ? "warn" : entry.status === "reversed" ? "danger" : "outline"}`}>
                   {entry.status}
                 </span>
+              </td>
+              <td className="p-3 text-right">
+                {entry.status === "pending" && (
+                  <button
+                    className="ks-btn ks-btn-sm"
+                    disabled={isPosting}
+                    type="button"
+                    onClick={() => handlePost(entry.id)}
+                  >
+                    Post
+                  </button>
+                )}
               </td>
             </tr>
           ))}
