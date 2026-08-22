@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 
 import { AppSidebar } from "@/components/layouts/dashboard-layout/app-sidebar";
-import { ColorThemeSwitcher } from "@/components/shared/ColorThemeSwitcher";
 import { DensitySwitcher } from "@/components/shared/DensitySwitcher";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -33,7 +32,6 @@ export default function DashboardLayout(props: DashboardLayoutProps) {
                 <BreadcrumbNavigation />
               </div>
               <div className="flex items-center gap-2 px-6">
-                <ColorThemeSwitcher />
                 <DensitySwitcher />
                 <NotificationPopover />
               </div>

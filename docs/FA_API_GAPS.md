@@ -1,537 +1,138 @@
-# Fixed Assets — API Gaps (Backend Not Yet Provided)
+# Fixed Assets — API Gaps (FE ↔ BE cross-audit, Aug 2026)
 
-> Generated from UI-to-spec gap analysis. The existing spec (`FA_API_REQUIREMENTS.md`)
-> covers 58 endpoints. This doc lists features in the UI that **have no corresponding
-> backend endpoint** or where existing endpoints need **additional fields**.
-
----
-
-## A. Missing Endpoints (14)
-
-### A1. Reservations
-
-UI: `modals/ReservationModal.tsx`
-
-```
-POST /v1/organizations/{org_id}/fa/reservations
-GET  /v1/organizations/{org_id}/fa/reservations
-```
-
-```typescript
-// POST request
-{
-  asset_id: string;
-  reserved_by: string;
-  start_time: string;      // ISO datetime
-  duration: string;        // "2 hours" | "4 hours" | "Full day" | "2 days" | "1 week"
-  purpose?: string;
-}
-
-// GET response data
-{
-  reservations: Array<{
-    id: string;
-    asset_id: string;
-    asset_name: string;
-    reserved_by: string;
-    start_time: string;
-    end_time: string;
-    status: "upcoming" | "active" | "completed" | "cancelled";
-  }>;
-}
-```
+> **Previous versions of this doc are obsolete.** katalyst-core has since implemented
+> everything from the original gap list (A1–A14 missing endpoints, B1 summary blocks,
+> B2 floor-plan rooms, B3 health/utilization, B4 approval history, B5 integrations
+> connect, C modal mounting). The backend now serves ~95 routes under
+> `/v1/organizations/:organizationID/fa/` and 13 list endpoints return a `summary`
+> block (`Summary map[string]interface{}` in `fixed_asset_response/response.go`).
+>
+> This doc now tracks only what is **still open**, split by where the fix belongs.
 
 ---
 
-### A2. EPC Range Registration
+## 1. Backend: summary values are hardcoded placeholders — ✅ FIXED (katalyst-core `develop`, Aug 2026)
 
-UI: `modals/EpcRangeModal.tsx`
+> Fixed by replacing literals with real aggregates. New `FaSummaryRepository` methods:
+> `AggregateCheckOuts` (AVG days out→return), `AggregateAuditZones` (SUM system/found/NBV),
+> `AggregateDisposals` (SUM NBV all, SUM recovery approved-only), `CountLateTransfers`
+> (past `expected_arrival`, stage dispatched/in-transit), `CountCriticalWorkOrders`
+> (critical + open/in-progress), `AggregateAssetHealth` (overdue PM via `next_pm_days < 0`,
+> AVG run hours, AVG MTBF), `AggregateRtls` (AVG accuracy, online readers, distinct zones),
+> `CountUnprintedRfidTags`. Users summary now derives from the AOR list
+> (`active_rate`, distinct `roles_count`, `pending_invites` = INACTIVE count) — `CountUsers`
+> (distinct aor_id in activity log) removed. The 9 never-called `Get*Summary` methods on
+> `FaExtraService` were deleted (dead duplicate of the inline logic). Column names and the
+> `FILTER`/`EXTRACT EPOCH` SQL patterns verified read-only against the staging DB.
 
-```
-POST /v1/organizations/{org_id}/fa/epc-ranges
-GET  /v1/organizations/{org_id}/fa/epc-ranges
-```
-
-```typescript
-// POST request
-{
-  company_prefix: string;   // GS1 company prefix
-  filter_value: string;     // asset-type filter
-  encoding_format: string;  // "SGTIN-96" | "GID-96" | ...
-  range_start: string;
-  range_end: string;
-}
-```
-
----
-
-### A3. Export (CSV/Excel)
-
-UI: `FaRegisterPage`, `FaRfidTagsPage`, `FaDashboardPage`, `FaCheckOutPage`, `FaScanOutPage`
-
-```
-POST /v1/organizations/{org_id}/fa/exports
-```
-
-```typescript
-// Request
-{
-  source: "assets" | "rfid-tags" | "check-outs" | "disposals" | "transfers" | "dashboard";
-  format: "csv" | "excel";
-  filters?: Record<string, unknown>;  // same filters as the list endpoint
-}
-
-// Response data
-{
-  download_url: string;
-  expires_at: string;
-}
-```
-
-> Alternative: reuse `POST /fa/reports/generate` with predefined templates per source.
+Definitions chosen (confirm if semantics should differ):
+- `late_rate` = transfers past `expected_arrival` and still dispatched/in-transit, over ALL transfers
+- `total_recovery` = SUM(recovery_value) of **approved** disposals only
+- `pending_invites` = AORs with status `INACTIVE`
+- `critical_alerts` = work orders priority `critical` AND status open/in-progress
 
 ---
 
-### A4. Scan-In History
+## 2. Backend: summary keys not provided at all — partially fixed (Aug 2026)
 
-UI: `FaScanInPage.tsx` — receiving history panel
+| Page | FaStat label | Status |
+|---|---|---|
+| `FaUsersPage` | Failed logins (24h) | still open — no auth-event source |
+| `FaDashboardPage` | Utilization | ✅ `utilization_pct` on dashboard response = deployed+in-service+checked-out ÷ non-retired fleet |
+| `FaScanOutPage` | Tax impact | ✅ bound to disposals `summary.total_nbv` (NBV write-off) |
+| `FaRTLSPage` | Missing >24h | ✅ `missing_24h` in RTLS summary = positions with `last_seen_at` older than 24h |
+| `FaMaintenancePage` | Fleet MTBF | ✅ wired to maintenance summary `mtbf_days` (org-wide `open_wo` also replaces the page-local count) |
+| `FaReportsPage` | Scheduled monthly | still open — needs report scheduler concept |
+| `FaReportsPage` | Compliance status | still open — needs definition |
+| `FaTransferPage` | Cross-site | still open — needs site-pair derivation |
 
-```
-GET /v1/organizations/{org_id}/fa/scan-in/history
-```
+Also fixed in the same pass (katalyst-core):
+- **Removed fake seed-on-read blocks**: billing invoices (3× Rp25M "paid"), report history
+  records, RFID readers (fake IPs), CCTV cameras (fake RTSP URLs). Empty list now returns
+  empty — hardware/invoices must be created by real flows.
+- `ConnectIntegration` now persists `{connected:true}` into `fa_settings.integrations`
+  (key-mapped: erp / active_directory / email_provider) instead of returning success
+  without writing anything.
+- `GetUserAuditLog` resolves real user names via AOR lookup (was `"User"` placeholder).
+- Kept intentionally: default role catalog seed and default billing plan seed (editable
+  config, not fake stats).
 
-```typescript
-// Query params: cursor, limit
-// Response data
-{
-  history: Array<{
-    id: string;
-    po_id: string;
-    asset_id: string;
-    asset_name: string;
-    epc: string;
-    deployed_at: string;
-    deployed_by: string;
-  }>;
-}
-```
+Remaining open (product/infra decisions):
+- `failed_logins_24h` KPI — no auth-event source yet
+- Reports "Scheduled monthly" / "Compliance status" KPIs — need scheduler/compliance concepts
+- Transfer "Cross-site" KPI — needs site-pair derivation
+- CCTV feed viewer (§3b) — needs stream-format decision
 
----
+**Invite + floor plan — implemented (Aug 2026)**:
+- `InviteUser` now creates real records: finds the account by email, creates a PENDING
+  account (random hashed password, name derived from email) if new, then links an
+  INACTIVE AOR with the requested role; duplicate membership short-circuits to
+  `already-member`. FE surfaces that status. Email delivery of the invite itself is
+  still pending (no mail pipeline on this endpoint).
+- RTLS floor plan: new `fa_rtls_floor_plans` table (org+site+floor unique, rooms JSONB),
+  `GET` returns the stored plan or an empty canvas, `PUT /fa/rtls/floor-plan` saves it.
+  FE renders rooms from the API (invented `ROOMS` constant deleted) and adds a layout
+  editor dialog (add/edit/remove room/zone/gate, save via PUT).
 
-### A5. Transfer History (detailed)
+**Report pipeline — implemented (Aug 2026)**: `GenerateReport`/`generate-all` now render
+real data per template (asset register, depreciation schedule, disposal summary, audit
+reconciliation, maintenance log, fiscal-year movement, insurance schedule) as CSV
+(csv/excel) or PDF (gofpdf), upload to MinIO (`fa-reports/{orgID}/`), and persist a
+`FaReportRecord` (ready/failed, real download URL, generated-by resolved from the JWT
+AOR). Report history, preview (record metadata HTML), and per-template `last_run` all
+read real records now.
 
-UI: `modals/TransferHistoryModal.tsx`
-
-```
-GET /v1/organizations/{org_id}/fa/transfers/history
-```
-
-```typescript
-// Response data
-{
-  history: Array<{
-    id: string;
-    asset_name: string;
-    from_loc: string;
-    to_loc: string;
-    initiated_by: string;
-    dispatched_at: string;
-    received_at: string | null;
-    status: string;
-    cost_center: string;
-  }>;
-}
-```
-
-> Current `GET /fa/transfers` exists but lacks `cost_center`, `initiated_by`, and
-> timestamp detail fields needed for the history modal.
-
----
-
-### A6. Saved RTLS Queries
-
-UI: `FaRTLSPage.tsx`
-
-```
-GET  /v1/organizations/{org_id}/fa/rtls/saved-queries
-POST /v1/organizations/{org_id}/fa/rtls/saved-queries
-DELETE /v1/organizations/{org_id}/fa/rtls/saved-queries/{id}
-```
-
-```typescript
-// POST request
-{
-  name: string;
-  site_id: string;
-  floor: string;
-  zone?: string;
-  filters?: Record<string, unknown>;
-}
-```
+Transaction coverage note (Aug 2026): all ~50 FA write endpoints are now wired FE↔BE,
+including the last two — `POST /fa/depreciation/run` (Run Depreciation button, confirm
+dialog, invalidates schedule/journal/dashboard) and `POST /fa/journal-entries/:id/post`
+(per-row Post button on pending entries in the Journal tab).
 
 ---
 
-### A7. Billing / Subscription
+## 3. Frontend: wiring gaps (no backend work needed)
 
-UI: `FaSettingsPage.tsx` → BillingPanel
+### 3a. Roles tab ignores the real API — ✅ FIXED
 
-```
-GET /v1/organizations/{org_id}/fa/billing
-GET /v1/organizations/{org_id}/fa/billing/invoices
-```
+`FaUsersPage.tsx` Roles tab now renders from `useGetRolesQuery` (`GET /fa/roles`) —
+name, description, `user_count`, and permission chips from the API's `permissions[]`.
+The static `ROLE_CATALOG` is deleted. The tab meta count and the Users-tab role
+filter chips now also come from real data (roles endpoint / distinct user roles).
+Note: the backend seeds 6 default business roles on first `GET /fa/roles` call.
 
-```typescript
-// Response data (billing)
-{
-  plan: string;              // "Enterprise"
-  seat_count: number;
-  seats_used: number;
-  asset_count: number;
-  asset_limit: number;
-  storage_used_mb: number;
-  storage_limit_mb: number;
-  renewal_date: string;
-}
+### 3b. CCTV feed never rendered
 
-// Response data (invoices)
-{
-  invoices: Array<{
-    id: string;
-    date: string;
-    amount: number;
-    status: "paid" | "pending" | "overdue";
-    download_url: string;
-  }>;
-}
-```
+`FaSecurityPage.tsx` `handleOpenCCTV` (~72) only fires `toast.info("Opening CCTV…")`.
+`GET /fa/security/cameras` is wired (camera list gates the alert buttons), but
+`GET /fa/security/cameras/{cameraID}/feed` is never called. Camera list now returns
+only real rows (fake camera seed removed) — a feed viewer still needs a product
+decision on stream format.
 
----
+### 3c. Pages that don't read the summary block they already get — ✅ FIXED
 
-### A8. Roles & Permissions
+- `FaCheckOutPage` — KPI strip now reads `summary` (`active`, `overdue`, `on_time_rate`,
+  `avg_duration_days`) instead of computing from the current page only; "Return rate"
+  (page-local) replaced by org-wide "On-time rate"
+- `FaRTLSPage` — "Zones" now reads `summary.zones_active`; "Tracked assets" keeps the
+  per-site/floor filtered count (more accurate for the view than org-wide `tracked_assets`);
+  "Missing >24h" still "—" (no backend field — see §2)
+- `FaUsersPage` — KPI strip now reads users `summary` (`total_users`, `active_rate`,
+  `pending_invites`); the dead "MFA enabled" card was replaced by "Active rate"
 
-UI: `FaUsersPage.tsx` — Roles tab (currently hardcoded 6 roles)
+Once §1 lands real values, these pages should read `resp.data.summary.*`.
 
-```
-GET /v1/organizations/{org_id}/fa/roles
-PUT /v1/organizations/{org_id}/fa/roles/{role_id}
-```
+### 3d. Integrations panel is minimal
 
-```typescript
-// Response data
-{
-  roles: Array<{
-    id: string;
-    name: string;
-    description: string;
-    user_count: number;
-    permissions: string[];   // ["All Modules", "Settings", ...]
-  }>;
-}
-```
+`FaSettingsPage` renders 3 integration cards (ERP, Active Directory, Email).
+Backend `settings.integrations` is an open `map[string]interface{}` plus
+`POST /fa/integrations/{type}/connect`, so more types (accounting, label printers,
+messaging) can be surfaced without schema changes.
 
 ---
 
-### A9. Report Preview & History
-
-UI: `FaReportsPage.tsx`
-
-```
-GET /v1/organizations/{org_id}/fa/reports/{report_id}/preview
-GET /v1/organizations/{org_id}/fa/reports/history
-```
-
-```typescript
-// Preview response data
-{
-  html: string;              // or download_url
-  generated_at: string;
-}
-
-// History response data
-{
-  reports: Array<{
-    id: string;
-    template_id: string;
-    template_name: string;
-    format: string;
-    generated_at: string;
-    generated_by: string;
-    download_url: string;
-    status: "ready" | "failed";
-  }>;
-}
-```
-
----
-
-### A10. RFID Reader Inventory & Health
-
-UI: `FaSettingsPage.tsx` → RFID Hardware panel
-
-```
-GET /v1/organizations/{org_id}/fa/rfid-readers
-```
-
-```typescript
-// Response data
-{
-  readers: Array<{
-    id: string;
-    name: string;
-    model: string;
-    location: string;
-    ip: string;
-    status: "online" | "offline" | "error";
-    last_heartbeat: string;
-    firmware_version: string;
-    antenna_count: number;
-  }>;
-}
-```
-
----
-
-### A11. Notification Trigger Matrix
-
-UI: `FaSettingsPage.tsx` → Notifications panel
-
-The current `GET /fa/settings` returns `notifications.email_enabled` and
-`maintenance_reminder_days[]`, but the UI has a full trigger matrix
-(per-event × per-channel toggles). Need:
-
-```
-GET /v1/organizations/{org_id}/fa/settings/notifications/triggers
-PUT /v1/organizations/{org_id}/fa/settings/notifications/triggers
-```
-
-```typescript
-// Triggers
-{
-  triggers: Array<{
-    event: string;            // "transfer_dispatched" | "disposal_approved" | ...
-    channels: string[];       // ["email", "push", "sms"]
-    enabled: boolean;
-  }>;
-}
-```
-
----
-
-### A12. CCTV Camera Feed
-
-UI: `FaSecurityPage.tsx`
-
-```
-GET /v1/organizations/{org_id}/fa/security/cameras
-GET /v1/organizations/{org_id}/fa/security/cameras/{camera_id}/feed
-```
-
-```typescript
-// Cameras list
-{
-  cameras: Array<{
-    id: string;
-    name: string;
-    zone: string;
-    status: "online" | "offline";
-    stream_url?: string;
-  }>;
-}
-```
-
----
-
-### A13. Asset Document Download
-
-UI: `FaDetailPage.tsx` — Documents tab
-
-The `GET /fa/assets/{id}` response includes `docs[]` with `{ id, title, ... }`
-but no download URL. Need:
-
-```
-GET /v1/organizations/{org_id}/fa/assets/{asset_id}/docs/{doc_id}
-```
-
-```typescript
-// Response data
-{
-  download_url: string;
-  file_size: number;
-  content_type: string;
-  uploaded_at: string;
-  uploaded_by: string;
-}
-```
-
----
-
-### A14. Audit Report PDF Export
-
-UI: `FaAuditPage.tsx`
-
-```
-POST /v1/organizations/{org_id}/fa/audit/{audit_id}/report
-```
-
-```typescript
-// Response: binary PDF or { download_url: string }
-```
-
----
-
-## B. Existing Endpoints Needing Additional Fields
-
-### B1. List Endpoints Needing Summary/KPI Block
-
-Every page renders `<FaKpiStrip>` with hardcoded metrics. The corresponding GET
-endpoints should return a `summary` block alongside the list data.
-
-| Endpoint | Needed summary fields |
-|----------|---------------------|
-| `GET /fa/rfid-tags` | `total_tags`, `active`, `lost`, `unprinted` |
-| `GET /fa/security/alerts` | `total`, `critical`, `investigating`, `resolution_rate` |
-| `GET /fa/audit/zones` | `total_assets`, `found`, `variance_nbv`, `zones_total`, `zones_scanned` |
-| `GET /fa/users` | `total_users`, `active_rate`, `roles_count`, `pending_invites` |
-| `GET /fa/dashboard` | (already has most KPIs, but verify) |
-| `GET /fa/check-outs` | `active`, `overdue`, `on_time_rate`, `avg_duration_days` |
-| `GET /fa/transfers` | `in_transit`, `dispatched`, `received_total`, `late_rate` |
-| `GET /fa/disposals` | `pending`, `approved`, `total_recovery`, `total_nbv` |
-| `GET /fa/reports/templates` | `total_templates`, `ready_count`, `last_run_status` |
-| `GET /fa/maintenance` | `open_wo`, `critical_alerts`, `overdue_pm`, `avg_run_hours` |
-| `GET /fa/rtls/positions` | `tracked_assets`, `avg_accuracy_m`, `online_readers`, `zones_active` |
-
-**Suggested response shape:**
-
-```typescript
-{
-  data: { /* existing list data */ },
-  summary: {
-    [key: string]: string | number;   // page-specific KPI fields
-  }
-}
-```
-
----
-
-### B2. Floor Plan Needs Room/Zone Metadata
-
-`GET /fa/rtls/floor-plan` currently returns `{ floor_plan_url, width, height }`.
-The UI renders labeled rooms/zones on the SVG. Need:
-
-```typescript
-{
-  floor_plan_url: string;
-  width: number;
-  height: number;
-  rooms: Array<{
-    id: string;
-    label: string;
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-    type: "room" | "zone" | "gate";
-  }>;
-}
-```
-
----
-
-### B3. Asset Detail Needs Health/Utilization Metrics
-
-`GET /fa/assets/{id}` returns `depreciationSchedule[]` but the UI's Overview tab
-shows health score, utilization %, and status. Need:
-
-```typescript
-{
-  asset: FaAsset & {
-    health_score?: number;        // 0-100
-    utilization_pct?: number;     // 0-100
-    // ... existing FaAssetDetail fields
-  }
-}
-```
-
----
-
-### B4. Disposal Detail Needs Approval Stage History
-
-`GET /fa/disposals` returns `FaDisposalItem[]` with `status` (current stage).
-The UI renders a full 5-step approval timeline. Need per-disposal:
-
-```typescript
-{
-  approval_history: Array<{
-    stage: string;
-    approver: string;
-    acted_at: string;
-    action: "approved" | "rejected" | "revised" | "pending";
-    notes?: string;
-  }>;
-}
-```
-
----
-
-### B5. Settings Integration List is Incomplete
-
-`GET /fa/settings.integrations` returns `{ erp, active_directory, email_provider }`.
-The UI shows 8 integration cards (DJP, BPJS, Zebra, SATO, Slack, etc.). Need:
-
-```typescript
-{
-  integrations: {
-    erp: { connected: boolean; type?: string };
-    active_directory: { connected: boolean };
-    email_provider: { connected: boolean };
-    // Add these:
-    accounting?: { connected: boolean; type?: "djp" | "bpjs" | "quickbooks" };
-    label_printers?: { connected: boolean; devices?: string[] };
-    messaging?: { connected: boolean; type?: "slack" | "teams" };
-  };
-}
-```
-
----
-
-## C. Structural Frontend Issue: Modal System Not Mounted
-
-`FaModalProvider` / `FaModalRoot` are defined but **never mounted** in the app tree.
-All 11 modals are unreachable. This is a frontend-only fix (no backend needed):
-
-- Mount `<FaModalProvider>` in `FaShell.tsx` or `_app.tsx`
-- Replace `toast.info("Opening form…")` calls with `openModal("checkOut")`, etc.
-
-Modals with working mutations ready to connect:
-- `CheckOutModal` → `useCreateCheckOutMutation`
-- `TransferModal` → `useCreateTransferMutation`
-- `DisposalRequestModal` → `useCreateDisposalMutation`
-- `WorkOrderModal` → `useCreateWorkOrderMutation`
-- `ReservationModal` → needs `POST /fa/reservations` (A1)
-- `PmRuleModal` → `useCreatePmRuleMutation`
-- `OrderStockModal` → `useOrderRFIDTagsMutation`
-- `EditAssetModal` → `useUpdateAssetMutation`
-- `EpcRangeModal` → needs `POST /fa/epc-ranges` (A2)
-- `LocateAssetModal` → already wired (uses `useGetAssetRegisterQuery`)
-
----
-
-## Summary
-
-| Category | Count | Backend Needed? |
-|----------|-------|-----------------|
-| **A. Missing endpoints** | 14 | Yes |
-| **B. Existing endpoints need more fields** | 5 | Yes (schema additions) |
-| **C. Modal system not mounted** | 1 | No (frontend fix) |
-| **Hardcoded data → existing API** | 20 | Mostly no (use existing endpoints better) |
-| **Hardcoded KPI metrics** | 12 pages | Yes (add `summary` blocks) |
-
-### Priority for Backend
-
-1. **Reservations** (A1) — no endpoint at all, modal is blocked
-2. **Export** (A3) — 5 pages need this
-3. **Summary/KPI blocks** (B1) — 12 pages show fake metrics
-4. **Roles & Permissions** (A8) — Users page is fully hardcoded
-5. **Billing** (A7) — Settings page BillingPanel is fully hardcoded
-6. **RFID Readers** (A10) — Settings RFID panel is hardcoded
-7. Everything else can follow
+## Priority
+
+1. ~~§1 hardcoded summary values~~ — ✅ done in katalyst-core
+2. ~~§3a Roles tab wiring~~ — ✅ done
+3. ~~§3c CheckOut/RTLS/Users pages read the summary block~~ — ✅ done
+4. ~~§2 derivable keys~~ — ✅ `utilization_pct`, `total_nbv` tax impact, `missing_24h` done; invite modal now sends a role from the roles API
+5. **Open (product/infra decisions)**: `failed_logins_24h`, reports scheduler/compliance, `cross_site`, CCTV feed viewer (§3b), integrations surface (§3d)

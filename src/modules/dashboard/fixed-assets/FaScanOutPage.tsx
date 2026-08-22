@@ -3,7 +3,6 @@
 import {
   Ban,
   CheckCircle2,
-  ChevronRight,
   DollarSign,
   Download,
   FileText,
@@ -37,28 +36,6 @@ import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
 import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
 import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
-
-interface ApprovalStep {
-  date: string;
-  label: string;
-  who: string;
-}
-
-const APPROVAL_FLOW: ApprovalStep[] = [
-  { date: "14 Oct", label: "Request submitted", who: "Andi P." },
-  { date: "15 Oct", label: "Dept Head review", who: "Dewi A." },
-  { date: "—", label: "Finance review", who: "Pending" },
-  { date: "—", label: "CFO approval", who: "Pending" },
-  { date: "—", label: "BAST signed", who: "Pending" },
-];
-
-const STAGE_BY_STATUS: Record<string, number> = {
-  "Approved": 5,
-  "BAST signed": 5,
-  "CFO approval": 4,
-  "Dept Head": 2,
-  "Finance review": 3,
-};
 
 function statusBadgeClass(status: string): string {
   const s = status.toLowerCase();
@@ -97,6 +74,7 @@ export function FaScanOutPage() {
   const { isPending: isExporting, mutateAsync: exportData } =
     useExportDataMutation({ organizationId });
   const disposals = resp?.data?.disposals ?? [];
+  const summary = resp?.data?.summary;
   const awaitingApproval = disposals.filter((d) => !d.status.toLowerCase().includes("approv") && !d.status.toLowerCase().includes("signed")).length;
   const recoveryYTD = disposals.reduce((sum, d) => sum + d.rec, 0);
 
@@ -132,10 +110,11 @@ export function FaScanOutPage() {
   }
 
   const Icon = catToLucide[item.cat] ?? catToLucide.furn;
-  const stage = STAGE_BY_STATUS[item.status] ?? 2;
-  const gain = item.rec - item.nbv;
-  const costBasis = item.nbv + 64000000;
-  const accumDep = costBasis - item.nbv;
+  const approvalHistory = item.approval_history ?? [];
+  // Mirrors the exact lines POST /disposals/:id/journal-entry will post
+  // (core/fixed_asset/fixed_asset_service/disposal.go JournalEntry) — this is a
+  // preview, not the source of truth, so it must stay in lockstep with the backend.
+  const accumDepDebit = item.nbv - item.rec;
 
   const handleGenerateBast = async () => {
     await generateBast({ disposalId: item.id });
@@ -153,7 +132,7 @@ export function FaScanOutPage() {
   };
 
   const handleNext = () => {
-    if (page < (resp?.pagination?.total_pages ?? 1)) {
+    if (resp?.page_pagination?.has_next) {
       setPage((p) => p + 1);
       setSelectedIdx(0);
     }
@@ -206,7 +185,7 @@ export function FaScanOutPage() {
         <FaStat label="This month" sub="disposals" tone="info" value={String(disposals.length)} />
         <FaStat label="Awaiting approval" sub="pending" tone="warn" value={String(awaitingApproval)} />
         <FaStat label="Recovery YTD" tone="success" value={recoveryYTD > 0 ? formatIDR(recoveryYTD) : "—"} />
-        <FaStat label="Tax impact" sub="fiscal drag" tone="danger" value="—" />
+        <FaStat label="Tax impact" sub="NBV write-off" tone="danger" value={summary && summary.total_nbv > 0 ? formatIDR(summary.total_nbv) : "—"} />
       </FaKpiStrip>
 
       <FaQueryState
@@ -268,11 +247,11 @@ export function FaScanOutPage() {
             <div className="flex flex-row flex-1 justify-end items-end w-full">
               <PaginationCursor
                 currentPage={page}
-                hasNextPage={page < (resp?.pagination?.total_pages ?? 1)}
-                hasPrevPage={page > 1}
+                hasNextPage={resp?.page_pagination?.has_next ?? false}
+                hasPrevPage={resp?.page_pagination?.has_prev ?? false}
                 limit={PAGE_LIMIT}
-                totalCount={resp?.pagination?.total_count ?? null}
-                totalPages={resp?.pagination?.total_pages}
+                totalCount={resp?.page_pagination?.total_records ?? null}
+                totalPages={resp?.page_pagination?.total_pages}
                 onNext={handleNext}
                 onPrev={handlePrev}
               />
@@ -316,38 +295,31 @@ export function FaScanOutPage() {
 
             <div>
               <p className="mb-2 text-xs font-medium text-muted-foreground">Approval Flow</p>
-              <div className="space-y-0">
-                {APPROVAL_FLOW.map((s, i) => {
-                  const done = i < stage;
-                  const currentStep = i === stage;
-                  return (
-                    <div key={s.label} className="flex gap-3">
+              {approvalHistory.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No approval actions yet.</p>
+              ) : (
+                <div className="space-y-0">
+                  {approvalHistory.map((s, i) => (
+                    <div key={`${s.stage}-${s.acted_at}`} className="flex gap-3">
                       <div className="flex flex-col items-center">
-                        <div
-                          className={`flex h-7 w-7 items-center justify-center rounded-full ${
-                            done
-                              ? "bg-[hsl(var(--brand))] text-white"
-                              : currentStep
-                                ? "border-2 border-[hsl(var(--brand))] bg-[hsl(var(--brand)/0.1)] text-[hsl(var(--brand))]"
-                                : "border border-border bg-muted text-muted-foreground"
-                          }`}
-                        >
-                          {done ? <CheckCircle2 size={14} /> : <ChevronRight size={14} />}
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[hsl(var(--brand))] text-white">
+                          <CheckCircle2 size={14} />
                         </div>
-                        {i < APPROVAL_FLOW.length - 1 && (
-                          <div className={`my-0.5 w-px flex-1 ${done ? "bg-[hsl(var(--brand))]" : "bg-border"}`} style={{ minHeight: 18 }} />
+                        {i < approvalHistory.length - 1 && (
+                          <div className="my-0.5 w-px flex-1 bg-[hsl(var(--brand))]" style={{ minHeight: 18 }} />
                         )}
                       </div>
                       <div className="pb-3">
-                        <p className={`text-sm font-medium ${done || currentStep ? "text-foreground" : "text-muted-foreground"}`}>
-                          {s.label}
+                        <p className="text-sm font-medium text-foreground">
+                          {s.stage} · {s.action}
                         </p>
-                        <p className="text-xs text-muted-foreground">{s.who} · {s.date}</p>
+                        <p className="text-xs text-muted-foreground">{s.approver} · {s.acted_at}</p>
+                        {s.notes && <p className="text-xs text-muted-foreground">{s.notes}</p>}
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="rounded-lg border border-border p-3">
@@ -358,7 +330,7 @@ export function FaScanOutPage() {
               <div className="space-y-1 font-mono text-xs">
                 <div className="flex justify-between">
                   <span>Dr. Accumulated depreciation</span>
-                  <span className="font-semibold">{formatIDR(accumDep)}</span>
+                  <span className="font-semibold">{formatIDR(accumDepDebit)}</span>
                 </div>
                 {item.rec > 0 && (
                   <div className="flex justify-between">
@@ -366,22 +338,10 @@ export function FaScanOutPage() {
                     <span className="font-semibold">{formatIDR(item.rec)}</span>
                   </div>
                 )}
-                {gain < 0 && (
-                  <div className="flex justify-between text-[hsl(var(--destructive))]">
-                    <span>Dr. Loss on disposal</span>
-                    <span className="font-semibold">{formatIDR(Math.abs(gain))}</span>
-                  </div>
-                )}
                 <div className="flex justify-between border-t border-border pt-1">
-                  <span>Cr. Fixed assets (cost)</span>
-                  <span className="font-semibold">{formatIDR(costBasis)}</span>
+                  <span>Cr. Aset Tetap</span>
+                  <span className="font-semibold">{formatIDR(item.nbv)}</span>
                 </div>
-                {gain > 0 && (
-                  <div className="flex justify-between text-[hsl(var(--success))]">
-                    <span>Cr. Gain on disposal</span>
-                    <span className="font-semibold">{formatIDR(gain)}</span>
-                  </div>
-                )}
               </div>
               <button
                 className="ks-btn ks-btn-ghost mt-3 w-full"

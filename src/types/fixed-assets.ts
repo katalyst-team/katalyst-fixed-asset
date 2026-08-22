@@ -58,9 +58,9 @@ export interface FaCategoryStat {
 }
 
 export interface FaFinancialCategory {
+  cat: AssetCategory;
   cost: number;
   nbv: number;
-  n: string;
   pct: number;
 }
 
@@ -90,8 +90,17 @@ export interface FaMaintenanceUpcoming {
   tone: string;
 }
 
+export interface FaDisposalApprovalHistoryItem {
+  acted_at: string;
+  action: string;
+  approver: string;
+  notes?: string;
+  stage: string;
+}
+
 export interface FaDisposalItem {
   a: string;
+  approval_history?: FaDisposalApprovalHistoryItem[];
   cat: AssetCategory;
   id: string;
   nbv: number;
@@ -99,6 +108,21 @@ export interface FaDisposalItem {
   rec: number;
   status: string;
   tone: string;
+}
+
+export interface FaDisposalSummary {
+  approved: number;
+  pending: number;
+  total_nbv: number;
+  total_recovery: number;
+}
+
+export interface FaMaintenanceSummary {
+  avg_run_hours: number;
+  critical_alerts: number;
+  mtbf_days: number;
+  open_wo: number;
+  overdue_pm: number;
 }
 
 export interface FaTransferItem {
@@ -115,6 +139,7 @@ export interface FaAuditZone {
   f: number;
   nbv: number | string;
   s: number;
+  status?: string;
   tone: string;
   v: number | string;
   z: string;
@@ -238,6 +263,13 @@ export interface FaCheckOutRecord {
   status: "active" | "returned" | "overdue";
 }
 
+export interface FaCheckOutSummary {
+  active: number;
+  avg_duration_days: number;
+  on_time_rate: number;
+  overdue: number;
+}
+
 export interface FaDoc {
   d: string;
   n: string;
@@ -253,10 +285,21 @@ export interface FaReportTemplate {
 }
 
 export interface FaMasterDataRow {
+  address?: string;
+  city?: string;
+  code?: string;
+  contact?: string;
   count: number;
+  department?: string;
+  depreciation_method?: string;
   desc: string;
+  email?: string;
+  employee_id?: string;
   id: string;
   name: string;
+  phone?: string;
+  psak16_code?: string;
+  useful_life_years?: number;
 }
 
 export interface FaUser {
@@ -265,8 +308,15 @@ export interface FaUser {
   id: string;
   last_active: string;
   name: string;
-  role: "Admin" | "Manager" | "Auditor" | "Operator" | "Viewer";
-  status: "active" | "invited" | "suspended";
+  role: string;
+  status: "active" | "inactive" | "suspended";
+}
+
+export interface FaUserSummary {
+  active_rate: number;
+  pending_invites: number;
+  roles_count: number;
+  total_users: number;
 }
 
 export interface FaPmRuleRow extends FaPmRule {
@@ -349,9 +399,37 @@ export interface FaRTLSAnchor {
   y: number;
 }
 
+export interface FaRtlsSummary {
+  avg_accuracy_m: number;
+  missing_24h: number;
+  online_readers: number;
+  tracked_assets: number;
+  zones_active: number;
+}
+
+export interface FaRTLSFloorPlanRoom {
+  h: number;
+  id: string;
+  label: string;
+  type: "gate" | "room" | "zone";
+  w: number;
+  x: number;
+  y: number;
+}
+
 export interface FaRTLSFloorPlan {
   floor_plan_url: string;
   height: number;
+  rooms?: FaRTLSFloorPlanRoom[];
+  width: number;
+}
+
+export interface UpsertRTLSFloorPlanRequest {
+  floor: string;
+  floor_plan_url?: string;
+  height: number;
+  rooms: FaRTLSFloorPlanRoom[];
+  site_id: string;
   width: number;
 }
 
@@ -367,6 +445,21 @@ export type FaAuditSignOffRole =
   | "internal_audit"
   | "finance_manager"
   | "external_accountant";
+
+export interface FaAuditSignOffEntry {
+  role: FaAuditSignOffRole;
+  signed_at: string;
+  user_name: string;
+}
+
+export interface FaAuditSession {
+  id: string;
+  name: string;
+  required_sign_off: number;
+  sign_off_count: number;
+  sign_offs: FaAuditSignOffEntry[];
+  status: string;
+}
 
 export type FaDisposalReason =
   | "sold"
@@ -394,7 +487,7 @@ export type FaReportFormat = "pdf" | "excel" | "json-ld";
 export interface FaReportResult {
   download_url?: string;
   report_id: string;
-  status: "generating" | "ready";
+  status: "failed" | "generating" | "ready";
 }
 
 export interface FaUserAuditLog {
@@ -723,7 +816,7 @@ export interface GenerateReportRequest {
 export interface InviteFAUserRequest {
   department: string;
   email: string;
-  role: "Admin" | "Manager" | "Auditor" | "Operator" | "Viewer";
+  role: string;
 }
 
 export interface GeofenceRuleRequest {

@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { toastError } from "@/services";
@@ -15,6 +15,8 @@ interface UseGenerateReportMutationParams {
 const useGenerateReportMutation = ({
   organizationId,
 }: UseGenerateReportMutationParams) => {
+  const queryClient = useQueryClient();
+
   return useMutation<GenerateReportResponse, Error, GenerateReportRequest>({
     mutationFn: (data) => generateReportService({ data, organizationId }),
     onError: (error) => {
@@ -27,6 +29,8 @@ const useGenerateReportMutation = ({
       } else {
         toast.success("Report generation started");
       }
+      queryClient.invalidateQueries({ queryKey: ["faReportTemplates", organizationId] });
+      queryClient.invalidateQueries({ queryKey: ["faReportHistory", organizationId] });
     },
   });
 };

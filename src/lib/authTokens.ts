@@ -3,6 +3,8 @@ import { deleteCookie, setCookie } from "cookies-next";
 
 const THIRTY_DAYS_IN_SECONDS = 60 * 60 * 24 * 30;
 
+export const PENDING_SIGNUP_TOKENS_KEY = "pending_signup_tokens";
+
 export const AUTH_COOKIE_OPTIONS: SerializeOptions = {
   maxAge: THIRTY_DAYS_IN_SECONDS,
   path: "/",

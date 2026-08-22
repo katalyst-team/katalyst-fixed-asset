@@ -7,7 +7,6 @@ import {
   FileText,
   PlayCircle,
   Shield,
-  User,
 } from "lucide-react";
 
 import { useUser } from "@/context/user-context";
@@ -35,29 +34,12 @@ import type {
   PostAuditAdjustmentRequest,
 } from "@/types/fixed-assets";
 
-interface SignoffItem {
-  done: boolean;
-  label: string;
-  role: FaAuditSignOffRole;
-  who: string;
-}
-
-const ACTIVE_ZONE_ID = "BDG-WH-Bay-2";
-const AUDIT_ID = "Q4-2025";
-
-const SIGNOFFS: SignoffItem[] = [
-  { done: true, label: "Stock count lead", role: "stock_count_lead", who: "Rahmat S." },
-  { done: true, label: "Department head", role: "dept_head", who: "Dewi A." },
-  { done: true, label: "Internal audit", role: "internal_audit", who: "Surya D." },
-  { done: true, label: "Finance manager", role: "finance_manager", who: "Ratna I." },
-  { done: false, label: "External accountant", role: "external_accountant", who: "KAP Tanjung" },
-];
-
-const JOURNAL_LINES = [
-  { acc: "1.500 · Aset Tetap — Peralatan", amt: "-5.200.000", dr: false },
-  { acc: "7.120 · Beban Selisih Stok", amt: "5.200.000", dr: true },
-  { acc: "1.500 · Aset Tetap — Kendaraan", amt: "-4.200.000", dr: false },
-  { acc: "7.120 · Beban Selisih Stok", amt: "4.200.000", dr: true },
+const SIGNOFF_ROLES: { label: string; role: FaAuditSignOffRole }[] = [
+  { label: "Stock count lead", role: "stock_count_lead" },
+  { label: "Department head", role: "dept_head" },
+  { label: "Internal audit", role: "internal_audit" },
+  { label: "Finance manager", role: "finance_manager" },
+  { label: "External accountant", role: "external_accountant" },
 ];
 
 export function FaAuditPage() {
@@ -76,41 +58,70 @@ export function FaAuditPage() {
     organizationId,
   });
   const zones = resp?.data?.zones ?? [];
+  const auditProgress = resp?.data?.audit_progress;
+  const session = resp?.data?.audit_session;
+  const auditId = session?.id ?? "";
+
   const countedTotal = zones.reduce((sum, z) => sum + z.f, 0);
   const varianceCount = zones.filter((z) => typeof z.v === "number" && z.v !== 0).length;
   const nbvImpact = zones.reduce((sum, z) => sum + (typeof z.nbv === "number" ? z.nbv : 0), 0);
   const zonesRemaining = zones.filter((z) => z.tone !== "success").length;
-  const signoffDone = SIGNOFFS.filter((s) => s.done).length;
+
+  const signOffByRole = new Map((session?.sign_offs ?? []).map((s) => [s.role, s]));
+  const signoffDone = session?.sign_off_count ?? 0;
+  const signoffRequired = session?.required_sign_off ?? SIGNOFF_ROLES.length;
+
+  // The zone with the largest NBV variance drives the adjustment journal preview —
+  // PostAdjustment only takes a single zone_id, so it can't post for every variance at once.
+  const varianceZones = zones.filter((z) => typeof z.nbv === "number" && z.nbv !== 0);
+  const worstZone = varianceZones.reduce<typeof varianceZones[number] | null>((worst, z) => {
+    if (!worst) return z;
+    return Math.abs(Number(z.nbv)) > Math.abs(Number(worst.nbv)) ? z : worst;
+  }, null);
+  const journalAmount = worstZone ? Math.abs(Number(worstZone.nbv)) : 0;
+  const journalLines: FaJournalEntryLine[] = worstZone
+    ? [
+        {
+          account: "1.500 · Aset Tetap",
+          credit: journalAmount,
+          debit: 0,
+          description: `Audit variance adjustment — ${worstZone.z}`,
+        },
+        {
+          account: "7.120 · Beban Selisih Stok",
+          credit: 0,
+          debit: journalAmount,
+          description: `Audit variance adjustment — ${worstZone.z}`,
+        },
+      ]
+    : [];
+
+  const nextZoneToScan = zones.find((z) => z.status !== "scanned" && z.status !== "reconciled");
 
   const handlePostToGl = async () => {
-    const lines: FaJournalEntryLine[] = JOURNAL_LINES.map((l) => {
-      const amount = Math.abs(parseInt(l.amt.replace(/\./g, ""), 10) || 0);
-      return {
-        account: l.acc,
-        credit: l.dr ? 0 : amount,
-        debit: l.dr ? amount : 0,
-        description: "Audit variance adjustment",
-      };
-    });
+    if (!auditId || !worstZone) return;
     const data: PostAuditAdjustmentRequest = {
-      lines,
-      zone_id: ACTIVE_ZONE_ID,
+      lines: journalLines,
+      zone_id: worstZone.z,
     };
-    await postAdjustment({ auditId: AUDIT_ID, data });
+    await postAdjustment({ auditId, data });
   };
 
   const handleResumeSweep = async () => {
-    await resumeSweep({ auditId: AUDIT_ID, zone_id: ACTIVE_ZONE_ID });
+    if (!auditId || !nextZoneToScan) return;
+    await resumeSweep({ auditId, zone_id: nextZoneToScan.z });
   };
 
   const handleAuditReport = async () => {
-    const reportResp = await getAuditReport({ auditId: AUDIT_ID });
+    if (!auditId) return;
+    const reportResp = await getAuditReport({ auditId });
     if (reportResp?.data?.download_url) {
       safeOpenUrl(reportResp.data.download_url);
     }
   };
 
   const handleSignOff = async (role: FaAuditSignOffRole) => {
+    if (!auditId) return;
     const data: AuditSignOffRequest = {
       role,
       signature:
@@ -119,7 +130,7 @@ export function FaAuditPage() {
           .join(" ") || tokenPayload?.email || "",
       user_id: tokenPayload?.account_id ?? "",
     };
-    await signOff({ auditId: AUDIT_ID, data });
+    await signOff({ auditId, data });
   };
 
   return (
@@ -129,6 +140,7 @@ export function FaAuditPage() {
           <>
             <button
               className="ks-btn"
+              disabled={!auditId}
               type="button"
               onClick={handleAuditReport}
             >
@@ -138,6 +150,7 @@ export function FaAuditPage() {
             {canManage && (
               <button
                 className="ks-btn ks-btn-primary"
+                disabled={!auditId || !nextZoneToScan}
                 type="button"
                 onClick={handleResumeSweep}
               >
@@ -147,7 +160,7 @@ export function FaAuditPage() {
             )}
           </>
         }
-        title="Stock Audit · Q4 2025"
+        title={session?.name ? `Stock Audit · ${session.name}` : "Stock Audit"}
       />
 
       <div
@@ -176,7 +189,7 @@ export function FaAuditPage() {
               <span style={{ fontSize: 14, fontWeight: 600 }}>
                 Physical count sweep in progress
               </span>
-              <span className="ks-badge brand">Live</span>
+              <span className="ks-badge brand">{session?.status ?? "Live"}</span>
             </div>
             <div
               style={{
@@ -189,18 +202,16 @@ export function FaAuditPage() {
               }}
             >
               <span style={{ fontFamily: "ui-monospace, monospace", fontWeight: 600 }}>
-                22 of 28 zones
+                {auditProgress ? `${auditProgress.scanned_zones} of ${auditProgress.total_zones} zones` : "—"}
               </span>
-              <span style={{ alignItems: "center", display: "inline-flex", gap: 4 }}>
-                <Clock size={12} />
-                Day 3 · 14:42
-              </span>
-              <span style={{ alignItems: "center", display: "inline-flex", gap: 4 }}>
-                <User size={12} />
-                Auditor: Rahmat S.
-              </span>
+              {nextZoneToScan && (
+                <span style={{ alignItems: "center", display: "inline-flex", gap: 4 }}>
+                  <Clock size={12} />
+                  Next: {nextZoneToScan.z}
+                </span>
+              )}
             </div>
-            <FaMeter pct={78} tone="brand" />
+            <FaMeter pct={auditProgress?.pct_complete ?? 0} tone="brand" />
           </div>
           <div style={{ textAlign: "right" }}>
             <div
@@ -210,10 +221,10 @@ export function FaAuditPage() {
                 fontWeight: 600,
               }}
             >
-              78%
+              {auditProgress ? `${Math.round(auditProgress.pct_complete)}%` : "—"}
             </div>
             <div style={{ color: "hsl(var(--text-3))", fontSize: 12 }}>
-              6 zones remaining
+              {auditProgress ? `${auditProgress.total_zones - auditProgress.scanned_zones} zones remaining` : ""}
             </div>
           </div>
         </div>
@@ -229,7 +240,7 @@ export function FaAuditPage() {
           value={nbvImpact !== 0 ? formatIDRShort(nbvImpact) : "—"}
         />
         <FaStat label="Zones remaining" tone="info" value={String(zonesRemaining)} />
-        <FaStat label="Sign-off" sub={`${signoffDone} of ${SIGNOFFS.length} done`} tone="success" value={`${signoffDone}/${SIGNOFFS.length}`} />
+        <FaStat label="Sign-off" sub={`${signoffDone} of ${signoffRequired} done`} tone="success" value={`${signoffDone}/${signoffRequired}`} />
       </FaKpiStrip>
 
       <FaQueryState
@@ -337,7 +348,7 @@ export function FaAuditPage() {
               <div>
                 <div className="ks-card-title">Adjustment journal entry</div>
                 <div className="ks-card-desc">
-                  Auto-drafted from variances · JE-2410-018
+                  {worstZone ? `Largest variance · ${worstZone.z}` : "No variance to adjust"}
                 </div>
               </div>
               <span className="ks-badge outline">Draft</span>
@@ -353,25 +364,25 @@ export function FaAuditPage() {
                   padding: 14,
                 }}
               >
-                {JOURNAL_LINES.map((l) => (
+                {journalLines.map((l) => (
                   <div
-                    key={l.acc}
+                    key={l.account}
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
                     }}
                   >
-                    <span style={{ color: "hsl(var(--text-2))" }}>{l.acc}</span>
+                    <span style={{ color: "hsl(var(--text-2))" }}>{l.account}</span>
                     <span
                       style={{
-                        color: l.dr
+                        color: l.debit
                           ? "hsl(var(--text))"
                           : "hsl(var(--destructive))",
                         fontWeight: 600,
                       }}
                     >
-                      {l.dr ? "Dr " : "Cr "}
-                      {l.amt}
+                      {l.debit ? "Dr " : "Cr "}
+                      {formatIDRShort(l.debit || l.credit)}
                     </span>
                   </div>
                 ))}
@@ -391,13 +402,14 @@ export function FaAuditPage() {
                       fontWeight: 700,
                     }}
                   >
-                    -Rp 14.200.000
+                    {worstZone ? formatIDRShort(-journalAmount) : "—"}
                   </span>
                 </div>
               </div>
               {canManage && (
                 <button
                   className="ks-btn ks-btn-primary"
+                  disabled={!auditId || !worstZone}
                   style={{ marginTop: 12, width: "100%" }}
                   type="button"
                   onClick={handlePostToGl}
@@ -412,21 +424,24 @@ export function FaAuditPage() {
             <div className="ks-card-head">
               <div>
                 <div className="ks-card-title">Sign-off · Audit report</div>
-                <div className="ks-card-desc">4 of 5 required approvals</div>
+                <div className="ks-card-desc">{signoffDone} of {signoffRequired} required approvals</div>
               </div>
-              <span className="ks-badge warn">1 pending</span>
+              <span className="ks-badge warn">{Math.max(signoffRequired - signoffDone, 0)} pending</span>
             </div>
             <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {SIGNOFFS.map((s) => (
+              {SIGNOFF_ROLES.map((s) => {
+                const entry = signOffByRole.get(s.role);
+                const done = Boolean(entry);
+                return (
                 <div
-                  key={s.label}
+                  key={s.role}
                   style={{
                     alignItems: "center",
                     display: "flex",
                     gap: 10,
                   }}
                 >
-                  {s.done ? (
+                  {done ? (
                     <CheckCircle2
                       size={18}
                       style={{ color: "hsl(var(--success))", flexShrink: 0 }}
@@ -442,14 +457,15 @@ export function FaAuditPage() {
                       {s.label}
                     </div>
                     <div style={{ color: "hsl(var(--text-3))", fontSize: 12 }}>
-                      {s.who}
+                      {entry?.user_name || "Awaiting signature"}
                     </div>
                   </div>
-                  {s.done ? (
+                  {done ? (
                     <span className="ks-badge success">Signed</span>
                   ) : canManage ? (
                     <button
                       className="ks-btn ks-btn-primary ks-btn-sm"
+                      disabled={!auditId}
                       type="button"
                       onClick={() => handleSignOff(s.role)}
                     >
@@ -459,7 +475,8 @@ export function FaAuditPage() {
                     <span className="ks-badge outline">Pending</span>
                   )}
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

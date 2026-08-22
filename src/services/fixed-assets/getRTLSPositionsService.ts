@@ -2,6 +2,7 @@ import type {
   FaRTLSAnchor,
   FaRTLSPosition,
   FaRTLSPositionFilterOptions,
+  FaRtlsSummary,
 } from "@/types/fixed-assets";
 
 import fetcher, { ApiResponse } from "..";
@@ -9,6 +10,7 @@ import fetcher, { ApiResponse } from "..";
 export type GetRTLSPositionsResponse = ApiResponse<{
   anchors: FaRTLSAnchor[];
   positions: FaRTLSPosition[];
+  summary?: FaRtlsSummary;
 }>;
 
 interface GetRTLSPositionsParams extends FaRTLSPositionFilterOptions {

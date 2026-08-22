@@ -1,8 +1,15 @@
-import type { FaCheckOutFilterOptions, FaCheckOutRecord } from "@/types/fixed-assets";
+import type {
+  FaCheckOutFilterOptions,
+  FaCheckOutRecord,
+  FaCheckOutSummary,
+} from "@/types/fixed-assets";
 
 import fetcher, { ApiResponse } from "..";
 
-export type GetCheckOutsResponse = ApiResponse<{ check_outs: FaCheckOutRecord[] }>;
+export type GetCheckOutsResponse = ApiResponse<{
+  check_outs: FaCheckOutRecord[];
+  summary?: FaCheckOutSummary;
+}>;
 
 interface GetCheckOutsParams extends FaCheckOutFilterOptions {
   organizationId: string;

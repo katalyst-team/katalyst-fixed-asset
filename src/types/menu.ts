@@ -217,13 +217,21 @@ export enum MenuName {
   WEB_FA_USERS = "WEB_FA_USERS",
   WEB_FA_SETTINGS = "WEB_FA_SETTINGS",
   WEB_FA_DOCS = "WEB_FA_DOCS",
+  WEB_FA_TAGS = "WEB_FA_TAGS",
+  WEB_FA_OPERATIONS = "WEB_FA_OPERATIONS",
+  WEB_FA_MOVEMENT = "WEB_FA_MOVEMENT",
+  WEB_FA_ADMIN = "WEB_FA_ADMIN",
+
+  WEB_SETTINGS = "WEB_SETTINGS",
+  WEB_GENERAL_SETTINGS = "WEB_GENERAL_SETTINGS",
+  WEB_VERIFICATION_METHOD_SETTINGS = "WEB_VERIFICATION_METHOD_SETTINGS",
 }
 
 /**
  * Maps menu names to their corresponding sidebar routes.
  */
 export const MENU_ROUTE_MAP: Record<string, string> = {
-  [MenuName.WEB_OVERVIEW]: "/dashboard/overview",
+  [MenuName.WEB_OVERVIEW]: "/dashboard/fixed-assets/",
   [MenuName.WEB_LEDGER]: "/dashboard/ledger",
   [MenuName.WEB_LEDGER_V2]: "/dashboard/ledger-v2",
   [MenuName.WEB_PRINT_RFID]: "/dashboard/print-rfid",

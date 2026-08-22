@@ -115,7 +115,7 @@ export async function middleware(request: NextRequest) {
   if (AUTH_PATH_PAGE.includes(request.nextUrl.pathname) && isAuthenticated) {
     if (paramToken && paramRefreshToken) {
       const response = NextResponse.redirect(
-        new URL("/dashboard/overview", request.url),
+        new URL("/dashboard/fixed-assets/", request.url),
       );
       persistResponseCookies(response, paramToken, paramRefreshToken);
 
@@ -123,7 +123,7 @@ export async function middleware(request: NextRequest) {
     }
 
     return NextResponse.redirect(
-      new URL(`/${locale}/dashboard/overview`, request.url),
+      new URL(`/${locale}/dashboard/fixed-assets/`, request.url),
     );
   }
   if (request.nextUrl.pathname.startsWith("/dashboard") && !isAuthenticated) {
@@ -133,7 +133,7 @@ export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/dashboard") && isAuthenticated) {
     if (paramToken && paramRefreshToken) {
       const response = NextResponse.redirect(
-        new URL(`/${locale}/dashboard/overview`, request.url),
+        new URL(`/${locale}/dashboard/fixed-assets/`, request.url),
       );
       persistResponseCookies(response, paramToken, paramRefreshToken);
       return response;

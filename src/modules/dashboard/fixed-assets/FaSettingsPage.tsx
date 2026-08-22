@@ -12,8 +12,10 @@ import {
   useGetBillingQuery,
   useGetFASettingsQuery,
   useGetInvoicesQuery,
+  useGetMaintenanceQuery,
   useGetNotificationTriggersQuery,
   useGetRfidReadersQuery,
+  useGetRFIDTagsQuery,
   useUpdateFASettingsMutation,
   useUpdateNotificationTriggersMutation,
 } from "@/hooks/api/fixed-assets";
@@ -40,14 +42,6 @@ const NAV = [
   { icon: DollarSign, id: "billing", label: "Billing" },
 ];
 
-const STATIC_INTEGRATIONS = [
-  { connected: true, desc: "Tax reporting (SPT 1771)", name: "DJP Online" },
-  { connected: true, desc: "Payroll & contributions", name: "BPJS" },
-  { connected: true, desc: "Tag printer", name: "Zebra ZD621" },
-  { connected: true, desc: "Tag printer", name: "SATO CL4NX" },
-  { connected: true, desc: "Alerts channel", name: "Slack" },
-];
-
 function Field({ label, onChange, value }: { label: string; onChange: (v: string) => void; value: string }) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -57,33 +51,32 @@ function Field({ label, onChange, value }: { label: string; onChange: (v: string
   );
 }
 
-function GeneralPanel({ onChange, workspace }: {
+function GeneralPanel({ onChange, organizationId, workspace }: {
   onChange: (patch: Partial<FaSettings["workspace"]>) => void;
+  organizationId: string;
   workspace: FaSettings["workspace"];
 }) {
-  const [extras, setExtras] = useState({ lang: "Bahasa Indonesia", totalTagged: "9,851", tz: "WIB (UTC+7)", wsId: "indojaya-fa-prod" });
+  const { data: tagsResp } = useGetRFIDTagsQuery({ organizationId });
+  const totalTagged = tagsResp?.data?.tags.length ?? 0;
 
   return (
     <div className="ks-card">
       <div className="ks-card-head"><span className="ks-card-title">Workspace</span></div>
       <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <div style={{ display: "grid", gap: 14, gridTemplateColumns: "1fr 1fr" }}>
+        <div className="ks-grid-2" style={{ gap: 14 }}>
           <Field label="Company Name" value={workspace.company_name} onChange={(v) => onChange({ company_name: v })} />
           <Field label="NPWP" value={workspace.npwp} onChange={(v) => onChange({ npwp: v })} />
-          <Field label="Workspace ID" value={extras.wsId} onChange={(v) => setExtras((p) => ({ ...p, wsId: v }))} />
           <Field label="Currency" value={workspace.currency} onChange={(v) => onChange({ currency: v })} />
-          <Field label="Language" value={extras.lang} onChange={(v) => setExtras((p) => ({ ...p, lang: v }))} />
-          <Field label="Timezone" value={extras.tz} onChange={(v) => setExtras((p) => ({ ...p, tz: v }))} />
           <Field label="Fiscal Year Start" value={workspace.fiscal_year_start} onChange={(v) => onChange({ fiscal_year_start: v })} />
           <Field label="Depreciation Standard" value={workspace.depreciation_standard} onChange={(v) => onChange({ depreciation_standard: v })} />
         </div>
         <div>
           <div style={{ color: "hsl(var(--text-3))", fontSize: 11, fontWeight: 600, marginBottom: 10, textTransform: "uppercase" }}>Asset Numbering Scheme</div>
-          <div style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 1fr 1fr" }}>
+          <div className="ks-grid-3" style={{ gap: 12 }}>
             {[
               { k: "Format", v: workspace.asset_id_prefix },
               { k: "Next Sequence", v: String(workspace.next_asset_number) },
-              { k: "Total Tagged", v: extras.totalTagged },
+              { k: "Total Tagged", v: totalTagged.toLocaleString("id-ID") },
             ].map((item) => (
               <div key={item.k} style={{ background: "hsl(var(--surface-2))", borderRadius: 8, padding: 12 }}>
                 <div style={{ color: "hsl(var(--text-3))", fontSize: 11 }}>{item.k}</div>
@@ -103,9 +96,8 @@ function NotificationsPanel({ notifications, organizationId }: { notifications: 
   const triggers = resp?.data?.triggers ?? [];
   const channels = [
     { name: "Email", on: notifications.email_enabled },
-    { name: "WhatsApp", on: true },
-    { name: "Slack", on: true },
-    { name: "Microsoft Teams", on: false },
+    { name: "WhatsApp", on: triggers.some((t) => t.channels.includes("wa")) },
+    { name: "Slack", on: triggers.some((t) => t.channels.includes("slack")) },
   ];
 
   const handleToggleChannel = async (event: string, channel: string) => {
@@ -122,7 +114,7 @@ function NotificationsPanel({ notifications, organizationId }: { notifications: 
       <div className="ks-card">
         <div className="ks-card-head"><span className="ks-card-title">Channels</span></div>
         <div className="ks-card-body">
-          <div style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 1fr" }}>
+          <div className="ks-grid-2" style={{ gap: 12 }}>
             {channels.map((c) => (
               <div key={c.name} style={{ alignItems: "center", background: "hsl(var(--surface-2))", borderRadius: 8, display: "flex", justifyContent: "space-between", padding: "10px 14px" }}>
                 <span style={{ fontSize: 13, fontWeight: 500 }}>{c.name}</span>
@@ -134,6 +126,7 @@ function NotificationsPanel({ notifications, organizationId }: { notifications: 
       </div>
       <div className="ks-card">
         <div className="ks-card-head"><span className="ks-card-title">Triggers</span></div>
+        <div style={{ overflowX: "auto" }}>
         <table className="w-full text-sm">
           <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">Event</th><th className="p-3 text-left font-medium text-muted-foreground">Email</th><th className="p-3 text-left font-medium text-muted-foreground">WhatsApp</th><th className="p-3 text-left font-medium text-muted-foreground">Slack</th></tr></thead>
           <tbody>
@@ -152,36 +145,46 @@ function NotificationsPanel({ notifications, organizationId }: { notifications: 
             })}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );
 }
 
-function MaintenancePanel() {
+function MaintenancePanel({ organizationId }: { organizationId: string }) {
+  const { data: resp } = useGetMaintenanceQuery({ organizationId });
+  const pmRules = resp?.data?.pm_rules ?? [];
+  const upcoming = (resp?.data?.work_orders ?? [])
+    .filter((w) => w.status === "open" || w.status === "in-progress")
+    .sort((a, b) => a.eta.localeCompare(b.eta))
+    .slice(0, 6);
+
   return (
-    <div style={{ display: "grid", gap: 16, gridTemplateColumns: "1.4fr 1fr" }}>
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.4fr_1fr]">
       <div className="ks-card">
         <div className="ks-card-head"><span className="ks-card-title">Reminder Rules</span></div>
+        <div style={{ overflowX: "auto" }}>
         <table className="w-full text-sm">
           <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">Rule</th><th className="p-3 text-left font-medium text-muted-foreground">Trigger</th><th className="p-3 text-left font-medium text-muted-foreground">Lead time</th></tr></thead>
           <tbody>
-            {[["IT Equipment", "Every 90 days", "14d · 3d · 1d"], ["CNC + Machinery", "500 cycles / 1000h", "90% · 100%"], ["Vehicle Service", "5,000 km / 6 months", "500km · 100km"], ["Lab Calibration", "Annual · ISO 17025", "60d · 30d · 7d"], ["Fire Safety", "Monthly + annual", "7d · 1d"]].map((r) => (
-              <tr key={r[0]}>
-                <td className="border-t border-border p-3" style={{ fontWeight: 600 }}>{r[0]}</td>
-                <td className="border-t border-border p-3">{r[1]}</td>
-                <td className="border-t border-border p-3">{r[2]}</td>
+            {pmRules.map((r) => (
+              <tr key={r.name}>
+                <td className="border-t border-border p-3" style={{ fontWeight: 600 }}>{r.name}</td>
+                <td className="border-t border-border p-3">{r.trigger}</td>
+                <td className="border-t border-border p-3">{r.remind}</td>
               </tr>
             ))}
           </tbody>
         </table>
+        </div>
       </div>
       <div className="ks-card">
         <div className="ks-card-head"><span className="ks-card-title">Upcoming</span></div>
         <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {[["Tomorrow", "PM IT Servers · 8 units"], ["3 days", "PH Meter calibration"], ["6 days", "Forklift 500h service"], ["12 days", "ISO 17025 calibration"]].map(([d, t]) => (
-            <div key={t} style={{ alignItems: "center", background: "hsl(var(--surface-2))", borderRadius: 8, display: "flex", gap: 10, padding: "9px 12px" }}>
-              <span className="ks-badge warn">{d}</span>
-              <span style={{ fontSize: 13 }}>{t}</span>
+          {upcoming.map((w) => (
+            <div key={w.id} style={{ alignItems: "center", background: "hsl(var(--surface-2))", borderRadius: 8, display: "flex", gap: 10, padding: "9px 12px" }}>
+              <span className="ks-badge warn">{w.eta}</span>
+              <span style={{ fontSize: 13 }}>{w.desc}</span>
             </div>
           ))}
         </div>
@@ -203,7 +206,7 @@ function IntegrationsPanel({ canManageSettings, integrations, isConnecting, onCo
   ];
 
   return (
-    <div style={{ display: "grid", gap: 14, gridTemplateColumns: "repeat(3, 1fr)" }}>
+    <div className="ks-grid-3" style={{ gap: 14 }}>
       {apiCards.map((i) => (
         <div key={i.name} className="ks-card">
           <div className="ks-card-body" style={{ alignItems: "center", display: "flex", flexDirection: "column", gap: 10, textAlign: "center" }}>
@@ -224,16 +227,6 @@ function IntegrationsPanel({ canManageSettings, integrations, isConnecting, onCo
           </div>
         </div>
       ))}
-      {STATIC_INTEGRATIONS.map((i) => (
-        <div key={i.name} className="ks-card">
-          <div className="ks-card-body" style={{ alignItems: "center", display: "flex", flexDirection: "column", gap: 10, textAlign: "center" }}>
-            <div style={{ alignItems: "center", background: "hsl(var(--surface-2))", borderRadius: 10, display: "flex", height: 44, justifyContent: "center", width: 44 }}><Database size={20} /></div>
-            <div style={{ fontSize: 14, fontWeight: 600 }}>{i.name}</div>
-            <div style={{ color: "hsl(var(--text-3))", fontSize: 12 }}>{i.desc}</div>
-            {i.connected ? <span className="ks-badge success">Connected</span> : <span className="ks-badge outline">Available</span>}
-          </div>
-        </div>
-      ))}
     </div>
   );
 }
@@ -251,7 +244,7 @@ function RfidPanel({ onChange, organizationId, rfidHardware }: {
       <div className="ks-card">
         <div className="ks-card-head"><span className="ks-card-title">Hardware Config</span></div>
         <div className="ks-card-body">
-          <div style={{ display: "grid", gap: 14, gridTemplateColumns: "1fr 1fr" }}>
+          <div className="ks-grid-2" style={{ gap: 14 }}>
             <Field label="Reader Polling Interval" value={String(rfidHardware.reader_polling_interval_ms)} onChange={(v) => onChange({ reader_polling_interval_ms: Number(v) || 0 })} />
             <Field label="RSSI Threshold" value={String(rfidHardware.rssi_threshold)} onChange={(v) => onChange({ rssi_threshold: Number(v) || 0 })} />
             <Field label="EPC Encoding" value={rfidHardware.epc_encoding} onChange={(v) => onChange({ epc_encoding: v })} />
@@ -261,6 +254,7 @@ function RfidPanel({ onChange, organizationId, rfidHardware }: {
       </div>
       <div className="ks-card">
         <div className="ks-card-head"><span className="ks-card-title">Readers · {readers.length}</span></div>
+        <div style={{ overflowX: "auto" }}>
         <table className="w-full text-sm">
           <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">ID</th><th className="p-3 text-left font-medium text-muted-foreground">Location</th><th className="p-3 text-left font-medium text-muted-foreground">Model</th><th className="p-3 text-left font-medium text-muted-foreground">IP</th><th className="p-3 text-left font-medium text-muted-foreground">Status</th></tr></thead>
           <tbody>
@@ -275,6 +269,7 @@ function RfidPanel({ onChange, organizationId, rfidHardware }: {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );
@@ -285,7 +280,6 @@ function SecurityPanel({ security }: { security: FaSettings["security"] }) {
     { desc: "Minutes of inactivity before auto-logout", title: "Session Timeout", val: `${security.session_timeout_min} min` },
     { desc: "Restrict access to specified ranges", title: "IP Whitelist", val: security.ip_whitelist.length > 0 ? security.ip_whitelist.join(", ") : "Any" },
     { desc: "Required for Admin & Finance roles", title: "MFA Requirement", val: security.mfa_required ? "Enforced" : "Off" },
-    { desc: "How long logs are kept", title: "Audit Log Retention", val: "2 years" },
     { desc: "Min 12 chars, mixed case, symbol", title: "Password Policy", val: security.password_policy || "Default" },
   ];
 
@@ -321,7 +315,7 @@ function BillingPanel({ organizationId }: { organizationId: string }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div className="ks-card">
         <div className="ks-card-head"><span className="ks-card-title">Plan</span><span className="ks-badge brand">{billing.plan}</span></div>
-        <div className="ks-card-body" style={{ display: "grid", gap: 14, gridTemplateColumns: "1fr 1fr 1fr" }}>
+        <div className="ks-card-body ks-grid-3" style={{ gap: 14 }}>
           {[["Plan", billing.plan], ["Renewal", billing.renewal_date], ["Seats", `${billing.seats_used} / ${billing.seat_count}`]].map(([k, v]) => (
             <div key={k} style={{ background: "hsl(var(--surface-2))", borderRadius: 8, padding: 12 }}>
               <div style={{ color: "hsl(var(--text-3))", fontSize: 11 }}>{k}</div>
@@ -348,6 +342,7 @@ function BillingPanel({ organizationId }: { organizationId: string }) {
       </div>
       <div className="ks-card">
         <div className="ks-card-head"><span className="ks-card-title">Invoice History</span></div>
+        <div style={{ overflowX: "auto" }}>
         <table className="w-full text-sm">
           <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">Invoice</th><th className="p-3 text-left font-medium text-muted-foreground">Date</th><th className="p-3 text-left font-medium text-muted-foreground">Amount</th><th className="p-3 text-left font-medium text-muted-foreground">Status</th></tr></thead>
           <tbody>
@@ -361,6 +356,7 @@ function BillingPanel({ organizationId }: { organizationId: string }) {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );
@@ -379,7 +375,16 @@ export function FaSettingsPage() {
 
   useEffect(() => {
     if (settings) {
-      setForm(settings);
+      setForm((prev) => ({
+        ...prev,
+        ...settings,
+        depreciation: { ...prev.depreciation, ...settings.depreciation },
+        integrations: { ...prev.integrations, ...settings.integrations },
+        notifications: { ...prev.notifications, ...settings.notifications },
+        rfid_hardware: { ...prev.rfid_hardware, ...settings.rfid_hardware },
+        security: { ...prev.security, ...settings.security },
+        workspace: { ...prev.workspace, ...settings.workspace },
+      }));
     }
   }, [settings]);
 
@@ -412,7 +417,7 @@ export function FaSettingsPage() {
         desc="Workspace, notifications, integrations, hardware, security, and billing."
         title="Settings"
       />
-      <div style={{ display: "grid", gap: 16, gridTemplateColumns: "220px 1fr" }}>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[220px_1fr]">
         <div className="ks-card">
           <div style={{ display: "flex", flexDirection: "column", padding: 8 }}>
             {NAV.map((n) => {
@@ -436,12 +441,13 @@ export function FaSettingsPage() {
         <div>
           {tab === "general" && (
             <GeneralPanel
+              organizationId={organizationId}
               workspace={form.workspace}
               onChange={(patch) => setForm((prev) => ({ ...prev, workspace: { ...prev.workspace, ...patch } }))}
             />
           )}
           {tab === "notif" && <NotificationsPanel notifications={form.notifications} organizationId={organizationId} />}
-          {tab === "maint" && <MaintenancePanel />}
+          {tab === "maint" && <MaintenancePanel organizationId={organizationId} />}
           {tab === "integ" && (
             <IntegrationsPanel
               canManageSettings={canManageSettings}

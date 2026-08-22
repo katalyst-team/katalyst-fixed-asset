@@ -9,8 +9,13 @@ export interface SignUpParams {
   organization_name: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface SignUpResponses extends ApiResponse<{ message: string }> {}
+export type SignUpResponses = ApiResponse<{
+  message: string;
+  access_token: string;
+  access_token_expired_at: string;
+  refresh_token: string;
+  refresh_token_expired_at: string;
+}>;
 
 export const signUpService = (
   params: SignUpParams

@@ -91,7 +91,7 @@ export function FaTransferPage() {
   const transfers = resp?.data?.transfers ?? [];
 
   const handleNext = () => {
-    if (page < (resp?.pagination?.total_pages ?? 1)) {
+    if (resp?.page_pagination?.has_next) {
       setPage((p) => p + 1);
     }
   };
@@ -273,11 +273,11 @@ export function FaTransferPage() {
         <div className="flex flex-row flex-1 justify-end items-end w-full">
           <PaginationCursor
             currentPage={page}
-            hasNextPage={page < (resp?.pagination?.total_pages ?? 1)}
-            hasPrevPage={page > 1}
+            hasNextPage={resp?.page_pagination?.has_next ?? false}
+            hasPrevPage={resp?.page_pagination?.has_prev ?? false}
             limit={PAGE_LIMIT}
-            totalCount={resp?.pagination?.total_count ?? null}
-            totalPages={resp?.pagination?.total_pages}
+            totalCount={resp?.page_pagination?.total_records ?? null}
+            totalPages={resp?.page_pagination?.total_pages}
             onNext={handleNext}
             onPrev={handlePrev}
           />
