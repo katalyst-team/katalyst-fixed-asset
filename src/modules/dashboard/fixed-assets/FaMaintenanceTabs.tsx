@@ -4,13 +4,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   AlertTriangle,
   Calendar,
-  ChevronRight,
-  Cog,
   Eye,
-  Package,
-  Radio,
-  RefreshCw,
-  Shield,
   Wrench,
   Zap,
 } from "lucide-react";
@@ -66,20 +60,12 @@ export function iconBox(size = 34): React.CSSProperties {
   };
 }
 
-const LIFECYCLE: { icon: LucideIcon; label: string; n: string }[] = [
-  { icon: Radio, label: "Scan-In", n: "8,420" },
-  { icon: Cog, label: "Operate", n: "7,180" },
-  { icon: Wrench, label: "Maintain", n: "42 open" },
-  { icon: Package, label: "Transfer / Dispose", n: "38 / 12" },
-];
-
-const WO_SOURCES: { icon: LucideIcon; label: string; n: number }[] = [
-  { icon: Eye, label: "Inspection", n: 8 },
-  { icon: Zap, label: "Predictive AI", n: 3 },
-  { icon: Wrench, label: "Corrective", n: 18 },
-  { icon: Calendar, label: "PM", n: 9 },
-  { icon: Shield, label: "Audit", n: 4 },
-];
+const WO_TYPE_META: Record<string, { icon: LucideIcon; label: string }> = {
+  corrective: { icon: Wrench, label: "Corrective" },
+  inspection: { icon: Eye, label: "Inspection" },
+  pm: { icon: Calendar, label: "PM" },
+  predictive: { icon: Zap, label: "Predictive AI" },
+};
 
 export function FlowTab() {
   const { tokenPayload } = useUser();
@@ -89,6 +75,10 @@ export function FlowTab() {
   const alerts = HEALTH_DATA.filter(
     (h) => h.status === "critical" || h.status === "alert",
   );
+  const openWorkOrders = (resp?.data?.work_orders ?? []).filter((w) => w.status === "open");
+  const woBySource = Object.entries(WO_TYPE_META)
+    .map(([type, meta]) => ({ ...meta, n: openWorkOrders.filter((w) => w.type === type).length }))
+    .filter((s) => s.n > 0);
   const buckets = [
     { label: "Critical (<40)", n: HEALTH_DATA.filter((h) => h.health_score < 40).length, tone: "danger" },
     { label: "Alert (40-59)", n: HEALTH_DATA.filter((h) => h.health_score >= 40 && h.health_score < 60).length, tone: "warn" },
@@ -97,67 +87,35 @@ export function FlowTab() {
   ];
   return (
     <div style={{ ...flexCol, gap: 16 }}>
-      <div className="ks-card">
-        <div className="ks-card-body">
-          <div style={{ ...flexRow, gap: 10, marginBottom: 14 }}>
-            <RefreshCw size={15} style={{ color: "hsl(var(--brand))" }} />
-            <span style={{ fontSize: 14, fontWeight: 600 }}>Asset lifecycle</span>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-            {LIFECYCLE.map((s, i) => {
-              const Icon = s.icon;
+      {openWorkOrders.length > 0 && (
+        <div
+          style={{
+            alignItems: "center",
+            background: "hsl(var(--brand-soft))",
+            border: "1px solid hsl(var(--border))",
+            borderRadius: 10,
+            display: "flex",
+            gap: 12,
+            padding: "12px 16px",
+          }}
+        >
+          <Wrench size={16} style={{ color: "hsl(var(--brand))" }} />
+          <span style={{ fontSize: 13, fontWeight: 600 }}>
+            Work Order intake · {openWorkOrders.length} open across {woBySource.length} sources
+          </span>
+          <div className="ks-chips" style={{ marginLeft: "auto" }}>
+            {woBySource.map((src) => {
+              const Icon = src.icon;
               return (
-                <div key={s.label} style={{ ...flexRow, flex: "1 1 180px" }}>
-                  <button
-                    className="ks-card"
-                    style={{ ...flexRow, cursor: "pointer", gap: 10, padding: "12px 14px", width: "100%" }}
-                    type="button"
-                  >
-                    <div style={{ ...iconBox(), background: "hsl(var(--brand-soft))", color: "hsl(var(--brand))" }}>
-                      <Icon size={16} />
-                    </div>
-                    <div style={{ textAlign: "left" }}>
-                      <div style={{ fontSize: 13, fontWeight: 600 }}>{s.label}</div>
-                      <div style={muted}>{s.n} assets</div>
-                    </div>
-                  </button>
-                  {i < LIFECYCLE.length - 1 && (
-                    <ChevronRight size={16} style={{ color: "hsl(var(--text-3))", margin: "0 2px" }} />
-                  )}
-                </div>
+                <span key={src.label} className="ks-chip">
+                  <Icon size={12} />
+                  {src.label} · {src.n}
+                </span>
               );
             })}
           </div>
         </div>
-      </div>
-
-      <div
-        style={{
-          alignItems: "center",
-          background: "hsl(var(--brand-soft))",
-          border: "1px solid hsl(var(--border))",
-          borderRadius: 10,
-          display: "flex",
-          gap: 12,
-          padding: "12px 16px",
-        }}
-      >
-        <Wrench size={16} style={{ color: "hsl(var(--brand))" }} />
-        <span style={{ fontSize: 13, fontWeight: 600 }}>
-          Work Order intake · 42 open across 5 sources
-        </span>
-        <div className="ks-chips" style={{ marginLeft: "auto" }}>
-          {WO_SOURCES.map((src) => {
-            const Icon = src.icon;
-            return (
-              <span key={src.label} className="ks-chip">
-                <Icon size={12} />
-                {src.label} · {src.n}
-              </span>
-            );
-          })}
-        </div>
-      </div>
+      )}
 
       <FaQueryState
         emptyDescription="No health monitoring data available."

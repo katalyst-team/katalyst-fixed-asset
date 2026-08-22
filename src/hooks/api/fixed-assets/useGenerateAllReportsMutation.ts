@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { toastError } from "@/services";
@@ -19,6 +19,8 @@ interface GenerateAllReportsVariables {
 const useGenerateAllReportsMutation = ({
   organizationId,
 }: UseGenerateAllReportsMutationParams) => {
+  const queryClient = useQueryClient();
+
   return useMutation<
     GenerateAllReportsResponse,
     Error,
@@ -32,8 +34,15 @@ const useGenerateAllReportsMutation = ({
     onError: (error) => {
       toastError(error);
     },
-    onSuccess: () => {
-      toast.success("All reports generation started");
+    onSuccess: (response) => {
+      const ready = response?.data?.filter((r) => r.status === "ready") ?? [];
+      if (ready.length > 0) {
+        toast.success(`${ready.length} reports generated — check History`);
+      } else {
+        toast.info("No reports could be generated");
+      }
+      queryClient.invalidateQueries({ queryKey: ["faReportTemplates", organizationId] });
+      queryClient.invalidateQueries({ queryKey: ["faReportHistory", organizationId] });
     },
   });
 };

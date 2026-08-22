@@ -6,25 +6,23 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useUser } from "@/context/user-context";
 import {
   useGetFAUserAuditLogQuery,
   useGetFAUsersQuery,
+  useGetRolesQuery,
   useInviteFAUserMutation,
 } from "@/hooks/api/fixed-assets";
 import { avatarColor, FaKpiStrip, FaShellHead, FaStat, initials } from "@/modules/dashboard/fixed-assets";
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
-
-const ROLES = [
-  { count: 4, desc: "Full access to all modules, settings, and user management.", name: "Admin", perms: ["All Modules", "Settings", "Billing", "Users"] },
-  { count: 18, desc: "Manage assets, transfers, disposals, and maintenance schedules.", name: "Asset Manager", perms: ["Assets", "Transfers", "Disposals", "Reports"] },
-  { count: 42, desc: "Day-to-day custody of assigned assets and check-outs.", name: "Custodian", perms: ["My Assets", "Check-out", "Return"] },
-  { count: 8, desc: "Read-only access to registers, reports, and audit trails.", name: "Auditor", perms: ["Reports", "Audit Log", "Read-only"] },
-  { count: 22, desc: "Create and close work orders, manage PM schedules.", name: "Maintenance", perms: ["Work Orders", "PM Rules", "Health"] },
-  { count: 12, desc: "Depreciation, disposals, GL integration, and compliance.", name: "Finance", perms: ["Finance", "PSAK 16", "Disposals"] },
-  { count: 14, desc: "RFID hardware config, reader health, and tag management.", name: "IT Support", perms: ["RFID Hardware", "Settings", "Users"] },
-  { count: 22, desc: "View dashboards and reports only — no edits.", name: "Read-Only", perms: ["Dashboard", "Reports"] },
-];
 
 function Th({ children }: { children: React.ReactNode }) {
   return <th className="p-3 text-left font-medium text-muted-foreground">{children}</th>;
@@ -35,21 +33,21 @@ function Td({ children, style }: { children: React.ReactNode; style?: React.CSSP
 
 function statusBadge(s: string) {
   if (s === "active") return <span className="ks-badge success">Active</span>;
-  if (s === "invited") return <span className="ks-badge warn">Invited</span>;
+  if (s === "inactive") return <span className="ks-badge warn">Invited</span>;
   return <span className="ks-badge danger">Suspended</span>;
 }
 
 function UsersTab({ organizationId }: { organizationId: string }) {
   const [q, setQ] = useState("");
   const [role, setRole] = useState("All");
-  const roles = ["All", "Admin", "Manager", "Auditor", "Operator", "Viewer"];
   const { data: resp } = useGetFAUsersQuery({ organizationId });
   const allUsers = resp?.data?.users ?? [];
+  const roles = ["All", ...Array.from(new Set(allUsers.map((u) => u.role).filter(Boolean)))];
   const rows = allUsers.filter((u) => (role === "All" || u.role === role) && (u.name.toLowerCase().includes(q.toLowerCase()) || u.email.includes(q.toLowerCase())));
   return (
     <div className="ks-card">
-      <div className="ks-card-head">
-        <div className="ks-search-box" style={{ width: 240 }}>
+      <div className="ks-card-head" style={{ flexWrap: "wrap" }}>
+        <div className="ks-search-box" style={{ maxWidth: 240, width: "100%" }}>
           <Search size={14} />
           <input placeholder="Search users…" style={{ background: "transparent", border: 0, color: "hsl(var(--text))", fontFamily: "inherit", fontSize: 13, outline: "none", width: "100%" }} onChange={(e) => setQ(e.target.value)} />
         </div>
@@ -59,6 +57,7 @@ function UsersTab({ organizationId }: { organizationId: string }) {
           ))}
         </div>
       </div>
+      <div style={{ overflowX: "auto" }}>
       <table className="w-full text-sm">
         <thead>
           <tr><Th>User</Th><Th>Role</Th><Th>Department</Th><Th>Last active</Th><Th>Status</Th></tr>
@@ -80,30 +79,41 @@ function UsersTab({ organizationId }: { organizationId: string }) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
 
-function RolesTab() {
+function RolesTab({ organizationId }: { organizationId: string }) {
+  const { data: resp, isError, isLoading } = useGetRolesQuery({ organizationId });
+  const roles = resp?.data?.roles ?? [];
   return (
-    <div className="ks-grid-2">
-      {ROLES.map((r) => (
-        <div key={r.name} className="ks-card">
-          <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <div style={{ alignItems: "center", display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontSize: 14, fontWeight: 600 }}>{r.name}</span>
-              <span className="ks-badge brand">{r.count} users</span>
-            </div>
-            <p style={{ color: "hsl(var(--text-2))", fontSize: 12.5, lineHeight: 1.5, margin: 0 }}>{r.desc}</p>
-            <div className="ks-chips">
-              {r.perms.map((p) => (
-                <span key={p} className="ks-badge outline">{p}</span>
-              ))}
+    <FaQueryState
+      emptyDescription="No roles are configured for this organization yet."
+      emptyTitle="No roles"
+      isEmpty={roles.length === 0}
+      isError={isError}
+      isLoading={isLoading}
+    >
+      <div className="ks-grid-2">
+        {roles.map((r) => (
+          <div key={r.id} className="ks-card">
+            <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ alignItems: "center", display: "flex", justifyContent: "space-between" }}>
+                <span style={{ fontSize: 14, fontWeight: 600 }}>{r.name}</span>
+                <span className="ks-badge brand">{r.user_count} users</span>
+              </div>
+              <p style={{ color: "hsl(var(--text-2))", fontSize: 12.5, lineHeight: 1.5, margin: 0 }}>{r.description}</p>
+              <div className="ks-chips">
+                {r.permissions.map((p) => (
+                  <span key={p} className="ks-badge outline">{p}</span>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </FaQueryState>
   );
 }
 
@@ -113,6 +123,7 @@ function AuditTab({ organizationId }: { organizationId: string }) {
   return (
     <div className="ks-card">
       <div className="ks-card-head"><span className="ks-card-title">Audit Log</span></div>
+      <div style={{ overflowX: "auto" }}>
       <table className="w-full text-sm">
         <thead>
           <tr><Th>Time</Th><Th>User</Th><Th>Action</Th><Th>Resource</Th><Th>IP</Th></tr>
@@ -129,6 +140,7 @@ function AuditTab({ organizationId }: { organizationId: string }) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
@@ -138,19 +150,23 @@ export function FaUsersPage() {
   const { canManageUsers } = useFaPermission();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: usersResp } = useGetFAUsersQuery({ organizationId });
-  const userCount = usersResp?.data?.users?.length ?? 0;
+  const { data: rolesResp } = useGetRolesQuery({ organizationId });
+  const summary = usersResp?.data?.summary;
+  const userCount = summary?.total_users ?? usersResp?.data?.users?.length ?? 0;
   const [tab, setTab] = useState("users");
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState("");
+  const inviteRoles = rolesResp?.data?.roles ?? [];
   const { mutateAsync: inviteUser } = useInviteFAUserMutation({ organizationId });
   const tabs = [
     { id: "users", label: "Users", meta: String(userCount) },
-    { id: "roles", label: "Roles & Permissions", meta: "8" },
+    { id: "roles", label: "Roles & Permissions", meta: String(inviteRoles.length) },
     { id: "audit", label: "Audit Log", meta: "" },
   ];
   const handleInvite = async () => {
-    if (!inviteEmail) return;
-    await inviteUser({ department: "", email: inviteEmail, role: "Viewer" });
+    if (!inviteEmail || !inviteRole) return;
+    await inviteUser({ department: "", email: inviteEmail, role: inviteRole });
     setInviteOpen(false);
     setInviteEmail("");
   };
@@ -170,8 +186,8 @@ export function FaUsersPage() {
       />
       <FaKpiStrip>
         <FaStat label="Total users" tone="brand" value={String(userCount)} />
-        <FaStat label="MFA enabled" sub="of active users" tone="success" value="—" />
-        <FaStat label="Pending invite" tone="warn" value={String(usersResp?.data?.users?.filter((u) => u.status === "invited").length ?? 0)} />
+        <FaStat label="Active rate" sub="of all users" tone="success" value={summary ? `${Math.round(summary.active_rate)}%` : "—"} />
+        <FaStat label="Pending invite" tone="warn" value={String(summary?.pending_invites ?? "—")} />
         <FaStat label="Failed logins" sub="last 24h" tone="danger" value="—" />
       </FaKpiStrip>
       <div className="ks-seg" style={{ marginBottom: 16 }}>
@@ -182,7 +198,7 @@ export function FaUsersPage() {
         ))}
       </div>
       {tab === "users" && <UsersTab organizationId={organizationId} />}
-      {tab === "roles" && <RolesTab />}
+      {tab === "roles" && <RolesTab organizationId={organizationId} />}
       {tab === "audit" && <AuditTab organizationId={organizationId} />}
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent>
@@ -197,8 +213,21 @@ export function FaUsersPage() {
             onChange={(e) => setInviteEmail(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") handleInvite(); }}
           />
+          <Select
+            value={inviteRole}
+            onValueChange={setInviteRole}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select role" />
+            </SelectTrigger>
+            <SelectContent>
+              {inviteRoles.map((r) => (
+                <SelectItem key={r.id} value={r.name}>{r.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <DialogFooter>
-            <Button onClick={handleInvite}>Send invite</Button>
+            <Button disabled={!inviteEmail || !inviteRole} onClick={handleInvite}>Send invite</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

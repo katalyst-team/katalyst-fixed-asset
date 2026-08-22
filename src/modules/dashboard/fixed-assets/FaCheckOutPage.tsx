@@ -57,13 +57,10 @@ export function FaCheckOutPage() {
   const { isPending: isExporting, mutateAsync: exportData } =
     useExportDataMutation({ organizationId });
   const check_outs = resp?.data?.check_outs ?? [];
-  const activeLoans = check_outs.filter((c) => c.status === "active").length;
-  const overdueLoans = check_outs.filter((c) => c.status === "overdue").length;
-  const returnedLoans = check_outs.filter((c) => c.status === "returned").length;
-  const returnRate = check_outs.length > 0 ? Math.round((returnedLoans / check_outs.length) * 100) : null;
+  const summary = resp?.data?.summary;
 
   const handleNext = () => {
-    if (page < (resp?.pagination?.total_pages ?? 1)) {
+    if (resp?.page_pagination?.has_next) {
       setPage((p) => p + 1);
     }
   };
@@ -106,10 +103,10 @@ export function FaCheckOutPage() {
       />
 
       <FaKpiStrip>
-        <FaStat label="Active loans" tone="info" value={String(activeLoans)} />
-        <FaStat label="Overdue" sub="needs action" tone="danger" value={String(overdueLoans)} />
-        <FaStat label="Return rate" tone="success" value={returnRate !== null ? `${returnRate}%` : "—"} />
-        <FaStat label="Avg duration" tone="brand" value="—" />
+        <FaStat label="Active loans" tone="info" value={String(summary?.active ?? "—")} />
+        <FaStat label="Overdue" sub="needs action" tone="danger" value={String(summary?.overdue ?? "—")} />
+        <FaStat label="On-time rate" tone="success" value={summary ? `${Math.round(summary.on_time_rate)}%` : "—"} />
+        <FaStat label="Avg duration" sub="out to return" tone="brand" value={summary ? `${summary.avg_duration_days.toFixed(1)} d` : "—"} />
       </FaKpiStrip>
 
       <FaQueryState
@@ -229,14 +226,14 @@ export function FaCheckOutPage() {
           className="justify-between text-xs text-muted-foreground flex items-center"
           style={{ borderTop: "1px solid hsl(var(--border))", padding: "10px 18px" }}
         >
-          <span>Showing {check_outs.length} of {resp?.pagination?.count ?? 0}</span>
+          <span>Showing {check_outs.length} of {resp?.page_pagination?.total_records ?? 0}</span>
           <PaginationCursor
             currentPage={page}
-            hasNextPage={page < (resp?.pagination?.total_pages ?? 1)}
-            hasPrevPage={page > 1}
+            hasNextPage={resp?.page_pagination?.has_next ?? false}
+            hasPrevPage={resp?.page_pagination?.has_prev ?? false}
             limit={PAGE_LIMIT}
-            totalCount={resp?.pagination?.total_count ?? null}
-            totalPages={resp?.pagination?.total_pages}
+            totalCount={resp?.page_pagination?.total_records ?? null}
+            totalPages={resp?.page_pagination?.total_pages}
             onNext={handleNext}
             onPrev={handlePrev}
           />

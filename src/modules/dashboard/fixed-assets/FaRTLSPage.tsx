@@ -1,6 +1,6 @@
 "use client";
 
-import { Building, MapPin, Search, Trash2 } from "lucide-react";
+import { Building, MapPin, Pencil, Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -11,6 +11,7 @@ import { useUser } from "@/context/user-context";
 import {
   useCreateSavedQueryMutation,
   useDeleteSavedQueryMutation,
+  useGetAssetRegisterQuery,
   useGetRTLSFloorPlanQuery,
   useGetRTLSPositionsQuery,
   useGetSavedQueriesQuery,
@@ -22,6 +23,7 @@ import {
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { FloorPlanEditor, ROOM_TONE } from "@/modules/dashboard/fixed-assets/FaRTLSFloorPlanEditor";
 import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
 
 interface PulseDotProps {
@@ -43,26 +45,6 @@ function PulseDot({ color, dur = "2.4s", x, y }: PulseDotProps) {
   );
 }
 
-const ROOMS = [
-  { fill: "rgba(59,130,246,0.07)", h: 140, label: "Open Workstations", w: 250, x: 20, y: 20 },
-  { fill: "rgba(6,182,212,0.07)", h: 70, label: "Meeting 8A", w: 120, x: 20, y: 170 },
-  { fill: "rgba(6,182,212,0.07)", h: 70, label: "Meeting 8B", w: 120, x: 150, y: 170 },
-  { fill: "rgba(245,158,11,0.07)", h: 90, label: "IT room", w: 250, x: 20, y: 250 },
-  { fill: "rgba(16,185,129,0.07)", h: 150, label: "Engineering", w: 150, x: 280, y: 20 },
-  { fill: "rgba(139,92,246,0.07)", h: 160, label: "Design", w: 150, x: 280, y: 180 },
-  { fill: "rgba(100,116,139,0.08)", h: 320, label: "Gate / Lift", w: 140, x: 440, y: 20 },
-];
-
-const INFO_ROWS = [
-  { k: "Asset", v: 'MacBook Pro 16" M3 Max' },
-  { k: "Asset ID", v: "IT-LP-9847" },
-  { k: "Zone", v: "Open Workstations" },
-  { k: "Floor", v: "JKT-HQ · Floor 8" },
-  { k: "Custodian", v: "Dewi A." },
-  { k: "Last seen", v: "live · 2s ago" },
-  { k: "Battery", v: "84%" },
-  { k: "Value", v: formatIDRShort(50400000) },
-];
 
 export function FaRTLSPage() {
   const router = useRouter();
@@ -85,22 +67,43 @@ export function FaRTLSPage() {
     site_id: siteId,
   });
   const { data: savedQueriesResp } = useGetSavedQueriesQuery({ organizationId });
+  const { data: assetResp } = useGetAssetRegisterQuery({ organizationId });
   const { mutateAsync: createSavedQuery } = useCreateSavedQueryMutation({
     organizationId,
   });
   const { mutateAsync: deleteSavedQuery } = useDeleteSavedQueryMutation({
     organizationId,
   });
+  const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
+  const [editorOpen, setEditorOpen] = useState(false);
 
   const positions = posResp?.data?.positions ?? [];
   const anchors = posResp?.data?.anchors ?? [];
+  const rtlsSummary = posResp?.data?.summary;
   const avgAccuracy = positions.length > 0
     ? (positions.reduce((sum, p) => sum + p.accuracy_m, 0) / positions.length).toFixed(1)
     : null;
   const floorPlan = fpResp?.data;
+  const rooms = floorPlan?.rooms ?? [];
   const savedQueries = savedQueriesResp?.data?.queries ?? [];
+  const assets = assetResp?.data?.assets ?? [];
+  const assetById = new Map(assets.map((a) => [a.id, a]));
   const vbW = floorPlan?.width ?? 600;
   const vbH = floorPlan?.height ?? 360;
+
+  const selectedPosition = positions.find((p) => p.asset_id === selectedAssetId) ?? positions[0] ?? null;
+  const selectedAsset = selectedPosition ? assetById.get(selectedPosition.asset_id) : undefined;
+  const infoRows = selectedPosition
+    ? [
+        { k: "Asset", v: selectedPosition.name },
+        { k: "Asset ID", v: selectedPosition.asset_id },
+        { k: "Site / Floor", v: `${siteId} · Floor ${floor}` },
+        { k: "Custodian", v: selectedAsset?.custodian ?? "—" },
+        { k: "Last seen", v: selectedPosition.last_seen },
+        { k: "Accuracy", v: `±${selectedPosition.accuracy_m.toFixed(1)} m` },
+        { k: "Value", v: selectedAsset ? formatIDRShort(selectedAsset.val) : "—" },
+      ]
+    : [];
 
   const handleSaveQuery = async () => {
     if (!queryName) return;
@@ -142,12 +145,12 @@ export function FaRTLSPage() {
       <FaKpiStrip>
         <FaStat label="Tracked assets" tone="brand" value={String(positions.length)} />
         <FaStat label="Accuracy" tone="info" value={avgAccuracy ? `±${avgAccuracy} m` : "—"} />
-        <FaStat label="Zones" tone="success" value="—" />
+        <FaStat label="Zones" tone="success" value={String(rtlsSummary?.zones_active ?? "—")} />
         <FaStat
           label="Missing >24h"
           sub="needs attention"
           tone="danger"
-          value="—"
+          value={String(rtlsSummary?.missing_24h ?? "—")}
         />
       </FaKpiStrip>
 
@@ -160,13 +163,19 @@ export function FaRTLSPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">JKT-HQ · Floor 8</div>
+              <div className="ks-card-title">{siteId} · Floor {floor}</div>
               <div className="ks-card-desc">
                 live · {anchors.length} anchors · {positions.length} assets on
                 floor
               </div>
             </div>
-            <span className="ks-badge success">● live</span>
+            <div style={{ alignItems: "center", display: "flex", gap: 8 }}>
+              <button className="ks-btn ks-btn-sm" type="button" onClick={() => setEditorOpen(true)}>
+                <Pencil size={13} />
+                Edit layout
+              </button>
+              <span className="ks-badge success">● live</span>
+            </div>
           </div>
           <div className="ks-card-body">
             <svg
@@ -204,10 +213,10 @@ export function FaRTLSPage() {
                 />
               )}
 
-              {ROOMS.map((r) => (
-                <g key={r.label}>
+              {rooms.map((r) => (
+                <g key={r.id}>
                   <rect
-                    fill={r.fill}
+                    fill={ROOM_TONE[r.type] ?? ROOM_TONE.room}
                     height={r.h}
                     rx="4"
                     stroke="currentColor"
@@ -246,38 +255,14 @@ export function FaRTLSPage() {
               ))}
 
               {positions.map((p) => (
-                <PulseDot key={p.asset_id} color="#3b82f6" x={p.x} y={p.y} />
-              ))}
-
-              <g>
-                <circle cx="465" cy="100" fill="#ef4444" opacity="0.3" r="8">
-                  <animate
-                    attributeName="r"
-                    dur="1.6s"
-                    repeatCount="indefinite"
-                    values="8;18;8"
-                  />
-                  <animate
-                    attributeName="opacity"
-                    dur="1.6s"
-                    repeatCount="indefinite"
-                    values="0.3;0;0.3"
-                  />
-                </circle>
-                <circle cx="465" cy="100" fill="#ef4444" r="6" />
-                <rect fill="#ef4444" height="14" rx="3" width="66" x="432" y="76" />
-                <text
-                  dominantBaseline="middle"
-                  fill="#fff"
-                  fontSize="9"
-                  fontWeight="700"
-                  textAnchor="middle"
-                  x="465"
-                  y="83"
+                <g
+                  key={p.asset_id}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setSelectedAssetId(p.asset_id)}
                 >
-                  IT-LP-9847
-                </text>
-              </g>
+                  <PulseDot color={p.asset_id === selectedPosition?.asset_id ? "#ef4444" : "#3b82f6"} x={p.x} y={p.y} />
+                </g>
+              ))}
             </svg>
 
             <div className="ks-chart-legend" style={{ marginTop: 12 }}>
@@ -309,12 +294,16 @@ export function FaRTLSPage() {
         <div className="grid gap-4">
           <div className="ks-card">
             <div className="ks-card-head">
-              <div className="ks-card-title">Selected · IT-LP-9847</div>
+              <div className="ks-card-title">
+                {selectedPosition ? `Selected · ${selectedPosition.asset_id}` : "Selected"}
+              </div>
               <MapPin size={14} />
             </div>
             <div className="ks-card-body">
+              {selectedPosition ? (
+                <>
               <div className="grid grid-cols-2 gap-3">
-                {INFO_ROWS.map((row) => (
+                {infoRows.map((row) => (
                   <div key={row.k}>
                     <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
                       {row.k}
@@ -327,11 +316,15 @@ export function FaRTLSPage() {
                 className="ks-btn ks-btn-primary ks-btn-sm"
                 style={{ marginTop: 14 }}
                 type="button"
-                onClick={() => router.push("/dashboard/fixed-assets/register/IT-LP-9847/")}
+                onClick={() => router.push(`/dashboard/fixed-assets/register/${selectedPosition.asset_id}/`)}
               >
                 <Search size={14} />
                 Open profile
               </button>
+                </>
+              ) : (
+                <p className="text-sm text-muted-foreground">No assets tracked on this floor.</p>
+              )}
             </div>
           </div>
 
@@ -397,6 +390,16 @@ export function FaRTLSPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <FloorPlanEditor
+        floor={floor}
+        height={vbH}
+        open={editorOpen}
+        organizationId={organizationId}
+        rooms={rooms}
+        siteId={siteId}
+        width={vbW}
+        onDone={() => setEditorOpen(false)}
+      />
     </div>
   );
 }

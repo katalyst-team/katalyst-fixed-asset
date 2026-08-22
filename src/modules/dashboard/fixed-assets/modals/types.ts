@@ -9,6 +9,7 @@ export type FaModalType =
   | "transfer"
   | "transferHistory"
   | "workOrder"
+  | "createAsset"
   | "editAsset"
   | "locateAsset"
   | "epcRange"
@@ -36,8 +37,10 @@ export function useFaPeopleOptions() {
     tab: "cust",
   });
   const people =
-    peopleResp?.data?.master_data_sections?.flatMap((s) => s.rows) ?? [];
-  return people.map((p) => ({ label: p.name, value: p.id }));
+    peopleResp?.data?.master_data_sections?.flatMap((s) => s?.rows ?? []) ?? [];
+  return people
+    .filter((p): p is NonNullable<typeof p> => p !== null && p !== undefined)
+    .map((p) => ({ label: p.name, value: p.id }));
 }
 
 export function useFaLocationOptions() {
@@ -48,6 +51,8 @@ export function useFaLocationOptions() {
     tab: "loc",
   });
   const locations =
-    locResp?.data?.master_data_sections?.flatMap((s) => s.rows) ?? [];
-  return locations.map((l) => ({ label: l.name, value: l.id }));
+    locResp?.data?.master_data_sections?.flatMap((s) => s?.rows ?? []) ?? [];
+  return locations
+    .filter((l): l is NonNullable<typeof l> => l !== null && l !== undefined)
+    .map((l) => ({ label: l.name, value: l.id }));
 }

@@ -1,4 +1,5 @@
 import { CheckOutModal } from "./CheckOutModal";
+import { CreateAssetModal } from "./CreateAssetModal";
 import { DisposalRequestModal } from "./DisposalRequestModal";
 import { EditAssetModal } from "./EditAssetModal";
 import { EpcRangeModal } from "./EpcRangeModal";
@@ -18,6 +19,10 @@ export function FaModalRoot() {
     <>
       <CheckOutModal
         open={type === "checkout"}
+        onClose={closeModal}
+      />
+      <CreateAssetModal
+        open={type === "createAsset"}
         onClose={closeModal}
       />
       <DisposalRequestModal

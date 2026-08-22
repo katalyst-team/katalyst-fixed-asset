@@ -62,6 +62,8 @@ export function FaSecurityPage() {
     organizationId,
   });
   const alerts = alertResp?.data?.alerts ?? [];
+  const summary = alertResp?.data?.summary;
+  const totalAlerts = summary?.total ?? alerts.length;
   const assets = assetResp?.data?.assets ?? [];
   const cameras = camerasResp?.data?.cameras ?? [];
   const ASSET_BY_ID = new Map(assets.map((a) => [a.id, a]));
@@ -108,7 +110,7 @@ export function FaSecurityPage() {
               }}
               type="button"
             >
-              <AlertTriangle size={14} />3 active alerts
+              <AlertTriangle size={14} />{totalAlerts} active alerts
             </button>
           </>
         }
@@ -117,10 +119,10 @@ export function FaSecurityPage() {
       />
 
       <FaKpiStrip>
-        <FaStat label="Active geofences" tone="brand" value="14" />
-        <FaStat label="Alerts today" tone="danger" value="3" />
-        <FaStat label="Missing >7d" tone="warn" value="4" />
-        <FaStat label="Recovery rate" tone="success" value="94%" />
+        <FaStat label="Total alerts" tone="brand" value={String(totalAlerts)} />
+        <FaStat label="Critical" tone="danger" value={String(summary?.critical ?? 0)} />
+        <FaStat label="Investigating" tone="warn" value={String(summary?.investigating ?? 0)} />
+        <FaStat label="Resolution rate" tone="success" value={summary ? `${Math.round(summary.resolution_rate)}%` : "—"} />
       </FaKpiStrip>
 
       <FaQueryState
@@ -131,7 +133,7 @@ export function FaSecurityPage() {
       <div className="ks-card">
         <div className="ks-card-head">
           <div className="ks-card-title">Live alerts</div>
-          <span className="ks-badge danger">3 active</span>
+          <span className="ks-badge danger">{alerts.length} active</span>
         </div>
         <div className="ks-card-body">
           <div className="flex flex-col gap-3">

@@ -10,10 +10,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Build**: `bun run build` (Next.js build + sitemap via `postbuild` → `next-sitemap`)
 - **Lint**: `bun run lint` — **always run after changes**
 - **Typecheck**: `bun tsc --noEmit`
+- **Pre-PR gate**: `make pre-pr` (runs `bun run lint && bun run build`)
 
 **Always use `bun`** — never npm/yarn/pnpm. Lockfile is `bun.lockb`. **No tests are configured** (no test runner, no test files) — verify with `lint` + `tsc --noEmit`.
 
 **No build/lint/typecheck in CI.** The only GitHub workflows are Claude code review (`pull_request`), Claude on `@claude` mentions, and a malware scanner. Quality gates are **local-only** — always run lint + typecheck yourself before considering work done.
+
+## No Fabricated Data (hard rule)
+
+Never hardcode, invent, or mock data to fill a UI panel, KPI, table, or chart. Every number and list must come from a real API call. If an endpoint doesn't exist yet, render the empty/loading state (`<FaQueryState>`/`<EmptyState>`) — do not fabricate placeholders that look real. A long cleanup effort (see git history: "Roles & Permissions tab was a fully invented role catalog", "Settings page had multiple fabricated panels", etc.) removed pages of invented data; reintroducing it is the worst regression in this repo. Same rule for permission checks: use `useFaPermission` with real backend enums, never invented role names.
 
 ## Architecture
 
@@ -21,10 +26,30 @@ Next.js 15 **Pages Router** (not App Router). `trailingSlash: true` in `next.con
 
 ### Layer Pattern
 
-1. **Services** (`src/services/[domain]/`): pure async functions calling `fetcher()` (axios wrapper in `src/services/index.ts`). Return shape: `ApiResponse<T>` with `data`, `metadata`, `pagination` (cursor-based: `next_cursor` / `prev_cursor`), and top-level `message`.
+1. **Services** (`src/services/[domain]/`): pure async functions calling `fetcher()` (axios wrapper in `src/services/index.ts`). Return shape: `ApiResponse<T>` with `data`, `metadata`, and page-based pagination. FA endpoints use the `page_pagination` key; other domains use `pagination`. There is no top-level `message` — it lives in `metadata.message`.
 2. **React Query Hooks** (`src/hooks/api/[domain]/`): wrap service calls with `useQuery`/`useMutation`; query key factories like `KEY_USE_GET_LEDGER_DATA`.
-3. **Feature Module** (`src/modules/dashboard/[feature]/`): state via either **Zustand store with slices** (newer — e.g. `src/modules/dashboard/sku/store/`, consumed through a thin `use[Feature].tsx` hook) or **React Context Provider** (legacy — `use[Feature].tsx` exports a `<FeatureProvider>` + `useFeature`). Both patterns coexist. Some features split store/components to `src/modules/[feature]/` (root, not under `dashboard/`) — check both locations.
-4. **Pages** (`src/pages/dashboard/[feature]/index.tsx`): thin wrappers composing `<DashboardLayout>`, the feature provider/store, and SEO via `createPageSEO()` from `@/utils/seo`.
+3. **Feature Module** (`src/modules/dashboard/[feature]/`): one `Fa*Page.tsx` component per route, local `useState` for view state, `useFaModal` for dialogs. There are no per-feature Zustand stores or feature Context providers left in this repo (only remaining usage is `src/hooks/useBypassHardware.ts`; don't add more without reason).
+4. **Pages** (`src/pages/dashboard/[feature]/index.tsx`): thin wrappers composing `<DashboardLayout>`, `<FaLayout>`, and SEO via `createPageSEO()` from `@/utils/seo`.
+
+**Only two dashboard modules exist**: `fixed-assets/` (everything) and `profile/`. All inventory/log/SKU modules were deleted in commit `02b5cb4` — if you find a doc or import referencing them, it's stale. (Parts of `README.md` and `docs/PAGES_SPECIAL_LOGIC_AND_HARDCODE.md` still reference those deleted modules.) FA-specific docs worth reading: `docs/FA_API_GAPS.md`, `docs/FA_API_REQUIREMENTS.md`, `docs/FA_MENU_GROUPING.md`.
+
+### Backend (katalyst-core)
+
+The backend lives in a **separate sibling repo** at `../katalyst-core/` (same parent
+directory, outside this repo). Stack: **Go 1.26 + Fiber + GORM + PostgreSQL + Redis +
+MinIO**, migrations via Atlas. See that repo's `AGENTS.md` for architecture, commands
+(`make run`, `make pre-pr`), and the layered domain pattern.
+
+**Fixed Assets backend** (`core/fixed_asset/`): ~75 endpoints under
+`/v1/organizations/:organizationID/fa/`, ~31 `fa_*` tables. Runs locally on `:8000`
+(matches `NEXT_PUBLIC_ENDPOINT_URL`).
+
+**Roles/permissions** come from the JWT and use backend enum values verbatim —
+roles `APP_SUPERADMIN`, `APP_ADMIN`, `ORGANIZATION_OWNER`, `ORGANIZATION_ADMIN`,
+`ORGANIZATION_MEMBER`, `ORGANIZATION_OPERATOR`, `ORGANIZATION_VERIFIER`,
+`ORGANIZATION_HO`; permissions `ORGANIZATION_{CREATE,READ,UPDATE,DELETE}_ALL` etc.
+Never invent lowercase shorthands like `"admin"` or `"fa.delete"` — see
+`useFaPermission.ts`.
 
 ### Cloud Functions (`cloud-functions/`)
 
@@ -40,7 +65,7 @@ Standalone **Google Cloud Functions** (Node.js, `@google-cloud/functions-framewo
 - **`organizationId`** — **not a property of `useUser()`**. Derive it inline at each call site: `const organizationId = tokenPayload?.organization_id ?? ""`. Pass to *every* API service call as the `organizationId` param (universal convention, 100+ call sites do this).
 - **`selectedTeam`** — the selected **store** ID (NOT org). Persisted to `localStorage` as `selectedStoreId`; `"0"` means "all stores". Passed as `store_id` / `store_ids` in per-store queries.
 
-Middleware (`src/middleware.ts`) gates `/dashboard/*`. **Its own default locale is `"en"`** (not `id` — that's the next-i18next default). Redirects: unauthenticated → `/${locale}/`; authenticated user hitting auth pages (`/`, `/sign-up`, `/reset-password`, etc.) → `/dashboard/overview`; `account_status === "PENDING"` → `/${locale}/sign-up/${encryptedEmail}`; `account_organization_role_status === "SUSPENDED"` → `/${locale}/verification-access`. PENDING/SUSPENDED checks only run when already authenticated.
+Middleware (`src/middleware.ts`) gates `/dashboard/*`. **Its own default locale is `"en"`** (not `id` — that's the next-i18next default). Redirects: unauthenticated → `/${locale}/`; authenticated user hitting auth pages (`/`, `/sign-up`, `/reset-password`, etc.) → `/${locale}/dashboard/fixed-assets/`; `account_status === "PENDING"` → `/${locale}/sign-up/${encryptedEmail}`; `account_organization_role_status === "SUSPENDED"` → `/${locale}/verification-access`. PENDING/SUSPENDED checks only run when already authenticated.
 
 ### JWT Refresh (Automatic — do not handle manually)
 
@@ -48,23 +73,13 @@ Middleware (`src/middleware.ts`) gates `/dashboard/*`. **Its own default locale 
 
 ### Pagination
 
-Server-side, **cursor-based** (`next_cursor` / `prev_cursor` in `ApiResponse.pagination`). Frontend abstraction lives in Context Providers or Zustand pagination slices (see `src/modules/device-monitoring/store/paginationSlice.ts` for a cursor-history stack implementation). Use `<PaginationCursor>` from `@/components/shared/PaginationCursor` for UI.
-
-### Log Modules (shared blueprint)
-
-Modules like st-kering-log, lamina-log, st-basah-log, penerimaan-log, and ledger-product all follow the same pattern — understanding one unlocks the rest:
-
-- Reuse the **generic product API** (`useGetProductDataQuery` + `ProductFilterOptions` from `src/services/product/getProductService.ts`) — no per-module service files.
-- Dynamic attribute columns via `<AttributeColumnHeader>` (`src/modules/dashboard/ledger-product/`). Type support: SELECT/CHECKBOX → checkbox presets, TEXT/NUMBER → input, BOOLEAN → true/false. **REFERENCE_GROUP is unsupported** for inline filtering.
-- Attribute filters use `query_attributes` (`Record<string, string[]>` — attribute ID → values array; store can hold object or JSON string, service serializes either) and `query_date_attributes` (`{ date_attributes: [{ attribute_id, start_date, end_date }] }`, JSON string).
-- Filter popovers keep **local state** during editing, commit to store + URL only on Apply. When building `query_attributes`, preserve keys managed by `<AttributeColumnHeader>` (column-header filters) and only replace the popover-managed keys.
+Server-side, **page-based** — despite the component name, no endpoint this app calls uses cursor pagination. (A few orphaned files under `src/types/` still declare `next_cursor`/`prev_cursor`; nothing reads them.) Requests send `page` + `limit`. Fixed-assets endpoints return `page_pagination` (`page`, `limit`, `total_pages`, `total_records`, `count`, `has_next`, `has_prev`, `next_page`, `prev_page`); other domains return `pagination`. Keep the current page in local `useState` and drive nav from `has_next` / `has_prev`. Use `<PaginationCursor>` from `@/components/shared/PaginationCursor` for UI.
 
 ### State Management Split
 
 - **Server state**: React Query (all API data)
-- **Complex feature state** (filters, pagination, store selection): Zustand stores with slices (e.g. `src/modules/dashboard/sku/store/`) — newer pattern
-- **Simple feature state**: React Context Provider (legacy pattern)
-- **Global auth/menu/preferences**: React Context (`src/context/`)
+- **Feature state**: local `useState` inside the `Fa*Page` component; modals through `useFaModal`
+- **Global auth/menu/preferences**: React Context — only `user-context`, `menu-context`, `user-preferences-context` in `src/context/`
 
 ### Internationalization
 
@@ -83,11 +98,11 @@ All use CSS variables (`--text`, `--border`, `--surface`, `--brand`, etc.) so th
 
 ## Shared Components (`src/components/shared/`)
 
-Reusable components — check here before building new ones: `ButtonDelete` (AlertDialog confirm), `ButtonAdd`, `ButtonEdit`, `ButtonDetail`, `PaginationCursor` (cursor-based pagination), `EmptyState`, `Loading`, `SkeletonTable`, `FilterBar`, `FilterBadge`, `BadgeStatus`, `ColumnVisibility`, `ExportButton`, `DensitySwitcher`, `ColorThemeSwitcher`.
+Reusable components — check here before building new ones: `ButtonDelete` (AlertDialog confirm), `ButtonAdd`, `ButtonEdit`, `ButtonDetail`, `PaginationCursor` (page-based pagination, despite the name), `EmptyState`, `Loading`, `SkeletonTable`, `FilterBar`, `FilterBadge`, `BadgeStatus`, `ColumnVisibility`, `TableExportButton`, `DensitySwitcher`, `ColorThemeSwitcher`.
 
 ## Forms
 
-Use `react-hook-form` + shadcn `Form`/`FormField`/`FormControl`/`FormItem`/`FormLabel`/`FormMessage` (from `@/components/ui/form`). Validation via `@hookform/resolvers` with `zod` or `yup`. See `src/modules/dashboard/gate-management/GateManagementPage.tsx` for the canonical create-form pattern.
+Use `react-hook-form` + shadcn `Form`/`FormField`/`FormControl`/`FormItem`/`FormLabel`/`FormMessage` (from `@/components/ui/form`). Validation via `@hookform/resolvers` with `zod` or `yup`. See `src/modules/dashboard/fixed-assets/modals/EditAssetModal.tsx` for the canonical form pattern.
 
 ## Code Style (Enforced by ESLint — `eslint.config.mjs`)
 
@@ -106,11 +121,11 @@ Use `react-hook-form` + shadcn `Form`/`FormField`/`FormControl`/`FormItem`/`Form
 
 | Type | Pattern | Example |
 |------|---------|---------|
-| Components | PascalCase | `LedgerItem`, `SkuModalAdd` |
-| Hooks | camelCase + `use` prefix | `useLedger`, `useGetSkuDataQuery` |
-| Service files | `[action][Domain]Service.ts` | `getLedgerDataService` |
-| Types | `[Domain][Type]Type` | `LedgerItemType` |
-| Query keys | `KEY_USE_GET_[DOMAIN]_DATA` | `KEY_USE_GET_LEDGER_DATA` |
+| Components | PascalCase | `FaAuditPage`, `EditAssetModal` |
+| Hooks | camelCase + `use` prefix | `useFaPermission`, `useGetAssetsQuery` |
+| Service files | `[action][Domain]Service.ts` | `getAssetsService` |
+| Types | `[Domain][Type]Type` | `FaAsset`, `AssetStatus` |
+| Query keys | `KEY_USE_GET_[DOMAIN]_DATA` | `KEY_USE_GET_ASSETS_DATA` |
 | Event handlers | `handle[Action]` | `handleSubmit` |
 
 ### Error Handling
@@ -119,7 +134,7 @@ Use `toastError` from `@/services` for mutation errors. Do not create ad-hoc err
 
 ### Filters
 
-Filter state **must sync with URL query params** for shareable URLs (40+ modules follow this). On change, call `router.replace({ pathname: router.pathname, query: nextQuery }, undefined, { shallow: true })`. Initialize filter state from URL query once on mount (guard with `useRef`).
+Filter state **must sync with URL query params** for shareable URLs. Use `useUrlFilterSync` (`src/hooks/useUrlFilterSync.ts`) — it initializes from `router.query` once on mount and returns `syncToUrl(filters)` doing a shallow `router.replace`. Don't hand-roll the `useRef` init guard.
 
 ## Environment Variables
 
@@ -159,9 +174,13 @@ This repo's primary feature is `src/modules/dashboard/fixed-assets/`. All work i
 (Non-obvious items not covered above — see prior sections for bun, port, trailing slash, and i18n quirks.)
 
 - Menu hierarchy is **API-driven** (`/accounts/me/menus`), not hardcoded. Route + icon mapping lives in `MENU_CONFIG` (`src/lib/menu-utils.ts`); fallback route map in `MENU_ROUTE_MAP` (`src/types/menu.ts`). `MOBILE_*` menus are filtered out. To add a new sidebar page, add the entry to `MENU_CONFIG` and ensure `MenuName` enum + `MENU_ROUTE_MAP` have the key.
-- Some modules are tenant-specific (prefixed `kbm-`) for a timber/lumber tenant
 - Icons: always use `lucide-react`, never other icon libraries
 - shadcn/ui config (`components.json`): `rsc: false`, style `default`, base color `slate`, icon library `lucide`
 - `cn()` utility from `@/lib/utils` for Tailwind class merging
 - `reactStrictMode: true` is on
-- **Printing (QZ Tray)**: direct-printer integration via `jsprintmanager`. Entry points: `usePrintV5` (`src/hooks/usePrintV5.ts`, wraps `window.qz`), signing via `useQZSigning` / `src/pages/api/qz/sign-message.ts`, and `<script src="/js/qz-tray.js">` loaded in `src/pages/_document.tsx`. Used by `PrintRfid.tsx` and `PrintModalV5.tsx`.
+- **Printing (QZ Tray)**: only the plumbing survives — `useQZSigning` (`src/hooks/useQZSigning.ts`), the signing endpoint `src/pages/api/qz/sign-message.ts`, and `<script src="/js/qz-tray.js">` in `src/pages/_document.tsx`. The print hooks/components that used them were deleted; wire new label printing on top of `useQZSigning` + `window.qz`. Requires QZ Tray running on the client machine. (The `jsprintmanager` dep is installed but unused in `src/` — ignore the README's claim about it.)
+- `Katalyst Fixed Assets/` at the repo root is a standalone static prototype (`app.jsx`/`modals.jsx`/`index.html`), not part of the Next.js app or the build — reference only, do not import from it.
+
+## Git Workflow
+
+- **Default branch for work**: `develop`. Single-developer repo — do **not** create a new branch unless the user explicitly asks; commit straight to `develop`.

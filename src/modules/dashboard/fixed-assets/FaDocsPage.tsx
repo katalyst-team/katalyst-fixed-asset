@@ -107,7 +107,7 @@ export function FaDocsPage() {
         {groups.map((g) => (
           <div key={g.title} style={{ marginBottom: 24 }}>
             <h2 style={{ fontSize: 14, fontWeight: 700, letterSpacing: "-0.01em", margin: "0 0 12px" }}>{g.title}</h2>
-            <div style={{ display: "grid", gap: 14, gridTemplateColumns: "repeat(3, 1fr)" }}>
+            <div className="ks-grid-3" style={{ gap: 14 }}>
               {g.cards.map((c) => (
                 <DocCardItem key={c.id} doc={c} />
               ))}

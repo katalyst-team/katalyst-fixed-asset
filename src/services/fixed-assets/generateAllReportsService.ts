@@ -1,11 +1,8 @@
-import type { FaReportFormat } from "@/types/fixed-assets";
+import type { FaReportFormat, FaReportResult } from "@/types/fixed-assets";
 
 import fetcher, { ApiResponse } from "..";
 
-export type GenerateAllReportsResponse = ApiResponse<{
-  report_ids: string[];
-  status: string;
-}>;
+export type GenerateAllReportsResponse = ApiResponse<FaReportResult[]>;
 
 interface GenerateAllReportsParams {
   data: { format: FaReportFormat };

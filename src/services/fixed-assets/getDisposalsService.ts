@@ -1,8 +1,15 @@
-import type { FaDisposalFilterOptions, FaDisposalItem } from "@/types/fixed-assets";
+import type {
+  FaDisposalFilterOptions,
+  FaDisposalItem,
+  FaDisposalSummary,
+} from "@/types/fixed-assets";
 
 import fetcher, { ApiResponse } from "..";
 
-export type GetDisposalsResponse = ApiResponse<{ disposals: FaDisposalItem[] }>;
+export type GetDisposalsResponse = ApiResponse<{
+  disposals: FaDisposalItem[];
+  summary?: FaDisposalSummary;
+}>;
 
 interface GetDisposalsParams extends FaDisposalFilterOptions {
   organizationId: string;

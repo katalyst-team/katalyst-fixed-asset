@@ -1,5 +1,6 @@
 import type {
   FaHealthItem,
+  FaMaintenanceSummary,
   FaMaintenanceTab,
   FaPmRule,
   FaPmScheduleItem,
@@ -14,6 +15,7 @@ export type GetMaintenanceResponse = ApiResponse<{
   pm_rules: FaPmRule[];
   pmSchedule: FaPmScheduleItem[];
   pre_use_assets: FaPreUseAsset[];
+  summary?: FaMaintenanceSummary;
   work_orders: FaWorkOrder[];
 }>;
 

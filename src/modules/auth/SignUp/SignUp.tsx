@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useSignUpMutation } from "@/hooks/api/auth/signUpMutation";
+import { PENDING_SIGNUP_TOKENS_KEY } from "@/lib/authTokens";
 import { encryptText } from "@/lib/crypto";
 import { cn } from "@/lib/utils";
 import { toastError } from "@/services";
@@ -63,7 +64,17 @@ const SignUp = ({
         password: data.password,
         phone: data.phone,
       })
-      .then(() => {
+      .then((resp) => {
+        // ponytail: stash tokens for VerificationEmail to persist once OTP is
+        // confirmed, so activation logs the user straight into the dashboard
+        // instead of bouncing them to the login page.
+        sessionStorage.setItem(
+          PENDING_SIGNUP_TOKENS_KEY,
+          JSON.stringify({
+            access_token: resp.data.access_token,
+            refresh_token: resp.data.refresh_token,
+          })
+        );
         const encryptedEmail = encryptText(data.email);
         router.push(`/sign-up/${encryptedEmail}`);
       })

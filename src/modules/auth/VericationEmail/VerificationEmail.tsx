@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -21,6 +22,10 @@ import {
 import { Label } from "@/components/ui/label";
 import { useActivateEmailMutation } from "@/hooks/api/auth/activateEmailMutation";
 import { useSendOtpEmailMutation } from "@/hooks/api/auth/sendOtpEmailMutation";
+import {
+  PENDING_SIGNUP_TOKENS_KEY,
+  persistAuthTokens,
+} from "@/lib/authTokens";
 import { decryptText } from "@/lib/crypto";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +35,7 @@ const VerificationEmail = ({
 }: React.ComponentPropsWithoutRef<"div">) => {
   const { t } = useTranslation(["auth"]);
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { email: encryptedEmail } = router.query;
   const [otp, setOtp] = useState("");
   const [countdown, setCountdown] = useState(0);
@@ -90,7 +96,19 @@ const VerificationEmail = ({
         otp,
       });
       toast.success(t("auth:verificationEmail.verified"));
-      router.push("/");
+
+      const pendingTokensRaw = sessionStorage.getItem(
+        PENDING_SIGNUP_TOKENS_KEY
+      );
+      if (pendingTokensRaw) {
+        const { access_token, refresh_token } = JSON.parse(pendingTokensRaw);
+        sessionStorage.removeItem(PENDING_SIGNUP_TOKENS_KEY);
+        persistAuthTokens(access_token, refresh_token);
+        queryClient.clear();
+        router.push("/dashboard/fixed-assets/");
+      } else {
+        router.push("/");
+      }
     } catch {
       toast.error(t("auth:verificationEmail.invalidOtpTryAgain"));
       setOtp("");
