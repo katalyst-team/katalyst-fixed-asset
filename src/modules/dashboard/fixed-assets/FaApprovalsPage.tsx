@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, Plus, XCircle } from "lucide-react";
 import { useState } from "react";
 
 import { useUser } from "@/context/user-context";
@@ -16,6 +16,8 @@ import {
   FaStat,
 } from "@/modules/dashboard/fixed-assets";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { useFaModal } from "@/modules/dashboard/fixed-assets/modals/FaModalContext";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 import type { ApprovalStatus, FaApprovalRequest } from "@/types/fixed-assets";
 
 type FilterTab = "all" | ApprovalStatus;
@@ -53,6 +55,8 @@ function stepProgress(req: FaApprovalRequest): number {
 
 export function FaApprovalsPage() {
   const { tokenPayload } = useUser();
+  const { canManage } = useFaPermission();
+  const { openModal } = useFaModal();
   const organizationId = tokenPayload?.organization_id ?? "";
   const [tab, setTab] = useState<FilterTab>("all");
   const status = tab === "all" ? undefined : tab;
@@ -161,15 +165,29 @@ export function FaApprovalsPage() {
           </table>
         </div>
 
-        {rules.length > 0 && (
-          <div className="ks-card" style={{ marginTop: 16 }}>
-            <div className="ks-card-head">
-              <div>
-                <div className="ks-card-title">Approval Rules</div>
-                <div className="ks-card-desc">Configured workflow rules</div>
-              </div>
+        <div className="ks-card" style={{ marginTop: 16 }}>
+          <div className="ks-card-head">
+            <div>
+              <div className="ks-card-title">Approval Rules</div>
+              <div className="ks-card-desc">Configured workflow rules</div>
             </div>
-            <div className="ks-card-body">
+            {canManage && (
+              <button
+                className="ks-btn ks-btn-sm ks-btn-primary"
+                type="button"
+                onClick={() => openModal("approvalRule")}
+              >
+                <Plus size={12} />
+                New rule
+              </button>
+            )}
+          </div>
+          <div className="ks-card-body">
+            {rules.length === 0 ? (
+              <div className="text-muted-foreground text-sm">
+                No approval rules configured yet.
+              </div>
+            ) : (
               <div className="grid grid-cols-2 gap-3">
                 {rules.map((rule) => (
                   <div key={rule.id} className="border border-border p-3 rounded-lg">
@@ -185,9 +203,9 @@ export function FaApprovalsPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            )}
           </div>
-        )}
+        </div>
       </FaQueryState>
     </div>
   );

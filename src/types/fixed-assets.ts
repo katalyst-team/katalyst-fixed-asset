@@ -795,10 +795,22 @@ export interface SubmitPreUseCheckRequest {
 export interface CreatePmRuleRequest {
   auto_wo: boolean;
   name: string;
-  remind: string;
+  reminder_days: number[];
   scope: string;
-  scope_assets?: string[];
-  trigger: string;
+  trigger_type: string;
+  trigger_value: number;
+}
+
+export interface StartAuditSessionRequest {
+  name?: string;
+  required_sign_off?: number;
+}
+
+export interface StartAuditSessionResult {
+  audit_id: string;
+  name: string;
+  status: string;
+  zone_count: number;
 }
 
 export interface GenerateReportRequest {

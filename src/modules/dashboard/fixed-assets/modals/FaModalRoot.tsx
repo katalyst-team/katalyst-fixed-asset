@@ -1,3 +1,4 @@
+import { ApprovalRuleModal } from "./ApprovalRuleModal";
 import { CheckOutModal } from "./CheckOutModal";
 import { CreateAssetModal } from "./CreateAssetModal";
 import { DisposalRequestModal } from "./DisposalRequestModal";
@@ -17,6 +18,10 @@ export function FaModalRoot() {
 
   return (
     <>
+      <ApprovalRuleModal
+        open={type === "approvalRule"}
+        onClose={closeModal}
+      />
       <CheckOutModal
         open={type === "checkout"}
         onClose={closeModal}

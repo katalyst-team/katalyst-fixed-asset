@@ -137,6 +137,7 @@ export { default as useReturnCheckOutMutation } from "./useReturnCheckOutMutatio
 export { default as useReviseDisposalMutation } from "./useReviseDisposalMutation";
 export { default as useRunDepreciationMutation } from "./useRunDepreciationMutation";
 export { default as useSignBastMutation } from "./useSignBastMutation";
+export { default as useStartAuditSessionMutation } from "./useStartAuditSessionMutation";
 export { default as useSubmitPreUseCheckMutation } from "./useSubmitPreUseCheckMutation";
 export { default as useUpdateApprovalRuleMutation } from "./useUpdateApprovalRuleMutation";
 export { default as useUpdateAssetMutation } from "./useUpdateAssetMutation";

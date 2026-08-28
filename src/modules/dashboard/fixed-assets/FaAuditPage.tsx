@@ -16,6 +16,7 @@ import {
   useGetAuditZonesQuery,
   usePostAuditAdjustmentMutation,
   useResumeAuditSweepMutation,
+  useStartAuditSessionMutation,
 } from "@/hooks/api/fixed-assets";
 import {
   FaKpiStrip,
@@ -57,8 +58,10 @@ export function FaAuditPage() {
   const { mutateAsync: getAuditReport } = useGetAuditReportMutation({
     organizationId,
   });
-  const zones = resp?.data?.zones ?? [];
-  const auditProgress = resp?.data?.audit_progress;
+  const { mutateAsync: startSession } = useStartAuditSessionMutation({
+    organizationId,
+  });
+  const zones = resp?.data?.zones ?? [];  const auditProgress = resp?.data?.audit_progress;
   const session = resp?.data?.audit_session;
   const auditId = session?.id ?? "";
 
@@ -138,6 +141,16 @@ export function FaAuditPage() {
       <FaShellHead
         actions={
           <>
+            {canManage && !auditId && (
+              <button
+                className="ks-btn ks-btn-primary"
+                type="button"
+                onClick={() => void startSession(undefined)}
+              >
+                <PlayCircle size={14} />
+                Start audit session
+              </button>
+            )}
             <button
               className="ks-btn"
               disabled={!auditId}

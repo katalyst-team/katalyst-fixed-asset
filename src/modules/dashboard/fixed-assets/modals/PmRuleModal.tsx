@@ -28,23 +28,10 @@ interface PmRuleModalProps {
   open: boolean;
 }
 
-const TRIGGERS = [
-  "Insurance expiry",
-  "Odometer / km",
-  "Time interval",
-  "Usage · cycles",
-  "Usage · run-hours",
-  "Warranty expiry",
-];
-
-const INTERVALS = [
-  "1,000 run-hours",
-  "180 days",
-  "30 days",
-  "365 days",
-  "500 cycles",
-  "5,000 km",
-  "90 days",
+const TRIGGER_TYPES = [
+  { label: "Time interval (days)", value: "days" },
+  { label: "Usage · run-hours", value: "run-hours" },
+  { label: "Usage · cycles", value: "cycles" },
 ];
 
 const ASSIGNEES = [
@@ -62,21 +49,28 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
   const organizationId = tokenPayload?.organization_id ?? "";
   const { mutateAsync } = useCreatePmRuleMutation({ organizationId });
   const [assignTo, setAssignTo] = useState("Maintenance Team");
-  const [intervalValue, setIntervalValue] = useState("30 days");
+  const [intervalValue, setIntervalValue] = useState("30");
   const [name, setName] = useState("");
-  const [remindAt, setRemindAt] = useState("14d · 7d · 1d");
-  const [trigger, setTrigger] = useState("Time interval");
+  const [remindAt, setRemindAt] = useState("14, 7, 1");
+  const [triggerType, setTriggerType] = useState("days");
 
-  const isValid = name.trim().length > 0;
+  const parsedInterval = parseInt(intervalValue, 10);
+  const parsedReminders = remindAt
+    .split(/[,\s·]+/)
+    .map((part) => parseInt(part, 10))
+    .filter((days) => !Number.isNaN(days) && days > 0);
+  const isValid =
+    name.trim().length > 0 && !Number.isNaN(parsedInterval) && parsedInterval >= 1;
 
   async function handleSubmit() {
     if (!isValid) return;
     await mutateAsync({
       auto_wo: true,
       name: name.trim(),
-      remind: remindAt,
+      reminder_days: parsedReminders,
       scope: assignTo,
-      trigger: `${trigger} · ${intervalValue}`,
+      trigger_type: triggerType,
+      trigger_value: parsedInterval,
     });
     onClose();
   }
@@ -108,36 +102,33 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="pm-trigger">Trigger type</Label>
-              <Select value={trigger} onValueChange={setTrigger}>
+              <Select value={triggerType} onValueChange={setTriggerType}>
                 <SelectTrigger id="pm-trigger">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {TRIGGERS.map((tr) => (
-                    <SelectItem key={tr} value={tr}>
-                      {tr}
+                  {TRIGGER_TYPES.map((tr) => (
+                    <SelectItem key={tr.value} value={tr.value}>
+                      {tr.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="pm-interval">Interval</Label>
-              <Select
+              <Label htmlFor="pm-interval">Interval value</Label>
+              <Input
+                id="pm-interval"
+                inputMode="numeric"
+                min={1}
+                placeholder="30"
+                type="number"
                 value={intervalValue}
-                onValueChange={setIntervalValue}
-              >
-                <SelectTrigger id="pm-interval">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {INTERVALS.map((itv) => (
-                    <SelectItem key={itv} value={itv}>
-                      {itv}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onChange={(e) => setIntervalValue(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">
+                Amount per trigger type (e.g. every 30 days)
+              </p>
             </div>
           </div>
 
@@ -145,11 +136,12 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
             <Label htmlFor="pm-remind">Remind at</Label>
             <Input
               id="pm-remind"
+              placeholder="14, 7, 1"
               value={remindAt}
               onChange={(e) => setRemindAt(e.target.value)}
             />
             <p className="text-xs text-muted-foreground">
-              Lead times before due, separated by ·
+              Lead times before due (days), separated by commas
             </p>
           </div>
 

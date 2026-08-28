@@ -3,6 +3,7 @@ import { useGetFAMasterDataQuery } from "@/hooks/api/fixed-assets";
 import type { FaAsset } from "@/types/fixed-assets";
 
 export type FaModalType =
+  | "approvalRule"
   | "disposal"
   | "checkout"
   | "reservation"

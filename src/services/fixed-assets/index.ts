@@ -184,6 +184,8 @@ export type { ReviseDisposalResponse } from "./reviseDisposalService";
 export { reviseDisposalService } from "./reviseDisposalService";
 export type { SignBastResponse } from "./signBastService";
 export { signBastService } from "./signBastService";
+export type { StartAuditSessionResponse } from "./startAuditSessionService";
+export { startAuditSessionService } from "./startAuditSessionService";
 export type { SubmitPreUseCheckResponse } from "./submitPreUseCheckService";
 export { submitPreUseCheckService } from "./submitPreUseCheckService";
 export type { UpdateApprovalRuleResponse } from "./updateApprovalRuleService";
