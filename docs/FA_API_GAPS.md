@@ -89,6 +89,42 @@ dialog, invalidates schedule/journal/dashboard) and `POST /fa/journal-entries/:i
 
 ---
 
+## 2b. Business-flow corrections — ✅ implemented Aug 2026 (both repos, `staging`)
+
+Full write-up: katalyst-core `docs/analysis/fixed-asset-workflow-fixes-2026-08-28.md`.
+Headlines affecting FE contracts:
+
+- **New endpoints**: `GET /fa/finance/depreciation` (per-asset schedule aggregates,
+  camelCase, matches `FaDepreciationSchedule`) and `POST /fa/audit/sessions`
+  (start stock audit; one active session per org).
+- **Depreciation** runs now create a balanced draft journal entry (postable from
+  the Journal tab) and use calendar years; retired assets excluded.
+- **Disposal**: completion retires the asset; the disposal page bulk action now
+  opens pending disposal requests instead of retiring directly; asset status
+  `retired` is terminal (edit modal rejects it as a target from retired, etc.).
+- **Approvals**: "My tasks" fixed (was org-ID corruption); every disposal spawns a
+  linked approval inbox item; multi-step chains from approval rules are honored
+  (disposal page approve advances one step per click, `next_stage: "in-review"`
+  until the chain completes). FE rule editor (Approvals page → New rule) stores
+  `workflow_steps: [{step_name, approver_id}]` with approvers from `GET /fa/users`
+  (user `id` = AOR ext id = the JWT `account_organization_role_id` space).
+- **Check-out**: guards (retired/`maint`/double-loan/date order) return real
+  errors; overdue flips lazily so the KPI is live; damaged returns route the
+  asset to `maint`.
+- **Maintenance**: WO status transitions validated (`done` terminal); corrective
+  WOs put the asset in `maint`, completing the last WO returns it to `in-service`;
+  PM rules with `trigger_type: "days"` + auto-WO generate due work orders on
+  maintenance reads. **FE PM modal now sends `trigger_type` / `trigger_value` /
+  `reminder_days[]`** (the old free-text payload always failed validation).
+- **Audit**: session lifecycle implemented (start → sweep per zone → awaiting
+  sign-off → completed + reconciled); audit adjustments must post balanced,
+  non-zero lines; audit report PDF / disposal BAST / asset export now return
+  real uploaded file URLs instead of dead links.
+- **Camera feed** returns a clear error when the camera has no stream URL
+  configured (previously an invented `rtsp://` address).
+
+---
+
 ## 3. Frontend: wiring gaps (no backend work needed)
 
 ### 3a. Roles tab ignores the real API — ✅ FIXED
@@ -135,4 +171,6 @@ messaging) can be surfaced without schema changes.
 2. ~~§3a Roles tab wiring~~ — ✅ done
 3. ~~§3c CheckOut/RTLS/Users pages read the summary block~~ — ✅ done
 4. ~~§2 derivable keys~~ — ✅ `utilization_pct`, `total_nbv` tax impact, `missing_24h` done; invite modal now sends a role from the roles API
-5. **Open (product/infra decisions)**: `failed_logins_24h`, reports scheduler/compliance, `cross_site`, CCTV feed viewer (§3b), integrations surface (§3d)
+5. ~~§2b business-flow corrections~~ — ✅ done Aug 2026 (see §2b + katalyst-core analysis doc)
+6. **Open (product/infra decisions)**: `failed_logins_24h`, reports scheduler/compliance, `cross_site`, CCTV feed viewer (§3b), integrations surface (§3d)
+7. **Open (needs upstream data)**: PM usage triggers (`run-hours`/`cycles`), approval rule scope matching (`category`/`cost_center`/`store`), true audit variance (RFID scan feed)
