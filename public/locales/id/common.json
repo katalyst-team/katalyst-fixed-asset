@@ -210,7 +210,12 @@
     "statusInactive": "Tidak Aktif",
     "createButton": "Buat Toko",
     "creating": "Membuat...",
-    "storeCreated": "Toko berhasil dibuat"
+    "storeCreated": "Toko berhasil dibuat",
+    "editTitle": "Ubah Toko",
+    "editDescription": "Perbarui informasi toko. Perubahan berlaku untuk seluruh organisasi.",
+    "editButton": "Simpan Perubahan",
+    "saving": "Menyimpan...",
+    "storeUpdated": "Toko berhasil diperbarui"
   },
   "packing": "Kemasan",
   "single": "Satuan",

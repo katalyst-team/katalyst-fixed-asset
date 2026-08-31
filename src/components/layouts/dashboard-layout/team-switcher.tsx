@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronsUpDown, Globe, Plus } from "lucide-react";
+import { ChevronsUpDown, Globe, Pencil, Plus } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -41,7 +41,10 @@ import {
 import { useUser } from "@/context/user-context";
 import useCreateStoreAreaDataMutation from "@/hooks/api/store/useCreateStoreAreaDataMutation";
 import useCreateStoreDataMutation from "@/hooks/api/store/useCreateStoreDataMutation";
-import { KEY_USE_GET_STORE_DATA } from "@/hooks/api/store/useGetStoreDataQuery";
+import useEditStoreDataMutation from "@/hooks/api/store/useEditStoreDataMutation";
+import useGetStoreDataQuery, {
+  KEY_USE_GET_STORE_DATA,
+} from "@/hooks/api/store/useGetStoreDataQuery";
 import { toastError } from "@/services";
 
 export function TeamSwitcher({
@@ -80,7 +83,48 @@ export function TeamSwitcher({
   
   const { mutateAsync: createStore, isPending: isCreating } = useCreateStoreDataMutation();
   const { mutateAsync: createStoreArea, isPending: isCreatingArea } = useCreateStoreAreaDataMutation();
+  const { mutateAsync: editStore, isPending: isEditingStore } = useEditStoreDataMutation();
   const isPending = isCreating || isCreatingArea;
+
+  const { data: storeResp } = useGetStoreDataQuery({
+    organizationId: tokenPayload?.organization_id || "",
+  });
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingStoreId, setEditingStoreId] = useState("");
+  const [editName, setEditName] = useState("");
+  const [editAddress, setEditAddress] = useState("");
+  const [editStatus, setEditStatus] = useState<string | undefined>(undefined);
+
+  const handleOpenEdit = (storeId: string) => {
+    const store = storeResp?.data?.stores?.find((s) => s.id === storeId);
+    const fallback = teams.find((t) => t.id === storeId);
+    setEditingStoreId(storeId);
+    setEditName(store?.name ?? fallback?.name ?? "");
+    setEditAddress(store?.address ?? "");
+    setEditStatus(store?.status ?? "ACTIVE");
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditStore = async () => {
+    await editStore({
+      address: editAddress,
+      name: editName,
+      organizationID: tokenPayload?.organization_id || "",
+      status: editStatus || "ACTIVE",
+      storeID: editingStoreId,
+    })
+      .then(async () => {
+        queryClient.invalidateQueries({
+          queryKey: KEY_USE_GET_STORE_DATA(
+            tokenPayload?.organization_id || ""
+          ),
+        });
+        toast.success(t("storeModal.storeUpdated"));
+        setIsEditModalOpen(false);
+      })
+      .catch((e) => toastError(e));
+  };
   
   const handleCreateStore = async () => {
     await createStore({
@@ -163,7 +207,7 @@ export function TeamSwitcher({
               </DropdownMenuLabel>
               {allTeamsWithAll.map((team, index) => (
                 <DropdownMenuItem
-                  key={team.name}
+                  key={team.id}
                   className="gap-2 p-2"
                   onClick={() => {
                     setActiveTeam(team);
@@ -174,6 +218,19 @@ export function TeamSwitcher({
                     {team?.logo && <team.logo className="size-4 shrink-0" />}
                   </div>
                   {team.name}
+                  {team.id !== "0" && (
+                    <button
+                      aria-label={t("storeModal.editButton")}
+                      className="ml-auto rounded p-1 text-muted-foreground hover:bg-accent"
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenEdit(team.id);
+                      }}
+                    >
+                      <Pencil className="size-3.5" />
+                    </button>
+                  )}
                   <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
                 </DropdownMenuItem>
               ))}
@@ -242,6 +299,62 @@ export function TeamSwitcher({
                 {isPending
                   ? t("storeModal.creating")
                   : t("storeModal.createButton")}
+              </Button>
+            </DialogFooter>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
+      {/* Store Edit Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{t("storeModal.editTitle")}</DialogTitle>
+            <DialogDescription>
+              {t("storeModal.editDescription")}
+            </DialogDescription>
+            <div className="flex py-4 flex-col w-full gap-4">
+              <InputWithLabel
+                isRequired
+                label={t("storeModal.storeNameLabel")}
+                placeholder={t("storeModal.storeNamePlaceholder")}
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+              />
+              <InputWithLabel
+                label={t("storeModal.addressLabel")}
+                placeholder={t("storeModal.addressPlaceholder")}
+                value={editAddress}
+                onChange={(e) => setEditAddress(e.target.value)}
+              />
+              <Label isRequired htmlFor="edit-status">
+                {t("storeModal.statusLabel")}
+              </Label>
+              <Select value={editStatus} onValueChange={setEditStatus}>
+                <SelectTrigger className="w-full">
+                  <SelectValue
+                    placeholder={t("storeModal.statusPlaceholder")}
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ACTIVE">
+                    {t("storeModal.statusActive")}
+                  </SelectItem>
+                  <SelectItem value="INACTIVE">
+                    {t("storeModal.statusInactive")}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <DialogFooter>
+              <Button
+                disabled={!editName || !editStatus || isEditingStore}
+                type="button"
+                onClick={handleEditStore}
+              >
+                {isEditingStore
+                  ? t("storeModal.saving")
+                  : t("storeModal.editButton")}
               </Button>
             </DialogFooter>
           </DialogHeader>

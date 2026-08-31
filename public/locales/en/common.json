@@ -208,7 +208,12 @@
     "statusInactive": "Inactive",
     "createButton": "Create Store",
     "creating": "Creating...",
-    "storeCreated": "Store created successfully"
+    "storeCreated": "Store created successfully",
+    "editTitle": "Edit Store",
+    "editDescription": "Update store information. Changes apply to the whole organization.",
+    "editButton": "Save Changes",
+    "saving": "Saving...",
+    "storeUpdated": "Store updated successfully"
   },
   "packing": "Packing",
   "single": "Unit",
