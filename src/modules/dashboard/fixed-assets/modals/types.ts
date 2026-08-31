@@ -15,6 +15,7 @@ export type FaModalType =
   | "locateAsset"
   | "epcRange"
   | "orderStock"
+  | "registerTag"
   | "pmRule"
   | null;
 

@@ -101,6 +101,8 @@ export { default as useGetReservationsQuery } from "./useGetReservationsQuery";
 export { KEY_USE_GET_FA_RESERVATIONS } from "./useGetReservationsQuery";
 export { default as useGetRfidReadersQuery } from "./useGetRfidReadersQuery";
 export { KEY_USE_GET_FA_RFID_READERS } from "./useGetRfidReadersQuery";
+export { default as useGetRfidTagOrdersQuery } from "./useGetRfidTagOrdersQuery";
+export { KEY_USE_GET_FA_RFID_TAG_ORDERS } from "./useGetRfidTagOrdersQuery";
 export { default as useGetRFIDTagsQuery } from "./useGetRFIDTagsQuery";
 export { KEY_USE_GET_FA_RFID_TAGS } from "./useGetRFIDTagsQuery";
 export { default as useGetRolesQuery } from "./useGetRolesQuery";

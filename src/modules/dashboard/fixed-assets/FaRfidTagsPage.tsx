@@ -10,24 +10,33 @@ import { useUser } from "@/context/user-context";
 import {
   useEncodeRFIDTagMutation,
   useExportDataMutation,
+  useGetRfidTagOrdersQuery,
   useGetRFIDTagsQuery,
   usePrintRFIDTagsMutation,
 } from "@/hooks/api/fixed-assets";
+import { useBypassHardware } from "@/hooks/useBypassHardware";
 import {
   FaKpiStrip,
   FaShellHead,
   FaStat,
+  formatActivityTime,
 } from "@/modules/dashboard/fixed-assets";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
 import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
 import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
-import type { FaRfidTag } from "@/types/fixed-assets";
+import type { FaRfidTag, FaRfidTagOrder } from "@/types/fixed-assets";
 
 const STATUS_TONE: Record<string, string> = {
   active: "success",
   inactive: "outline",
   lost: "danger",
+};
+
+const ORDER_TONE: Record<string, string> = {
+  cancelled: "danger",
+  placed: "warn",
+  received: "success",
 };
 
 const rssiTone = (rssi: number): string =>
@@ -40,6 +49,7 @@ const rssiTone = (rssi: number): string =>
 export function FaRfidTagsPage() {
   const { tokenPayload } = useUser();
   const { canManage } = useFaPermission();
+  const { isBypassEnabled } = useBypassHardware();
   const organizationId = tokenPayload?.organization_id ?? "";
   const [page, setPage] = useState(1);
   const PAGE_LIMIT = 20;
@@ -48,6 +58,11 @@ export function FaRfidTagsPage() {
     organizationId,
     page,
   });
+  const { data: ordersResp } = useGetRfidTagOrdersQuery({
+    limit: 5,
+    organizationId,
+  });
+  const orders: FaRfidTagOrder[] = ordersResp?.data?.orders ?? [];
   const tags = resp?.data?.tags ?? [];
   const activeTags = tags.filter((t) => t.status === "active").length;
   const inactiveTags = tags.filter((t) => t.status === "inactive").length;
@@ -110,6 +125,16 @@ export function FaRfidTagsPage() {
                 Print queue
               </button>
             )}
+            {canManage && isBypassEnabled && (
+              <button
+                className="ks-btn ks-btn-sm"
+                type="button"
+                onClick={() => openModal("registerTag")}
+              >
+                <Zap size={14} />
+                Register tag
+              </button>
+            )}
             {canManage && (
               <button
                 className="ks-btn ks-btn-sm"
@@ -141,6 +166,64 @@ export function FaRfidTagsPage() {
         <FaStat label="Lost" tone="danger" value={String(lostTags)} />
         <FaStat label="Print queue" sub="Zebra ZD621" tone="warn" value={String(printQueue)} />
       </FaKpiStrip>
+
+      <div className="ks-card">
+        <div className="ks-card-head">
+          <div className="flex items-center gap-2">
+            <Printer size={14} />
+            <div className="ks-card-title">Tag orders</div>
+          </div>
+          <span className="ks-badge outline">
+            {ordersResp?.page_pagination?.total_records ?? orders.length} total
+          </span>
+        </div>
+        <div style={{ overflowX: "auto" }}>
+          <table className="w-full text-sm">
+            <thead>
+              <tr>
+                {["Order", "Supplier", "Items", "Qty", "Status", "Placed"].map((c) => (
+                  <th key={c} className="p-3 text-left font-medium text-muted-foreground">
+                    {c}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((o) => (
+                <tr key={o.id}>
+                  <td className="border-t border-border p-3 font-mono text-xs">
+                    {o.order_no}
+                  </td>
+                  <td className="border-t border-border p-3">{o.supplier}</td>
+                  <td className="border-t border-border p-3 text-muted-foreground">
+                    {o.lines
+                      .map((l) => `${l.qty}× ${l.tag_type}`)
+                      .join(", ")}
+                  </td>
+                  <td className="border-t border-border p-3 font-medium">
+                    {o.total_qty}
+                  </td>
+                  <td className="border-t border-border p-3">
+                    <span className={"ks-badge " + (ORDER_TONE[o.status] ?? "outline")}>
+                      {o.status}
+                    </span>
+                  </td>
+                  <td className="border-t border-border p-3 text-xs text-muted-foreground">
+                    {formatActivityTime(o.created_at)}
+                  </td>
+                </tr>
+              ))}
+              {orders.length === 0 && (
+                <tr>
+                  <td className="border-t border-border p-3 text-muted-foreground" colSpan={6}>
+                    No tag orders yet — orders appear here after placing one.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <FaQueryState
         emptyDescription="No RFID tags registered yet."

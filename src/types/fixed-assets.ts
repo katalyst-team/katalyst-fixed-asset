@@ -573,6 +573,30 @@ export interface FaRfidTagFilterOptions {
   status?: "active" | "inactive" | "lost";
 }
 
+export interface FaRfidTagOrderLine {
+  cat: string;
+  id: string;
+  qty: number;
+  size: string;
+  tag_type: string;
+}
+
+export interface FaRfidTagOrder {
+  created_at: string;
+  id: string;
+  lines: FaRfidTagOrderLine[];
+  order_no: string;
+  status: "placed" | "received" | "cancelled";
+  supplier: string;
+  total_qty: number;
+}
+
+export interface FaRfidTagOrderFilterOptions {
+  page?: number;
+  limit?: number;
+  status?: "placed" | "received" | "cancelled";
+}
+
 export interface FaDisposalFilterOptions {
   page?: number;
   limit?: number;

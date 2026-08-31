@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { toastError } from "@/services";
@@ -15,6 +15,8 @@ interface UseOrderRFIDTagsMutationParams {
 const useOrderRFIDTagsMutation = ({
   organizationId,
 }: UseOrderRFIDTagsMutationParams) => {
+  const queryClient = useQueryClient();
+
   return useMutation<OrderRFIDTagsResponse, Error, OrderRFIDTagsRequest>({
     mutationFn: (data) => orderRFIDTagsService({ data, organizationId }),
     onError: (error) => {
@@ -22,6 +24,9 @@ const useOrderRFIDTagsMutation = ({
     },
     onSuccess: () => {
       toast.success("Tag order placed successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["faRfidTagOrders", organizationId],
+      });
     },
   });
 };

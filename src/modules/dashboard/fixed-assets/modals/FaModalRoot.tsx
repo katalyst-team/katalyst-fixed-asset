@@ -8,6 +8,7 @@ import { useFaModal } from "./FaModalContext";
 import { LocateAssetModal } from "./LocateAssetModal";
 import { OrderStockModal } from "./OrderStockModal";
 import { PmRuleModal } from "./PmRuleModal";
+import { RegisterTagModal } from "./RegisterTagModal";
 import { ReservationModal } from "./ReservationModal";
 import { TransferHistoryModal } from "./TransferHistoryModal";
 import { TransferModal } from "./TransferModal";
@@ -53,6 +54,10 @@ export function FaModalRoot() {
       />
       <PmRuleModal
         open={type === "pmRule"}
+        onClose={closeModal}
+      />
+      <RegisterTagModal
+        open={type === "registerTag"}
         onClose={closeModal}
       />
       <ReservationModal
