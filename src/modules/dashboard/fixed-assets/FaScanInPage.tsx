@@ -27,6 +27,7 @@ import {
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
 import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
+import { FaRfidReaderPanel } from "@/modules/dashboard/fixed-assets/FaRfidReaderPanel";
 import {
   useFaCostCenterOptions,
   useFaLocationOptions,
@@ -147,6 +148,7 @@ export function FaScanInPage() {
   const [step, setStep] = useState(0);
   const [selectedPo, setSelectedPo] = useState(0);
   const [scannedCount, setScannedCount] = useState(0);
+  const [realEpCs, setRealEpCs] = useState<string[]>([]);
   const [scanning, setScanning] = useState(false);
   const [custodian, setCustodian] = useState("");
   const [loc, setLoc] = useState("");
@@ -179,10 +181,10 @@ export function FaScanInPage() {
     for (const line of PO_LINES) {
       for (let i = 0; i < line.qty && count < scannedCount; i++) {
         assets.push({
-          epc: `E280-${line.id}-${count}`,
+          epc: realEpCs[count] ?? `E280-${line.id}-${count}`,
           line_id: line.id,
           name: line.name,
-          serial: `SN-${line.id}-${count}`,
+          serial: realEpCs[count] ? `SN-${realEpCs[count].slice(-10)}` : `SN-${line.id}-${count}`,
           tid: `TID-${line.id}-${count}`,
           val: line.unit,
         });
@@ -198,7 +200,14 @@ export function FaScanInPage() {
       qc_passed: qcPassed,
     });
     setScannedCount(0);
+    setRealEpCs([]);
     setStep(0);
+  };
+
+  const handleEpc = (epc: string) => {
+    setRealEpCs((prev) => (prev.includes(epc) ? prev : [...prev, epc]));
+    setScannedCount((c) => Math.min(c + 1, totalItems));
+    toast.success(`Tag read · ${epc}`);
   };
 
   const handleImportPO = () => {
@@ -346,6 +355,7 @@ export function FaScanInPage() {
                   onClick={() => {
                     setStep(1);
                     setScannedCount(0);
+                    setRealEpCs([]);
                     toast.success("RFID tagging station ready");
                   }}
                 >
@@ -413,6 +423,9 @@ export function FaScanInPage() {
               </div>
             </div>
             <div className="ks-card-body">
+              <div className="mb-3">
+                <FaRfidReaderPanel onEpc={handleEpc} />
+              </div>
               <ScanPortal scanning={scanning} />
               <div className="flex flex-col items-center gap-3">
                 <div className="text-2xl font-bold">{scannedCount}<span className="text-muted-foreground"> / {totalItems}</span></div>
@@ -429,7 +442,7 @@ export function FaScanInPage() {
                   onClick={handleScan}
                 >
                   <Radio size={16} />
-                  {scanning ? "Writing EPC…" : "Scan & encode"}
+                  {scanning ? "Writing EPC…" : "Simulate scan"}
                 </button>
               </div>
               <div className="mt-4 border-t border-border pt-3">
