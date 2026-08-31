@@ -112,11 +112,10 @@ export function WoTab() {
                   onClick={() => setSelectedId(w.id)}
                 >
                   <TD>
-                    <span style={{ ...mono, fontSize: 12, fontWeight: 600 }}>{w.id}</span>
+                    <span style={{ fontSize: 12, fontWeight: 600 }}>{w.desc}</span>
                   </TD>
                   <TD>
                     <div style={{ fontSize: 12, fontWeight: 600 }}>{w.asset}</div>
-                    <div style={{ ...muted, fontSize: 11 }}>{w.asset_id}</div>
                   </TD>
                   <TD>
                     <span className="ks-badge outline">
@@ -141,7 +140,7 @@ export function WoTab() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">{wo.id}</div>
+              <div className="ks-card-title">{wo.desc}</div>
               <div className="ks-card-desc">{wo.asset}</div>
             </div>
             <span className={`ks-badge ${priorityBadge(wo.priority)}`}>{wo.priority}</span>
@@ -301,7 +300,6 @@ export function ScheduleTab() {
                   >
                     <TD>
                       <CatCell cat={a.cat} name={a.asset} />
-                      <div style={{ ...muted, fontSize: 11, marginTop: 2 }}>{a.id}</div>
                     </TD>
                     <TD>
                       <span
@@ -398,26 +396,24 @@ export function ScheduleTab() {
               <span className="ks-badge outline">{PM_SCHEDULE.length} upcoming</span>
             </div>
             <div className="ks-card-body" style={{ ...flexCol, gap: 10 }}>
-              {PM_SCHEDULE.map((p) => (
+              {PM_SCHEDULE.map((p, i) => (
                 <div
-                  key={p.id}
+                  key={`${p.asset_code}-${p.created_at}-${i}`}
                   style={{ border: "1px solid hsl(var(--border))", borderRadius: 8, display: "flex", gap: 10, padding: 10 }}
                 >
                   <div style={iconBox(32)}>
                     <Cog size={14} />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600 }}>{p.task}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600 }}>{p.desc}</div>
                     <div style={{ ...muted, marginTop: 2 }}>
-                      {p.asset} · {p.who}
+                      {p.asset} · {p.assigned_to}
                     </div>
                     <div style={{ ...flexRow, ...muted, fontSize: 11, gap: 10, marginTop: 4 }}>
-                      <span>{p.when}</span>
-                      <span>· {p.date}</span>
-                      <span>· ETA {p.eta}</span>
+                      <span>{p.created_at}</span>
                     </div>
                   </div>
-                  <span className={`ks-badge ${p.tone || "outline"}`}>{p.type}</span>
+                  <span className={`ks-badge ${p.status === "done" ? "success" : "warn"}`}>{p.status}</span>
                 </div>
               ))}
             </div>

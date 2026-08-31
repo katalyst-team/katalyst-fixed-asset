@@ -191,7 +191,7 @@ export function FaTransferPage() {
                       fontWeight: 600,
                     }}
                   >
-                    {t.id}
+                    {t.n}
                   </span>
                   {t.late && (
                     <span className="ks-badge danger">

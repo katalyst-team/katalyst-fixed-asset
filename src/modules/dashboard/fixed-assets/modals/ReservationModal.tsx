@@ -140,7 +140,7 @@ export function ReservationModal({ onClose, open }: ReservationModalProps) {
                     <SelectContent>
                       {assets.map((a) => (
                         <SelectItem key={a.id} value={a.id}>
-                          {a.name} · {a.id}
+                          {a.name} · {a.asset_code}
                         </SelectItem>
                       ))}
                     </SelectContent>

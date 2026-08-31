@@ -229,7 +229,6 @@ export function FaScanOutPage() {
                           <DIcon size={14} />
                           <div>
                             <div className="font-medium">{d.a}</div>
-                            <div className="text-xs text-muted-foreground">{d.id}</div>
                           </div>
                         </div>
                       </td>
@@ -263,7 +262,7 @@ export function FaScanOutPage() {
           <div className="ks-card-head">
             <div>
               <div className="ks-card-title">Disposal Detail</div>
-              <div className="ks-card-desc">{item.id} · approval workflow</div>
+              <div className="ks-card-desc">{item.a} · approval workflow</div>
             </div>
           </div>
           <div className="ks-card-body space-y-4">

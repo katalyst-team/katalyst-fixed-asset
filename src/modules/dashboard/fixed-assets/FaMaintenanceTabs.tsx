@@ -138,7 +138,7 @@ export function FlowTab() {
                     <div style={{ fontSize: 13, fontWeight: 600 }}>{a.name}</div>
                     <div style={{ ...muted, marginTop: 2 }}>{a.ai}</div>
                     <div style={{ ...muted, fontSize: 11, marginTop: 2 }}>
-                      {a.id} · last seen {a.lastSeenLabel}
+                      last seen {a.lastSeenLabel}
                     </div>
                   </div>
                   <span className={`ks-badge ${healthTone(a.status)}`}>{a.status}</span>
@@ -227,7 +227,7 @@ export function HealthTab() {
                 <TD>
                   <CatCell cat={h.cat} name={h.name} />
                   <div style={{ ...muted, fontSize: 11, marginTop: 2 }}>
-                    {h.id} · {h.loc}
+                    {h.loc}
                   </div>
                 </TD>
                 <TD style={mono}>{formatAge(h.ageDays)}</TD>

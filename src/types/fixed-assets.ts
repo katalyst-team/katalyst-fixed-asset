@@ -24,6 +24,7 @@ export type BadgeTone = "success" | "warn" | "danger" | "info" | "brand" | "outl
 
 export interface FaAsset {
   age: number;
+  asset_code: string;
   id: string;
   name: string;
   cat: AssetCategory;
@@ -83,11 +84,14 @@ export interface FaActivityItem {
 }
 
 export interface FaMaintenanceUpcoming {
-  d: string;
-  dt: string;
-  icon: string;
-  t: string;
-  tone: string;
+  asset: string;
+  asset_code: string;
+  assigned_to: string;
+  created_at: string;
+  desc: string;
+  priority: string;
+  status: string;
+  type: string;
 }
 
 export interface FaDisposalApprovalHistoryItem {
@@ -182,14 +186,12 @@ export interface FaPreUseAsset {
 
 export interface FaPmScheduleItem {
   asset: string;
-  date: string;
-  eta: string;
-  id: string;
-  task: string;
-  tone: string;
-  type: string;
-  when: string;
-  who: string;
+  asset_code: string;
+  assigned_to: string;
+  created_at: string;
+  desc: string;
+  priority: string;
+  status: string;
 }
 
 export interface FaPmRule {

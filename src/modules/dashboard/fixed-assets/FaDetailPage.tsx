@@ -176,7 +176,7 @@ export function FaDetailPage() {
             <span className={`ks-badge ${STATUS_TONE[asset.status]}`}>{STATUS_LABEL[asset.status]}</span>
           </div>
           <div className="flex items-center gap-3 font-mono text-xs text-muted-foreground">
-            <span>{asset.id}</span>
+            <span>{asset.asset_code}</span>
             <span>·</span>
             <span>{asset.epc}</span>
             <span>·</span>
@@ -335,7 +335,7 @@ export function FaDetailPage() {
                       <div className="flex-1">
                         <div className="text-sm">{wo.desc}</div>
                         <div className="font-mono text-xs text-muted-foreground">
-                          {wo.id} · {wo.assigned_to} · ETA {wo.eta}
+                          {wo.asset} · {wo.assigned_to} · ETA {wo.eta}
                         </div>
                       </div>
                       <span className={`ks-badge ${woBadge(wo.status)}`}>{wo.status}</span>

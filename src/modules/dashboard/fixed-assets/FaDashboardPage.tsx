@@ -307,7 +307,7 @@ export function FaDashboardPage() {
                   <Icon size={14} style={{ color: "hsl(var(--text-3))" }} />
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-sm">{a.name}</div>
-                    <div className="font-mono text-xs text-muted-foreground">{a.id}</div>
+                    <div className="font-mono text-xs text-muted-foreground">{a.asset_code}</div>
                   </div>
                   <span className="font-mono text-sm font-semibold">{formatIDRShort(a.val)}</span>
                 </div>
@@ -422,17 +422,22 @@ export function FaDashboardPage() {
           <div className="ks-card-body" style={{ padding: 0 }}>
             {maintenanceUpcoming.map((m, i) => (
               <div
-                key={i}
+                key={`${m.asset_code}-${m.created_at}`}
                 className="flex items-center gap-3"
                 style={{ borderBottom: rowBorder(i === maintenanceUpcoming.length - 1), padding: "10px 18px" }}
               >
-                <span className={`ks-badge ${m.tone || "outline"}`} style={{ flexShrink: 0 }}>
-                  <FaProtoIcon name={m.icon} />
+                <span
+                  className={`ks-badge ${
+                    m.priority === "critical" ? "danger" : m.priority === "high" ? "warn" : m.priority === "medium" ? "info" : "outline"
+                  }`}
+                  style={{ flexShrink: 0 }}
+                >
+                  {m.type}
                 </span>
-                <span className="flex-1 text-sm">{m.t}</span>
+                <span className="flex-1 text-sm">{m.desc}</span>
                 <div className="text-right">
-                  <div className="font-mono text-xs">{m.dt}</div>
-                  <div className="text-xs text-muted-foreground">{m.d}</div>
+                  <div className="font-mono text-xs">{m.created_at}</div>
+                  <div className="text-xs text-muted-foreground">{m.asset}</div>
                 </div>
               </div>
             ))}

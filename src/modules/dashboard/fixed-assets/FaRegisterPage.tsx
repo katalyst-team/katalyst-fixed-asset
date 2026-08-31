@@ -311,7 +311,7 @@ export function FaRegisterPage() {
                         <Icon size={16} style={{ color: "hsl(var(--text-3))", flexShrink: 0 }} />
                         <div>
                           <div className="font-medium">{a.name}</div>
-                          <div className="font-mono text-xs text-muted-foreground">{a.id}</div>
+                          <div className="font-mono text-xs text-muted-foreground">{a.asset_code}</div>
                         </div>
                       </div>
                     </td>

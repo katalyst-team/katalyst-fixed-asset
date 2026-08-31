@@ -270,7 +270,7 @@ export function FaScanInPage() {
                   onClick={() => setSelectedPo(i)}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-medium">{p.id}</span>
+                    <span className="font-medium">{p.supplier}</span>
                     <span className={`ks-badge ${p.status === "received" ? "success" : "warn"}`}>
                       {p.status}
                     </span>
@@ -291,7 +291,7 @@ export function FaScanInPage() {
           <div className="ks-card">
             <div className="ks-card-head">
               <div>
-                <div className="ks-card-title">{po.id} · Detail</div>
+                <div className="ks-card-title">{po.supplier} · Detail</div>
                 <div className="ks-card-desc">{po.supplier} · {po.date}</div>
               </div>
               <span className={`ks-badge ${po.status === "received" ? "success" : "warn"}`}>
@@ -356,7 +356,7 @@ export function FaScanInPage() {
             <div className="ks-card-head">
               <div>
                 <div className="ks-card-title">Item Info</div>
-                <div className="ks-card-desc">Tagging targets for {po.id}</div>
+                <div className="ks-card-desc">Tagging targets for {po.supplier}</div>
               </div>
             </div>
             <div className="ks-card-body space-y-3">
@@ -431,8 +431,7 @@ export function FaScanInPage() {
                     <div key={s.id} className="flex items-center justify-between rounded px-2 py-1.5 text-xs hover:bg-muted">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="text-[hsl(var(--success))]" size={13} />
-                        <span className="font-medium">{s.id}</span>
-                        <span className="text-muted-foreground">{s.name}</span>
+                        <span className="font-medium">{s.name}</span>
                       </div>
                       <span className="text-muted-foreground">RSSI {s.rssi}dBm · {s.t} ago</span>
                     </div>

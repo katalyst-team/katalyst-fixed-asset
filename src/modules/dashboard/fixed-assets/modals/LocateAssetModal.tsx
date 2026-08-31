@@ -93,7 +93,7 @@ export function LocateAssetModal({ onClose, open }: LocateAssetModalProps) {
                     {a.name}
                   </div>
                   <div className="truncate text-xs text-muted-foreground">
-                    {a.id} · {a.loc} · last ping 2m
+                    {a.loc}
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">

@@ -131,7 +131,7 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
                     <SelectContent>
                       {eligible.map((a) => (
                         <SelectItem key={a.id} value={a.id}>
-                          {a.name} · {a.id}
+                          {a.name} · {a.asset_code}
                         </SelectItem>
                       ))}
                     </SelectContent>

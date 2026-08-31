@@ -256,11 +256,11 @@ function RfidPanel({ onChange, organizationId, rfidHardware }: {
         <div className="ks-card-head"><span className="ks-card-title">Readers · {readers.length}</span></div>
         <div style={{ overflowX: "auto" }}>
         <table className="w-full text-sm">
-          <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">ID</th><th className="p-3 text-left font-medium text-muted-foreground">Location</th><th className="p-3 text-left font-medium text-muted-foreground">Model</th><th className="p-3 text-left font-medium text-muted-foreground">IP</th><th className="p-3 text-left font-medium text-muted-foreground">Status</th></tr></thead>
+          <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">Name</th><th className="p-3 text-left font-medium text-muted-foreground">Location</th><th className="p-3 text-left font-medium text-muted-foreground">Model</th><th className="p-3 text-left font-medium text-muted-foreground">IP</th><th className="p-3 text-left font-medium text-muted-foreground">Status</th></tr></thead>
           <tbody>
             {readers.map((r) => (
               <tr key={r.id}>
-                <td className="border-t border-border p-3" style={{ fontFamily: "ui-monospace, monospace" }}>{r.id}</td>
+                <td className="border-t border-border p-3 font-medium">{r.name}</td>
                 <td className="border-t border-border p-3">{r.location}</td>
                 <td className="border-t border-border p-3">{r.model}</td>
                 <td className="border-t border-border p-3" style={{ fontFamily: "ui-monospace, monospace" }}>{r.ip || "—"}</td>
@@ -344,11 +344,10 @@ function BillingPanel({ organizationId }: { organizationId: string }) {
         <div className="ks-card-head"><span className="ks-card-title">Invoice History</span></div>
         <div style={{ overflowX: "auto" }}>
         <table className="w-full text-sm">
-          <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">Invoice</th><th className="p-3 text-left font-medium text-muted-foreground">Date</th><th className="p-3 text-left font-medium text-muted-foreground">Amount</th><th className="p-3 text-left font-medium text-muted-foreground">Status</th></tr></thead>
+          <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">Invoice</th><th className="p-3 text-left font-medium text-muted-foreground">Amount</th><th className="p-3 text-left font-medium text-muted-foreground">Status</th></tr></thead>
           <tbody>
             {invoices.map((inv) => (
               <tr key={inv.id}>
-                <td className="border-t border-border p-3" style={{ fontFamily: "ui-monospace, monospace" }}>{inv.id}</td>
                 <td className="border-t border-border p-3">{inv.date}</td>
                 <td className="border-t border-border p-3">{inv.amount}</td>
                 <td className="border-t border-border p-3"><span className={`ks-badge ${inv.status === "paid" ? "success" : inv.status === "pending" ? "warn" : "danger"}`}>{inv.status.charAt(0).toUpperCase() + inv.status.slice(1)}</span></td>

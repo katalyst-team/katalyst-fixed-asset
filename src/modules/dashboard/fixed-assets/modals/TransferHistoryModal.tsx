@@ -54,9 +54,6 @@ export function TransferHistoryModal({
                 >
                   <td className="py-3 pr-3">
                     <div className="font-medium text-foreground">{row.asset_name}</div>
-                    <div className="font-mono text-xs text-muted-foreground">
-                      {row.id}
-                    </div>
                   </td>
                   <td className="px-3 py-3 text-muted-foreground">
                     <span className="inline-flex items-center gap-1.5">

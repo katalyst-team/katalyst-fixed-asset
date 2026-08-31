@@ -131,7 +131,7 @@ export function EditAssetModal({ asset, onClose, open }: EditAssetModalProps) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit asset · {asset.id}</DialogTitle>
+          <DialogTitle>Edit asset · {asset.asset_code}</DialogTitle>
           <DialogDescription>
             Changes are versioned in the audit log
           </DialogDescription>
