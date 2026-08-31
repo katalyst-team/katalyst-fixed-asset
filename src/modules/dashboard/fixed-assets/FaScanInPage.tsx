@@ -27,6 +27,11 @@ import {
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
 import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
+import {
+  useFaCostCenterOptions,
+  useFaLocationOptions,
+  useFaPeopleOptions,
+} from "@/modules/dashboard/fixed-assets/modals";
 import type { DeployScanInRequest } from "@/types/fixed-assets";
 
 interface PoLineItem {
@@ -143,11 +148,14 @@ export function FaScanInPage() {
   const [selectedPo, setSelectedPo] = useState(0);
   const [scannedCount, setScannedCount] = useState(0);
   const [scanning, setScanning] = useState(false);
-  const [custodian, setCustodian] = useState("Dewi Anggraini");
-  const [loc, setLoc] = useState("JKT-HQ · Floor 8");
-  const [costCenter, setCostCenter] = useState("CC-8100 · Engineering");
+  const [custodian, setCustodian] = useState("");
+  const [loc, setLoc] = useState("");
+  const [costCenter, setCostCenter] = useState("");
   const [qcPassed, setQcPassed] = useState(true);
   const poFileRef = useRef<HTMLInputElement>(null);
+  const custodianOptions = useFaPeopleOptions();
+  const locationOptions = useFaLocationOptions();
+  const ccOptions = useFaCostCenterOptions();
 
   const selectedPO = apiPOs[selectedPo];
   const PO_LINES: PoLineItem[] = (selectedPO?.lines ?? []).map((l) => ({
@@ -455,12 +463,18 @@ export function FaScanInPage() {
             <div className="ks-card-body space-y-3">
               <div>
                 <label className="mb-1 block text-xs font-medium text-muted-foreground">Custodian</label>
-                <input
+                <select
                   className="w-full rounded-lg border border-border bg-transparent px-3 py-2 text-sm outline-none focus:border-[hsl(var(--brand))]"
-                  placeholder="Search employee"
                   value={custodian}
                   onChange={(e) => setCustodian(e.target.value)}
-                />
+                >
+                  <option value="">Select custodian</option>
+                  {custodianOptions.map((c) => (
+                    <option key={c.value} value={c.value}>
+                      {c.label}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="mb-1 block text-xs font-medium text-muted-foreground">Location</label>
@@ -469,10 +483,12 @@ export function FaScanInPage() {
                   value={loc}
                   onChange={(e) => setLoc(e.target.value)}
                 >
-                  <option>JKT-HQ · Floor 8</option>
-                  <option>JKT-HQ · Floor 12</option>
-                  <option>BDG-Office</option>
-                  <option>JKT-Workshop</option>
+                  <option value="">Select location</option>
+                  {locationOptions.map((l) => (
+                    <option key={l.value} value={l.value}>
+                      {l.label}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
@@ -482,9 +498,12 @@ export function FaScanInPage() {
                   value={costCenter}
                   onChange={(e) => setCostCenter(e.target.value)}
                 >
-                  <option>CC-8100 · Engineering</option>
-                  <option>CC-8200 · Operations</option>
-                  <option>CC-8300 · Facilities</option>
+                  <option value="">Select cost center</option>
+                  {ccOptions.map((c) => (
+                    <option key={c.value} value={c.value}>
+                      {c.label}
+                    </option>
+                  ))}
                 </select>
               </div>
               <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-border p-3 text-sm">
@@ -538,6 +557,7 @@ export function FaScanInPage() {
               </div>
               <button
                 className="ks-btn ks-btn-primary w-full"
+                disabled={!custodian || !loc || scannedCount === 0}
                 type="button"
                 onClick={handleDeploy}
               >

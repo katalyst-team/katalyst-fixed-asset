@@ -57,3 +57,17 @@ export function useFaLocationOptions() {
     .filter((l): l is NonNullable<typeof l> => l !== null && l !== undefined)
     .map((l) => ({ label: l.name, value: l.id }));
 }
+
+export function useFaCostCenterOptions() {
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { data: ccResp } = useGetFAMasterDataQuery({
+    organizationId,
+    tab: "cc",
+  });
+  const costCenters =
+    ccResp?.data?.master_data_sections?.flatMap((s) => s?.rows ?? []) ?? [];
+  return costCenters
+    .filter((c): c is NonNullable<typeof c> => c !== null && c !== undefined)
+    .map((c) => ({ label: c.name, value: c.id }));
+}

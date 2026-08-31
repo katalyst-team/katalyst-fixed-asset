@@ -5,4 +5,4 @@ export type {
   FaModalPayload,
   FaModalType,
 } from "./types";
-export { useFaLocationOptions, useFaPeopleOptions } from "./types";
+export { useFaCostCenterOptions, useFaLocationOptions, useFaPeopleOptions } from "./types";
