@@ -20,6 +20,8 @@ import {
   useGetFADashboardQuery,
 } from "@/hooks/api/fixed-assets";
 import {
+  activityIcon,
+  activityTone,
   avatarColor,
   catToLucide,
   FaKpiStrip,
@@ -27,6 +29,7 @@ import {
   FaProtoIcon,
   FaShellHead,
   FaStat,
+  formatActivityTime,
   formatIDRShort,
   initials,
 } from "@/modules/dashboard/fixed-assets";
@@ -219,13 +222,13 @@ export function FaDashboardPage() {
                 className="flex items-center gap-3"
                 style={{ borderBottom: rowBorder(i === activity.length - 1), padding: "10px 18px" }}
               >
-                <span className={`ks-badge ${it.ic}`} style={{ flexShrink: 0 }}>
-                  <FaProtoIcon name={it.icon} />
+                <span className={`ks-badge ${activityTone(it.action_type)}`} style={{ flexShrink: 0 }}>
+                  <FaProtoIcon name={activityIcon(it.action_type)} />
                 </span>
                 <span className="flex-1 text-sm" style={{ color: "hsl(var(--text))" }}>
-                  {it.txt}
+                  {it.description}
                 </span>
-                <span className="text-xs text-muted-foreground">{it.t}</span>
+                <span className="text-xs text-muted-foreground">{formatActivityTime(it.created_at)}</span>
               </div>
             ))}
           </div>

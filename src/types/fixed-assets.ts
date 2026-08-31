@@ -75,12 +75,10 @@ export interface FaRfidRead {
 }
 
 export interface FaActivityItem {
-  go?: string;
-  icon: string;
-  ic: string;
-  id?: string;
-  t: string;
-  txt: string;
+  action_type: string;
+  created_at: string;
+  description: string;
+  id: string;
 }
 
 export interface FaMaintenanceUpcoming {

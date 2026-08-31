@@ -108,3 +108,46 @@ const PROTO_ICON_MAP: Record<string, LucideIcon> = {
 
 export const protoIcon = (name: string): LucideIcon =>
   PROTO_ICON_MAP[name] ?? Package;
+
+const ACT_ICON: Record<string, string> = {
+  audit_scan_batch: "audit",
+  checkout: "arrout",
+  create: "plus",
+  deploy: "check",
+  depreciation: "dollar",
+  disposal_complete: "cross",
+  disposal_create: "cross",
+  transfer: "truck",
+  update: "refresh",
+  work_order_create: "wrench",
+};
+
+const ACT_TONE: Record<string, string> = {
+  audit_scan_batch: "info",
+  checkout: "brand",
+  create: "success",
+  deploy: "success",
+  depreciation: "info",
+  disposal_complete: "danger",
+  disposal_create: "warn",
+  transfer: "brand",
+  update: "info",
+  work_order_create: "warn",
+};
+
+export const activityIcon = (actionType: string): string =>
+  ACT_ICON[actionType] ?? "box";
+
+export const activityTone = (actionType: string): string =>
+  ACT_TONE[actionType] ?? "outline";
+
+export const formatActivityTime = (iso: string): string => {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleString(undefined, {
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    month: "short",
+  });
+};

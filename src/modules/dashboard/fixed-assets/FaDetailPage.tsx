@@ -12,9 +12,12 @@ import {
   useUpdateAssetMutation,
 } from "@/hooks/api/fixed-assets";
 import {
+  activityIcon,
+  activityTone,
   catToLucide,
   FaMeter,
   FaProtoIcon,
+  formatActivityTime,
   formatAge,
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
@@ -296,11 +299,11 @@ export function FaDetailPage() {
                     className="flex items-center gap-3"
                     style={{ borderBottom: "1px solid hsl(var(--border))", padding: "8px 0" }}
                   >
-                    <span className={`ks-badge ${it.ic}`} style={{ flexShrink: 0 }}>
-                      <FaProtoIcon name={it.icon} />
+                    <span className={`ks-badge ${activityTone(it.action_type)}`} style={{ flexShrink: 0 }}>
+                      <FaProtoIcon name={activityIcon(it.action_type)} />
                     </span>
-                    <span className="flex-1 text-sm">{it.txt}</span>
-                    <span className="text-xs text-muted-foreground">{it.t}</span>
+                    <span className="flex-1 text-sm">{it.description}</span>
+                    <span className="text-xs text-muted-foreground">{formatActivityTime(it.created_at)}</span>
                   </div>
                 ))}
               </div>
