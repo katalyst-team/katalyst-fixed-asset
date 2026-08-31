@@ -6,6 +6,7 @@ import {
   ArrowRight,
   CheckCircle2,
   Download,
+  Keyboard,
   Radio,
   Upload,
 } from "lucide-react";
@@ -19,6 +20,7 @@ import {
   useGetScanInHistoryQuery,
   useImportPOMutation,
 } from "@/hooks/api/fixed-assets";
+import { useBypassHardware } from "@/hooks/useBypassHardware";
 import {
   catToLucide,
   catToneClass,
@@ -154,10 +156,12 @@ export function FaScanInPage() {
   const [loc, setLoc] = useState("");
   const [costCenter, setCostCenter] = useState("");
   const [qcPassed, setQcPassed] = useState(true);
+  const [manualEpc, setManualEpc] = useState("");
   const poFileRef = useRef<HTMLInputElement>(null);
   const custodianOptions = useFaPeopleOptions();
   const locationOptions = useFaLocationOptions();
   const ccOptions = useFaCostCenterOptions();
+  const { isBypassEnabled } = useBypassHardware();
 
   const selectedPO = apiPOs[selectedPo];
   const PO_LINES: PoLineItem[] = (selectedPO?.lines ?? []).map((l) => ({
@@ -208,6 +212,20 @@ export function FaScanInPage() {
     setRealEpCs((prev) => (prev.includes(epc) ? prev : [...prev, epc]));
     setScannedCount((c) => Math.min(c + 1, totalItems));
     toast.success(`Tag read · ${epc}`);
+  };
+
+  const handleManualEpc = () => {
+    const value = manualEpc.trim().toUpperCase();
+    if (!/^[0-9A-F]{24}$/.test(value)) {
+      toast.error("EPC must be 24 hex characters");
+      return;
+    }
+    if (realEpCs.includes(value)) {
+      toast.error("EPC already scanned");
+      return;
+    }
+    handleEpc(value);
+    setManualEpc("");
   };
 
   const handleImportPO = () => {
@@ -424,7 +442,38 @@ export function FaScanInPage() {
             </div>
             <div className="ks-card-body">
               <div className="mb-3">
-                <FaRfidReaderPanel onEpc={handleEpc} />
+                {isBypassEnabled ? (
+                  <div className="rounded-lg border border-border p-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 text-sm font-medium">
+                        <Keyboard size={14} />
+                        Manual EPC entry
+                      </div>
+                      <span className="ks-badge warn">Hardware bypassed</span>
+                    </div>
+                    <div className="mt-2 flex items-center gap-2">
+                      <input
+                        className="min-w-0 flex-1 rounded-lg border border-border bg-transparent px-3 py-1.5 font-mono text-xs uppercase outline-none focus:border-[hsl(var(--brand))]"
+                        placeholder="Enter 24-hex EPC"
+                        value={manualEpc}
+                        onChange={(e) => setManualEpc(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleManualEpc();
+                        }}
+                      />
+                      <button
+                        className="ks-btn ks-btn-primary ks-btn-sm"
+                        disabled={!manualEpc.trim()}
+                        type="button"
+                        onClick={handleManualEpc}
+                      >
+                        Add tag
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <FaRfidReaderPanel onEpc={handleEpc} />
+                )}
               </div>
               <ScanPortal scanning={scanning} />
               <div className="flex flex-col items-center gap-3">
@@ -435,15 +484,22 @@ export function FaScanInPage() {
                     style={{ transition: "width .3s", width: `${pct}%` }}
                   />
                 </div>
-                <button
-                  className="ks-btn ks-btn-primary"
-                  disabled={scanning || scannedCount >= totalItems}
-                  type="button"
-                  onClick={handleScan}
-                >
-                  <Radio size={16} />
-                  {scanning ? "Writing EPC…" : "Simulate scan"}
-                </button>
+                {isBypassEnabled && (
+                  <button
+                    className="ks-btn ks-btn-primary"
+                    disabled={scanning || scannedCount >= totalItems}
+                    type="button"
+                    onClick={handleScan}
+                  >
+                    <Radio size={16} />
+                    {scanning ? "Writing EPC…" : "Simulate scan"}
+                  </button>
+                )}
+                {!isBypassEnabled && (
+                  <p className="text-xs text-muted-foreground">
+                    Waiting for tag reads from the connected reader…
+                  </p>
+                )}
               </div>
               <div className="mt-4 border-t border-border pt-3">
                 <p className="mb-2 text-xs font-medium text-muted-foreground">Recently scanned</p>
