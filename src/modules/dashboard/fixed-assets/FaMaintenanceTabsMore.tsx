@@ -63,7 +63,21 @@ export function WoTab() {
     if (filter === "Predictive") return w.type === "predictive";
     return true;
   });
-  const wo = WORK_ORDERS.find((w) => w.id === selectedId) ?? WORK_ORDERS[0];  const src = SOURCE_MAP[wo.type] ?? SOURCE_MAP.corrective;
+  if (WORK_ORDERS.length === 0) {
+    return (
+      <FaQueryState
+        emptyDescription="No work orders in the queue."
+        emptyTitle="No work orders"
+        isEmpty
+        isError={isError}
+        isLoading={isLoading}
+      >
+        {null}
+      </FaQueryState>
+    );
+  }
+  const wo = WORK_ORDERS.find((w) => w.id === selectedId) ?? WORK_ORDERS[0];
+  const src = SOURCE_MAP[wo.type] ?? SOURCE_MAP.corrective;
   const SrcIcon = src.icon;
   const srcDesc =
     wo.type === "predictive"
