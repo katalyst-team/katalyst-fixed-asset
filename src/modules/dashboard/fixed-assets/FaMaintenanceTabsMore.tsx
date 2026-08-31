@@ -66,9 +66,9 @@ export function WoTab() {
   if (WORK_ORDERS.length === 0) {
     return (
       <FaQueryState
+        isEmpty
         emptyDescription="No work orders in the queue."
         emptyTitle="No work orders"
-        isEmpty
         isError={isError}
         isLoading={isLoading}
       >
@@ -263,9 +263,9 @@ export function ScheduleTab() {
   if (view === "preuse" && !asset) {
     return (
       <FaQueryState
+        isEmpty
         emptyDescription="No assets require pre-use inspection."
         emptyTitle="No inspections due"
-        isEmpty
         isError={isError}
         isLoading={isLoading}
       >
