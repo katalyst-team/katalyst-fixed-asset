@@ -123,7 +123,7 @@ export function FaDetailPage() {
     }
   }, [docResp]);
 
-  const asset: FaAssetDetail | undefined = resp?.data?.asset ?? undefined;
+  const asset: FaAssetDetail | undefined = resp?.data ?? undefined;
 
   if (isLoading) {
     return <Loading />;

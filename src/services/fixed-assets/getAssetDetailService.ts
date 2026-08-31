@@ -2,7 +2,7 @@ import type { FaAssetDetail } from "@/types/fixed-assets";
 
 import fetcher, { ApiResponse } from "..";
 
-export type GetAssetDetailResponse = ApiResponse<{ asset: FaAssetDetail | null }>;
+export type GetAssetDetailResponse = ApiResponse<FaAssetDetail | null>;
 
 interface GetAssetDetailParams {
   assetId: string;
