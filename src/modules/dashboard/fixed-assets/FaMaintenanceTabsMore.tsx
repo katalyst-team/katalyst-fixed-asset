@@ -259,6 +259,20 @@ export function ScheduleTab() {
   const [view, setView] = useState<"preuse" | "pm">("preuse");
   const [selAsset, setSelAsset] = useState("");
   const asset = PRE_USE_ASSETS.find((a) => a.id === selAsset) ?? PRE_USE_ASSETS[0];
+
+  if (view === "preuse" && !asset) {
+    return (
+      <FaQueryState
+        emptyDescription="No assets require pre-use inspection."
+        emptyTitle="No inspections due"
+        isEmpty
+        isError={isError}
+        isLoading={isLoading}
+      >
+        {null}
+      </FaQueryState>
+    );
+  }
   return (
     <div>
       <div className="ks-seg" style={{ marginBottom: 16 }}>
