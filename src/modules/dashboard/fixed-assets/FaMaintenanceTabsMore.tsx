@@ -241,7 +241,7 @@ export function ScheduleTab() {
     organizationId,
   });
   const PRE_USE_ASSETS = resp?.data?.pre_use_assets ?? [];
-  const PM_SCHEDULE = resp?.data?.pmSchedule ?? [];
+  const PM_SCHEDULE = resp?.data?.pm_schedule ?? [];
   const PM_RULES = resp?.data?.pm_rules ?? [];
   const [view, setView] = useState<"preuse" | "pm">("preuse");
   const [selAsset, setSelAsset] = useState("");

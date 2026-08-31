@@ -64,7 +64,7 @@ export function FaSecurityPage() {
   const alerts = alertResp?.data?.alerts ?? [];
   const summary = alertResp?.data?.summary;
   const totalAlerts = summary?.total ?? alerts.length;
-  const assets = assetResp?.data?.assets ?? [];
+  const assets = assetResp?.data ?? [];
   const cameras = camerasResp?.data?.cameras ?? [];
   const ASSET_BY_ID = new Map(assets.map((a) => [a.id, a]));
   const CAMERA_BY_NAME = new Map(cameras.map((c) => [c.name, c]));

@@ -63,7 +63,7 @@ export function TransferModal({ onClose, open }: TransferModalProps) {
   });
   const locationOptions = useFaLocationOptions();
   const peopleOptions = useFaPeopleOptions();
-  const assets = resp?.data?.assets ?? [];
+  const assets = resp?.data ?? [];
 
   const form = useForm<FormValues>({
     defaultValues: {

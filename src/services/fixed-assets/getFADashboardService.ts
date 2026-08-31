@@ -15,10 +15,11 @@ export type GetFADashboardResponse = ApiResponse<{
   audit_progress_pct: number;
   category_stats: FaCategoryStat[];
   financial_categories: FaFinancialCategory[];
-  maintenanceUpcoming: FaMaintenanceUpcoming[];
+  maintenance_upcoming: FaMaintenanceUpcoming[];
   net_book_value: number;
-  rfidReads: FaRfidRead[];
+  rfid_reads: FaRfidRead[];
   sites: FaSite[];
+  total_acquisition: number;
   total_assets: number;
   utilization_pct: number;
 }>;

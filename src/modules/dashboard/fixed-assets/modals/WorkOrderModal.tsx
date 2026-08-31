@@ -61,7 +61,7 @@ export function WorkOrderModal({ onClose, open }: WorkOrderModalProps) {
   const { mutateAsync: createWO } = useCreateWorkOrderMutation({
     organizationId,
   });
-  const assets = resp?.data?.assets ?? [];
+  const assets = resp?.data ?? [];
   const [assetId, setAssetId] = useState<string>("");
   const [assignedTo, setAssignedTo] = useState<string>(ASSIGN_OPTIONS[0]);
   const [issue, setIssue] = useState<string>("");

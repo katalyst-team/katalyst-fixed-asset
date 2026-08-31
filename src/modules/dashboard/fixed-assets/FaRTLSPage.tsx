@@ -86,7 +86,7 @@ export function FaRTLSPage() {
   const floorPlan = fpResp?.data;
   const rooms = floorPlan?.rooms ?? [];
   const savedQueries = savedQueriesResp?.data?.queries ?? [];
-  const assets = assetResp?.data?.assets ?? [];
+  const assets = assetResp?.data ?? [];
   const assetById = new Map(assets.map((a) => [a.id, a]));
   const vbW = floorPlan?.width ?? 600;
   const vbH = floorPlan?.height ?? 360;

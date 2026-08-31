@@ -13,7 +13,7 @@ import fetcher, { ApiResponse } from "..";
 export type GetMaintenanceResponse = ApiResponse<{
   health_data: FaHealthItem[];
   pm_rules: FaPmRule[];
-  pmSchedule: FaPmScheduleItem[];
+  pm_schedule: FaPmScheduleItem[];
   pre_use_assets: FaPreUseAsset[];
   summary?: FaMaintenanceSummary;
   work_orders: FaWorkOrder[];

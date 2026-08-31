@@ -61,9 +61,9 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
   });
   const peopleOptions = useFaPeopleOptions();
   const eligible =
-    resp?.data?.assets?.filter(
+    (resp?.data ?? []).filter(
       (a) => a.status === "deployed" || a.status === "idle",
-    ) ?? [];
+    );
 
   const form = useForm<FormValues>({
     defaultValues: {

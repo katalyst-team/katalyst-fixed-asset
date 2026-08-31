@@ -18,6 +18,7 @@ import { useUser } from "@/context/user-context";
 import {
   useGetBastDocumentsQuery,
   useGetDepreciationScheduleQuery,
+  useGetFADashboardQuery,
   useGetInsurancePoliciesQuery,
   useGetJournalEntriesQuery,
   usePostJournalEntryMutation,
@@ -126,7 +127,7 @@ function DepreciationTab({ organizationId }: { organizationId: string }) {
 
 function JournalTab({ organizationId }: { organizationId: string }) {
   const { data: resp, isError, isLoading } = useGetJournalEntriesQuery({ organizationId });
-  const entries = resp?.data?.entries ?? [];
+  const entries = resp?.data?.journal_entries ?? [];
   const { isPending: isPosting, mutateAsync: postJournalEntry } = usePostJournalEntryMutation({ organizationId });
 
   const handlePost = async (journalEntryId: string) => {
@@ -281,8 +282,14 @@ export function FaFinancePage() {
   const organizationId = tokenPayload?.organization_id ?? "";
   const [tab, setTab] = useState<Tab>("depreciation");
 
-  const { data: journalResp } = useGetJournalEntriesQuery({ enabled: tab === "journal", organizationId });
-  const summary = journalResp?.data?.summary;
+  const { data: dashResp } = useGetFADashboardQuery({ organizationId });
+  const { data: draftResp } = useGetJournalEntriesQuery({
+    limit: 1,
+    organizationId,
+    status: "draft",
+  });
+  const summary = dashResp?.data;
+  const pendingPostings = draftResp?.data?.total;
 
   return (
     <div>
@@ -292,10 +299,10 @@ export function FaFinancePage() {
       />
 
       <FaKpiStrip>
-        <FaStat label="Total Acquisition" tone="brand" value={summary ? formatIDRShort(summary.totalAcquisitionValue) : "—"} />
-        <FaStat label="Net Book Value" tone="success" value={summary ? formatIDRShort(summary.netBookValue) : "—"} />
-        <FaStat label="Pending Postings" sub="journal entries" tone={summary && summary.pendingPostings > 0 ? "warn" : "success"} value={String(summary?.pendingPostings ?? 0)} />
-        <FaStat label="GL Status" tone={summary?.glIntegrationStatus === "connected" ? "success" : "danger"} value={summary?.glIntegrationStatus ?? "—"} />
+        <FaStat label="Total Acquisition" tone="brand" value={summary ? formatIDRShort(summary.total_acquisition) : "—"} />
+        <FaStat label="Net Book Value" tone="success" value={summary ? formatIDRShort(summary.net_book_value) : "—"} />
+        <FaStat label="Pending Postings" sub="journal entries" tone={pendingPostings && pendingPostings > 0 ? "warn" : "success"} value={String(pendingPostings ?? 0)} />
+        <FaStat label="GL Status" tone="info" value="—" />
       </FaKpiStrip>
 
       <div className="ks-seg" style={{ marginBottom: 16 }}>

@@ -88,7 +88,7 @@ export function FaRegisterPage() {
   const { mutateAsync: bulkCreateAsset } = useBulkCreateAssetMutation({ organizationId });
   const { mutateAsync: bulkUpdateAsset } = useBulkUpdateAssetMutation({ organizationId });
   const { isPending: isExporting, mutateAsync: exportData } = useExportDataMutation({ organizationId });
-  const assets = useMemo(() => resp?.data?.assets ?? [], [resp]);
+  const assets = useMemo(() => resp?.data ?? [], [resp]);
 
   const filtered = useMemo(() => {
     return assets.filter((a) => {

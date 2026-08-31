@@ -2,7 +2,7 @@ import type { FaAsset, FaAssetFilterOptions } from "@/types/fixed-assets";
 
 import fetcher, { ApiResponse } from "..";
 
-export type GetAssetRegisterResponse = ApiResponse<{ assets: FaAsset[] }>;
+export type GetAssetRegisterResponse = ApiResponse<FaAsset[]>;
 
 interface GetAssetRegisterParams extends FaAssetFilterOptions {
   organizationId: string;

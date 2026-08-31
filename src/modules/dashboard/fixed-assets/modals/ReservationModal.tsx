@@ -69,7 +69,7 @@ export function ReservationModal({ onClose, open }: ReservationModalProps) {
   const { mutateAsync: createReservation, isPending } =
     useCreateReservationMutation({ organizationId });
   const peopleOptions = useFaPeopleOptions();
-  const assets = resp?.data?.assets ?? [];
+  const assets = resp?.data ?? [];
   const reserveByOptions = useMemo(() => {
     const extraOptions = [
       { label: "Facilities", value: "Facilities" },

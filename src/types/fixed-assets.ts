@@ -65,12 +65,12 @@ export interface FaFinancialCategory {
 }
 
 export interface FaRfidRead {
-  a: string;
-  dir: "in" | "out";
-  g: string;
-  rssi: number;
-  t: string;
-  who: string;
+  asset: string;
+  custodian: string;
+  epc: string;
+  last_read_at: string;
+  reader_id?: string | null;
+  rssi?: number | null;
 }
 
 export interface FaActivityItem {

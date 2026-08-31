@@ -81,7 +81,7 @@ export function DisposalRequestModal({
   const { mutateAsync: createDisposal } = useCreateDisposalMutation({
     organizationId,
   });
-  const assets = resp?.data?.assets ?? [];
+  const assets = resp?.data ?? [];
 
   const form = useForm<FormValues>({
     defaultValues: {

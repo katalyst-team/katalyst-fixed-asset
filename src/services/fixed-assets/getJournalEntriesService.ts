@@ -1,10 +1,10 @@
-import type { FaFinanceSummary, FaJournalEntry } from "@/types/fixed-assets";
+import type { FaJournalEntry } from "@/types/fixed-assets";
 
 import fetcher, { ApiResponse } from "..";
 
 export type GetJournalEntriesResponse = ApiResponse<{
-  entries: FaJournalEntry[];
-  summary: FaFinanceSummary;
+  journal_entries: FaJournalEntry[];
+  total: number;
 }>;
 
 interface GetJournalEntriesParams {

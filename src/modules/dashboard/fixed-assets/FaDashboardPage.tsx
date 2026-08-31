@@ -84,11 +84,11 @@ export function FaDashboardPage() {
   const activity = d?.activity ?? [];
   const category_stats = d?.category_stats ?? [];
   const financialCategories = d?.financial_categories ?? [];
-  const maintenanceUpcoming = d?.maintenanceUpcoming ?? [];
-  const rfidReads = d?.rfidReads ?? [];
+  const maintenanceUpcoming = d?.maintenance_upcoming ?? [];
+  const rfidReads = d?.rfid_reads ?? [];
   const sites = d?.sites ?? [];
 
-  const allAssets = assetResp?.data?.assets ?? [];
+  const allAssets = assetResp?.data ?? [];
   const totalAssets = d?.total_assets ?? 0;
   const capitalValue = d?.net_book_value ?? 0;
   const topValue = allAssets
@@ -357,29 +357,29 @@ export function FaDashboardPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Live RFID gate reads</div>
-              <div className="ks-card-desc">Real-time custody events</div>
+              <div className="ks-card-title">Recent RFID reads</div>
+              <div className="ks-card-desc">Latest tag reads across readers</div>
             </div>
           </div>
           <div className="ks-card-body" style={{ padding: 0 }}>
             {rfidReads.map((r, i) => (
               <div
-                key={i}
+                key={r.epc}
                 className="flex items-center gap-3"
                 style={{ borderBottom: rowBorder(i === rfidReads.length - 1), padding: "10px 18px" }}
               >
-                <span className={`ks-badge ${r.dir === "in" ? "success" : "warn"}`} style={{ flexShrink: 0 }}>
-                  {r.dir === "in" ? "IN" : "OUT"}
-                </span>
-                <span className="flex-1 font-mono text-sm">{r.a}</span>
-                <span className="text-xs text-muted-foreground">{r.g}</span>
+                <span className="flex-1 text-sm">{r.asset}</span>
+                <span className="font-mono text-xs text-muted-foreground">{r.epc}</span>
+                <span className="text-xs text-muted-foreground">{r.reader_id ?? "—"}</span>
                 <span
                   className="flex items-center justify-center text-xs font-semibold text-white"
                   style={{ background: avatarColor(i), borderRadius: "50%", height: 24, width: 24 }}
                 >
-                  {initials(r.who)}
+                  {initials(r.custodian)}
                 </span>
-                <span className="font-mono text-xs text-muted-foreground">{r.t}</span>
+                <span className="font-mono text-xs text-muted-foreground">
+                  {new Date(r.last_read_at).toLocaleString()}
+                </span>
               </div>
             ))}
           </div>

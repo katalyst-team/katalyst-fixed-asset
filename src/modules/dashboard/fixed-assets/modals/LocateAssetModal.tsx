@@ -29,7 +29,7 @@ export function LocateAssetModal({ onClose, open }: LocateAssetModalProps) {
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp } = useGetAssetRegisterQuery({ organizationId });
-  const allAssets = useMemo(() => resp?.data?.assets ?? [], [resp]);
+  const allAssets = useMemo(() => resp?.data ?? [], [resp]);
   const [query, setQuery] = useState<string>("");
 
   const results = useMemo<FaAsset[]>(() => {
