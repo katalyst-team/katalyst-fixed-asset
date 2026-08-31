@@ -75,7 +75,7 @@ export function FaRfidTagsPage() {
     useExportDataMutation({ organizationId });
 
   const handleEncode = async (tag: FaRfidTag) => {
-    await encodeTag({ asset_id: tag.assetId, tag_type: tag.format });
+    await encodeTag({ asset_id: tag.asset_id, tag_type: tag.format });
   };
 
   const handlePrintQueue = async () => {
@@ -203,7 +203,7 @@ export function FaRfidTagsPage() {
                   <td className="border-t border-border p-3">
                     <div className="font-medium">{tag.asset}</div>
                     <div className="text-xs text-muted-foreground">
-                      {tag.assetId}
+                      {tag.asset_id}
                     </div>
                   </td>
                   <td className="border-t border-border p-3 text-muted-foreground">
@@ -213,7 +213,7 @@ export function FaRfidTagsPage() {
                     {tag.tid}
                   </td>
                   <td className="border-t border-border p-3 text-muted-foreground">
-                    {tag.lastRead}
+                    {tag.last_read}
                   </td>
                   <td className="border-t border-border p-3">
                     {tag.rssi === 0 ? (
@@ -250,7 +250,7 @@ export function FaRfidTagsPage() {
                       <button
                         className="ks-btn ks-btn-ghost ks-btn-sm"
                         disabled={
-                          isEncoding && encodingVars?.asset_id === tag.assetId
+                          isEncoding && encodingVars?.asset_id === tag.asset_id
                         }
                         type="button"
                         onClick={() => handleEncode(tag)}

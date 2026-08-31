@@ -230,12 +230,12 @@ export interface FaSecurityAlert {
 
 export interface FaRfidTag {
   asset: string;
-  assetId: string;
-  encodedAt: string;
+  asset_id: string;
+  encoded_at: string;
   epc: string;
   format: string;
   id: string;
-  lastRead: string;
+  last_read: string;
   printed: boolean;
   rssi: number;
   status: "active" | "inactive" | "lost";
