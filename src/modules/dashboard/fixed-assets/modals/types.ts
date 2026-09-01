@@ -72,3 +72,17 @@ export function useFaCostCenterOptions() {
     .filter((c): c is NonNullable<typeof c> => c !== null && c !== undefined)
     .map((c) => ({ label: c.name, value: c.id }));
 }
+
+export function useFaSupplierOptions() {
+  const { tokenPayload } = useUser();
+  const organizationId = tokenPayload?.organization_id ?? "";
+  const { data: supResp } = useGetFAMasterDataQuery({
+    organizationId,
+    tab: "sup",
+  });
+  const suppliers =
+    supResp?.data?.master_data_sections?.flatMap((s) => s?.rows ?? []) ?? [];
+  return suppliers
+    .filter((s): s is NonNullable<typeof s> => s !== null && s !== undefined)
+    .map((s) => ({ label: s.name, value: s.name }));
+}

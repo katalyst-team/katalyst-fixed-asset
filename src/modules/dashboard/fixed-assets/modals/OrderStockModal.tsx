@@ -22,58 +22,49 @@ import {
 } from "@/components/ui/select";
 import { useUser } from "@/context/user-context";
 import { useOrderRFIDTagsMutation } from "@/hooks/api/fixed-assets";
-import { cn } from "@/lib/utils";
-import { formatIDRShort } from "@/modules/dashboard/fixed-assets/helpers";
+import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
+import { useFaSupplierOptions } from "@/modules/dashboard/fixed-assets/modals/types";
+import type { AssetCategory } from "@/types/fixed-assets";
 
 interface OrderStockModalProps {
   onClose: () => void;
   open: boolean;
 }
 
-const TAG_TYPES: { cost: number; t: string; vendor: string }[] = [
-  { cost: 4000, t: "Avery RF600 soft inlay", vendor: "PT. Avery Indonesia" },
-  {
-    cost: 32000,
-    t: "Confidex Carrier (anti-metal)",
-    vendor: "PT. Confidex ID",
-  },
-  {
-    cost: 28000,
-    t: "Confidex Survivor (anti-metal)",
-    vendor: "PT. Confidex ID",
-  },
-  { cost: 84000, t: "HID IronStor (industrial)", vendor: "PT. HID Global" },
-  {
-    cost: 48000,
-    t: "SATO IT80 (autoclave-safe)",
-    vendor: "PT. SATO Indonesia",
-  },
-];
+const TAG_TYPES = ["passive", "anti-metal", "industrial"] as const;
 
 export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { isPending: isOrdering, mutateAsync: orderTags } =
     useOrderRFIDTagsMutation({ organizationId });
+  const supplierOptions = useFaSupplierOptions();
+  const [cat, setCat] = useState<AssetCategory>("it");
   const [qty, setQty] = useState("1000");
-  const [tagType, setTagType] = useState(TAG_TYPES[0].t);
+  const [supplier, setSupplier] = useState("");
+  const [tagType, setTagType] = useState<string>(TAG_TYPES[0]);
 
-  const selected = TAG_TYPES.find((item) => item.t === tagType) ?? TAG_TYPES[0];
-  const total = selected.cost * (parseInt(qty, 10) || 0);
+  const parsedQty = parseInt(qty, 10) || 0;
+  const isValid = parsedQty >= 1 && supplier.length > 0;
 
   const handleSubmit = async () => {
-    await orderTags({
-      items: [
-        {
-          cat: "it",
-          qty: parseInt(qty, 10) || 0,
-          size: "standard",
-          tag_type: selected.t,
-        },
-      ],
-      supplier: selected.vendor,
-    });
-    onClose();
+    if (!isValid) return;
+    try {
+      await orderTags({
+        items: [
+          {
+            cat,
+            qty: parsedQty,
+            size: "standard",
+            tag_type: tagType,
+          },
+        ],
+        supplier,
+      });
+      onClose();
+    } catch {
+      // hook handles toast
+    }
   };
 
   return (
@@ -82,7 +73,7 @@ export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
         <DialogHeader>
           <DialogTitle>Order tag stock</DialogTitle>
           <DialogDescription>
-            Creates a purchase order with the mapped tag vendor
+            Creates a purchase order with the selected supplier
           </DialogDescription>
         </DialogHeader>
 
@@ -94,9 +85,28 @@ export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {TAG_TYPES.map((item) => (
-                  <SelectItem key={item.t} value={item.t}>
-                    {item.t}
+                {TAG_TYPES.map((t) => (
+                  <SelectItem key={t} value={t}>
+                    {t}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="tag-cat">Category</Label>
+            <Select
+              value={cat}
+              onValueChange={(v) => setCat(v as AssetCategory)}
+            >
+              <SelectTrigger id="tag-cat">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(CAT_LABEL).map(([slug, label]) => (
+                  <SelectItem key={slug} value={slug}>
+                    {label}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -107,34 +117,26 @@ export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
             <Label htmlFor="tag-qty">Quantity</Label>
             <Input
               id="tag-qty"
+              min={1}
               type="number"
               value={qty}
               onChange={(e) => setQty(e.target.value)}
-            />
-          </div>
+            />          </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="tag-vendor">Vendor</Label>
-            <Input disabled id="tag-vendor" value={selected.vendor} />
-          </div>
-
-          <div
-            className={cn(
-              "flex items-center justify-between rounded-lg border border-border p-3",
-              "bg-muted/40",
-            )}
-          >
-            <span className="text-sm text-muted-foreground">
-              Estimated total ({formatIDRShort(selected.cost)}/tag)
-            </span>
-            <span
-              className={cn(
-                "text-sm font-semibold",
-                total > 0 ? "text-foreground" : "text-muted-foreground",
-              )}
-            >
-              {formatIDRShort(total)}
-            </span>
+            <Label htmlFor="tag-supplier">Supplier</Label>
+            <Select value={supplier} onValueChange={setSupplier}>
+              <SelectTrigger id="tag-supplier">
+                <SelectValue placeholder="Select supplier" />
+              </SelectTrigger>
+              <SelectContent>
+                {supplierOptions.map((s) => (
+                  <SelectItem key={s.value} value={s.value}>
+                    {s.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -144,7 +146,7 @@ export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
           </button>
           <button
             className="ks-btn ks-btn-primary"
-            disabled={isOrdering}
+            disabled={isOrdering || !isValid}
             type="button"
             onClick={handleSubmit}
           >

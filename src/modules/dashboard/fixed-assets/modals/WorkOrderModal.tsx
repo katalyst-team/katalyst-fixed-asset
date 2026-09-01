@@ -27,21 +27,12 @@ import {
   useGetAssetRegisterQuery,
 } from "@/hooks/api/fixed-assets";
 import { cn } from "@/lib/utils";
+import { useFaPeopleOptions } from "@/modules/dashboard/fixed-assets/modals/types";
 
 interface WorkOrderModalProps {
   onClose: () => void;
   open: boolean;
 }
-
-const ASSIGN_OPTIONS = [
-  "Andi Pratama",
-  "Auto-dispatch vendor",
-  "Eko Pranata",
-  "Facilities",
-  "Galang Tirta",
-  "IT Ops",
-  "Med Engineering",
-];
 
 const PRIORITY_OPTIONS = ["Critical", "High", "Medium", "Low"];
 
@@ -61,9 +52,10 @@ export function WorkOrderModal({ onClose, open }: WorkOrderModalProps) {
   const { mutateAsync: createWO } = useCreateWorkOrderMutation({
     organizationId,
   });
+  const peopleOptions = useFaPeopleOptions();
   const assets = resp?.data ?? [];
   const [assetId, setAssetId] = useState<string>("");
-  const [assignedTo, setAssignedTo] = useState<string>(ASSIGN_OPTIONS[0]);
+  const [assignedTo, setAssignedTo] = useState<string>("");
   const [issue, setIssue] = useState<string>("");
   const [priority, setPriority] = useState<string>("Medium");
   const [source, setSource] = useState<string>(SOURCE_OPTIONS[1]);
@@ -157,12 +149,12 @@ export function WorkOrderModal({ onClose, open }: WorkOrderModalProps) {
             <Label htmlFor="wo-assign">Assign to</Label>
             <Select value={assignedTo} onValueChange={setAssignedTo}>
               <SelectTrigger id="wo-assign">
-                <SelectValue placeholder="Select assignee" />
+                <SelectValue placeholder="Select custodian" />
               </SelectTrigger>
               <SelectContent>
-                {ASSIGN_OPTIONS.map((a) => (
-                  <SelectItem key={a} value={a}>
-                    {a}
+                {peopleOptions.map((person) => (
+                  <SelectItem key={person.value} value={person.value}>
+                    {person.label}
                   </SelectItem>
                 ))}
               </SelectContent>

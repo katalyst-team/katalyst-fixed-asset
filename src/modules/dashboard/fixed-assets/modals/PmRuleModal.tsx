@@ -22,6 +22,7 @@ import {
 import { useUser } from "@/context/user-context";
 import { useCreatePmRuleMutation } from "@/hooks/api/fixed-assets";
 import { cn } from "@/lib/utils";
+import { useFaPeopleOptions } from "@/modules/dashboard/fixed-assets/modals/types";
 
 interface PmRuleModalProps {
   onClose: () => void;
@@ -34,21 +35,12 @@ const TRIGGER_TYPES = [
   { label: "Usage · cycles", value: "cycles" },
 ];
 
-const ASSIGNEES = [
-  "Auto-dispatch vendor",
-  "Facilities",
-  "IT Helpdesk",
-  "Lab Manager",
-  "Maintenance Team",
-  "Med Engineering",
-  "Safety Officer",
-];
-
 export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { mutateAsync } = useCreatePmRuleMutation({ organizationId });
-  const [assignTo, setAssignTo] = useState("Maintenance Team");
+  const peopleOptions = useFaPeopleOptions();
+  const [assignTo, setAssignTo] = useState("");
   const [intervalValue, setIntervalValue] = useState("30");
   const [name, setName] = useState("");
   const [remindAt, setRemindAt] = useState("14, 7, 1");
@@ -60,7 +52,10 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
     .map((part) => parseInt(part, 10))
     .filter((days) => !Number.isNaN(days) && days > 0);
   const isValid =
-    name.trim().length > 0 && !Number.isNaN(parsedInterval) && parsedInterval >= 1;
+    name.trim().length > 0 &&
+    !Number.isNaN(parsedInterval) &&
+    parsedInterval >= 1 &&
+    assignTo.length > 0;
 
   async function handleSubmit() {
     if (!isValid) return;
@@ -149,12 +144,12 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
             <Label htmlFor="pm-assign">Assign to</Label>
             <Select value={assignTo} onValueChange={setAssignTo}>
               <SelectTrigger id="pm-assign">
-                <SelectValue />
+                <SelectValue placeholder="Select custodian" />
               </SelectTrigger>
               <SelectContent>
-                {ASSIGNEES.map((person) => (
-                  <SelectItem key={person} value={person}>
-                    {person}
+                {peopleOptions.map((person) => (
+                  <SelectItem key={person.value} value={person.value}>
+                    {person.label}
                   </SelectItem>
                 ))}
               </SelectContent>
