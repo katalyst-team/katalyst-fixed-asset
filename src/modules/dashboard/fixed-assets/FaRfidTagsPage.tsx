@@ -1,6 +1,15 @@
 "use client";
 
-import { CheckCircle2, Download, Plus, Printer, Search, Tag, Zap } from "lucide-react";
+import {
+  CheckCircle2,
+  Download,
+  Pencil,
+  Plus,
+  Printer,
+  Search,
+  Tag,
+  Zap,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -12,7 +21,6 @@ import {
   useExportDataMutation,
   useGetRfidTagOrdersQuery,
   useGetRFIDTagsQuery,
-  usePrintRFIDTagsMutation,
 } from "@/hooks/api/fixed-assets";
 import { useBypassHardware } from "@/hooks/useBypassHardware";
 import {
@@ -29,6 +37,7 @@ import type { FaRfidTag, FaRfidTagOrder } from "@/types/fixed-assets";
 
 const STATUS_TONE: Record<string, string> = {
   active: "success",
+  damaged: "warn",
   inactive: "outline",
   lost: "danger",
 };
@@ -67,7 +76,8 @@ export function FaRfidTagsPage() {
   const activeTags = tags.filter((t) => t.status === "active").length;
   const inactiveTags = tags.filter((t) => t.status === "inactive").length;
   const lostTags = tags.filter((t) => t.status === "lost").length;
-  const printQueue = tags.filter((t) => !t.printed).length;
+  const damagedTags = tags.filter((t) => t.status === "damaged").length;
+  const printQueue = tags.filter((t) => !t.printed);
 
   const handleNext = () => {
     if (resp?.page_pagination?.has_next) {
@@ -84,8 +94,6 @@ export function FaRfidTagsPage() {
     mutateAsync: encodeTag,
     variables: encodingVars,
   } = useEncodeRFIDTagMutation({ organizationId });
-  const { isPending: isPrinting, mutateAsync: printTags } =
-    usePrintRFIDTagsMutation({ organizationId });
   const { isPending: isExporting, mutateAsync: exportData } =
     useExportDataMutation({ organizationId });
 
@@ -93,13 +101,12 @@ export function FaRfidTagsPage() {
     await encodeTag({ asset_id: tag.asset_id, tag_type: tag.format });
   };
 
-  const handlePrintQueue = async () => {
-    const queuedIds = tags.filter((t) => !t.printed).map((t) => t.id);
-    if (queuedIds.length === 0) {
+  const handleOpenPrintQueue = () => {
+    if (printQueue.length === 0) {
       toast.info("No tags in the print queue");
       return;
     }
-    await printTags({ tag_ids: queuedIds });
+    openModal("printTag", { tags: printQueue });
   };
 
   const handleExport = async () => {
@@ -117,9 +124,8 @@ export function FaRfidTagsPage() {
             {canManage && (
               <button
                 className="ks-btn ks-btn-sm"
-                disabled={isPrinting}
                 type="button"
-                onClick={handlePrintQueue}
+                onClick={handleOpenPrintQueue}
               >
                 <Printer size={14} />
                 Print queue
@@ -164,7 +170,13 @@ export function FaRfidTagsPage() {
         <FaStat label="Active tags" tone="brand" value={String(activeTags)} />
         <FaStat label="Inactive" tone="info" value={String(inactiveTags)} />
         <FaStat label="Lost" tone="danger" value={String(lostTags)} />
-        <FaStat label="Print queue" sub="Zebra ZD621" tone="warn" value={String(printQueue)} />
+        <FaStat label="Damaged" tone="warn" value={String(damagedTags)} />
+        <FaStat
+          label="Print queue"
+          sub="Zebra ZD621"
+          tone="warn"
+          value={String(printQueue.length)}
+        />
       </FaKpiStrip>
 
       <div className="ks-card">
@@ -231,7 +243,7 @@ export function FaRfidTagsPage() {
         isEmpty={tags.length === 0}
         isError={isError}
         isLoading={isLoading}
-        skeleton={<SkeletonTable columns={9} rows={8} />}
+        skeleton={<SkeletonTable columns={10} rows={8} />}
       >
       <div className="ks-card">
         <div className="ks-card-head">
@@ -268,6 +280,9 @@ export function FaRfidTagsPage() {
                 </th>
                 <th className="p-3 text-left font-medium text-muted-foreground">
                   Status
+                </th>
+                <th className="p-3 text-left font-medium text-muted-foreground">
+                  Notes
                 </th>
                 <th className="p-3 text-left font-medium text-muted-foreground">
                   Print status
@@ -311,9 +326,16 @@ export function FaRfidTagsPage() {
                     )}
                   </td>
                   <td className="border-t border-border p-3">
-                    <span className={"ks-badge " + STATUS_TONE[tag.status]}>
+                    <span className={"ks-badge " + (STATUS_TONE[tag.status] ?? "outline")}>
                       {tag.status}
                     </span>
+                  </td>
+                  <td className="max-w-[220px] border-t border-border p-3 text-xs text-muted-foreground">
+                    {tag.notes ? (
+                      <span title={tag.notes}>{tag.notes}</span>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
                   </td>
                   <td className="border-t border-border p-3">
                     {tag.printed ? (
@@ -329,19 +351,43 @@ export function FaRfidTagsPage() {
                     )}
                   </td>
                   <td className="border-t border-border p-3">
-                    {canManage && (
-                      <button
-                        className="ks-btn ks-btn-ghost ks-btn-sm"
-                        disabled={
-                          isEncoding && encodingVars?.asset_id === tag.asset_id
-                        }
-                        type="button"
-                        onClick={() => handleEncode(tag)}
-                      >
-                        <Zap size={13} />
-                        Encode
-                      </button>
-                    )}
+                    <div className="flex items-center gap-1">
+                      {canManage && (
+                        <>
+                          <button
+                            className="ks-btn ks-btn-ghost ks-btn-sm"
+                            disabled={
+                              isEncoding && encodingVars?.asset_id === tag.asset_id
+                            }
+                            type="button"
+                            onClick={() => handleEncode(tag)}
+                          >
+                            <Zap size={13} />
+                            Encode
+                          </button>
+                          <button
+                            aria-label="Print label"
+                            className="ks-btn ks-btn-icon ks-btn-sm"
+                            title="Print label"
+                            type="button"
+                            onClick={() =>
+                              openModal("printTag", { tags: [tag] })
+                            }
+                          >
+                            <Printer size={13} />
+                          </button>
+                          <button
+                            aria-label="Edit tag"
+                            className="ks-btn ks-btn-icon ks-btn-sm"
+                            title="Edit tag"
+                            type="button"
+                            onClick={() => openModal("editTag", { tag })}
+                          >
+                            <Pencil size={13} />
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

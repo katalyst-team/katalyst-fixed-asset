@@ -3,11 +3,13 @@ import { CheckOutModal } from "./CheckOutModal";
 import { CreateAssetModal } from "./CreateAssetModal";
 import { DisposalRequestModal } from "./DisposalRequestModal";
 import { EditAssetModal } from "./EditAssetModal";
+import { EditTagModal } from "./EditTagModal";
 import { EpcRangeModal } from "./EpcRangeModal";
 import { useFaModal } from "./FaModalContext";
 import { LocateAssetModal } from "./LocateAssetModal";
 import { OrderStockModal } from "./OrderStockModal";
 import { PmRuleModal } from "./PmRuleModal";
+import { PrintTagModal } from "./PrintTagModal";
 import { RegisterTagModal } from "./RegisterTagModal";
 import { ReservationModal } from "./ReservationModal";
 import { TransferHistoryModal } from "./TransferHistoryModal";
@@ -40,6 +42,10 @@ export function FaModalRoot() {
         open={type === "editAsset"}
         onClose={closeModal}
       />
+      <EditTagModal
+        open={type === "editTag"}
+        onClose={closeModal}
+      />
       <EpcRangeModal
         open={type === "epcRange"}
         onClose={closeModal}
@@ -54,6 +60,10 @@ export function FaModalRoot() {
       />
       <PmRuleModal
         open={type === "pmRule"}
+        onClose={closeModal}
+      />
+      <PrintTagModal
+        open={type === "printTag"}
         onClose={closeModal}
       />
       <RegisterTagModal

@@ -1,6 +1,6 @@
 import { useUser } from "@/context/user-context";
 import { useGetFAMasterDataQuery } from "@/hooks/api/fixed-assets";
-import type { FaAsset } from "@/types/fixed-assets";
+import type { FaAsset, FaRfidTag } from "@/types/fixed-assets";
 
 export type FaModalType =
   | "approvalRule"
@@ -12,6 +12,8 @@ export type FaModalType =
   | "workOrder"
   | "createAsset"
   | "editAsset"
+  | "editTag"
+  | "printTag"
   | "locateAsset"
   | "epcRange"
   | "orderStock"
@@ -22,6 +24,8 @@ export type FaModalType =
 export interface FaModalPayload {
   asset?: FaAsset;
   assetId?: string;
+  tag?: FaRfidTag;
+  tags?: FaRfidTag[];
 }
 
 export interface FaModalContextValue {
