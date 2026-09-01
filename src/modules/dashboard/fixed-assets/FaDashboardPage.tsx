@@ -12,17 +12,21 @@ import {
   Zap,
 } from "lucide-react";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 
 import { useUser } from "@/context/user-context";
 import {
   useExportDataMutation,
   useGetAssetRegisterQuery,
+  useGetCheckOutsQuery,
   useGetFADashboardQuery,
+  useGetScanInHistoryQuery,
 } from "@/hooks/api/fixed-assets";
 import {
   activityIcon,
   activityTone,
   avatarColor,
+  buildActivityHeatmap,
   catToLucide,
   FaKpiStrip,
   FaMeter,
@@ -31,6 +35,7 @@ import {
   FaStat,
   formatActivityTime,
   formatIDRShort,
+  heatOpacity,
   initials,
 } from "@/modules/dashboard/fixed-assets";
 import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
@@ -38,16 +43,7 @@ import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-const HEATMAP: number[][] = [
-  [2, 3, 4, 5, 4, 3],
-  [3, 4, 5, 5, 4, 2],
-  [4, 5, 5, 4, 3, 1],
-  [3, 4, 4, 5, 4, 3],
-  [4, 5, 5, 5, 4, 2],
-  [2, 3, 3, 4, 3, 1],
-  [1, 2, 2, 3, 2, 1],
-];
+const HEATMAP_SLOTS = ["6a", "9a", "12p", "3p", "6p", "9p"];
 
 const QUICK_ACTIONS = [
   { href: "/dashboard/fixed-assets/scan-in/", icon: Download, label: "Scan-In" },
@@ -58,8 +54,11 @@ const QUICK_ACTIONS = [
   { href: "/dashboard/fixed-assets/register/", icon: Plus, label: "Register" },
 ];
 
-function heatOpacity(v: number): string {
-  return `${0.12 + v * 0.176}`;
+function greeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
 }
 
 function rowBorder(isLast: boolean): string | undefined {
@@ -73,6 +72,14 @@ export function FaDashboardPage() {
   const queryClient = useQueryClient();
   const { data: resp, isError, isLoading } = useGetFADashboardQuery({ organizationId });
   const { data: assetResp } = useGetAssetRegisterQuery({ organizationId });
+  const { data: checkOutResp } = useGetCheckOutsQuery({
+    limit: 200,
+    organizationId,
+  });
+  const { data: scanInHistoryResp } = useGetScanInHistoryQuery({
+    limit: 200,
+    organizationId,
+  });
   const { isPending: isExporting, mutateAsync: exportData } =
     useExportDataMutation({ organizationId });
 
@@ -98,6 +105,17 @@ export function FaDashboardPage() {
     .filter((a) => a.val > 100_000_000)
     .sort((a, b) => b.val - a.val)
     .slice(0, 6);
+
+  const heatmap = useMemo(
+    () =>
+      buildActivityHeatmap([
+        ...(checkOutResp?.data?.check_outs ?? []).map((c) => c.out_date),
+        ...(scanInHistoryResp?.data?.history ?? []).map((h) => h.deployed_at),
+      ]),
+    [checkOutResp, scanInHistoryResp],
+  );
+  const heatmapMax = Math.max(...heatmap.flat());
+  const heatmapTotal = heatmap.flat().reduce((sum, v) => sum + v, 0);
 
   return (
     <div>
@@ -132,7 +150,7 @@ export function FaDashboardPage() {
           </>
         }
         desc={`${totalAssets.toLocaleString()} assets · ${sites.length} sites`}
-        title={`Good afternoon, ${tokenPayload?.first_name ?? ""}`}
+        title={`${greeting()}, ${tokenPayload?.first_name ?? ""}`}
       />
 
       <FaKpiStrip>
@@ -264,33 +282,41 @@ export function FaDashboardPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Utilization · 7 days</div>
-              <div className="ks-card-desc">Check-in / check-out density</div>
+              <div className="ks-card-title">Activity · last 7 days</div>
+              <div className="ks-card-desc">Check-out &amp; scan-in density</div>
             </div>
           </div>
           <div className="ks-card-body">
-            <div className="flex gap-1" style={{ marginBottom: 6 }}>
-              <span style={{ width: 28 }} />
-              {["6a", "9a", "12p", "3p", "6p", "9p"].map((h) => (
-                <span key={h} className="flex-1 text-center text-xs text-muted-foreground">{h}</span>
-              ))}
-            </div>
-            {HEATMAP.map((row, ri) => (
-              <div key={ri} className="flex items-center gap-1" style={{ marginBottom: 4 }}>
-                <span className="text-xs text-muted-foreground" style={{ width: 28 }}>{DAYS[ri]}</span>
-                {row.map((v, ci) => (
-                  <div
-                    key={ci}
-                    className="flex-1"
-                    style={{
-                      background: `hsl(var(--brand) / ${heatOpacity(v)})`,
-                      borderRadius: 3,
-                      height: 22,
-                    }}
-                  />
+            {heatmapTotal === 0 ? (
+              <p className="py-8 text-center text-sm text-muted-foreground">
+                No check-out or scan-in activity recorded in the last 7 days
+              </p>
+            ) : (
+              <>
+                <div className="flex gap-1" style={{ marginBottom: 6 }}>
+                  <span style={{ width: 28 }} />
+                  {HEATMAP_SLOTS.map((h) => (
+                    <span key={h} className="flex-1 text-center text-xs text-muted-foreground">{h}</span>
+                  ))}
+                </div>
+                {heatmap.map((row, ri) => (
+                  <div key={ri} className="flex items-center gap-1" style={{ marginBottom: 4 }}>
+                    <span className="text-xs text-muted-foreground" style={{ width: 28 }}>{DAYS[ri]}</span>
+                    {row.map((count, ci) => (
+                      <div
+                        key={ci}
+                        className="flex-1"
+                        style={{
+                          background: `hsl(var(--brand) / ${heatOpacity(count, heatmapMax)})`,
+                          borderRadius: 3,
+                          height: 22,
+                        }}
+                      />
+                    ))}
+                  </div>
                 ))}
-              </div>
-            ))}
+              </>
+            )}
           </div>
         </div>
 

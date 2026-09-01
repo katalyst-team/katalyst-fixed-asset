@@ -151,3 +151,33 @@ export const formatActivityTime = (iso: string): string => {
     month: "short",
   });
 };
+
+const HEATMAP_DAYS = 7;
+const HEATMAP_SLOTS_PER_DAY = 6;
+const HEATMAP_START_HOUR = 6;
+
+export const parseEventDate = (raw: string): Date | null => {
+  const parsed = new Date(raw.includes("T") ? raw : raw.replace(" ", "T"));
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
+export const buildActivityHeatmap = (events: string[]): number[][] => {
+  const grid = Array.from({ length: HEATMAP_DAYS }, () =>
+    Array.from({ length: HEATMAP_SLOTS_PER_DAY }, () => 0),
+  );
+  const weekAgo = Date.now() - HEATMAP_DAYS * 24 * 60 * 60 * 1000;
+  for (const raw of events) {
+    const d = parseEventDate(raw);
+    if (!d || d.getTime() < weekAgo) continue;
+    const slot = Math.floor((d.getHours() - HEATMAP_START_HOUR) / 3);
+    if (slot < 0 || slot >= HEATMAP_SLOTS_PER_DAY) continue;
+    const day = (d.getDay() + 6) % HEATMAP_DAYS;
+    grid[day][slot] += 1;
+  }
+  return grid;
+};
+
+export const heatOpacity = (count: number, max: number): number => {
+  if (count === 0 || max === 0) return 0.04;
+  return 0.15 + 0.7 * (count / max);
+};

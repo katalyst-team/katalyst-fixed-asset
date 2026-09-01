@@ -3,6 +3,7 @@ export {
   activityIcon,
   activityTone,
   avatarColor,
+  buildActivityHeatmap,
   catToLucide,
   catToneClass,
   formatActivityTime,
@@ -11,6 +12,8 @@ export {
   formatIDRShort,
   healthBarTone,
   healthTone,
+  heatOpacity,
   initials,
+  parseEventDate,
   protoIcon,
 } from "./helpers";
