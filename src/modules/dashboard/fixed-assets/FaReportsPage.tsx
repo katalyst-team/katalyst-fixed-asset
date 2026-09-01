@@ -12,7 +12,7 @@ import {
   useGetReportPreviewQuery,
   useGetReportTemplatesQuery,
 } from "@/hooks/api/fixed-assets";
-import { FaKpiStrip, FaProtoIcon, FaShellHead, FaStat } from "@/modules/dashboard/fixed-assets";
+import { FaKpiStrip, FaProtoIcon, FaShellHead, FaStat,formatActivityTime } from "@/modules/dashboard/fixed-assets";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
 import type { FaReportTemplate } from "@/types/fixed-assets";
@@ -50,7 +50,7 @@ function ReportCard({
             <span key={f} className="ks-badge outline">{f}</span>
           ))}
           <span style={{ color: "hsl(var(--text-3))", fontSize: 11, marginLeft: "auto" }}>
-            <Clock size={11} style={{ display: "inline", marginRight: 3 }} />{tpl.last_run}
+            <Clock size={11} style={{ display: "inline", marginRight: 3 }} />{formatActivityTime(tpl.last_run)}
           </span>
         </div>
         <div style={{ display: "flex", gap: 8 }}>

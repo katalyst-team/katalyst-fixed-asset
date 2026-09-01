@@ -465,7 +465,7 @@ export function FaDashboardPage() {
                 </span>
                 <span className="flex-1 text-sm">{m.desc}</span>
                 <div className="text-right">
-                  <div className="font-mono text-xs">{m.created_at}</div>
+                  <div className="font-mono text-xs">{formatActivityTime(m.created_at)}</div>
                   <div className="text-xs text-muted-foreground">{m.asset}</div>
                 </div>
               </div>

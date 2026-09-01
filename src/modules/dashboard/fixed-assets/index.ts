@@ -8,6 +8,7 @@ export {
   catToneClass,
   formatActivityTime,
   formatAge,
+  formatDate,
   formatIDR,
   formatIDRShort,
   healthBarTone,

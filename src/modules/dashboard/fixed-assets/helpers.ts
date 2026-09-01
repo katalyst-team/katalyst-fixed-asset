@@ -157,8 +157,18 @@ const HEATMAP_SLOTS_PER_DAY = 6;
 const HEATMAP_START_HOUR = 6;
 
 export const parseEventDate = (raw: string): Date | null => {
-  const parsed = new Date(raw.includes("T") ? raw : raw.replace(" ", "T"));
+  const parsed = new Date(raw);
   return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
+export const formatDate = (iso: string): string => {
+  const d = parseEventDate(iso);
+  if (!d) return "";
+  return d.toLocaleDateString(undefined, {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 };
 
 export const buildActivityHeatmap = (events: string[]): number[][] => {

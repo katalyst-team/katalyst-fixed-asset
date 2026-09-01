@@ -19,6 +19,7 @@ import {
   FaProtoIcon,
   formatActivityTime,
   formatAge,
+  formatDate,
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
 import {
@@ -35,7 +36,7 @@ const TABS = ["Overview", "Activity", "Maintenance", "Depreciation", "Documents"
 type Tab = (typeof TABS)[number];
 
 const LIFECYCLE = (a: FaAsset) => [
-  { label: `Purchased · ${a.purchased}`, sub: a.supplier },
+  { label: `Purchased · ${formatDate(a.purchased)}`, sub: a.supplier },
   { label: "Tagged & registered", sub: a.epc },
   { label: `Deployed · ${a.loc}`, sub: `Custodian: ${a.custodian}` },
   { label: `Current: ${STATUS_LABEL[a.status]}`, sub: `Age ${formatAge(a.age)}` },
@@ -222,7 +223,7 @@ export function FaDetailPage() {
             <MetaRow label="Custodian" val={asset.custodian} />
             <MetaRow label="Serial No." val={asset.serial} />
             <MetaRow label="EPC" val={asset.epc} />
-            <MetaRow label="Acquired" val={asset.purchased} />
+            <MetaRow label="Acquired" val={formatDate(asset.purchased)} />
             <MetaRow label="Supplier" val={asset.supplier} />
             <MetaRow label="Warranty" val={asset.warranty} />
             <div style={{ marginTop: 12 }}>

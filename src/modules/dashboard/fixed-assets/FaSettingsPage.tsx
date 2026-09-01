@@ -19,7 +19,7 @@ import {
   useUpdateFASettingsMutation,
   useUpdateNotificationTriggersMutation,
 } from "@/hooks/api/fixed-assets";
-import { FaMeter, FaShellHead } from "@/modules/dashboard/fixed-assets";
+import { FaMeter, FaShellHead,formatDate } from "@/modules/dashboard/fixed-assets";
 import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 import type { FaSettings } from "@/types/fixed-assets";
 
@@ -316,7 +316,7 @@ function BillingPanel({ organizationId }: { organizationId: string }) {
       <div className="ks-card">
         <div className="ks-card-head"><span className="ks-card-title">Plan</span><span className="ks-badge brand">{billing.plan}</span></div>
         <div className="ks-card-body ks-grid-3" style={{ gap: 14 }}>
-          {[["Plan", billing.plan], ["Renewal", billing.renewal_date], ["Seats", `${billing.seats_used} / ${billing.seat_count}`]].map(([k, v]) => (
+          {[["Plan", billing.plan], ["Renewal", formatDate(billing.renewal_date)], ["Seats", `${billing.seats_used} / ${billing.seat_count}`]].map(([k, v]) => (
             <div key={k} style={{ background: "hsl(var(--surface-2))", borderRadius: 8, padding: 12 }}>
               <div style={{ color: "hsl(var(--text-3))", fontSize: 11 }}>{k}</div>
               <div style={{ fontSize: 15, fontWeight: 600 }}>{v}</div>
@@ -348,7 +348,7 @@ function BillingPanel({ organizationId }: { organizationId: string }) {
           <tbody>
             {invoices.map((inv) => (
               <tr key={inv.id}>
-                <td className="border-t border-border p-3">{inv.date}</td>
+                <td className="border-t border-border p-3">{formatDate(inv.date)}</td>
                 <td className="border-t border-border p-3">{inv.amount}</td>
                 <td className="border-t border-border p-3"><span className={`ks-badge ${inv.status === "paid" ? "success" : inv.status === "pending" ? "warn" : "danger"}`}>{inv.status.charAt(0).toUpperCase() + inv.status.slice(1)}</span></td>
               </tr>

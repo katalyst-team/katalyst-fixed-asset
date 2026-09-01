@@ -21,6 +21,7 @@ import {
   useUpdatePmRuleMutation,
   useUpdateWorkOrderStatusMutation,
 } from "@/hooks/api/fixed-assets";
+import { formatActivityTime } from "@/modules/dashboard/fixed-assets";
 
 import {
   CatCell,
@@ -186,7 +187,7 @@ export function WoTab() {
               {[
                 ["Assigned", wo.assigned_to],
                 ["ETA", wo.eta],
-                ["Created", wo.created_at],
+                ["Created", formatActivityTime(wo.created_at)],
               ].map(([k, v]) => (
                 <div key={k}>
                   <div style={{ ...muted, fontSize: 11 }}>{k}</div>
@@ -204,7 +205,7 @@ export function WoTab() {
                 </div>
                 <div style={{ ...flexRow, fontSize: 12, gap: 8 }}>
                   <Clock size={12} style={{ color: "hsl(var(--text-3))" }} />
-                  Pre-use check flagged · {wo.created_at}
+                  Pre-use check flagged · {formatActivityTime(wo.created_at)}
                 </div>
               </div>
             </div>
@@ -438,7 +439,7 @@ export function ScheduleTab() {
                       {p.asset} · {p.assigned_to}
                     </div>
                     <div style={{ ...flexRow, ...muted, fontSize: 11, gap: 10, marginTop: 4 }}>
-                      <span>{p.created_at}</span>
+                      <span>{formatActivityTime(p.created_at)}</span>
                     </div>
                   </div>
                   <span className={`ks-badge ${p.status === "done" ? "success" : "warn"}`}>{p.status}</span>

@@ -18,6 +18,7 @@ import {
   FaKpiStrip,
   FaShellHead,
   FaStat,
+  formatActivityTime,
 } from "@/modules/dashboard/fixed-assets";
 import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
@@ -181,11 +182,11 @@ export function FaCheckOutPage() {
                         <span>{c.by}</span>
                       </div>
                     </td>
-                    <td className="p-3 border-t border-border text-muted-foreground">{c.out_date}</td>
+                    <td className="p-3 border-t border-border text-muted-foreground">{formatActivityTime(c.out_date)}</td>
                     <td className="p-3 border-t border-border">
                       <span className={c.status === "overdue" ? "font-medium text-[hsl(var(--destructive))]" : "text-muted-foreground"}>
                         {c.status === "overdue" && <Clock className="mr-1 inline" size={12} />}
-                        {c.due_date}
+                        {formatActivityTime(c.due_date)}
                       </span>
                     </td>
                     <td className="p-3 border-t border-border text-muted-foreground">{c.purpose}</td>

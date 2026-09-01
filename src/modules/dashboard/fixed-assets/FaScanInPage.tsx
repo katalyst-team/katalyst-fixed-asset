@@ -25,6 +25,7 @@ import {
   catToLucide,
   catToneClass,
   FaShellHead,
+  formatDate,
   formatIDR,
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
@@ -316,7 +317,7 @@ export function FaScanInPage() {
                     <span>·</span>
                     <span>{formatIDRShort(p.value)}</span>
                     <span>·</span>
-                    <span>{p.date}</span>
+                    <span>{formatDate(p.date)}</span>
                   </div>
                 </button>
               ))}
