@@ -236,9 +236,10 @@ export interface FaRfidTag {
   format: string;
   id: string;
   last_read: string;
+  notes: string | null;
   printed: boolean;
   rssi: number;
-  status: "active" | "inactive" | "lost";
+  status: "active" | "inactive" | "lost" | "damaged";
   tid: string;
 }
 
@@ -570,7 +571,7 @@ export interface FaRfidTagFilterOptions {
   page?: number;
   limit?: number;
   q?: string;
-  status?: "active" | "inactive" | "lost";
+  status?: "active" | "inactive" | "lost" | "damaged";
 }
 
 export interface FaRfidTagOrderLine {
@@ -722,6 +723,11 @@ export interface PrintRFIDTagsRequest {
   label_size?: string;
   printer?: string;
   tag_ids: string[];
+}
+
+export interface UpdateFaRfidTagRequest {
+  notes?: string | null;
+  status?: "active" | "inactive" | "lost" | "damaged";
 }
 
 export interface OrderRFIDTagsRequest {

@@ -148,6 +148,7 @@ export { default as useUpdateFASettingsMutation } from "./useUpdateFASettingsMut
 export { default as useUpdateInsurancePolicyMutation } from "./useUpdateInsurancePolicyMutation";
 export { default as useUpdateNotificationTriggersMutation } from "./useUpdateNotificationTriggersMutation";
 export { default as useUpdatePmRuleMutation } from "./useUpdatePmRuleMutation";
+export { default as useUpdateRFIDTagMutation } from "./useUpdateRFIDTagMutation";
 export { default as useUpdateRoleMutation } from "./useUpdateRoleMutation";
 export { default as useUpdateWorkOrderStatusMutation } from "./useUpdateWorkOrderStatusMutation";
 export { default as useUpsertRTLSFloorPlanMutation } from "./useUpsertRTLSFloorPlanMutation";

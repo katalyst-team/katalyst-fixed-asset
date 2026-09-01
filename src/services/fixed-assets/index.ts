@@ -202,6 +202,8 @@ export type { UpdateNotificationTriggersResponse } from "./updateNotificationTri
 export { updateNotificationTriggersService } from "./updateNotificationTriggersService";
 export type { UpdatePmRuleResponse } from "./updatePmRuleService";
 export { updatePmRuleService } from "./updatePmRuleService";
+export type { UpdateRfidTagResponse } from "./updateRfidTagService";
+export { updateRfidTagService } from "./updateRfidTagService";
 export type { UpdateRoleResponse } from "./updateRoleService";
 export { updateRoleService } from "./updateRoleService";
 export type { UpdateWorkOrderStatusResponse } from "./updateWorkOrderStatusService";
