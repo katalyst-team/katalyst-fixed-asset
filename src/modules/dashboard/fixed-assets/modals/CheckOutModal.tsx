@@ -82,12 +82,13 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
   };
 
   const onSubmit = async (values: FormValues) => {
+    const durationDays = parseInt(values.due ?? "", 10) || 7;
     await createCheckOut({
       asset_id: values.assetId,
       borrower: values.borrower,
       condition: "excellent",
-      due_date: values.due ?? "",
-      out_date: new Date().toISOString().slice(0, 10),
+      due_date: new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString(),
+      out_date: new Date().toISOString(),
       purpose: values.purpose ?? "",
     });
     onClose();
