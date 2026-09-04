@@ -30,6 +30,7 @@ import {
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
 import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
+import { FaDesktopReaderPanel } from "@/modules/dashboard/fixed-assets/FaDesktopReaderPanel";
 import { FaRfidReaderPanel } from "@/modules/dashboard/fixed-assets/FaRfidReaderPanel";
 import {
   useFaCostCenterOptions,
@@ -473,7 +474,10 @@ export function FaScanInPage() {
                     </div>
                   </div>
                 ) : (
-                  <FaRfidReaderPanel onEpc={handleEpc} />
+                  <div className="space-y-2">
+                    <FaDesktopReaderPanel onEpc={handleEpc} />
+                    <FaRfidReaderPanel onEpc={handleEpc} />
+                  </div>
                 )}
               </div>
               <ScanPortal scanning={scanning} />
