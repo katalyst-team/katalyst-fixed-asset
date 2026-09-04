@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   Download,
   Keyboard,
+  Printer,
   Radio,
   Upload,
 } from "lucide-react";
@@ -35,9 +36,10 @@ import { FaRfidReaderPanel } from "@/modules/dashboard/fixed-assets/FaRfidReader
 import {
   useFaCostCenterOptions,
   useFaLocationOptions,
+  useFaModal,
   useFaPeopleOptions,
 } from "@/modules/dashboard/fixed-assets/modals";
-import type { DeployScanInRequest } from "@/types/fixed-assets";
+import type { DeployScanInRequest, FaRfidTag } from "@/types/fixed-assets";
 
 interface PoLineItem {
   cat: string;
@@ -164,6 +166,7 @@ export function FaScanInPage() {
   const locationOptions = useFaLocationOptions();
   const ccOptions = useFaCostCenterOptions();
   const { isBypassEnabled } = useBypassHardware();
+  const { openModal } = useFaModal();
 
   const selectedPO = apiPOs[selectedPo];
   const PO_LINES: PoLineItem[] = (selectedPO?.lines ?? []).map((l) => ({
@@ -228,6 +231,28 @@ export function FaScanInPage() {
     }
     handleEpc(value);
     setManualEpc("");
+  };
+
+  const handlePrintLabels = () => {
+    if (realEpCs.length === 0) {
+      toast.info("Scan at least one tag first");
+      return;
+    }
+    const tags: FaRfidTag[] = realEpCs.map((epc) => ({
+      asset: "",
+      asset_id: "",
+      encoded_at: "",
+      epc,
+      format: "SGTIN-96",
+      id: "",
+      last_read: "",
+      notes: null,
+      printed: false,
+      rssi: 0,
+      status: "active",
+      tid: "",
+    }));
+    openModal("printTag", { tags });
   };
 
   const handleImportPO = () => {
@@ -500,6 +525,15 @@ export function FaScanInPage() {
                     {scanning ? "Writing EPC…" : "Simulate scan"}
                   </button>
                 )}
+                <button
+                  className="ks-btn ks-btn-sm"
+                  disabled={realEpCs.length === 0}
+                  type="button"
+                  onClick={handlePrintLabels}
+                >
+                  <Printer size={14} />
+                  Print labels ({realEpCs.length})
+                </button>
                 {!isBypassEnabled && (
                   <p className="text-xs text-muted-foreground">
                     Waiting for tag reads from the connected reader…
