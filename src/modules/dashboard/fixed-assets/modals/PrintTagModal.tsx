@@ -60,6 +60,10 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
   const { payload } = useFaModal();
   const tags: FaRfidTag[] = payload.tags ?? [];
 
+  const persistedTagIds = tags
+    .filter((t) => t.id && t.id !== "sample")
+    .map((t) => t.id);
+
   const print = useFaTagPrint();
   const {
     generatePreview,
@@ -243,18 +247,20 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
     setProgress(null);
 
     if (printed === 0) return;
-    await markPrinted({ tag_ids: tags.map((t) => t.id) });
+    if (persistedTagIds.length > 0) {
+      await markPrinted({ tag_ids: persistedTagIds });
+    }
     await saveZplTemplate();
     toast.success(`Printed ${printed} label(s)`);
     onClose();
   };
 
   const handleMarkPrinted = async () => {
-    if (tags.length === 0) {
-      toast.info("No tags to mark");
+    if (persistedTagIds.length === 0) {
+      toast.info("No registered tags to mark");
       return;
     }
-    await markPrinted({ tag_ids: tags.map((t) => t.id) });
+    await markPrinted({ tag_ids: persistedTagIds });
     onClose();
   };
 
