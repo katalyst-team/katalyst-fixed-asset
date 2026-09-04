@@ -255,6 +255,15 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
     onClose();
   };
 
+  const handleSaveTemplate = async () => {
+    if (!settings.rawZplCode.trim()) {
+      toast.error("Enter ZPL code before saving a template");
+      return;
+    }
+    const saved = await saveZplTemplate();
+    if (saved) toast.success("Template saved");
+  };
+
   const handleMarkPrinted = async () => {
     if (persistedTagIds.length === 0) {
       toast.info("No registered tags to mark");
@@ -287,6 +296,7 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
             organizationId={organizationId}
             onApply={handleApplyZplTemplate}
             onNameChange={setTemplateName}
+            onSave={handleSaveTemplate}
           />
 
           <div className="space-y-2">

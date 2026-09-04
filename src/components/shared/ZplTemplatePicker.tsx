@@ -1,6 +1,6 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
+import { Save, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ interface ZplTemplatePickerProps {
   organizationId: string;
   onApply: (template: ZplTemplateType) => void;
   onNameChange: (name: string) => void;
+  onSave: () => void;
 }
 
 const ZplTemplatePicker = ({
@@ -35,6 +36,7 @@ const ZplTemplatePicker = ({
   organizationId,
   onApply,
   onNameChange,
+  onSave,
 }: ZplTemplatePickerProps) => {
   const [selectedId, setSelectedId] = useState<string>("");
 
@@ -110,13 +112,23 @@ const ZplTemplatePicker = ({
 
       <div className="space-y-1">
         <Label>Template name</Label>
-        <Input
-          placeholder="e.g. Asset label 40x60"
-          value={name}
-          onChange={(e) => onNameChange(e.target.value)}
-        />
+        <div className="flex gap-2">
+          <Input
+            placeholder="e.g. Asset label 40x60"
+            value={name}
+            onChange={(e) => onNameChange(e.target.value)}
+          />
+          <Button
+            disabled={isSaving}
+            variant="outline"
+            onClick={onSave}
+          >
+            <Save className="h-4 w-4" />
+            Save
+          </Button>
+        </div>
         <p className="text-xs text-muted-foreground">
-          {isSaving ? "Saving template…" : "Saved automatically after a successful print"}
+          {isSaving ? "Saving template…" : "Also saved automatically after a successful print"}
         </p>
       </div>
     </div>
