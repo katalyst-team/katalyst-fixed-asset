@@ -714,6 +714,7 @@ export interface CreateMasterDataRequest {
 
 export interface EncodeRFIDTagRequest {
   asset_id: string;
+  epc?: string;
   epc_format?: string;
   reader_id?: string;
   tag_type: string;

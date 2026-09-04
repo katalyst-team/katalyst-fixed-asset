@@ -25,6 +25,7 @@ import {
   useEncodeRFIDTagMutation,
   useGetAssetRegisterQuery,
 } from "@/hooks/api/fixed-assets";
+import { FaDesktopReaderPanel } from "@/modules/dashboard/fixed-assets/FaDesktopReaderPanel";
 
 interface RegisterTagModalProps {
   onClose: () => void;
@@ -44,6 +45,7 @@ export function RegisterTagModal({ onClose, open }: RegisterTagModalProps) {
     useEncodeRFIDTagMutation({ organizationId });
 
   const [assetId, setAssetId] = useState("");
+  const [epc, setEpc] = useState("");
   const [tagType, setTagType] = useState<string>(TAG_TYPES[0]);
 
   const assets = resp?.data ?? [];
@@ -54,13 +56,20 @@ export function RegisterTagModal({ onClose, open }: RegisterTagModalProps) {
       toast.error("Select an asset first");
       return;
     }
+    const scannedEpc = epc.trim().toUpperCase();
+    if (scannedEpc && !/^[0-9A-F]{24}$/.test(scannedEpc)) {
+      toast.error("EPC must be 24 hex characters");
+      return;
+    }
     const result = await encodeTag({
       asset_id: selectedAsset.id,
+      epc: scannedEpc || undefined,
       tag_type: tagType,
     });
     if (result?.data?.epc) {
       toast.success(`Tag registered · EPC ${result.data.epc}`);
     }
+    setEpc("");
     onClose();
   };
 
@@ -74,7 +83,7 @@ export function RegisterTagModal({ onClose, open }: RegisterTagModalProps) {
           </DialogTitle>
           <DialogDescription>
             Manually register a tag to an asset without RFID hardware. An EPC
-            is generated from the asset code.
+            is generated from the asset code when no EPC is scanned or typed.
           </DialogDescription>
         </DialogHeader>
 
@@ -100,6 +109,17 @@ export function RegisterTagModal({ onClose, open }: RegisterTagModalProps) {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>EPC</Label>
+            <FaDesktopReaderPanel onEpc={setEpc} />
+            <input
+              className="w-full rounded-lg border border-border bg-transparent px-3 py-1.5 font-mono text-xs uppercase outline-none focus:border-[hsl(var(--brand))]"
+              placeholder="Scan a tag or type 24-hex EPC (optional)"
+              value={epc}
+              onChange={(e) => setEpc(e.target.value)}
+            />
           </div>
 
           <div className="space-y-2">

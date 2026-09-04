@@ -22,7 +22,6 @@ import {
   useGetRfidTagOrdersQuery,
   useGetRFIDTagsQuery,
 } from "@/hooks/api/fixed-assets";
-import { useBypassHardware } from "@/hooks/useBypassHardware";
 import {
   FaKpiStrip,
   FaShellHead,
@@ -58,7 +57,6 @@ const rssiTone = (rssi: number): string =>
 export function FaRfidTagsPage() {
   const { tokenPayload } = useUser();
   const { canManage } = useFaPermission();
-  const { isBypassEnabled } = useBypassHardware();
   const organizationId = tokenPayload?.organization_id ?? "";
   const [page, setPage] = useState(1);
   const PAGE_LIMIT = 20;
@@ -131,7 +129,7 @@ export function FaRfidTagsPage() {
                 Print queue
               </button>
             )}
-            {canManage && isBypassEnabled && (
+            {canManage && (
               <button
                 className="ks-btn ks-btn-sm"
                 type="button"
