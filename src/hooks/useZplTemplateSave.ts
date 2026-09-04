@@ -39,14 +39,16 @@ export const useZplTemplateSave = ({
   // the mutation settles.
   const saveZplTemplate = useCallback(async () => {
     const trimmedContent = content.trim();
-    if (!trimmedContent || !organizationId) return;
+    if (!trimmedContent || !organizationId) return false;
 
-    await upsertZplTemplate({
+    return upsertZplTemplate({
       content: trimmedContent,
       field_mappings: fieldMappings,
       name: name.trim() || defaultName,
       tuning,
-    }).catch(() => undefined);
+    })
+      .then(() => true)
+      .catch(() => false);
   }, [
     content,
     defaultName,
