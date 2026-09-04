@@ -1,13 +1,13 @@
 "use client";
 
 import {
-  CheckCircle2,
   Clock,
   Download,
   FileText,
   PlayCircle,
   Shield,
 } from "lucide-react";
+import { useState } from "react";
 
 import { useUser } from "@/context/user-context";
 import {
@@ -25,6 +25,8 @@ import {
   FaStat,
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
+import { FaAuditSignOffCard, SIGNOFF_ROLE_COUNT } from "@/modules/dashboard/fixed-assets/FaAuditSignOffCard";
+import { FaDesktopReaderPanel } from "@/modules/dashboard/fixed-assets/FaDesktopReaderPanel";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
 import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
@@ -35,15 +37,8 @@ import type {
   PostAuditAdjustmentRequest,
 } from "@/types/fixed-assets";
 
-const SIGNOFF_ROLES: { label: string; role: FaAuditSignOffRole }[] = [
-  { label: "Stock count lead", role: "stock_count_lead" },
-  { label: "Department head", role: "dept_head" },
-  { label: "Internal audit", role: "internal_audit" },
-  { label: "Finance manager", role: "finance_manager" },
-  { label: "External accountant", role: "external_accountant" },
-];
-
 export function FaAuditPage() {
+  const [sweepEpcs, setSweepEpcs] = useState<string[]>([]);
   const { tokenPayload } = useUser();
   const { canManage } = useFaPermission();
   const organizationId = tokenPayload?.organization_id ?? "";
@@ -72,7 +67,7 @@ export function FaAuditPage() {
 
   const signOffByRole = new Map((session?.sign_offs ?? []).map((s) => [s.role, s]));
   const signoffDone = session?.sign_off_count ?? 0;
-  const signoffRequired = session?.required_sign_off ?? SIGNOFF_ROLES.length;
+  const signoffRequired = session?.required_sign_off ?? SIGNOFF_ROLE_COUNT;
 
   // The zone with the largest NBV variance drives the adjustment journal preview —
   // PostAdjustment only takes a single zone_id, so it can't post for every variance at once.
@@ -110,9 +105,18 @@ export function FaAuditPage() {
     await postAdjustment({ auditId, data });
   };
 
+  const handleSweepEpc = (epc: string) => {
+    setSweepEpcs((prev) => (prev.includes(epc) ? prev : [...prev, epc]));
+  };
+
   const handleResumeSweep = async () => {
     if (!auditId || !nextZoneToScan) return;
-    await resumeSweep({ auditId, zone_id: nextZoneToScan.z });
+    await resumeSweep({
+      auditId,
+      epcs: sweepEpcs.length > 0 ? sweepEpcs : undefined,
+      zone_id: nextZoneToScan.z,
+    });
+    setSweepEpcs([]);
   };
 
   const handleAuditReport = async () => {
@@ -225,6 +229,15 @@ export function FaAuditPage() {
               )}
             </div>
             <FaMeter pct={auditProgress?.pct_complete ?? 0} tone="brand" />
+            {canManage && nextZoneToScan && (
+              <div style={{ marginTop: 10 }}>
+                <FaDesktopReaderPanel onEpc={handleSweepEpc} />
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {sweepEpcs.length} tag(s) read for {nextZoneToScan.z} · counted
+                  on Continue sweep
+                </p>
+              </div>
+            )}
           </div>
           <div style={{ textAlign: "right" }}>
             <div
@@ -433,65 +446,14 @@ export function FaAuditPage() {
             </div>
           </div>
 
-          <div className="ks-card">
-            <div className="ks-card-head">
-              <div>
-                <div className="ks-card-title">Sign-off · Audit report</div>
-                <div className="ks-card-desc">{signoffDone} of {signoffRequired} required approvals</div>
-              </div>
-              <span className="ks-badge warn">{Math.max(signoffRequired - signoffDone, 0)} pending</span>
-            </div>
-            <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {SIGNOFF_ROLES.map((s) => {
-                const entry = signOffByRole.get(s.role);
-                const done = Boolean(entry);
-                return (
-                <div
-                  key={s.role}
-                  style={{
-                    alignItems: "center",
-                    display: "flex",
-                    gap: 10,
-                  }}
-                >
-                  {done ? (
-                    <CheckCircle2
-                      size={18}
-                      style={{ color: "hsl(var(--success))", flexShrink: 0 }}
-                    />
-                  ) : (
-                    <Clock
-                      size={18}
-                      style={{ color: "hsl(var(--warn))", flexShrink: 0 }}
-                    />
-                  )}
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600 }}>
-                      {s.label}
-                    </div>
-                    <div style={{ color: "hsl(var(--text-3))", fontSize: 12 }}>
-                      {entry?.user_name || "Awaiting signature"}
-                    </div>
-                  </div>
-                  {done ? (
-                    <span className="ks-badge success">Signed</span>
-                  ) : canManage ? (
-                    <button
-                      className="ks-btn ks-btn-primary ks-btn-sm"
-                      disabled={!auditId}
-                      type="button"
-                      onClick={() => handleSignOff(s.role)}
-                    >
-                      Sign off
-                    </button>
-                  ) : (
-                    <span className="ks-badge outline">Pending</span>
-                  )}
-                </div>
-                );
-              })}
-            </div>
-          </div>
+          <FaAuditSignOffCard
+            auditId={auditId}
+            canManage={canManage}
+            signOffByRole={signOffByRole}
+            signoffDone={signoffDone}
+            signoffRequired={signoffRequired}
+            onSignOff={handleSignOff}
+          />
         </div>
       </div>
       </FaQueryState>

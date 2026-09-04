@@ -13,6 +13,7 @@ interface UseResumeAuditSweepMutationParams {
 
 interface ResumeAuditSweepVariables {
   auditId: string;
+  epcs?: string[];
   zone_id: string;
 }
 
@@ -26,10 +27,10 @@ const useResumeAuditSweepMutation = ({
     Error,
     ResumeAuditSweepVariables
   >({
-    mutationFn: ({ auditId, zone_id }) =>
+    mutationFn: ({ auditId, epcs, zone_id }) =>
       resumeAuditSweepService({
         auditId,
-        data: { zone_id },
+        data: { epcs, zone_id },
         organizationId,
       }),
     onError: (error) => {

@@ -4,7 +4,7 @@ export type ResumeAuditSweepResponse = ApiResponse<Record<string, unknown>>;
 
 interface ResumeAuditSweepParams {
   auditId: string;
-  data: { zone_id: string };
+  data: { epcs?: string[]; zone_id: string };
   organizationId: string;
 }
 
