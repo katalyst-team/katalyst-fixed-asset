@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LogOut, ScanLine } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,7 @@ import {
   useGetAssetRegisterQuery,
 } from "@/hooks/api/fixed-assets";
 import { cn } from "@/lib/utils";
+import { FaDesktopReaderPanel } from "@/modules/dashboard/fixed-assets/FaDesktopReaderPanel";
 import { useFaPeopleOptions } from "@/modules/dashboard/fixed-assets/modals/types";
 
 const DUE_OPTIONS = ["1 day", "3 days", "7 days", "14 days", "30 days"];
@@ -75,6 +77,22 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
     resolver: zodResolver(formSchema),
   });
 
+  const handleScannedEpc = (epc: string) => {
+    const asset = (resp?.data ?? []).find(
+      (a) => a.epc?.toUpperCase() === epc.toUpperCase(),
+    );
+    if (!asset) {
+      toast.error(`No asset registered for EPC ${epc}`);
+      return;
+    }
+    if (!eligible.some((a) => a.id === asset.id)) {
+      toast.error(`${asset.name} is not available for check-out`);
+      return;
+    }
+    form.setValue("assetId", asset.id, { shouldValidate: true });
+    toast.success(`Asset selected · ${asset.name}`);
+  };
+
   const handleOpenChange = (next: boolean) => {
     if (!next) {
       onClose();
@@ -109,13 +127,7 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
 
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex items-start gap-2 rounded-lg border border-border bg-muted/40 p-3">
-              <ScanLine className="mt-0.5 shrink-0 text-muted-foreground" size={16} />
-              <p className="text-xs text-muted-foreground">
-                At a crib gate? Scanning the tag + badge fills this form
-                automatically.
-              </p>
-            </div>
+            <FaDesktopReaderPanel onEpc={handleScannedEpc} />
 
             <FormField
               control={form.control}
