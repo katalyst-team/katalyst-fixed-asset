@@ -15,7 +15,6 @@ module.exports = {
     "store",
     "validation",
     "employee",
-    "sku",
     "category",
     "inventory",
     "inbound",

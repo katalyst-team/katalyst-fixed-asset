@@ -169,7 +169,6 @@ const MENU_CONFIG: Record<string, { icon?: LucideIcon; url?: string }> = {
   WEB_REPORTS: { url: "/dashboard/report" },
   WEB_REUSABLE_EPC: { url: "/dashboard/reusable-epc" },
   WEB_SETTINGS: { icon: Settings },
-  WEB_SKU: { url: "/dashboard/sku" },
   WEB_STOCK_ALERT_CONFIG: { url: "/dashboard/stock-alert-config" },
   WEB_STOCK_AUDIT: { url: "/dashboard/stock-audit" },
   WEB_STOCK_AUDIT_AREA: { url: "/dashboard/stock-audit-area" },

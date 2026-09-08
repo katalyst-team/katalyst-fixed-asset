@@ -102,11 +102,6 @@ export function BreadcrumbNavigation() {
             path: "/dashboard/outbound",
             title: t("sidebar.outbound"),
           },
-          sku: {
-            parent: "masterData",
-            path: "/dashboard/sku",
-            title: t("sidebar.sku"),
-          },
           store: {
             dynamicPaths: [
               {
