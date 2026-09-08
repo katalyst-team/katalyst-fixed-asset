@@ -17,6 +17,7 @@ import {
   Shield,
   ShieldCheck,
   ShoppingCart,
+  Sparkles,
   Tags,
   Truck,
   Users,
@@ -45,6 +46,7 @@ export interface BaseNavItem {
  */
 const MENU_CONFIG: Record<string, { icon?: LucideIcon; url?: string }> = {
   WEB_ADD_REMOVE_RFID: { url: "/dashboard/add-remove-rfid" },
+  WEB_AI_ASSISTANT: { icon: Sparkles, url: "/dashboard/ai-assistant" },
   WEB_API_KEYS: { url: "/dashboard/api-key" },
   WEB_ASSIGN_RFID: { url: "/dashboard/assign-rfid" },
   WEB_ATTRIBUTE_COLLECTION: { url: "/dashboard/attribute/collection" },

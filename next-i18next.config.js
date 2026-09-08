@@ -12,6 +12,7 @@ module.exports = {
   ns: [
     "common",
     "auth",
+    "ai-assistant",
     "store",
     "validation",
     "employee",

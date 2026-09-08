@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/sidebar";
 import { MenuProvider } from "@/context/menu-context";
 import { UserProvider } from "@/context/user-context";
+import { AiAssistantWidget } from "@/modules/dashboard/ai-assistant/AiAssistantWidget";
 
 import { BreadcrumbNavigation } from "./breadcrumb-navigation";
 import NotificationPopover from "./Notification";
@@ -47,6 +48,7 @@ export default function DashboardLayout(props: DashboardLayoutProps) {
             <div className="min-h-[100vh] border flex-1 rounded-xl bg-muted/50 md:min-h-min" /> */}
             </div>
           </SidebarInset>
+          <AiAssistantWidget />
         </SidebarProvider>
       </MenuProvider>
     </UserProvider>

@@ -1,0 +1,18 @@
+{
+  "emptyDescription": "Tanyakan apa saja tentang data organisasi Anda — jumlah stok, pergerakan, performa toko, audit, dan lainnya.",
+  "emptyTitle": "Ada yang bisa saya bantu?",
+  "featureDisabledDescription": "AI Assistant belum diaktifkan untuk organisasi Anda. Silakan hubungi administrator Anda.",
+  "featureDisabledTitle": "AI Assistant nonaktif",
+  "inputHint": "Jawaban AI dibuat dari data organisasi Anda secara langsung. Enter untuk kirim, Shift+Enter untuk baris baru.",
+  "inputPlaceholder": "Ajukan pertanyaan...",
+  "newChat": "Chat baru",
+  "noSessions": "Belum ada percakapan",
+  "pageDescription": "Ajukan pertanyaan dan dapatkan insight instan tentang data organisasi Anda",
+  "pageTitle": "AI Assistant",
+  "suggestionCriticalStock": "Item mana saja yang stoknya kritis?",
+  "suggestionLowStock": "Item mana saja yang stoknya menipis?",
+  "suggestionPendingAudits": "Apakah ada audit stok yang tertunda?",
+  "suggestionStockHealth": "Bagaimana stock health bulan ini?",
+  "suggestionStorePerformance": "Bagaimana performa tiap toko bulan ini?",
+  "suggestionTopMovers": "Tampilkan top movers bulan ini"
+}

@@ -1,0 +1,18 @@
+{
+  "emptyDescription": "Ask anything about your organization data — stock levels, movements, store performance, audits, and more.",
+  "emptyTitle": "How can I help you today?",
+  "featureDisabledDescription": "The AI Assistant is not enabled for your organization. Please contact your administrator.",
+  "featureDisabledTitle": "AI Assistant is disabled",
+  "inputHint": "AI answers are generated from your organization's live data. Enter to send, Shift+Enter for a new line.",
+  "inputPlaceholder": "Ask a question...",
+  "newChat": "New chat",
+  "noSessions": "No previous conversations",
+  "pageDescription": "Ask questions and get instant insights about your organization data",
+  "pageTitle": "AI Assistant",
+  "suggestionCriticalStock": "Which items are critically low on stock?",
+  "suggestionLowStock": "Which items are running low on stock?",
+  "suggestionPendingAudits": "Are there pending stock audits?",
+  "suggestionStockHealth": "How is my stock health this month?",
+  "suggestionStorePerformance": "How is each store performing this month?",
+  "suggestionTopMovers": "Show top movers this month"
+}
