@@ -1,7 +1,8 @@
 "use client";
 
+import type { LucideIcon } from "lucide-react";
 import {
-  Bell, Check, Database, DollarSign, Loader2, Radio, RefreshCw, Save, Settings as Cog, Shield,
+  Bell, BookOpen, Check, Database, DollarSign, Loader2, Mail, MessageSquare, Network, Plug, Printer, Radio, RefreshCw, Save, Settings as Cog, Shield,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -25,7 +26,7 @@ import type { FaSettings } from "@/types/fixed-assets";
 
 const DEFAULT_SETTINGS: FaSettings = {
   depreciation: { default_useful_life_years: {}, method: "straight-line" },
-  integrations: { active_directory: { connected: false }, email_provider: { connected: false }, erp: { connected: false } },
+  integrations: { accounting: { connected: false }, active_directory: { connected: false }, email_provider: { connected: false }, erp: { connected: false }, label_printers: { connected: false }, messaging: { connected: false } },
   notifications: { audit_complete_notify: false, disposal_approval_notify: false, email_enabled: false, maintenance_reminder_days: [], push_enabled: false },
   rfid_hardware: { default_tag_type: "", epc_encoding: "", reader_polling_interval_ms: 0, rssi_threshold: 0 },
   security: { ip_whitelist: [], mfa_required: false, password_policy: "", session_timeout_min: 0 },
@@ -193,40 +194,63 @@ function MaintenancePanel({ organizationId }: { organizationId: string }) {
   );
 }
 
+// ponytail: connect endpoint whitelist (katalyst-core settingsKeyByType) only accepts
+// these 3 — expand both maps together when the backend adds more types.
+const CONNECT_TYPE_BY_KEY: Record<string, "active-directory" | "email" | "erp"> = {
+  active_directory: "active-directory",
+  email_provider: "email",
+  erp: "erp",
+};
+
+const INTEGRATION_META: Record<string, { desc: string; icon: LucideIcon; name: string }> = {
+  accounting: { desc: "Accounting sync", icon: BookOpen, name: "Accounting" },
+  active_directory: { desc: "SSO / directory", icon: Network, name: "Active Directory" },
+  email_provider: { desc: "Notifications channel", icon: Mail, name: "Email" },
+  erp: { desc: "ERP / asset sync", icon: Database, name: "ERP" },
+  label_printers: { desc: "Label & tag printers", icon: Printer, name: "Label Printers" },
+  messaging: { desc: "Messaging / chat alerts", icon: MessageSquare, name: "Messaging" },
+};
+
 function IntegrationsPanel({ canManageSettings, integrations, isConnecting, onConnect }: {
   canManageSettings: boolean;
   integrations: FaSettings["integrations"];
   isConnecting: boolean;
-  onConnect: (type: "active-directory" | "email" | "erp") => Promise<void>;
+  onConnect: (key: string) => Promise<void>;
 }) {
-  const apiCards = [
-    { connected: integrations.erp.connected, desc: "ERP / Accounting sync", name: integrations.erp.type ? integrations.erp.type.charAt(0).toUpperCase() + integrations.erp.type.slice(1) : "ERP", type: "erp" as const },
-    { connected: integrations.active_directory.connected, desc: "SSO / directory", name: "Active Directory", type: "active-directory" as const },
-    { connected: integrations.email_provider.connected, desc: "Notifications channel", name: "Email", type: "email" as const },
-  ];
+  const cards = Object.entries(integrations)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, state]) => {
+      const fallback = { desc: "Integration", icon: Plug, name: key.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ") };
+      const meta = INTEGRATION_META[key] ?? fallback;
+      return { ...meta, connected: state?.connected === true, key };
+    });
 
   return (
     <div className="ks-grid-3" style={{ gap: 14 }}>
-      {apiCards.map((i) => (
-        <div key={i.name} className="ks-card">
-          <div className="ks-card-body" style={{ alignItems: "center", display: "flex", flexDirection: "column", gap: 10, textAlign: "center" }}>
-            <div style={{ alignItems: "center", background: "hsl(var(--surface-2))", borderRadius: 10, display: "flex", height: 44, justifyContent: "center", width: 44 }}><Database size={20} /></div>
-            <div style={{ fontSize: 14, fontWeight: 600 }}>{i.name}</div>
-            <div style={{ color: "hsl(var(--text-3))", fontSize: 12 }}>{i.desc}</div>
-            {i.connected ? <span className="ks-badge success">Connected</span> : canManageSettings ? (
-              <button
-                className="ks-btn ks-btn-sm"
-                disabled={isConnecting}
-                type="button"
-                onClick={() => onConnect(i.type)}
-              >
-                {isConnecting ? <Loader2 className="animate-spin" size={14} /> : null}
-                Connect
-              </button>
-            ) : <span className="ks-badge outline">Available</span>}
+      {cards.map((i) => {
+        const Icon = i.icon;
+        const connectType = CONNECT_TYPE_BY_KEY[i.key];
+        return (
+          <div key={i.key} className="ks-card">
+            <div className="ks-card-body" style={{ alignItems: "center", display: "flex", flexDirection: "column", gap: 10, textAlign: "center" }}>
+              <div style={{ alignItems: "center", background: "hsl(var(--surface-2))", borderRadius: 10, display: "flex", height: 44, justifyContent: "center", width: 44 }}><Icon size={20} /></div>
+              <div style={{ fontSize: 14, fontWeight: 600 }}>{i.name}</div>
+              <div style={{ color: "hsl(var(--text-3))", fontSize: 12 }}>{i.desc}</div>
+              {i.connected ? <span className="ks-badge success">Connected</span> : connectType && canManageSettings ? (
+                <button
+                  className="ks-btn ks-btn-sm"
+                  disabled={isConnecting}
+                  type="button"
+                  onClick={() => onConnect(i.key)}
+                >
+                  {isConnecting ? <Loader2 className="animate-spin" size={14} /> : null}
+                  Connect
+                </button>
+              ) : connectType ? <span className="ks-badge outline">Available</span> : <span className="ks-badge outline">Coming soon</span>}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -391,7 +415,9 @@ export function FaSettingsPage() {
     await updateSettingsAsync(form);
   };
 
-  const handleConnect = async (type: "active-directory" | "email" | "erp") => {
+  const handleConnect = async (key: string) => {
+    const type = CONNECT_TYPE_BY_KEY[key];
+    if (!type) return;
     await connectAsync({ data: {}, type });
   };
 

@@ -516,11 +516,7 @@ export interface FaSettings {
     default_useful_life_years: Partial<Record<AssetCategory, number>>;
     method: "straight-line" | "declining-balance";
   };
-  integrations: {
-    active_directory: { connected: boolean };
-    email_provider: { connected: boolean };
-    erp: { connected: boolean; type?: "odoo" | "sap" | "oracle" };
-  };
+  integrations: Record<string, { connected: boolean; type?: string }>;
   notifications: {
     audit_complete_notify: boolean;
     disposal_approval_notify: boolean;
