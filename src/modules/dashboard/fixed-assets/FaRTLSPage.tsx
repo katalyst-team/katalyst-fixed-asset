@@ -1,12 +1,19 @@
 "use client";
 
-import { Building, MapPin, Pencil, Search, Trash2 } from "lucide-react";
+import { MapPin, Pencil, Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useUser } from "@/context/user-context";
 import {
   useCreateSavedQueryMutation,
@@ -16,6 +23,7 @@ import {
   useGetRTLSPositionsQuery,
   useGetSavedQueriesQuery,
 } from "@/hooks/api/fixed-assets";
+import { useUrlFilterSync } from "@/hooks/useUrlFilterSync";
 import {
   FaKpiStrip,
   FaShellHead,
@@ -51,17 +59,34 @@ export function FaRTLSPage() {
   const { openModal } = useFaModal();
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
-  const [siteId, setSiteId] = useState("JKT-HQ");
-  const [floor, setFloor] = useState("8");
+  const [siteId, setSiteId] = useState("");
+  const [floor, setFloor] = useState("");
   const [queryOpen, setQueryOpen] = useState(false);
   const [queryName, setQueryName] = useState("");
+  const [querySite, setQuerySite] = useState("");
+  const [queryFloor, setQueryFloor] = useState("");
+  const hasLocation = Boolean(siteId && floor);
+
+  const { syncToUrl } = useUrlFilterSync<{ floor: string; site: string }>({
+    fromQuery: (q) => ({
+      floor: typeof q.floor === "string" ? q.floor : "",
+      site: typeof q.site === "string" ? q.site : "",
+    }),
+    onInit: (f) => {
+      if (f.site) setSiteId(f.site);
+      if (f.floor) setFloor(f.floor);
+    },
+    toQuery: (f) => ({ floor: f.floor, site: f.site }),
+  });
 
   const { data: posResp, isError, isLoading } = useGetRTLSPositionsQuery({
+    enabled: hasLocation,
     floor,
     organizationId,
     site_id: siteId,
   });
   const { data: fpResp } = useGetRTLSFloorPlanQuery({
+    enabled: hasLocation,
     floor,
     organizationId,
     site_id: siteId,
@@ -85,7 +110,19 @@ export function FaRTLSPage() {
     : null;
   const floorPlan = fpResp?.data;
   const rooms = floorPlan?.rooms ?? [];
-  const savedQueries = savedQueriesResp?.data?.queries ?? [];
+  const savedQueries = useMemo(
+    () => savedQueriesResp?.data?.queries ?? [],
+    [savedQueriesResp],
+  );
+  const locations = Array.from(
+    new Map(savedQueries.map((q) => [`${q.site_id}|${q.floor}`, q])).values(),
+  );
+
+  useEffect(() => {
+    if (hasLocation || savedQueries.length === 0) return;
+    setSiteId(savedQueries[0].site_id);
+    setFloor(savedQueries[0].floor);
+  }, [floor, hasLocation, savedQueries, siteId]);
   const assets = assetResp?.data ?? [];
   const assetById = new Map(assets.map((a) => [a.id, a]));
   const vbW = floorPlan?.width ?? 600;
@@ -105,9 +142,16 @@ export function FaRTLSPage() {
       ]
     : [];
 
+  const handleSelectLocation = (nextSite: string, nextFloor: string) => {
+    setSiteId(nextSite);
+    setFloor(nextFloor);
+    syncToUrl({ floor: nextFloor, site: nextSite });
+  };
+
   const handleSaveQuery = async () => {
-    if (!queryName) return;
-    await createSavedQuery({ floor, name: queryName, site_id: siteId });
+    if (!queryName || !querySite || !queryFloor) return;
+    await createSavedQuery({ floor: queryFloor, name: queryName, site_id: querySite });
+    handleSelectLocation(querySite, queryFloor);
     setQueryOpen(false);
     setQueryName("");
   };
@@ -129,13 +173,29 @@ export function FaRTLSPage() {
               <Search size={14} />
               Locate asset
             </button>
-            <button
-              className="ks-btn ks-btn-sm"
-              type="button"
+            <Select
+              value={siteId ? `${siteId}|${floor}` : ""}
+              onValueChange={(key) => {
+                const loc = locations.find((l) => `${l.site_id}|${l.floor}` === key);
+                if (loc) handleSelectLocation(loc.site_id, loc.floor);
+              }}
             >
-              <Building size={14} />
-              {siteId}
-            </button>
+              <SelectTrigger className="w-[190px]">
+                <SelectValue
+                  placeholder={locations.length > 0 ? "Select location" : "No saved location"}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {locations.map((l) => (
+                  <SelectItem
+                    key={`${l.site_id}|${l.floor}`}
+                    value={`${l.site_id}|${l.floor}`}
+                  >
+                    {l.site_id} · Floor {l.floor}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </>
         }
         desc="Indoor positioning via BLE anchors · ±0.4 m accuracy · live"
@@ -155,15 +215,23 @@ export function FaRTLSPage() {
       </FaKpiStrip>
 
       <FaQueryState
-        isEmpty={positions.length === 0}
+        emptyDescription={
+          hasLocation
+            ? "No assets are being tracked on this floor."
+            : "Save a location query first, then pick it from the location selector."
+        }
+        emptyTitle={hasLocation ? "No tracked assets" : "No location selected"}
+        isEmpty={!hasLocation || positions.length === 0}
         isError={isError}
         isLoading={isLoading}
       >
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">{siteId} · Floor {floor}</div>
+              <div className="ks-card-title">
+                {siteId ? `${siteId} · Floor ${floor}` : "No location selected"}
+              </div>
               <div className="ks-card-desc">
                 live · {anchors.length} anchors · {positions.length} assets on
                 floor
@@ -350,10 +418,7 @@ export function FaRTLSPage() {
                       className="ks-btn ks-btn-ghost ks-btn-sm"
                       style={{ flex: 1, justifyContent: "flex-start" }}
                       type="button"
-                      onClick={() => {
-                        setSiteId(q.site_id);
-                        setFloor(q.floor);
-                      }}
+                      onClick={() => handleSelectLocation(q.site_id, q.floor)}
                     >
                       <MapPin size={13} />
                       {q.name}
@@ -373,7 +438,16 @@ export function FaRTLSPage() {
         </div>
       </div>
       </FaQueryState>
-      <Dialog open={queryOpen} onOpenChange={setQueryOpen}>
+      <Dialog
+        open={queryOpen}
+        onOpenChange={(open) => {
+          setQueryOpen(open);
+          if (open) {
+            setQuerySite(siteId);
+            setQueryFloor(floor);
+          }
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Save location query</DialogTitle>
@@ -385,8 +459,23 @@ export function FaRTLSPage() {
             onChange={(e) => setQueryName(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") handleSaveQuery(); }}
           />
+          <Input
+            placeholder="Site ID"
+            value={querySite}
+            onChange={(e) => setQuerySite(e.target.value)}
+          />
+          <Input
+            placeholder="Floor"
+            value={queryFloor}
+            onChange={(e) => setQueryFloor(e.target.value)}
+          />
           <DialogFooter>
-            <Button onClick={handleSaveQuery}>Save</Button>
+            <Button
+              disabled={!queryName || !querySite || !queryFloor}
+              onClick={handleSaveQuery}
+            >
+              Save
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
