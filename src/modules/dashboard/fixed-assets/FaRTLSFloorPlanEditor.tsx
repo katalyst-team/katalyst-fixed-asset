@@ -22,6 +22,25 @@ export const ROOM_TONE: Record<FaRTLSFloorPlanRoom["type"], string> = {
   zone: "rgba(6,182,212,0.07)",
 };
 
+interface PulseDotProps {
+  color: string;
+  dur?: string;
+  x: number;
+  y: number;
+}
+
+export function PulseDot({ color, dur = "2.4s", x, y }: PulseDotProps) {
+  return (
+    <g>
+      <circle cx={x} cy={y} fill={color} opacity="0.25" r="6">
+        <animate attributeName="r" dur={dur} repeatCount="indefinite" values="6;14;6" />
+        <animate attributeName="opacity" dur={dur} repeatCount="indefinite" values="0.25;0;0.25" />
+      </circle>
+      <circle cx={x} cy={y} fill={color} r="4" />
+    </g>
+  );
+}
+
 export function FloorPlanEditor({
   floor,
   onDone,

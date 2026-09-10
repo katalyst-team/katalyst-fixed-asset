@@ -142,6 +142,8 @@ export type { GetRTLSFloorPlanResponse } from "./getRTLSFloorPlanService";
 export { getRTLSFloorPlanService } from "./getRTLSFloorPlanService";
 export type { GetRTLSPositionsResponse } from "./getRTLSPositionsService";
 export { getRTLSPositionsService } from "./getRTLSPositionsService";
+export type { GetRTLSSitesResponse } from "./getRTLSSitesService";
+export { getRTLSSitesService } from "./getRTLSSitesService";
 export type { GetSavedQueriesResponse } from "./getSavedQueriesService";
 export { getSavedQueriesService } from "./getSavedQueriesService";
 export type { GetScanInHistoryResponse } from "./getScanInHistoryService";

@@ -425,6 +425,11 @@ export interface FaRTLSFloorPlan {
   width: number;
 }
 
+export interface FaRTLSLocation {
+  floor: string;
+  site_id: string;
+}
+
 export interface UpsertRTLSFloorPlanRequest {
   floor: string;
   floor_plan_url?: string;

@@ -21,6 +21,7 @@ import {
   useGetAssetRegisterQuery,
   useGetRTLSFloorPlanQuery,
   useGetRTLSPositionsQuery,
+  useGetRTLSSitesQuery,
   useGetSavedQueriesQuery,
 } from "@/hooks/api/fixed-assets";
 import { useUrlFilterSync } from "@/hooks/useUrlFilterSync";
@@ -31,28 +32,8 @@ import {
   formatIDRShort,
 } from "@/modules/dashboard/fixed-assets";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
-import { FloorPlanEditor, ROOM_TONE } from "@/modules/dashboard/fixed-assets/FaRTLSFloorPlanEditor";
+import { FloorPlanEditor, PulseDot, ROOM_TONE } from "@/modules/dashboard/fixed-assets/FaRTLSFloorPlanEditor";
 import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
-
-interface PulseDotProps {
-  color: string;
-  dur?: string;
-  x: number;
-  y: number;
-}
-
-function PulseDot({ color, dur = "2.4s", x, y }: PulseDotProps) {
-  return (
-    <g>
-      <circle cx={x} cy={y} fill={color} opacity="0.25" r="6">
-        <animate attributeName="r" dur={dur} repeatCount="indefinite" values="6;14;6" />
-        <animate attributeName="opacity" dur={dur} repeatCount="indefinite" values="0.25;0;0.25" />
-      </circle>
-      <circle cx={x} cy={y} fill={color} r="4" />
-    </g>
-  );
-}
-
 
 export function FaRTLSPage() {
   const router = useRouter();
@@ -92,6 +73,7 @@ export function FaRTLSPage() {
     site_id: siteId,
   });
   const { data: savedQueriesResp } = useGetSavedQueriesQuery({ organizationId });
+  const { data: sitesResp } = useGetRTLSSitesQuery({ organizationId });
   const { data: assetResp } = useGetAssetRegisterQuery({ organizationId });
   const { mutateAsync: createSavedQuery } = useCreateSavedQueryMutation({
     organizationId,
@@ -114,15 +96,21 @@ export function FaRTLSPage() {
     () => savedQueriesResp?.data?.queries ?? [],
     [savedQueriesResp],
   );
-  const locations = Array.from(
-    new Map(savedQueries.map((q) => [`${q.site_id}|${q.floor}`, q])).values(),
-  );
+  const sites = useMemo(() => sitesResp?.data?.sites ?? [], [sitesResp]);
+  const locations = useMemo(() => {
+    if (sites.length > 0) {
+      return sites.map((s) => ({ floor: s.floor, site_id: s.site_id }));
+    }
+    return Array.from(
+      new Map(savedQueries.map((q) => [`${q.site_id}|${q.floor}`, q])).values(),
+    ).map((q) => ({ floor: q.floor, site_id: q.site_id }));
+  }, [savedQueries, sites]);
 
   useEffect(() => {
-    if (hasLocation || savedQueries.length === 0) return;
-    setSiteId(savedQueries[0].site_id);
-    setFloor(savedQueries[0].floor);
-  }, [floor, hasLocation, savedQueries, siteId]);
+    if (hasLocation || locations.length === 0) return;
+    setSiteId(locations[0].site_id);
+    setFloor(locations[0].floor);
+  }, [floor, hasLocation, locations, siteId]);
   const assets = assetResp?.data ?? [];
   const assetById = new Map(assets.map((a) => [a.id, a]));
   const vbW = floorPlan?.width ?? 600;

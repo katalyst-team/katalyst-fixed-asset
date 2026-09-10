@@ -111,6 +111,8 @@ export { default as useGetRTLSFloorPlanQuery } from "./useGetRTLSFloorPlanQuery"
 export { KEY_USE_GET_FA_RTLS_FLOOR_PLAN } from "./useGetRTLSFloorPlanQuery";
 export { default as useGetRTLSPositionsQuery } from "./useGetRTLSPositionsQuery";
 export { KEY_USE_GET_FA_RTLS_POSITIONS } from "./useGetRTLSPositionsQuery";
+export { default as useGetRTLSSitesQuery } from "./useGetRTLSSitesQuery";
+export { KEY_USE_GET_FA_RTLS_SITES } from "./useGetRTLSSitesQuery";
 export { default as useGetSavedQueriesQuery } from "./useGetSavedQueriesQuery";
 export { KEY_USE_GET_FA_SAVED_QUERIES } from "./useGetSavedQueriesQuery";
 export { default as useGetScanInHistoryQuery } from "./useGetScanInHistoryQuery";
