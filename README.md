@@ -29,7 +29,7 @@ Copy `.env.local.example` to `.env.local` and set `NEXT_PUBLIC_ENDPOINT_URL` to 
 | API client | Axios (`src/services/index.ts` — automatic JWT refresh) |
 | i18n | next-i18next (en / id) |
 | Charts | Recharts |
-| Printing | QZ Tray via `jsprintmanager` |
+| Printing | QZ Tray (plumbing: `useQZSigning` + `/api/qz/sign-message`) |
 
 ## Project Structure
 
@@ -44,12 +44,7 @@ src/
 │   ├── auth/            # Sign-in, sign-up, password reset
 │   └── dashboard/
 │       ├── fixed-assets/  # PRIMARY FEATURE (see below)
-│       ├── overview/
-│       ├── store/
-│       ├── employee/
-│       ├── gate-*/
-│       ├── device-monitoring/
-│       └── [other features]/
+│       └── profile/
 ├── pages/dashboard/     # Next.js file-based routes (thin wrappers)
 ├── services/[domain]/   # Pure async functions calling fetcher()
 ├── styles/globals.css   # Design system CSS classes
@@ -64,7 +59,7 @@ Configuration files: `next.config.ts`, `tailwind.config.ts`, `eslint.config.mjs`
 
 1. **Service** (`src/services/[domain]/`) — pure async functions wrapping `fetcher()` (Axios). Every call receives `organizationId` derived from `tokenPayload?.organization_id ?? ""`.
 2. **React Query hook** (`src/hooks/api/[domain]/`) — `useQuery`/`useMutation` wrappers with key factories.
-3. **Feature module** (`src/modules/dashboard/[feature]/`) — page components + state. Newer modules use Zustand slices; legacy modules use React Context providers.
+3. **Feature module** (`src/modules/dashboard/[feature]/`) — page components + local state; dialogs via `useFaModal`.
 4. **Page** (`src/pages/dashboard/[feature]/index.tsx`) — thin wrapper with `<DashboardLayout>`, provider/store, and `createPageSEO()`.
 
 ### Fixed Assets Module (`src/modules/dashboard/fixed-assets/`)
