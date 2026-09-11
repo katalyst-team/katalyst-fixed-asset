@@ -107,7 +107,6 @@ export function FaRecapPage() {
               { key: "assets", label: "Assets" },
               { key: "val", label: "Value (IDR)" },
               { key: "pct", label: "Share (%)" },
-              { key: "status", label: "Status" },
             ],
             data: sites,
             sheetName: "Per site",
@@ -203,13 +202,12 @@ export function FaRecapPage() {
                     <th className="pb-2 text-right">Assets</th>
                     <th className="pb-2 text-right">Value</th>
                     <th className="pb-2 text-right">Share</th>
-                    <th className="pb-2 text-right">Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {sites.map((s) => (
                     <tr
-                      key={`${s.n}-${s.city}`}
+                      key={s.site_id}
                       className="border-t border-border"
                     >
                       <td className="py-2 font-medium">{s.n}</td>
@@ -217,11 +215,6 @@ export function FaRecapPage() {
                       <td className="py-2 text-right">{s.assets}</td>
                       <td className="py-2 text-right">{formatIDRShort(s.val)}</td>
                       <td className="py-2 text-right">{s.pct}%</td>
-                      <td className="py-2 text-right">
-                        <span className={`ks-badge ${s.status === "on" ? "success" : "danger"}`}>
-                          {s.status === "on" ? "active" : "offline"}
-                        </span>
-                      </td>
                     </tr>
                   ))}
                 </tbody>

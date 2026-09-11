@@ -364,7 +364,6 @@ export function FaDashboardPage() {
                 >
                   <div className="mb-1.5 flex items-center justify-between">
                     <span className="text-xs font-semibold">{s.n}</span>
-                    <span className={`ks-badge ${s.status === "on" ? "success" : "danger"}`} style={{ fontSize: 10 }} />
                   </div>
                   <div className="text-xs text-muted-foreground">{s.city}</div>
                   <div className="mt-2 flex items-center justify-between">

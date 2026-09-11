@@ -46,7 +46,7 @@ export interface FaSite {
   city: string;
   n: string;
   pct: number;
-  status: "on" | "off";
+  site_id: string;
   sub?: string;
   val: number;
 }
