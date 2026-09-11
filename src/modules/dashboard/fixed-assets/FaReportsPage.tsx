@@ -1,7 +1,7 @@
 "use client";
 
 import { Clock, Eye, Plus, Zap } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { useUser } from "@/context/user-context";
@@ -82,23 +82,24 @@ export function FaReportsPage() {
   const templates = resp?.data?.templates ?? [];
   const history = historyResp?.data?.reports ?? [];
 
+  useEffect(() => {
+    if (!previewId || !previewResp?.data?.html) return;
+    const iframe = document.createElement("iframe");
+    iframe.style.border = "none";
+    iframe.style.height = "100vh";
+    iframe.style.width = "100vw";
+    iframe.setAttribute("sandbox", "allow-same-origin");
+    const w = window.open("", "_blank", "noopener,noreferrer");
+    if (w) {
+      w.document.body.style.margin = "0";
+      w.document.body.appendChild(iframe);
+      iframe.srcdoc = previewResp.data.html;
+    }
+    setPreviewId("");
+  }, [previewId, previewResp]);
+
   const handlePreview = (tpl: FaReportTemplate) => {
     setPreviewId(tpl.id);
-    if (previewResp?.data?.html) {
-      const iframe = document.createElement("iframe");
-      iframe.style.border = "none";
-      iframe.style.height = "100vh";
-      iframe.style.width = "100vw";
-      iframe.setAttribute("sandbox", "allow-same-origin");
-      const w = window.open("", "_blank", "noopener,noreferrer");
-      if (w) {
-        w.document.body.style.margin = "0";
-        w.document.body.appendChild(iframe);
-        iframe.srcdoc = previewResp.data.html;
-      }
-    } else {
-      toast.info("Preparing preview…");
-    }
   };
 
   const handleHistory = () => {
@@ -126,9 +127,17 @@ export function FaReportsPage() {
       />
       <FaKpiStrip>
         <FaStat label="Available reports" tone="brand" value={String(templates.length)} />
-        <FaStat label="Generated today" tone="success" value={String(history.length)} />
-        <FaStat label="Scheduled monthly" tone="info" value="—" />
-        <FaStat label="Compliance status" sub="all green" tone="success" value="—" />
+        <FaStat label="Report history" tone="info" value={String(history.length)} />
+        <FaStat
+          label="Ready"
+          tone="success"
+          value={String(history.filter((h) => h.status === "ready").length)}
+        />
+        <FaStat
+          label="Failed"
+          tone="danger"
+          value={String(history.filter((h) => h.status === "failed").length)}
+        />
       </FaKpiStrip>
       <FaQueryState
         isEmpty={templates.length === 0}

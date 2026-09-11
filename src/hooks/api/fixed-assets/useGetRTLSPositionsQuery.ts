@@ -29,6 +29,7 @@ const useGetRTLSPositionsQuery = ({
     enabled: Boolean(organizationId && enabled),
     queryFn: () => getRTLSPositionsService({ ...filters, organizationId }),
     queryKey: KEY_USE_GET_FA_RTLS_POSITIONS(organizationId, filters),
+    refetchInterval: 5000,
     staleTime: 5 * 1000,
   });
 };
