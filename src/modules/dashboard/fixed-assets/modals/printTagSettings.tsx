@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslation } from "next-i18next";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -21,10 +23,12 @@ export function PreviewSettingsGrid({
   onPreviewSettingsChange,
   previewSettings,
 }: PreviewSettingsGridProps) {
+  const { t } = useTranslation("fixed-assets");
+
   return (
     <div className="grid gap-3 sm:grid-cols-4">
       <div className="space-y-1">
-        <Label>Width</Label>
+        <Label>{t("modals.printSettings.width")}</Label>
         <Input
           value={previewSettings.width}
           onChange={(e) => {
@@ -33,7 +37,7 @@ export function PreviewSettingsGrid({
         />
       </div>
       <div className="space-y-1">
-        <Label>Height</Label>
+        <Label>{t("modals.printSettings.height")}</Label>
         <Input
           value={previewSettings.height}
           onChange={(e) => {
@@ -42,7 +46,7 @@ export function PreviewSettingsGrid({
         />
       </div>
       <div className="space-y-1">
-        <Label>Unit</Label>
+        <Label>{t("modals.printSettings.unit")}</Label>
         <Select
           value={previewSettings.unit}
           onValueChange={(v) => {
@@ -59,7 +63,7 @@ export function PreviewSettingsGrid({
         </Select>
       </div>
       <div className="space-y-1">
-        <Label>Density</Label>
+        <Label>{t("modals.printSettings.density")}</Label>
         <Select
           value={previewSettings.dpmm}
           onValueChange={(v) => {
@@ -95,12 +99,14 @@ export function PrintTuningGrid({
   onRfidTuningChange,
   rfidTuning,
 }: PrintTuningGridProps) {
+  const { t } = useTranslation("fixed-assets");
+
   return (
     <div className="grid gap-3 sm:grid-cols-3">
       <div className="space-y-1">
-        <Label>RF power</Label>
+        <Label>{t("modals.printSettings.rfPower")}</Label>
         <Input
-          placeholder="e.g. 15"
+          placeholder={t("modals.printSettings.rfPowerPlaceholder")}
           value={rfidTuning.rfPower ?? ""}
           onChange={(e) => {
             onRfidTuningChange({ ...rfidTuning, rfPower: e.target.value });
@@ -108,9 +114,9 @@ export function PrintTuningGrid({
         />
       </div>
       <div className="space-y-1">
-        <Label>Encode position</Label>
+        <Label>{t("modals.printSettings.encodePosition")}</Label>
         <Input
-          placeholder="e.g. 1,0"
+          placeholder={t("modals.printSettings.encodePositionPlaceholder")}
           value={rfidTuning.encodePosition ?? ""}
           onChange={(e) => {
             onRfidTuningChange({
@@ -121,7 +127,7 @@ export function PrintTuningGrid({
         />
       </div>
       <div className="space-y-1">
-        <Label>Job delay (ms)</Label>
+        <Label>{t("modals.printSettings.jobDelay")}</Label>
         <Input
           max={5000}
           min={0}

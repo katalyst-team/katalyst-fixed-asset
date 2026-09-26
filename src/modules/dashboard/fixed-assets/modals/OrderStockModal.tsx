@@ -1,7 +1,9 @@
 "use client";
 
 import { PackageCheck } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import {
   Dialog,
@@ -34,6 +36,7 @@ interface OrderStockModalProps {
 const TAG_TYPES = ["passive", "anti-metal", "industrial"] as const;
 
 export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { isPending: isOrdering, mutateAsync: orderTags } =
@@ -61,6 +64,7 @@ export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
         ],
         supplier,
       });
+      toast.success(t("toasts.stockOrdered"));
       onClose();
     } catch {
       // hook handles toast
@@ -71,23 +75,23 @@ export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
-          <DialogTitle>Order tag stock</DialogTitle>
+          <DialogTitle>{t("modals.orderStock.title")}</DialogTitle>
           <DialogDescription>
-            Creates a purchase order with the selected supplier
+            {t("modals.orderStock.description")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="tag-type">Tag type</Label>
+            <Label htmlFor="tag-type">{t("modals.orderStock.tagType")}</Label>
             <Select value={tagType} onValueChange={setTagType}>
               <SelectTrigger id="tag-type">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {TAG_TYPES.map((t) => (
-                  <SelectItem key={t} value={t}>
-                    {t}
+                {TAG_TYPES.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -95,7 +99,7 @@ export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="tag-cat">Category</Label>
+            <Label htmlFor="tag-cat">{t("modals.orderStock.category")}</Label>
             <Select
               value={cat}
               onValueChange={(v) => setCat(v as AssetCategory)}
@@ -114,20 +118,25 @@ export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="tag-qty">Quantity</Label>
+            <Label htmlFor="tag-qty">{t("modals.orderStock.quantity")}</Label>
             <Input
               id="tag-qty"
               min={1}
               type="number"
               value={qty}
               onChange={(e) => setQty(e.target.value)}
-            />          </div>
+            />
+          </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="tag-supplier">Supplier</Label>
+            <Label htmlFor="tag-supplier">
+              {t("modals.orderStock.supplier")}
+            </Label>
             <Select value={supplier} onValueChange={setSupplier}>
               <SelectTrigger id="tag-supplier">
-                <SelectValue placeholder="Select supplier" />
+                <SelectValue
+                  placeholder={t("modals.orderStock.selectSupplier")}
+                />
               </SelectTrigger>
               <SelectContent>
                 {supplierOptions.map((s) => (
@@ -142,7 +151,7 @@ export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
 
         <DialogFooter>
           <button className="ks-btn" type="button" onClick={onClose}>
-            Cancel
+            {t("modals.orderStock.cancel")}
           </button>
           <button
             className="ks-btn ks-btn-primary"
@@ -151,7 +160,7 @@ export function OrderStockModal({ onClose, open }: OrderStockModalProps) {
             onClick={handleSubmit}
           >
             <PackageCheck size={14} />
-            Create PO
+            {t("modals.orderStock.createPo")}
           </button>
         </DialogFooter>
       </DialogContent>

@@ -5,6 +5,7 @@ import {
   AlertTriangle, BookOpen, Boxes, ChevronRight, Cog, Database, FileText, HelpCircle, Laptop,
   Lock, MapPin, Package, Printer, Radio, Shield, Truck, Wrench, Zap,
 } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useMemo } from "react";
 import { toast } from "sonner";
 
@@ -34,6 +35,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
 };
 
 function DocCardItem({ doc }: { doc: FaDocListItem }) {
+  const { t } = useTranslation("fixed-assets");
   const Icon = ICON_MAP[doc.icon] ?? FileText;
   return (
     <a
@@ -42,7 +44,7 @@ function DocCardItem({ doc }: { doc: FaDocListItem }) {
       rel="noopener noreferrer"
       style={{ alignItems: "flex-start", cursor: "pointer", display: "flex", flexDirection: "column", gap: 10, textAlign: "left" }}
       target="_blank"
-      onClick={() => toast(`Opening "${doc.title}"…`)}
+      onClick={() => toast(t("toasts.openingDoc", { title: doc.title }))}
     >
       <div className="ks-card-body" style={{ display: "flex", gap: 12, padding: 16, width: "100%" }}>
         <span className="ks-kpi-mini-square brand" style={{ alignItems: "center", borderRadius: 8, display: "flex", flexShrink: 0, height: 38, justifyContent: "center", width: 38 }}>
@@ -61,6 +63,7 @@ function DocCardItem({ doc }: { doc: FaDocListItem }) {
 }
 
 export function FaDocsPage() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
 
@@ -80,8 +83,8 @@ export function FaDocsPage() {
   return (
     <div>
       <FaShellHead
-        desc="Guides, references, and compliance documentation."
-        title="Documentation · How it works"
+        desc={t("page.docs.desc")}
+        title={t("page.docs.title")}
       />
       <div className="ks-card" style={{ marginBottom: 20 }}>
         <div className="ks-card-body" style={{ alignItems: "center", display: "flex", gap: 16 }}>
@@ -89,17 +92,16 @@ export function FaDocsPage() {
             <HelpCircle size={24} />
           </span>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 600 }}>Fixed Assets Module</div>
+            <div style={{ fontSize: 15, fontWeight: 600 }}>{t("page.docs.moduleTitle")}</div>
             <p style={{ color: "hsl(var(--text-2))", fontSize: 13, lineHeight: 1.5, margin: "4px 0 0", maxWidth: 640 }}>
-              End-to-end asset lifecycle management — from tagging and custody to PSAK 16 depreciation,
-              maintenance, and disposal. RFID-native with GS1 EPCIS export, audit-ready for BPKP &amp; ISO 17025.
+              {t("page.docs.moduleDesc")}
             </p>
           </div>
         </div>
       </div>
       <FaQueryState
-        emptyDescription="No documentation available."
-        emptyTitle="No documents"
+        emptyDescription={t("page.docs.emptyDesc")}
+        emptyTitle={t("page.docs.emptyTitle")}
         isEmpty={groups.length === 0}
         isError={isError}
         isLoading={isLoading}

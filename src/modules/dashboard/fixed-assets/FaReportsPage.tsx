@@ -1,6 +1,7 @@
 "use client";
 
 import { Clock, Eye, Plus, Zap } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -15,6 +16,7 @@ import {
 import { FaKpiStrip, FaProtoIcon, FaShellHead, FaStat,formatActivityTime } from "@/modules/dashboard/fixed-assets";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 import type { FaReportTemplate } from "@/types/fixed-assets";
 
 function formatBadgeFor(id: string): string[] {
@@ -32,6 +34,8 @@ function ReportCard({
   onPreview: (tpl: FaReportTemplate) => void;
   tpl: FaReportTemplate;
 }) {
+  const { t } = useTranslation("fixed-assets");
+  const { canManage } = useFaPermission();
   return (
     <div className="ks-card" style={{ display: "flex", flexDirection: "column" }}>
       <div className="ks-card-body" style={{ display: "flex", flex: 1, flexDirection: "column", gap: 12 }}>
@@ -54,8 +58,10 @@ function ReportCard({
           </span>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
-          <button className="ks-btn ks-btn-sm" style={{ flex: 1 }} type="button" onClick={() => onPreview(tpl)}><Eye size={13} />Preview</button>
-          <button className="ks-btn ks-btn-primary ks-btn-sm" style={{ flex: 1 }} type="button" onClick={() => onGenerate(tpl)}><Plus size={13} />Generate</button>
+          <button className="ks-btn ks-btn-sm" style={{ flex: 1 }} type="button" onClick={() => onPreview(tpl)}><Eye size={13} />{t("page.reports.preview")}</button>
+          {canManage && (
+            <button className="ks-btn ks-btn-primary ks-btn-sm" style={{ flex: 1 }} type="button" onClick={() => onGenerate(tpl)}><Plus size={13} />{t("page.reports.generate")}</button>
+          )}
         </div>
       </div>
     </div>
@@ -63,6 +69,8 @@ function ReportCard({
 }
 
 export function FaReportsPage() {
+  const { t } = useTranslation("fixed-assets");
+  const { canManage } = useFaPermission();
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp, isError, isLoading } = useGetReportTemplatesQuery({ organizationId });
@@ -104,7 +112,7 @@ export function FaReportsPage() {
 
   const handleHistory = () => {
     if (history.length === 0) {
-      toast.info("No report history yet");
+      toast.info(t("toasts.noReportHistory"));
       return;
     }
     const latest = history[0];
@@ -118,23 +126,25 @@ export function FaReportsPage() {
       <FaShellHead
         actions={
           <>
-            <button className="ks-btn" type="button" onClick={handleHistory}><Clock size={14} />History</button>
-            <button className="ks-btn ks-btn-primary" type="button" onClick={() => generateAll({ format: "pdf" })}><Zap size={14} />Generate all</button>
+            <button className="ks-btn" type="button" onClick={handleHistory}><Clock size={14} />{t("actions.history")}</button>
+            {canManage && (
+              <button className="ks-btn ks-btn-primary" type="button" onClick={() => generateAll({ format: "pdf" })}><Zap size={14} />{t("page.reports.generateAll")}</button>
+            )}
           </>
         }
-        desc="Financial, compliance, and operational reports — PSAK 16 ready."
-        title="Reports"
+        desc={t("page.reports.desc")}
+        title={t("page.reports.title")}
       />
       <FaKpiStrip>
-        <FaStat label="Available reports" tone="brand" value={String(templates.length)} />
-        <FaStat label="Report history" tone="info" value={String(history.length)} />
+        <FaStat label={t("page.reports.kpi.available")} tone="brand" value={String(templates.length)} />
+        <FaStat label={t("page.reports.kpi.history")} tone="info" value={String(history.length)} />
         <FaStat
-          label="Ready"
+          label={t("page.reports.kpi.ready")}
           tone="success"
           value={String(history.filter((h) => h.status === "ready").length)}
         />
         <FaStat
-          label="Failed"
+          label={t("page.reports.kpi.failed")}
           tone="danger"
           value={String(history.filter((h) => h.status === "failed").length)}
         />

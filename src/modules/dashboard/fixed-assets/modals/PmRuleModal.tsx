@@ -1,6 +1,8 @@
 "use client";
 
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import {
   Dialog,
@@ -29,13 +31,10 @@ interface PmRuleModalProps {
   open: boolean;
 }
 
-const TRIGGER_TYPES = [
-  { label: "Time interval (days)", value: "days" },
-  { label: "Usage · run-hours", value: "run-hours" },
-  { label: "Usage · cycles", value: "cycles" },
-];
+const TRIGGER_TYPES = ["days", "run-hours", "cycles"] as const;
 
 export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { mutateAsync } = useCreatePmRuleMutation({ organizationId });
@@ -45,6 +44,12 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
   const [name, setName] = useState("");
   const [remindAt, setRemindAt] = useState("14, 7, 1");
   const [triggerType, setTriggerType] = useState("days");
+
+  const triggerLabels: Record<(typeof TRIGGER_TYPES)[number], string> = {
+    cycles: t("modals.pmRule.triggerCycles"),
+    days: t("modals.pmRule.triggerDays"),
+    "run-hours": t("modals.pmRule.triggerRunHours"),
+  };
 
   const parsedInterval = parseInt(intervalValue, 10);
   const parsedReminders = remindAt
@@ -67,6 +72,7 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
       trigger_type: triggerType,
       trigger_value: parsedInterval,
     });
+    toast.success(t("toasts.pmRuleCreated"));
     onClose();
   }
 
@@ -74,21 +80,20 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
-          <DialogTitle>New reminder rule</DialogTitle>
+          <DialogTitle>{t("modals.pmRule.title")}</DialogTitle>
           <DialogDescription>
-            Auto-creates work orders and sends reminders on the configured
-            trigger
+            {t("modals.pmRule.description")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label isRequired htmlFor="pm-name">
-              Rule name
+              {t("modals.pmRule.ruleName")}
             </Label>
             <Input
               id="pm-name"
-              placeholder="e.g. Generator monthly load test"
+              placeholder={t("modals.pmRule.namePlaceholder")}
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -96,22 +101,26 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="pm-trigger">Trigger type</Label>
+              <Label htmlFor="pm-trigger">
+                {t("modals.pmRule.triggerType")}
+              </Label>
               <Select value={triggerType} onValueChange={setTriggerType}>
                 <SelectTrigger id="pm-trigger">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {TRIGGER_TYPES.map((tr) => (
-                    <SelectItem key={tr.value} value={tr.value}>
-                      {tr.label}
+                    <SelectItem key={tr} value={tr}>
+                      {triggerLabels[tr]}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="pm-interval">Interval value</Label>
+              <Label htmlFor="pm-interval">
+                {t("modals.pmRule.intervalValue")}
+              </Label>
               <Input
                 id="pm-interval"
                 inputMode="numeric"
@@ -122,13 +131,13 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
                 onChange={(e) => setIntervalValue(e.target.value)}
               />
               <p className="text-xs text-muted-foreground">
-                Amount per trigger type (e.g. every 30 days)
+                {t("modals.pmRule.intervalHelper")}
               </p>
             </div>
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="pm-remind">Remind at</Label>
+            <Label htmlFor="pm-remind">{t("modals.pmRule.remindAt")}</Label>
             <Input
               id="pm-remind"
               placeholder="14, 7, 1"
@@ -136,15 +145,17 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
               onChange={(e) => setRemindAt(e.target.value)}
             />
             <p className="text-xs text-muted-foreground">
-              Lead times before due (days), separated by commas
+              {t("modals.pmRule.remindHelper")}
             </p>
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="pm-assign">Assign to</Label>
+            <Label htmlFor="pm-assign">{t("modals.pmRule.assignTo")}</Label>
             <Select value={assignTo} onValueChange={setAssignTo}>
               <SelectTrigger id="pm-assign">
-                <SelectValue placeholder="Select custodian" />
+                <SelectValue
+                  placeholder={t("modals.pmRule.selectCustodian")}
+                />
               </SelectTrigger>
               <SelectContent>
                 {peopleOptions.map((person) => (
@@ -159,7 +170,7 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
 
         <DialogFooter>
           <button className="ks-btn" type="button" onClick={onClose}>
-            Cancel
+            {t("modals.pmRule.cancel")}
           </button>
           <button
             className={cn("ks-btn ks-btn-primary", !isValid && "opacity-50")}
@@ -167,7 +178,7 @@ export function PmRuleModal({ onClose, open }: PmRuleModalProps) {
             type="button"
             onClick={handleSubmit}
           >
-            Create rule
+            {t("modals.pmRule.createRule")}
           </button>
         </DialogFooter>
       </DialogContent>

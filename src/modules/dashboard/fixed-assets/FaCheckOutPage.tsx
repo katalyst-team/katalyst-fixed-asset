@@ -1,6 +1,7 @@
 "use client";
 
 import { Clock, Download, History, Plus } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import PaginationCursor from "@/components/shared/PaginationCursor";
@@ -11,6 +12,7 @@ import {
   useGetCheckOutsQuery,
   useReturnCheckOutMutation,
 } from "@/hooks/api/fixed-assets";
+import { useUrlFilterSync } from "@/hooks/useUrlFilterSync";
 import {
   avatarColor,
   catToLucide,
@@ -24,6 +26,7 @@ import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
 import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 
 const STATUS_TONE: Record<string, string> = {
   active: "info",
@@ -42,11 +45,22 @@ function statusLabel(s: string): string {
 }
 
 export function FaCheckOutPage() {
+  const { t } = useTranslation("fixed-assets");
   const { openModal } = useFaModal();
+  const { canCreate, canManage } = useFaPermission();
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const [page, setPage] = useState(1);
   const PAGE_LIMIT = 20;
+  const { syncToUrl } = useUrlFilterSync<{ page: number }>({
+    fromQuery: (query) => ({ page: Number(query.page) > 0 ? Number(query.page) : 1 }),
+    onInit: (f) => setPage(f.page ?? 1),
+    toQuery: (f) => (f.page > 1 ? { page: String(f.page) } : {}),
+  });
+  const goToPage = (p: number) => {
+    setPage(p);
+    syncToUrl({ page: p });
+  };
   const { data: resp, isError, isLoading } = useGetCheckOutsQuery({
     limit: PAGE_LIMIT,
     organizationId,
@@ -62,12 +76,12 @@ export function FaCheckOutPage() {
 
   const handleNext = () => {
     if (resp?.page_pagination?.has_next) {
-      setPage((p) => p + 1);
+      goToPage(page + 1);
     }
   };
 
   const handlePrev = () => {
-    setPage((p) => Math.max(1, p - 1));
+    goToPage(Math.max(1, page - 1));
   };
 
   const handleExport = async () => {
@@ -87,32 +101,34 @@ export function FaCheckOutPage() {
               type="button"
             >
               <History size={15} />
-              History
+              {t("actions.history")}
             </button>
-            <button
-              className="ks-btn ks-btn-primary"
-              type="button"
-              onClick={() => openModal("checkout")}
-            >
-              <Plus size={15} />
-              New check-out
-            </button>
+            {canCreate && (
+              <button
+                className="ks-btn ks-btn-primary"
+                type="button"
+                onClick={() => openModal("checkout")}
+              >
+                <Plus size={15} />
+                {t("actions.newCheckout")}
+              </button>
+            )}
           </>
         }
-        desc="Loan tools and equipment with RFID custody tracking"
-        title="Check-Out · Asset Loans"
+        desc={t("page.checkout.description")}
+        title={t("page.checkout.title")}
       />
 
       <FaKpiStrip>
-        <FaStat label="Active loans" tone="info" value={String(summary?.active ?? "—")} />
-        <FaStat label="Overdue" sub="needs action" tone="danger" value={String(summary?.overdue ?? "—")} />
-        <FaStat label="On-time rate" tone="success" value={summary ? `${Math.round(summary.on_time_rate)}%` : "—"} />
-        <FaStat label="Avg duration" sub="out to return" tone="brand" value={summary ? `${summary.avg_duration_days.toFixed(1)} d` : "—"} />
+        <FaStat label={t("page.checkout.kpi.activeLoans")} tone="info" value={String(summary?.active ?? "—")} />
+        <FaStat label={t("page.checkout.kpi.overdue")} sub={t("page.checkout.kpi.needsAction")} tone="danger" value={String(summary?.overdue ?? "—")} />
+        <FaStat label={t("page.checkout.kpi.returnRate")} tone="success" value={summary ? `${Math.round(summary.on_time_rate)}%` : "—"} />
+        <FaStat label={t("page.checkout.kpi.avgDuration")} sub={t("page.checkout.kpi.outToReturn")} tone="brand" value={summary ? `${summary.avg_duration_days.toFixed(1)} d` : "—"} />
       </FaKpiStrip>
 
       <FaQueryState
-        emptyDescription="No check-out records yet."
-        emptyTitle="No check-outs"
+        emptyDescription={t("page.checkout.noCheckoutsDesc")}
+        emptyTitle={t("page.checkout.noCheckouts")}
         isEmpty={check_outs.length === 0}
         isError={isError}
         isLoading={isLoading}
@@ -121,9 +137,9 @@ export function FaCheckOutPage() {
       <div className="ks-card">
         <div className="ks-card-head">
           <div>
-            <div className="ks-card-title">Check-Out Records</div>
+            <div className="ks-card-title">{t("page.checkout.recordsTitle")}</div>
             <div className="ks-card-desc">
-              {check_outs.length} loans · RFID-verified chain of custody
+              {t("page.checkout.recordsDescription", { count: check_outs.length })}
             </div>
           </div>
           <button
@@ -133,20 +149,20 @@ export function FaCheckOutPage() {
             onClick={handleExport}
           >
             <Download size={13} />
-            Export
+            {t("actions.export")}
           </button>
         </div>
         <div className="ks-card-body">
           <table className="w-full text-sm">
             <thead>
               <tr>
-                <th className="text-left font-medium text-muted-foreground p-3">Asset</th>
-                <th className="text-left font-medium text-muted-foreground p-3">Borrower</th>
-                <th className="text-left font-medium text-muted-foreground p-3">Out date</th>
-                <th className="text-left font-medium text-muted-foreground p-3">Due date</th>
-                <th className="text-left font-medium text-muted-foreground p-3">Purpose</th>
-                <th className="text-left font-medium text-muted-foreground p-3">Condition</th>
-                <th className="text-left font-medium text-muted-foreground p-3">Status</th>
+                <th className="text-left font-medium text-muted-foreground p-3">{t("page.checkout.columns.asset")}</th>
+                <th className="text-left font-medium text-muted-foreground p-3">{t("page.checkout.columns.borrower")}</th>
+                <th className="text-left font-medium text-muted-foreground p-3">{t("page.checkout.columns.outDate")}</th>
+                <th className="text-left font-medium text-muted-foreground p-3">{t("page.checkout.columns.dueDate")}</th>
+                <th className="text-left font-medium text-muted-foreground p-3">{t("page.checkout.columns.purpose")}</th>
+                <th className="text-left font-medium text-muted-foreground p-3">{t("page.checkout.columns.condition")}</th>
+                <th className="text-left font-medium text-muted-foreground p-3">{t("page.checkout.columns.status")}</th>
               </tr>
             </thead>
             <tbody>
@@ -199,7 +215,7 @@ export function FaCheckOutPage() {
                       <span className={`ks-badge ${STATUS_TONE[c.status] ?? "outline"}`}>
                         {statusLabel(c.status)}
                       </span>
-                      {c.status === "active" && (
+                      {canManage && c.status === "active" && (
                         <button
                           className="ml-2 text-xs text-[hsl(var(--brand))] hover:underline"
                           type="button"
@@ -213,7 +229,7 @@ export function FaCheckOutPage() {
                             })
                           }
                         >
-                          Return
+                          {t("actions.return")}
                         </button>
                       )}
                     </td>
@@ -227,7 +243,7 @@ export function FaCheckOutPage() {
           className="justify-between text-xs text-muted-foreground flex items-center"
           style={{ borderTop: "1px solid hsl(var(--border))", padding: "10px 18px" }}
         >
-          <span>Showing {check_outs.length} of {resp?.page_pagination?.total_records ?? 0}</span>
+          <span>{t("page.checkout.showing", { current: check_outs.length, total: resp?.page_pagination?.total_records ?? 0 })}</span>
           <PaginationCursor
             currentPage={page}
             hasNextPage={resp?.page_pagination?.has_next ?? false}

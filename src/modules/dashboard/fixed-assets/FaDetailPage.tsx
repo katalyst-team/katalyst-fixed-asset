@@ -2,6 +2,7 @@
 
 import { ArrowLeft, FileText, Pencil, Wrench } from "lucide-react";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
 
 import Loading from "@/components/shared/Loading";
@@ -9,7 +10,6 @@ import { useUser } from "@/context/user-context";
 import {
   useGetAssetDetailQuery,
   useGetAssetDocDownloadQuery,
-  useUpdateAssetMutation,
 } from "@/hooks/api/fixed-assets";
 import {
   activityIcon,
@@ -30,16 +30,25 @@ import {
 import { FaQueryError } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
 import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 import type { FaAsset, FaAssetDetail } from "@/types/fixed-assets";
 
 const TABS = ["Overview", "Activity", "Maintenance", "Depreciation", "Documents"] as const;
 type Tab = (typeof TABS)[number];
 
-const LIFECYCLE = (a: FaAsset) => [
-  { label: `Purchased · ${formatDate(a.purchased)}`, sub: a.supplier },
-  { label: "Tagged & registered", sub: a.epc },
-  { label: `Deployed · ${a.loc}`, sub: `Custodian: ${a.custodian}` },
-  { label: `Current: ${STATUS_LABEL[a.status]}`, sub: `Age ${formatAge(a.age)}` },
+const TAB_LABEL: Record<Tab, string> = {
+  Activity: "page.detail.tabs.activity",
+  Depreciation: "page.detail.tabs.depreciation",
+  Documents: "page.detail.tabs.documents",
+  Maintenance: "page.detail.tabs.maintenance",
+  Overview: "page.detail.tabs.overview",
+};
+
+const LIFECYCLE = (a: FaAsset, t: (key: string, opts?: Record<string, unknown>) => string) => [
+  { label: t("page.detail.lifecycle.purchased", { date: formatDate(a.purchased) }), sub: a.supplier },
+  { label: t("page.detail.lifecycle.tagged"), sub: a.epc },
+  { label: t("page.detail.lifecycle.deployed", { loc: a.loc }), sub: t("page.detail.lifecycle.custodian", { name: a.custodian }) },
+  { label: t("page.detail.lifecycle.current", { status: STATUS_LABEL[a.status] }), sub: t("page.detail.lifecycle.age", { age: formatAge(a.age) }) },
 ];
 
 function MetaRow({ label, val }: { label: string; val: string }) {
@@ -104,13 +113,14 @@ function prioBadge(p: string): string {
 }
 
 export function FaDetailPage() {
+  const { t } = useTranslation("fixed-assets");
   const router = useRouter();
   const { openModal } = useFaModal();
   const assetId = typeof router.query.id === "string" ? router.query.id : "";
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp, isError, isLoading } = useGetAssetDetailQuery({ assetId, organizationId });
-  const { mutateAsync: updateAsset } = useUpdateAssetMutation({ organizationId });
+  const { canCreate, canManage } = useFaPermission();
   const [tab, setTab] = useState<Tab>("Overview");
   const [docToDownload, setDocToDownload] = useState("");
   const { data: docResp } = useGetAssetDocDownloadQuery({
@@ -141,7 +151,7 @@ export function FaDetailPage() {
     return (
       <div className="ks-card">
         <div className="ks-card-body">
-          <p className="text-sm text-muted-foreground">Asset not found.</p>
+          <p className="text-sm text-muted-foreground">{t("page.detail.notFound")}</p>
           <button
             className="ks-btn ks-btn-sm"
             style={{ marginTop: 12 }}
@@ -149,7 +159,7 @@ export function FaDetailPage() {
             onClick={() => router.back()}
           >
             <ArrowLeft size={14} />
-            Back
+            {t("page.detail.back")}
           </button>
         </div>
       </div>
@@ -160,7 +170,7 @@ export function FaDetailPage() {
   const nbv = asset.val - asset.dep;
   const depPct = Math.round((asset.dep / asset.val) * 100);
   const relatedWOs = asset && "maintenanceHistory" in asset ? (asset.maintenanceHistory ?? []) : [];
-  const steps = LIFECYCLE(asset);
+  const steps = LIFECYCLE(asset, t);
 
   return (
     <div>
@@ -173,7 +183,7 @@ export function FaDetailPage() {
             onClick={() => router.back()}
           >
             <ArrowLeft size={14} />
-            Back
+            {t("page.detail.back")}
           </button>
           <div className="flex items-center gap-2" style={{ marginBottom: 4 }}>
             <h1 className="ks-page-title">{asset.name}</h1>
@@ -184,17 +194,23 @@ export function FaDetailPage() {
             <span>·</span>
             <span>{asset.epc}</span>
             <span>·</span>
-            <span>S/N {asset.serial}</span>
+            <span>{t("page.detail.serialNo", { serial: asset.serial })}</span>
           </div>
         </div>
         <div className="ks-page-actions">
-          <button className="ks-btn ks-btn-sm" type="button" onClick={() => openModal("disposal")}>Dispose</button>
-          <button className="ks-btn ks-btn-sm" type="button" onClick={() => openModal("transfer")}>Transfer</button>
-          <button className="ks-btn ks-btn-sm" type="button" onClick={() => openModal("workOrder")}>Service</button>
-          <button className="ks-btn ks-btn-primary ks-btn-sm" type="button" onClick={() => updateAsset({ assetId: asset.id, data: {} })}>
-            <Pencil size={14} />
-            Edit
-          </button>
+          {canCreate && (
+            <>
+              <button className="ks-btn ks-btn-sm" type="button" onClick={() => openModal("disposal")}>{t("actions.dispose")}</button>
+              <button className="ks-btn ks-btn-sm" type="button" onClick={() => openModal("transfer")}>{t("actions.transfer")}</button>
+              <button className="ks-btn ks-btn-sm" type="button" onClick={() => openModal("workOrder")}>{t("page.detail.actions.service")}</button>
+            </>
+          )}
+          {canManage && (
+            <button className="ks-btn ks-btn-primary ks-btn-sm" type="button" onClick={() => openModal("editAsset", { asset })}>
+              <Pencil size={14} />
+              {t("page.detail.actions.edit")}
+            </button>
+          )}
         </div>
       </div>
 
@@ -216,27 +232,27 @@ export function FaDetailPage() {
               className="flex items-center justify-center text-xs text-muted-foreground"
               style={{ border: "1px dashed hsl(var(--border))", borderRadius: 8, height: 60, marginBottom: 12 }}
             >
-              QR Code
+              {t("page.detail.qrCode")}
             </div>
-            <MetaRow label="Category" val={CAT_LABEL[asset.cat]} />
-            <MetaRow label="Location" val={asset.loc} />
-            <MetaRow label="Custodian" val={asset.custodian} />
-            <MetaRow label="Serial No." val={asset.serial} />
-            <MetaRow label="EPC" val={asset.epc} />
-            <MetaRow label="Acquired" val={formatDate(asset.purchased)} />
-            <MetaRow label="Supplier" val={asset.supplier} />
-            <MetaRow label="Warranty" val={asset.warranty} />
+            <MetaRow label={t("page.register.columns.category")} val={CAT_LABEL[asset.cat]} />
+            <MetaRow label={t("page.register.columns.location")} val={asset.loc} />
+            <MetaRow label={t("page.register.columns.custodian")} val={asset.custodian} />
+            <MetaRow label={t("page.detail.meta.serial")} val={asset.serial} />
+            <MetaRow label={t("page.detail.meta.epc")} val={asset.epc} />
+            <MetaRow label={t("page.detail.meta.acquired")} val={formatDate(asset.purchased)} />
+            <MetaRow label={t("page.detail.meta.supplier")} val={asset.supplier} />
+            <MetaRow label={t("page.detail.meta.warranty")} val={asset.warranty} />
             <div style={{ marginTop: 12 }}>
               <div className="flex items-center justify-between" style={{ marginBottom: 6 }}>
-                <span className="text-xs text-muted-foreground">Purchase value</span>
+                <span className="text-xs text-muted-foreground">{t("page.detail.purchaseValue")}</span>
                 <span className="font-mono text-sm">{formatIDRShort(asset.val)}</span>
               </div>
               <div className="flex items-center justify-between" style={{ marginBottom: 6 }}>
-                <span className="text-xs text-muted-foreground">Accumulated dep.</span>
+                <span className="text-xs text-muted-foreground">{t("page.detail.accumDep")}</span>
                 <span className="font-mono text-sm text-muted-foreground">−{formatIDRShort(asset.dep)}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold">Net book value</span>
+                <span className="text-xs font-semibold">{t("page.detail.netBookValue")}</span>
                 <span className="font-mono text-sm font-semibold">{formatIDRShort(nbv)}</span>
               </div>
             </div>
@@ -246,14 +262,14 @@ export function FaDetailPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div className="ks-seg">
-              {TABS.map((t) => (
+              {TABS.map((tb) => (
                 <button
-                  key={t}
-                  className={tab === t ? "on" : ""}
+                  key={tb}
+                  className={tab === tb ? "on" : ""}
                   type="button"
-                  onClick={() => setTab(t)}
+                  onClick={() => setTab(tb)}
                 >
-                  {t}
+                  {t(TAB_LABEL[tb])}
                 </button>
               ))}
             </div>
@@ -262,12 +278,12 @@ export function FaDetailPage() {
             {tab === "Overview" && (
               <div>
                 <div className="grid grid-cols-4 gap-2" style={{ marginBottom: 16 }}>
-                  <StatMini label="Health" val="98%" />
-                  <StatMini label="Age" val={formatAge(asset.age)} />
-                  <StatMini label="Utilization" val="82%" />
-                  <StatMini label="Last seen" val="live" />
+                  <StatMini label={t("page.detail.overview.health")} val="98%" />
+                  <StatMini label={t("page.detail.overview.age")} val={formatAge(asset.age)} />
+                  <StatMini label={t("page.detail.overview.utilization")} val="82%" />
+                  <StatMini label={t("page.detail.overview.lastSeen")} val={t("page.detail.overview.live")} />
                 </div>
-                <div className="mb-2 text-sm font-semibold">Lifecycle timeline</div>
+                <div className="mb-2 text-sm font-semibold">{t("page.detail.overview.lifecycleTimeline")}</div>
                 <div style={{ paddingLeft: 16, position: "relative" }}>
                   <div style={{ background: "hsl(var(--border))", bottom: 4, left: 5, position: "absolute", top: 4, width: 2 }} />
                   {steps.map((step, i) => (
@@ -315,16 +331,18 @@ export function FaDetailPage() {
                 {relatedWOs.length === 0 ? (
                   <div className="flex flex-col items-center justify-center text-center" style={{ padding: 40 }}>
                     <Wrench size={32} style={{ color: "hsl(var(--text-3))", marginBottom: 8 }} />
-                    <p className="text-sm text-muted-foreground">No work orders for this asset.</p>
-                    <button
-                      className="ks-btn ks-btn-primary ks-btn-sm"
-                      style={{ marginTop: 12 }}
-                      type="button"
-                      onClick={() => openModal("workOrder")}
-                    >
-                      <Wrench size={14} />
-                      Create Work Order
-                    </button>
+                    <p className="text-sm text-muted-foreground">{t("page.detail.maintenance.empty")}</p>
+                    {canCreate && (
+                      <button
+                        className="ks-btn ks-btn-primary ks-btn-sm"
+                        style={{ marginTop: 12 }}
+                        type="button"
+                        onClick={() => openModal("workOrder")}
+                      >
+                        <Wrench size={14} />
+                        {t("page.detail.maintenance.create")}
+                      </button>
+                    )}
                   </div>
                 ) : (
                   relatedWOs.map((wo) => (
@@ -339,7 +357,7 @@ export function FaDetailPage() {
                       <div className="flex-1">
                         <div className="text-sm">{wo.desc}</div>
                         <div className="font-mono text-xs text-muted-foreground">
-                          {wo.asset} · {wo.assigned_to} · ETA {wo.eta}
+                          {t("page.detail.maintenance.woMeta", { asset: wo.asset, assignee: wo.assigned_to, eta: wo.eta })}
                         </div>
                       </div>
                       <span className={`ks-badge ${woBadge(wo.status)}`}>{wo.status}</span>
@@ -352,12 +370,12 @@ export function FaDetailPage() {
             {tab === "Depreciation" && (
               <div>
                 <div className="grid grid-cols-4 gap-2" style={{ marginBottom: 16 }}>
-                  <StatMini label="Purchase" val={formatIDRShort(asset.val)} />
-                  <StatMini label="Annual dep." val={formatIDRShort(asset.val / 5)} />
-                  <StatMini label="NBV" val={formatIDRShort(nbv)} />
-                  <StatMini label="Dep. rate" val={`${depPct}%`} />
+                  <StatMini label={t("page.detail.dep.purchase")} val={formatIDRShort(asset.val)} />
+                  <StatMini label={t("page.detail.dep.annual")} val={formatIDRShort(asset.val / 5)} />
+                  <StatMini label={t("page.detail.dep.nbv")} val={formatIDRShort(nbv)} />
+                  <StatMini label={t("page.detail.dep.rate")} val={`${depPct}%`} />
                 </div>
-                <div className="mb-2 text-sm font-semibold">Net book value · 5-year projection</div>
+                <div className="mb-2 text-sm font-semibold">{t("page.detail.dep.projection")}</div>
                 <DepChart asset={asset} />
                 <div className="mt-1 flex justify-between text-xs text-muted-foreground">
                   {["Y0", "Y1", "Y2", "Y3", "Y4", "Y5"].map((yl) => (
@@ -365,7 +383,7 @@ export function FaDetailPage() {
                   ))}
                 </div>
                 <div style={{ marginTop: 16 }}>
-                  <div className="mb-2 text-sm font-semibold">Depreciation progress</div>
+                  <div className="mb-2 text-sm font-semibold">{t("page.detail.dep.progress")}</div>
                   <FaMeter pct={depPct} tone="brand" />
                 </div>
               </div>

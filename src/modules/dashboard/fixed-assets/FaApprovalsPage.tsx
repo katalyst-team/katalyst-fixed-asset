@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle2, Plus, XCircle } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import { useUser } from "@/context/user-context";
@@ -23,20 +24,20 @@ import type { ApprovalStatus, FaApprovalRequest } from "@/types/fixed-assets";
 type FilterTab = "all" | ApprovalStatus;
 
 const TABS: { id: FilterTab; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "pending", label: "Pending" },
-  { id: "in-review", label: "In Review" },
-  { id: "approved", label: "Approved" },
-  { id: "rejected", label: "Rejected" },
+  { id: "all", label: "page.approvals.tabs.all" },
+  { id: "pending", label: "page.approvals.tabs.pending" },
+  { id: "in-review", label: "page.approvals.tabs.inReview" },
+  { id: "approved", label: "page.approvals.tabs.approved" },
+  { id: "rejected", label: "page.approvals.tabs.rejected" },
 ];
 
 const TYPE_LABEL: Record<string, string> = {
-  acquisition: "Acquisition",
-  disposal: "Disposal",
-  maintenance: "Maintenance",
-  revaluation: "Revaluation",
-  transfer: "Transfer",
-  "write-off": "Write-off",
+  acquisition: "page.approvals.types.acquisition",
+  disposal: "page.approvals.types.disposal",
+  maintenance: "page.approvals.types.maintenance",
+  revaluation: "page.approvals.types.revaluation",
+  transfer: "page.approvals.types.transfer",
+  "write-off": "page.approvals.types.writeOff",
 };
 
 const STATUS_TONE: Record<string, string> = {
@@ -54,6 +55,7 @@ function stepProgress(req: FaApprovalRequest): number {
 }
 
 export function FaApprovalsPage() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const { canManage } = useFaPermission();
   const { openModal } = useFaModal();
@@ -77,27 +79,27 @@ export function FaApprovalsPage() {
     await approve({ requestId });
   };
   const handleReject = async (requestId: string) => {
-    await reject({ reason: "Rejected from approval center", requestId });
+    await reject({ reason: t("page.approvals.rejectReason"), requestId });
   };
 
   return (
     <div>
       <FaShellHead
-        desc="Multi-step approval workflows for disposals, transfers, acquisitions, and major asset changes"
-        title="Approval Center"
+        desc={t("page.approvals.desc")}
+        title={t("page.approvals.title")}
       />
 
       <FaKpiStrip>
-        <FaStat label="Pending" tone="brand" value={String(summary?.pending ?? 0)} />
-        <FaStat label="In Review" tone="warn" value={String(summary?.in_review ?? 0)} />
-        <FaStat label="Approved" tone="success" value={String(summary?.approved ?? 0)} />
-        <FaStat label="Escalated" sub="needs attention" tone="danger" value={String(summary?.escalated ?? 0)} />
+        <FaStat label={t("page.approvals.tabs.pending")} tone="brand" value={String(summary?.pending ?? 0)} />
+        <FaStat label={t("page.approvals.tabs.inReview")} tone="warn" value={String(summary?.in_review ?? 0)} />
+        <FaStat label={t("page.approvals.tabs.approved")} tone="success" value={String(summary?.approved ?? 0)} />
+        <FaStat label={t("page.approvals.kpi.escalated")} sub={t("page.approvals.kpi.needsAttention")} tone="danger" value={String(summary?.escalated ?? 0)} />
       </FaKpiStrip>
 
       <div className="ks-seg" style={{ marginBottom: 16 }}>
-        {TABS.map((t) => (
-          <button key={t.id} className={tab === t.id ? "on" : ""} type="button" onClick={() => setTab(t.id)}>
-            {t.label}
+        {TABS.map((tb) => (
+          <button key={tb.id} className={tab === tb.id ? "on" : ""} type="button" onClick={() => setTab(tb.id)}>
+            {t(tb.label)}
           </button>
         ))}
       </div>
@@ -106,26 +108,26 @@ export function FaApprovalsPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Approval Requests</div>
-              <div className="ks-card-desc">{requests.length} requests</div>
+              <div className="ks-card-title">{t("page.approvals.requestsTitle")}</div>
+              <div className="ks-card-desc">{t("page.approvals.requestsCount", { count: requests.length })}</div>
             </div>
           </div>
           <table className="w-full">
             <thead>
               <tr style={{ borderBottom: "1px solid hsl(var(--border))" }}>
-                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Type</th>
-                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Title</th>
-                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Requester</th>
-                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Progress</th>
-                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Status</th>
-                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">Actions</th>
+                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">{t("page.approvals.columns.type")}</th>
+                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">{t("page.approvals.columns.title")}</th>
+                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">{t("page.approvals.columns.requester")}</th>
+                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">{t("page.approvals.columns.progress")}</th>
+                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">{t("page.register.columns.status")}</th>
+                <th className="p-3 text-left text-xs font-semibold tracking-wide text-muted-foreground uppercase">{t("page.approvals.columns.actions")}</th>
               </tr>
             </thead>
             <tbody>
               {requests.map((req) => (
                 <tr key={req.id} style={{ borderBottom: "1px solid hsl(var(--border-soft))" }}>
                   <td className="p-3">
-                    <span className="ks-badge outline">{TYPE_LABEL[req.type] ?? req.type}</span>
+                    <span className="ks-badge outline">{t(TYPE_LABEL[req.type] ?? req.type)}</span>
                   </td>
                   <td className="p-3">
                     <div className="font-semibold text-sm">{req.title}</div>
@@ -146,15 +148,15 @@ export function FaApprovalsPage() {
                     <span className={`ks-badge ${STATUS_TONE[req.status] ?? "outline"}`}>{req.status}</span>
                   </td>
                   <td className="p-3">
-                    {(req.status === "pending" || req.status === "in-review") && (
+                    {canManage && (req.status === "pending" || req.status === "in-review") && (
                       <div className="flex gap-1">
                         <button className="ks-btn ks-btn-primary ks-btn-sm" type="button" onClick={() => handleApprove(req.id)}>
                           <CheckCircle2 size={12} />
-                          Approve
+                          {t("actions.approve")}
                         </button>
                         <button className="ks-btn ks-btn-sm" type="button" onClick={() => handleReject(req.id)}>
                           <XCircle size={12} />
-                          Reject
+                          {t("actions.reject")}
                         </button>
                       </div>
                     )}
@@ -168,8 +170,8 @@ export function FaApprovalsPage() {
         <div className="ks-card" style={{ marginTop: 16 }}>
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Approval Rules</div>
-              <div className="ks-card-desc">Configured workflow rules</div>
+              <div className="ks-card-title">{t("page.approvals.rulesTitle")}</div>
+              <div className="ks-card-desc">{t("page.approvals.rulesDesc")}</div>
             </div>
             {canManage && (
               <button
@@ -178,14 +180,14 @@ export function FaApprovalsPage() {
                 onClick={() => openModal("approvalRule")}
               >
                 <Plus size={12} />
-                New rule
+                {t("page.approvals.newRule")}
               </button>
             )}
           </div>
           <div className="ks-card-body">
             {rules.length === 0 ? (
               <div className="text-muted-foreground text-sm">
-                No approval rules configured yet.
+                {t("page.approvals.noRules")}
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
@@ -193,12 +195,12 @@ export function FaApprovalsPage() {
                   <div key={rule.id} className="border border-border p-3 rounded-lg">
                     <div className="mb-2 flex items-center justify-between">
                       <span className="font-semibold text-sm">{rule.name}</span>
-                      <span className={`ks-badge ${rule.is_active ? "success" : "outline"}`}>{rule.is_active ? "Active" : "Inactive"}</span>
+                      <span className={`ks-badge ${rule.is_active ? "success" : "outline"}`}>{rule.is_active ? t("page.approvals.active") : t("page.approvals.inactive")}</span>
                     </div>
-                    <div className="mb-2 text-muted-foreground text-xs">{TYPE_LABEL[rule.approval_type] ?? rule.approval_type}</div>
+                    <div className="mb-2 text-muted-foreground text-xs">{t(TYPE_LABEL[rule.approval_type] ?? rule.approval_type)}</div>
                     <div className="flex flex-wrap gap-1">
                       <span className="ks-badge info">{rule.scope}</span>
-                      <span className="ks-badge outline">{rule.workflow_steps.length} steps</span>
+                      <span className="ks-badge outline">{t("page.approvals.stepsCount", { count: rule.workflow_steps.length })}</span>
                     </div>
                   </div>
                 ))}

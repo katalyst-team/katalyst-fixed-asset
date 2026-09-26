@@ -1,12 +1,14 @@
 "use client";
 
 import { Calendar, Plus } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import { useUser } from "@/context/user-context";
 import { useGetMaintenanceQuery } from "@/hooks/api/fixed-assets";
 import { FaKpiStrip, FaShellHead, FaStat } from "@/modules/dashboard/fixed-assets";
 import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 
 import { FlowTab, HealthTab } from "./FaMaintenanceTabs";
 import { ScheduleTab, WoTab } from "./FaMaintenanceTabsMore";
@@ -14,13 +16,14 @@ import { ScheduleTab, WoTab } from "./FaMaintenanceTabsMore";
 type Tab = "flow" | "health" | "wo" | "schedule";
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: "flow", label: "Flow & Alerts" },
-  { id: "health", label: "Asset Health" },
-  { id: "wo", label: "Work Orders" },
-  { id: "schedule", label: "Inspections & PM" },
+  { id: "flow", label: "page.maintenance.tabs.flow" },
+  { id: "health", label: "page.maintenance.tabs.health" },
+  { id: "wo", label: "page.maintenance.tabs.wo" },
+  { id: "schedule", label: "page.maintenance.tabs.schedule" },
 ];
 
 export function FaMaintenancePage() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: maintResp } = useGetMaintenanceQuery({ organizationId });
@@ -32,6 +35,7 @@ export function FaMaintenancePage() {
   const dormant = health_data.filter((h) => h.since_maint_days > 30).length;
   const [tab, setTab] = useState<Tab>("flow");
   const { openModal } = useFaModal();
+  const { canCreate } = useFaPermission();
   return (
     <div>
       <FaShellHead
@@ -39,37 +43,49 @@ export function FaMaintenancePage() {
           <>
             <button className="ks-btn" type="button">
               <Calendar size={14} />
-              Schedule
+              {t("page.maintenance.schedule")}
             </button>
-            <button
-              className="ks-btn ks-btn-primary"
-              type="button"
-              onClick={() => openModal("workOrder")}
-            >
-              <Plus size={14} />
-              Create Work Order
-            </button>
+            {canCreate && (
+              <button
+                className="ks-btn ks-btn-primary"
+                type="button"
+                onClick={() => openModal("workOrder")}
+              >
+                <Plus size={14} />
+                {t("page.maintenance.createWo")}
+              </button>
+            )}
           </>
         }
-        title="Maintenance · CMMS"
+        title={t("page.maintenance.title")}
       />
 
       <FaKpiStrip>
-        <FaStat label="Open WOs" tone="brand" value={String(openWOs)} />
-        <FaStat label="Overdue / Failed" sub="needs attention" tone="danger" value={String(overdueFailed)} />
-        <FaStat label="Dormant > 30d" tone="warn" value={String(dormant)} />
-        <FaStat label="Fleet MTBF" sub="mean time between" tone="info" value={maintSummary ? `${Math.round(maintSummary.mtbf_days)} d` : "—"} />
+        <FaStat label={t("page.maintenance.kpi.openWos")} tone="brand" value={String(openWOs)} />
+        <FaStat
+          label={t("page.maintenance.kpi.overdueFailed")}
+          sub={t("page.maintenance.kpi.needsAttention")}
+          tone="danger"
+          value={String(overdueFailed)}
+        />
+        <FaStat label={t("page.maintenance.kpi.dormant30d")} tone="warn" value={String(dormant)} />
+        <FaStat
+          label={t("page.maintenance.kpi.fleetMtbf")}
+          sub={t("page.maintenance.kpi.mtbfSub")}
+          tone="info"
+          value={maintSummary ? `${Math.round(maintSummary.mtbf_days)} d` : "—"}
+        />
       </FaKpiStrip>
 
       <div className="ks-seg" style={{ marginBottom: 16 }}>
-        {TABS.map((t) => (
+        {TABS.map((item) => (
           <button
-            key={t.id}
-            className={tab === t.id ? "on" : ""}
+            key={item.id}
+            className={tab === item.id ? "on" : ""}
             type="button"
-            onClick={() => setTab(t.id)}
+            onClick={() => setTab(item.id)}
           >
-            {t.label}
+            {t(item.label)}
           </button>
         ))}
       </div>

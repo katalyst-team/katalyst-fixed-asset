@@ -1,6 +1,7 @@
 "use client";
 
 import { Activity, AlertTriangle, Brain, Eye, Zap } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import { useUser } from "@/context/user-context";
@@ -21,12 +22,18 @@ import type { PredictionSeverity } from "@/types/fixed-assets";
 type SevTab = "all" | PredictionSeverity;
 
 const TABS: { id: SevTab; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "critical", label: "Critical" },
-  { id: "warning", label: "Warning" },
-  { id: "watch", label: "Watch" },
-  { id: "healthy", label: "Healthy" },
+  { id: "all", label: "page.predictive.tabs.all" },
+  { id: "critical", label: "page.predictive.tabs.critical" },
+  { id: "warning", label: "page.predictive.tabs.warning" },
+  { id: "watch", label: "page.predictive.tabs.watch" },
+  { id: "healthy", label: "page.predictive.tabs.healthy" },
 ];
+
+const STATUS_LABEL: Record<string, string> = {
+  active: "page.predictive.status.active",
+  disabled: "page.predictive.status.disabled",
+  training: "page.predictive.status.training",
+};
 
 const SEV_TONE: Record<string, string> = {
   critical: "danger",
@@ -43,6 +50,7 @@ const SEV_ICON: Record<string, typeof AlertTriangle> = {
 };
 
 export function FaPredictivePage() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const [tab, setTab] = useState<SevTab>("all");
@@ -61,23 +69,23 @@ export function FaPredictivePage() {
   return (
     <div>
       <FaShellHead
-        desc="AI-powered failure prediction and remaining useful life (RUL) estimates"
-        title="Predictive Analytics"
+        desc={t("page.predictive.desc")}
+        title={t("page.predictive.title")}
       />
 
       <FaKpiStrip>
-        <FaStat label="Assets Monitored" tone="brand" value={String(summary?.totalAssetsMonitored ?? 0)} />
-        <FaStat label="Critical" sub="failure imminent" tone="danger" value={String(summary?.criticalPredictions ?? 0)} />
-        <FaStat label="Avg Accuracy" tone={summary && summary.avgAccuracy >= 85 ? "success" : "warn"} value={`${summary?.avgAccuracy ?? 0}%`} />
-        <FaStat label="Models Active" tone="info" value={`${summary?.modelsActive ?? 0}`} />
+        <FaStat label={t("page.predictive.kpi.monitored")} tone="brand" value={String(summary?.totalAssetsMonitored ?? 0)} />
+        <FaStat label={t("page.predictive.tabs.critical")} sub={t("page.predictive.kpi.criticalSub")} tone="danger" value={String(summary?.criticalPredictions ?? 0)} />
+        <FaStat label={t("page.predictive.kpi.avgAccuracy")} tone={summary && summary.avgAccuracy >= 85 ? "success" : "warn"} value={`${summary?.avgAccuracy ?? 0}%`} />
+        <FaStat label={t("page.predictive.kpi.modelsActive")} tone="info" value={`${summary?.modelsActive ?? 0}`} />
       </FaKpiStrip>
 
       <div className="ks-grid-2" style={{ marginBottom: 16 }}>
         <div>
           <div className="ks-seg" style={{ marginBottom: 12 }}>
-            {TABS.map((t) => (
-              <button key={t.id} className={tab === t.id ? "on" : ""} type="button" onClick={() => setTab(t.id)}>
-                {t.label}
+            {TABS.map((tb) => (
+              <button key={tb.id} className={tab === tb.id ? "on" : ""} type="button" onClick={() => setTab(tb.id)}>
+                {t(tb.label)}
               </button>
             ))}
           </div>
@@ -102,27 +110,27 @@ export function FaPredictivePage() {
 
                     <div className="grid grid-cols-4 gap-2 mb-2">
                       <div>
-                        <div className="text-xs text-muted-foreground">Health</div>
+                        <div className="text-xs text-muted-foreground">{t("page.predictive.health")}</div>
                         <div className="font-mono font-semibold text-sm">{pred.current_health}/100</div>
                       </div>
                       <div>
-                        <div className="text-xs text-muted-foreground">Days to Failure</div>
+                        <div className="text-xs text-muted-foreground">{t("page.predictive.daysToFailure")}</div>
                         <div className="font-mono font-semibold text-sm">{pred.days_to_failure}d</div>
                       </div>
                       <div>
-                        <div className="text-xs text-muted-foreground">Confidence</div>
+                        <div className="text-xs text-muted-foreground">{t("page.predictive.confidence")}</div>
                         <div className="font-mono font-semibold text-sm">{pred.confidence}%</div>
                       </div>
                       <div>
-                        <div className="text-xs text-muted-foreground">Est. Cost</div>
+                        <div className="text-xs text-muted-foreground">{t("page.predictive.estCost")}</div>
                         <div className="font-mono font-semibold text-sm">{formatIDRShort(pred.estimated_cost)}</div>
                       </div>
                     </div>
 
                     <div className="mb-2">
                       <div className="flex items-center justify-between text-xs mb-1">
-                        <span className="text-muted-foreground">Failure: {pred.failure_mode ?? "—"}</span>
-                        <span className="text-muted-foreground">Part: {pred.failed_part ?? "—"}</span>
+                        <span className="text-muted-foreground">{t("page.predictive.failure", { value: pred.failure_mode ?? "—" })}</span>
+                        <span className="text-muted-foreground">{t("page.predictive.part", { value: pred.failed_part ?? "—" })}</span>
                       </div>
                       <FaMeter pct={pred.current_health} tone={pred.current_health >= 70 ? "success" : pred.current_health >= 40 ? "warn" : "danger"} />
                     </div>
@@ -130,10 +138,10 @@ export function FaPredictivePage() {
                     <div className="rounded border border-border-soft p-2" style={{ background: "hsl(var(--surface-2))" }}>
                       <div className="text-xs font-semibold mb-1 flex items-center gap-1">
                         <Zap size={11} />
-                        Recommended Action
+                        {t("page.predictive.recommendedAction")}
                       </div>
                       <div className="text-xs text-muted-foreground">{pred.recommended_action ?? "—"}</div>
-                      <div className="text-xs text-muted-foreground mt-1">By: {pred.recommended_action_date ?? "—"}</div>
+                      <div className="text-xs text-muted-foreground mt-1">{t("page.predictive.by", { value: pred.recommended_action_date ?? "—" })}</div>
                     </div>
                   </div>
                 );
@@ -148,9 +156,9 @@ export function FaPredictivePage() {
               <div>
                 <div className="ks-card-title flex items-center gap-2">
                   <Brain size={14} />
-                  AI Models
+                  {t("page.predictive.modelsTitle")}
                 </div>
-                <div className="ks-card-desc">{models.length} models</div>
+                <div className="ks-card-desc">{t("page.predictive.modelsCount", { count: models.length })}</div>
               </div>
             </div>
             <div className="ks-card-body">
@@ -169,25 +177,25 @@ export function FaPredictivePage() {
                           <div className="text-xs text-muted-foreground">{model.model_type} · v{model.version}</div>
                         </div>
                         <span className={`ks-badge ${status === "active" ? "success" : status === "training" ? "warn" : "outline"}`}>
-                          {status}
+                          {t(STATUS_LABEL[status])}
                         </span>
                       </div>
                       <div className="grid grid-cols-3 gap-2 mb-2">
                         <div>
-                          <div className="text-xs text-muted-foreground">Accuracy</div>
+                          <div className="text-xs text-muted-foreground">{t("page.predictive.accuracy")}</div>
                           <div className="font-mono font-semibold">{model.accuracy}%</div>
                         </div>
                         <div>
-                          <div className="text-xs text-muted-foreground">Predictions</div>
+                          <div className="text-xs text-muted-foreground">{t("page.predictive.predictions")}</div>
                           <div className="font-mono font-semibold">{model.total_predictions}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-muted-foreground">Assets</div>
+                          <div className="text-xs text-muted-foreground">{t("page.predictive.assets")}</div>
                           <div className="font-mono font-semibold">{model.asset_count}</div>
                         </div>
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        Trained: {model.last_trained_at ?? "—"} · Scope: {model.asset_scope}
+                        {t("page.predictive.trainedScope", { scope: model.asset_scope, trained: model.last_trained_at ?? "—" })}
                       </div>
                     </div>
                   );

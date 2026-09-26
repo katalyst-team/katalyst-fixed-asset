@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import { useUser } from "@/context/user-context";
@@ -18,32 +19,33 @@ import type { LifecycleStage } from "@/types/fixed-assets";
 type FilterStage = "all" | LifecycleStage;
 
 const STAGES: { id: FilterStage; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "planning", label: "Planning" },
-  { id: "procurement", label: "Procurement" },
-  { id: "deployed", label: "Deployed" },
-  { id: "in-use", label: "In Use" },
-  { id: "maintenance", label: "Maintenance" },
-  { id: "disposal", label: "Disposal" },
-  { id: "retired", label: "Retired" },
+  { id: "all", label: "page.lifecycle.stages.all" },
+  { id: "planning", label: "page.lifecycle.stages.planning" },
+  { id: "procurement", label: "page.lifecycle.stages.procurement" },
+  { id: "deployed", label: "page.lifecycle.stages.deployed" },
+  { id: "in-use", label: "page.lifecycle.stages.inUse" },
+  { id: "maintenance", label: "page.lifecycle.stages.maintenance" },
+  { id: "disposal", label: "page.lifecycle.stages.disposal" },
+  { id: "retired", label: "page.lifecycle.stages.retired" },
 ];
 
 const STAGE_LABEL: Record<string, string> = {
-  audit: "Audit",
-  "checked-out": "Checked Out",
-  deployed: "Deployed",
-  disposal: "Disposal",
-  "in-use": "In Use",
-  maintenance: "Maintenance",
-  planning: "Planning",
-  procurement: "Procurement",
-  received: "Received",
-  retired: "Retired",
-  tagged: "Tagged",
-  transfer: "Transfer",
+  audit: "page.lifecycle.stage.audit",
+  "checked-out": "page.lifecycle.stage.checkedOut",
+  deployed: "page.lifecycle.stage.deployed",
+  disposal: "page.lifecycle.stage.disposal",
+  "in-use": "page.lifecycle.stage.inUse",
+  maintenance: "page.lifecycle.stage.maintenance",
+  planning: "page.lifecycle.stage.planning",
+  procurement: "page.lifecycle.stage.procurement",
+  received: "page.lifecycle.stage.received",
+  retired: "page.lifecycle.stage.retired",
+  tagged: "page.lifecycle.stage.tagged",
+  transfer: "page.lifecycle.stage.transfer",
 };
 
 export function FaLifecyclePage() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const [stage, setStage] = useState<FilterStage>("all");
@@ -61,21 +63,21 @@ export function FaLifecyclePage() {
   return (
     <div>
       <FaShellHead
-        desc="Complete lifecycle tracking from acquisition through deployment to disposal"
-        title="Asset Lifecycle"
+        desc={t("page.lifecycle.desc")}
+        title={t("page.lifecycle.title")}
       />
 
       <FaKpiStrip>
-        <FaStat label="Total Assets" tone="brand" value={String(summary?.total_assets ?? 0)} />
-        <FaStat label="In Use" tone="success" value={String(summary?.in_use ?? 0)} />
-        <FaStat label="Acquiring" sub="procurement + received" tone="info" value={String(summary?.acquiring ?? 0)} />
-        <FaStat label="Disposed / Retired" tone="warn" value={String(summary?.disposed ?? 0)} />
+        <FaStat label={t("page.lifecycle.kpi.totalAssets")} tone="brand" value={String(summary?.total_assets ?? 0)} />
+        <FaStat label={t("page.lifecycle.kpi.inUse")} tone="success" value={String(summary?.in_use ?? 0)} />
+        <FaStat label={t("page.lifecycle.kpi.acquiring")} sub={t("page.lifecycle.kpi.acquiringSub")} tone="info" value={String(summary?.acquiring ?? 0)} />
+        <FaStat label={t("page.lifecycle.kpi.disposedRetired")} tone="warn" value={String(summary?.disposed ?? 0)} />
       </FaKpiStrip>
 
       <div className="ks-seg" style={{ marginBottom: 16 }}>
         {STAGES.map((s) => (
           <button key={s.id} className={stage === s.id ? "on" : ""} type="button" onClick={() => setStage(s.id)}>
-            {s.label}
+            {t(s.label)}
           </button>
         ))}
       </div>
@@ -88,10 +90,10 @@ export function FaLifecyclePage() {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-sm font-semibold">{event.event_type}</span>
-                  <span className="ks-badge info">{STAGE_LABEL[event.stage] ?? event.stage}</span>
+                  <span className="ks-badge info">{t(STAGE_LABEL[event.stage] ?? event.stage)}</span>
                   {event.from_stage && (
                     <span className="ks-badge outline" style={{ fontSize: 9 }}>
-                      from {STAGE_LABEL[event.from_stage] ?? event.from_stage}
+                      {t("page.lifecycle.from", { stage: STAGE_LABEL[event.from_stage] ?? event.from_stage })}
                     </span>
                   )}
                 </div>

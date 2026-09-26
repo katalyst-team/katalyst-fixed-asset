@@ -12,6 +12,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import { useMemo } from "react";
 
 import { useUser } from "@/context/user-context";
@@ -41,24 +42,25 @@ import {
 import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const HEATMAP_SLOTS = ["6a", "9a", "12p", "3p", "6p", "9p"];
+const DAYS = ["page.dashboard.days.mon", "page.dashboard.days.tue", "page.dashboard.days.wed", "page.dashboard.days.thu", "page.dashboard.days.fri", "page.dashboard.days.sat", "page.dashboard.days.sun"];
+const HEATMAP_SLOTS = ["page.dashboard.slots.s6", "page.dashboard.slots.s9", "page.dashboard.slots.s12", "page.dashboard.slots.s15", "page.dashboard.slots.s18", "page.dashboard.slots.s21"];
 
 const QUICK_ACTIONS = [
-  { href: "/dashboard/fixed-assets/scan-in/", icon: Download, label: "Scan-In" },
-  { href: "/dashboard/fixed-assets/scan-out/", icon: Upload, label: "Scan-Out" },
-  { href: "/dashboard/fixed-assets/transfer/", icon: Truck, label: "Transfer" },
-  { href: "/dashboard/fixed-assets/audit/", icon: FileText, label: "Audit" },
-  { href: "/dashboard/fixed-assets/maintenance/", icon: Wrench, label: "Work Order" },
-  { href: "/dashboard/fixed-assets/register/", icon: Plus, label: "Register" },
+  { href: "/dashboard/fixed-assets/scan-in/", icon: Download, labelKey: "page.dashboard.quick.scanIn" },
+  { href: "/dashboard/fixed-assets/scan-out/", icon: Upload, labelKey: "page.dashboard.quick.scanOut" },
+  { href: "/dashboard/fixed-assets/transfer/", icon: Truck, labelKey: "actions.transfer" },
+  { href: "/dashboard/fixed-assets/audit/", icon: FileText, labelKey: "page.dashboard.quick.audit" },
+  { href: "/dashboard/fixed-assets/maintenance/", icon: Wrench, labelKey: "page.dashboard.quick.workOrder" },
+  { href: "/dashboard/fixed-assets/register/", icon: Plus, labelKey: "page.dashboard.quick.register" },
 ];
 
 function greeting(): string {
   const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
+  if (hour < 12) return "page.dashboard.greeting.morning";
+  if (hour < 18) return "page.dashboard.greeting.afternoon";
+  return "page.dashboard.greeting.evening";
 }
 
 function rowBorder(isLast: boolean): string | undefined {
@@ -66,10 +68,12 @@ function rowBorder(isLast: boolean): string | undefined {
 }
 
 export function FaDashboardPage() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { canManage } = useFaPermission();
   const { data: resp, isError, isLoading } = useGetFADashboardQuery({ organizationId });
   const { data: assetResp } = useGetAssetRegisterQuery({ organizationId });
   const { data: checkOutResp } = useGetCheckOutsQuery({
@@ -128,38 +132,40 @@ export function FaDashboardPage() {
               onClick={() => queryClient.invalidateQueries({ queryKey: ["fa"] })}
             >
               <RefreshCw size={14} />
-              Refresh
+              {t("page.dashboard.actions.refresh")}
             </button>
-            <button
-              className="ks-btn ks-btn-sm"
-              disabled={isExporting}
-              type="button"
-              onClick={handleExport}
-            >
-              <Download size={14} />
-              Export
-            </button>
+            {canManage && (
+              <button
+                className="ks-btn ks-btn-sm"
+                disabled={isExporting}
+                type="button"
+                onClick={handleExport}
+              >
+                <Download size={14} />
+                {t("actions.export")}
+              </button>
+            )}
             <button
               className="ks-btn ks-btn-primary ks-btn-sm"
               type="button"
               onClick={() => router.push("/dashboard/fixed-assets/register/")}
             >
               <Plus size={14} />
-              Add Assets
+              {t("actions.add")}
             </button>
           </>
         }
-        desc={`${totalAssets.toLocaleString()} assets · ${sites.length} sites`}
-        title={`${greeting()}, ${tokenPayload?.first_name ?? ""}`}
+        desc={t("page.dashboard.headerDesc", { assets: totalAssets.toLocaleString(), sites: sites.length })}
+        title={`${t(greeting())}, ${tokenPayload?.first_name ?? ""}`}
       />
 
       <FaKpiStrip>
-        <FaStat label="Total assets" tone="brand" value={String(totalAssets)} />
-        <FaStat label="Capital value" sub="PSAK 16 net book" tone="info" value={formatIDRShort(capitalValue)} />
-        <FaStat label="Utilization" sub="deployed · in-service · checked-out" tone="success" value={d ? `${Math.round(d.utilization_pct)}%` : "—"} />
-        <FaStat label="Active alerts" tone="danger" value={String(d?.active_alerts ?? 0)} />
+        <FaStat label={t("page.dashboard.kpi.totalAssets")} tone="brand" value={String(totalAssets)} />
+        <FaStat label={t("page.dashboard.kpi.capitalValue")} sub={t("page.dashboard.kpi.capitalValueSub")} tone="info" value={formatIDRShort(capitalValue)} />
+        <FaStat label={t("page.dashboard.kpi.utilization")} sub={t("page.dashboard.kpi.utilizationSub")} tone="success" value={d ? `${Math.round(d.utilization_pct)}%` : "—"} />
+        <FaStat label={t("page.dashboard.kpi.activeAlerts")} tone="danger" value={String(d?.active_alerts ?? 0)} />
         <FaStat
-          label="Audit progress"
+          label={t("page.dashboard.kpi.auditProgress")}
           tone="warn"
           value={d ? `${Math.round(d.audit_progress_pct)}%` : "—"}
         />
@@ -174,8 +180,8 @@ export function FaDashboardPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Quick actions</div>
-              <div className="ks-card-desc">Daily operations</div>
+              <div className="ks-card-title">{t("page.dashboard.section.quickActions")}</div>
+              <div className="ks-card-desc">{t("page.dashboard.section.quickActionsDesc")}</div>
             </div>
           </div>
           <div className="ks-card-body">
@@ -184,14 +190,14 @@ export function FaDashboardPage() {
                 const Icon = qa.icon;
                 return (
                   <button
-                    key={qa.label}
+                    key={qa.labelKey}
                     className="ks-btn"
                     style={{ justifyContent: "flex-start" }}
                     type="button"
                     onClick={() => router.push(qa.href)}
                   >
                     <Icon size={14} />
-                    {qa.label}
+                    {t(qa.labelKey)}
                   </button>
                 );
               })}
@@ -203,10 +209,10 @@ export function FaDashboardPage() {
               >
                 <div className="flex items-center gap-2" style={{ marginBottom: 4 }}>
                   <Zap size={14} style={{ color: "hsl(var(--brand))" }} />
-                  <span className="text-xs font-semibold">AI Insight</span>
+                  <span className="text-xs font-semibold">{t("page.dashboard.section.aiInsight")}</span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  3 assets trending toward failure within 7 days
+                  {t("page.dashboard.aiInsightDesc")}
                 </p>
               </div>
               <div
@@ -215,10 +221,10 @@ export function FaDashboardPage() {
               >
                 <div className="flex items-center gap-2" style={{ marginBottom: 4 }}>
                   <FileText size={14} style={{ color: "hsl(var(--destructive))" }} />
-                  <span className="text-xs font-semibold">Loss Prevention</span>
+                  <span className="text-xs font-semibold">{t("page.dashboard.section.lossPrevention")}</span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  1 exit alert · Forklift left geofence 4h ago
+                  {t("page.dashboard.lossPreventionDesc")}
                 </p>
               </div>
             </div>
@@ -228,10 +234,10 @@ export function FaDashboardPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Recent activity</div>
-              <div className="ks-card-desc">Live feed</div>
+              <div className="ks-card-title">{t("page.dashboard.section.recentActivity")}</div>
+              <div className="ks-card-desc">{t("page.dashboard.section.liveFeed")}</div>
             </div>
-            <span className="ks-badge success">Live</span>
+            <span className="ks-badge success">{t("page.dashboard.section.live")}</span>
           </div>
           <div className="ks-card-body" style={{ padding: 0 }}>
             {activity.map((it, i) => (
@@ -256,7 +262,7 @@ export function FaDashboardPage() {
       <div className="ks-grid-3" style={{ marginBottom: 16 }}>
         <div className="ks-card">
           <div className="ks-card-head">
-            <div className="ks-card-title">Category distribution</div>
+            <div className="ks-card-title">{t("page.dashboard.section.categoryDistribution")}</div>
           </div>
           <div className="ks-card-body">
             {category_stats.map((cs) => {
@@ -282,26 +288,26 @@ export function FaDashboardPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Activity · last 7 days</div>
-              <div className="ks-card-desc">Check-out &amp; scan-in density</div>
+              <div className="ks-card-title">{t("page.dashboard.section.activityWeek")}</div>
+              <div className="ks-card-desc">{t("page.dashboard.section.activityWeekDesc")}</div>
             </div>
           </div>
           <div className="ks-card-body">
             {heatmapTotal === 0 ? (
               <p className="py-8 text-center text-sm text-muted-foreground">
-                No check-out or scan-in activity recorded in the last 7 days
+                {t("page.dashboard.empty.noActivity")}
               </p>
             ) : (
               <>
                 <div className="flex gap-1" style={{ marginBottom: 6 }}>
                   <span style={{ width: 28 }} />
                   {HEATMAP_SLOTS.map((h) => (
-                    <span key={h} className="flex-1 text-center text-xs text-muted-foreground">{h}</span>
+                    <span key={h} className="flex-1 text-center text-xs text-muted-foreground">{t(h)}</span>
                   ))}
                 </div>
                 {heatmap.map((row, ri) => (
                   <div key={ri} className="flex items-center gap-1" style={{ marginBottom: 4 }}>
-                    <span className="text-xs text-muted-foreground" style={{ width: 28 }}>{DAYS[ri]}</span>
+                    <span className="text-xs text-muted-foreground" style={{ width: 28 }}>{t(DAYS[ri])}</span>
                     {row.map((count, ci) => (
                       <div
                         key={ci}
@@ -322,7 +328,7 @@ export function FaDashboardPage() {
 
         <div className="ks-card">
           <div className="ks-card-head">
-            <div className="ks-card-title">Top-value assets</div>
+            <div className="ks-card-title">{t("page.dashboard.section.topValue")}</div>
           </div>
           <div className="ks-card-body" style={{ padding: 0 }}>
             {topValue.map((a, i) => {
@@ -350,8 +356,8 @@ export function FaDashboardPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Site rollup</div>
-              <div className="ks-card-desc">{sites.length} sites</div>
+              <div className="ks-card-title">{t("page.dashboard.section.siteRollup")}</div>
+              <div className="ks-card-desc">{t("page.dashboard.sitesCount", { count: sites.length })}</div>
             </div>
           </div>
           <div className="ks-card-body">
@@ -385,8 +391,8 @@ export function FaDashboardPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Recent RFID reads</div>
-              <div className="ks-card-desc">Latest tag reads across readers</div>
+              <div className="ks-card-title">{t("page.dashboard.section.recentRfid")}</div>
+              <div className="ks-card-desc">{t("page.dashboard.section.recentRfidDesc")}</div>
             </div>
           </div>
           <div className="ks-card-body" style={{ padding: 0 }}>
@@ -418,8 +424,8 @@ export function FaDashboardPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Financial summary</div>
-              <div className="ks-card-desc">PSAK 16 · net book value by class</div>
+              <div className="ks-card-title">{t("page.dashboard.section.financialSummary")}</div>
+              <div className="ks-card-desc">{t("page.dashboard.section.financialSummaryDesc")}</div>
             </div>
           </div>
           <div className="ks-card-body">
@@ -443,8 +449,8 @@ export function FaDashboardPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Maintenance</div>
-              <div className="ks-card-desc">Next 30 days</div>
+              <div className="ks-card-title">{t("page.dashboard.section.maintenance")}</div>
+              <div className="ks-card-desc">{t("page.dashboard.section.maintenanceDesc")}</div>
             </div>
           </div>
           <div className="ks-card-body" style={{ padding: 0 }}>

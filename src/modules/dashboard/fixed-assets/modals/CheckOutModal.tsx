@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LogOut } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -40,14 +41,13 @@ import { useFaPeopleOptions } from "@/modules/dashboard/fixed-assets/modals/type
 
 const DUE_OPTIONS = ["1 day", "3 days", "7 days", "14 days", "30 days"];
 
-const formSchema = z.object({
-  assetId: z.string().min(1, "Asset is required"),
-  borrower: z.string().min(1, "Borrower is required"),
-  due: z.string().optional(),
-  purpose: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+const DUE_LABELS: Record<string, string> = {
+  "1 day": "modals.checkout.due1Day",
+  "14 days": "modals.checkout.due14Days",
+  "3 days": "modals.checkout.due3Days",
+  "30 days": "modals.checkout.due30Days",
+  "7 days": "modals.checkout.due7Days",
+};
 
 interface CheckOutModalProps {
   onClose: () => void;
@@ -55,6 +55,7 @@ interface CheckOutModalProps {
 }
 
 export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp } = useGetAssetRegisterQuery({ organizationId });
@@ -66,6 +67,15 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
     (resp?.data ?? []).filter(
       (a) => a.status === "deployed" || a.status === "idle",
     );
+
+  const formSchema = z.object({
+    assetId: z.string().min(1, t("modals.checkout.assetRequired")),
+    borrower: z.string().min(1, t("modals.checkout.borrowerRequired")),
+    due: z.string().optional(),
+    purpose: z.string().optional(),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -82,15 +92,15 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
       (a) => a.epc?.toUpperCase() === epc.toUpperCase(),
     );
     if (!asset) {
-      toast.error(`No asset registered for EPC ${epc}`);
+      toast.error(t("modals.checkout.noAssetForEpc", { epc }));
       return;
     }
     if (!eligible.some((a) => a.id === asset.id)) {
-      toast.error(`${asset.name} is not available for check-out`);
+      toast.error(t("modals.checkout.notAvailable", { name: asset.name }));
       return;
     }
     form.setValue("assetId", asset.id, { shouldValidate: true });
-    toast.success(`Asset selected · ${asset.name}`);
+    toast.success(t("modals.checkout.assetSelected", { name: asset.name }));
   };
 
   const handleOpenChange = (next: boolean) => {
@@ -109,6 +119,7 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
       out_date: new Date().toISOString(),
       purpose: values.purpose ?? "",
     });
+    toast.success(t("toasts.checkoutCreated"));
     onClose();
   };
 
@@ -118,10 +129,10 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <LogOut size={18} />
-            Check-Out · Asset Loan
+            {t("modals.checkout.title")}
           </DialogTitle>
           <DialogDescription>
-            Loan a tool or device with RFID custody tracking.
+            {t("modals.checkout.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -134,11 +145,11 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
               name="assetId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Asset</FormLabel>
+                  <FormLabel>{t("modals.checkout.assetLabel")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select asset (idle / deployed)" />
+                        <SelectValue placeholder={t("modals.checkout.assetPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -159,11 +170,11 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
               name="borrower"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Borrower</FormLabel>
+                  <FormLabel>{t("modals.checkout.borrowerLabel")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select borrower" />
+                        <SelectValue placeholder={t("modals.checkout.borrowerPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -184,23 +195,23 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
               name="due"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Due back</FormLabel>
+                  <FormLabel>{t("modals.checkout.dueLabel")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select duration" />
+                        <SelectValue placeholder={t("modals.checkout.duePlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {DUE_OPTIONS.map((d) => (
                         <SelectItem key={d} value={d}>
-                          {d}
+                          {t(DUE_LABELS[d])}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                   <p className="text-xs text-muted-foreground">
-                    Defaults: tools 7d · IT loaner 30d
+                    {t("modals.checkout.defaultsHint")}
                   </p>
                   <FormMessage />
                 </FormItem>
@@ -212,10 +223,10 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
               name="purpose"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Purpose (optional)</FormLabel>
+                  <FormLabel>{t("modals.checkout.purposeLabel")}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="e.g. Site survey at BDG-WH"
+                      placeholder={t("modals.checkout.purposePlaceholder")}
                       {...field}
                     />
                   </FormControl>
@@ -225,8 +236,7 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
             />
 
             <p className="text-xs text-muted-foreground">
-              Borrowers receive a reminder 24h before the due date and daily
-              overdue alerts until the asset is returned.
+              {t("modals.checkout.reminderNote")}
             </p>
 
             <DialogFooter>
@@ -235,13 +245,13 @@ export function CheckOutModal({ onClose, open }: CheckOutModalProps) {
                 type="button"
                 onClick={onClose}
               >
-                Cancel
+                {t("modals.checkout.cancel")}
               </Button>
               <Button
                 className={cn("ks-btn ks-btn-primary")}
                 type="submit"
               >
-                Check out
+                {t("modals.checkout.submit")}
               </Button>
             </DialogFooter>
           </form>

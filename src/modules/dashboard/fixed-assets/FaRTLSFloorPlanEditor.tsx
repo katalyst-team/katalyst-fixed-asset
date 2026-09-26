@@ -1,6 +1,7 @@
 "use client";
 
 import { Pencil, Plus, Trash2 } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useUpsertRTLSFloorPlanMutation } from "@/hooks/api/fixed-assets";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 import type { FaRTLSFloorPlanRoom } from "@/types/fixed-assets";
 
 export const ROOM_TONE: Record<FaRTLSFloorPlanRoom["type"], string> = {
@@ -60,6 +62,8 @@ export function FloorPlanEditor({
   siteId: string;
   width: number;
 }) {
+  const { t } = useTranslation("fixed-assets");
+  const { canManage } = useFaPermission();
   const [draft, setDraft] = useState<FaRTLSFloorPlanRoom[]>(rooms);
   const [editingIdx, setEditingIdx] = useState<number | null>(null);
   const [label, setLabel] = useState("");
@@ -135,11 +139,11 @@ export function FloorPlanEditor({
     <Dialog open={open} onOpenChange={(o) => { if (!o) onDone(); }}>
       <DialogContent style={{ maxWidth: 520 }}>
         <DialogHeader>
-          <DialogTitle>Edit floor plan · {siteId} floor {floor}</DialogTitle>
+          <DialogTitle>{t("page.floorplan.title", { floor, site: siteId })}</DialogTitle>
         </DialogHeader>
         <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 300, overflowY: "auto" }}>
           {draft.length === 0 && (
-            <p className="text-sm text-muted-foreground">No rooms yet. Add zones, rooms, and gates to lay out this floor.</p>
+            <p className="text-sm text-muted-foreground">{t("page.floorplan.noRooms")}</p>
           )}
           {draft.map((r, idx) => (
             <div key={r.id} style={{ alignItems: "center", display: "flex", gap: 8 }}>
@@ -148,10 +152,10 @@ export function FloorPlanEditor({
               <span style={{ color: "hsl(var(--text-3))", fontFamily: "ui-monospace, monospace", fontSize: 11 }}>
                 {r.w}×{r.h} @ {r.x},{r.y}
               </span>
-              <button className="ks-btn ks-btn-ghost ks-btn-icon ks-btn-sm" type="button" onClick={() => startEdit(idx)}>
+              <button aria-label={t("page.floorplan.editRoom")} className="ks-btn ks-btn-ghost ks-btn-icon ks-btn-sm" type="button" onClick={() => startEdit(idx)}>
                 <Pencil size={13} />
               </button>
-              <button className="ks-btn ks-btn-ghost ks-btn-icon ks-btn-sm" type="button" onClick={() => removeRoom(idx)}>
+              <button aria-label={t("page.floorplan.deleteRoom")} className="ks-btn ks-btn-ghost ks-btn-icon ks-btn-sm" type="button" onClick={() => removeRoom(idx)}>
                 <Trash2 size={13} />
               </button>
             </div>
@@ -161,7 +165,7 @@ export function FloorPlanEditor({
           {editingIdx !== null ? (
             <>
               <div style={{ display: "flex", gap: 8 }}>
-                <Input placeholder="Label" value={label} onChange={(e) => setLabel(e.target.value)} />
+                <Input placeholder={t("page.floorplan.labelPlaceholder")} value={label} onChange={(e) => setLabel(e.target.value)} />
                 <Select value={type} onValueChange={(v) => setType(v as FaRTLSFloorPlanRoom["type"])}>
                   <SelectTrigger style={{ width: 110 }}>
                     <SelectValue />
@@ -180,19 +184,21 @@ export function FloorPlanEditor({
                 <Input placeholder="h" type="number" value={h} onChange={(e) => setH(e.target.value)} />
               </div>
               <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                <Button size="sm" onClick={commitRoom}>{editingIdx < draft.length ? "Update" : "Add"}</Button>
-                <Button size="sm" variant="outline" onClick={() => setEditingIdx(null)}>Cancel</Button>
+                <Button size="sm" onClick={commitRoom}>{editingIdx < draft.length ? t("page.floorplan.update") : t("page.floorplan.add")}</Button>
+                <Button size="sm" variant="outline" onClick={() => setEditingIdx(null)}>{t("page.floorplan.cancel")}</Button>
               </div>
             </>
           ) : (
             <button className="ks-btn ks-btn-sm" type="button" onClick={startAdd}>
               <Plus size={13} />
-              Add room
+              {t("page.floorplan.addRoom")}
             </button>
           )}
         </div>
         <DialogFooter>
-          <Button disabled={isSaving} onClick={handleSave}>{isSaving ? "Saving…" : "Save floor plan"}</Button>
+          {canManage && (
+            <Button disabled={isSaving} onClick={handleSave}>{isSaving ? t("page.floorplan.saving") : t("page.floorplan.save")}</Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

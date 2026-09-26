@@ -1,11 +1,19 @@
-// export const config = { matcher: ["/profile", "/dashboard"] };
 import { deleteCookie } from "cookies-next";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { AUTH_COOKIE_OPTIONS } from "./lib/authTokens";
 import { encryptText } from "./lib/crypto";
-import { decodeToken } from "./lib/jwt";
+import { decodeToken, type TokenPayload } from "./lib/jwt";
+
+const decodeSafe = (value?: string): TokenPayload | null => {
+  if (!value) return null;
+  try {
+    return decodeToken(value);
+  } catch {
+    return null;
+  }
+};
 
 const persistResponseCookies = (
   response: NextResponse,
@@ -53,18 +61,18 @@ export async function middleware(request: NextRequest) {
 
   if (isAuthenticated && request.nextUrl.pathname !== "/verification-access") {
     if (decodedToken) {
-      // Check if token is expired
-      // if (
-      //   decodedToken.exp &&
-      //   decodedToken.exp < Math.floor(Date.now() / 1000)
-      // ) {
-      //   deleteCookie("token");
-      //   deleteCookie("refresh_token");
-      //   const response = NextResponse.redirect(new URL("/", request.url));
-      //   response.cookies.delete("token");
-      //   response.cookies.delete("refresh_token");
-      //   return response;
-      // }
+      const nowSec = Math.floor(Date.now() / 1000);
+      const accessExpired = Boolean(decodedToken.exp) && decodedToken.exp < nowSec;
+      const refreshDecoded = decodeSafe(
+        refresh_token?.value ?? paramRefreshToken ?? undefined,
+      );
+      const refreshUsable = Boolean(refreshDecoded && refreshDecoded.exp > nowSec);
+      if (accessExpired && !refreshUsable) {
+        const response = NextResponse.redirect(new URL("/", request.url));
+        response.cookies.delete("token");
+        response.cookies.delete("refresh_token");
+        return response;
+      }
 
       if (decodedToken.account_status === "PENDING") {
         deleteCookie("token");
@@ -90,26 +98,6 @@ export async function middleware(request: NextRequest) {
       }
     }
 
-    // const response = await fetch(
-    //   `${process.env.NEXT_PUBLIC_ENDPOINT_URL}/v1/accounts/me`,
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${tempToken}`,
-    //     },
-    //     method: "GET",
-    //   }
-    // );
-
-    // if (response.status === 403) {
-    //   deleteCookie("token");
-    //   deleteCookie("refresh_token");
-    //   const response = NextResponse.redirect(
-    //     new URL(`/${locale}/verification-access`, request.url)
-    //   );
-    //   response.cookies.delete("token");
-    //   response.cookies.delete("refresh_token");
-    //   return response;
-    // }
   }
 
   if (AUTH_PATH_PAGE.includes(request.nextUrl.pathname) && isAuthenticated) {

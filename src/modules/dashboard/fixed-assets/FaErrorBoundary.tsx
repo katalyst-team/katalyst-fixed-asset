@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { AlertTriangle } from "lucide-react";
 import { Component, ReactNode } from "react";
 
@@ -33,16 +34,16 @@ export class FaErrorBoundary extends Component<
             <AlertTriangle className="h-8 w-8 text-destructive" />
           </div>
           <h2 className="mb-2 text-lg font-semibold text-foreground">
-            Something went wrong
+            {i18next.t("ui.errorBoundary.title", { ns: "fixed-assets" })}
           </h2>
           <p className="mb-4 max-w-md text-sm text-muted-foreground">
-            {this.state.error?.message ?? "An unexpected error occurred."}
+            {this.state.error?.message ?? i18next.t("ui.errorBoundary.fallbackMessage", { ns: "fixed-assets" })}
           </p>
           <Button
             variant="outline"
             onClick={() => window.location.reload()}
           >
-            Reload page
+            {i18next.t("ui.errorBoundary.reload", { ns: "fixed-assets" })}
           </Button>
         </div>
       );

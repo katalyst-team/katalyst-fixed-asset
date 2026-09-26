@@ -10,6 +10,7 @@ import {
   Tag,
   Zap,
 } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -55,6 +56,7 @@ const rssiTone = (rssi: number): string =>
       : "hsl(var(--destructive))";
 
 export function FaRfidTagsPage() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const { canManage } = useFaPermission();
   const organizationId = tokenPayload?.organization_id ?? "";
@@ -101,7 +103,7 @@ export function FaRfidTagsPage() {
 
   const handleOpenPrintQueue = () => {
     if (printQueue.length === 0) {
-      toast.info("No tags in the print queue");
+      toast.info(t("page.rfid.noTagsInQueue"));
       return;
     }
     openModal("printTag", { tags: printQueue });
@@ -126,7 +128,7 @@ export function FaRfidTagsPage() {
                 onClick={handleOpenPrintQueue}
               >
                 <Printer size={14} />
-                Print queue
+                {t("actions.printQueue")}
               </button>
             )}
             {canManage && (
@@ -136,7 +138,7 @@ export function FaRfidTagsPage() {
                 onClick={() => openModal("registerTag")}
               >
                 <Zap size={14} />
-                Register tag
+                {t("page.rfid.registerTag")}
               </button>
             )}
             {canManage && (
@@ -146,7 +148,7 @@ export function FaRfidTagsPage() {
                 onClick={() => openModal("orderStock")}
               >
                 <Plus size={14} />
-                Order tags
+                {t("actions.orderTags")}
               </button>
             )}
             <button
@@ -156,22 +158,22 @@ export function FaRfidTagsPage() {
               onClick={handleExport}
             >
               <Download size={14} />
-              Export
+              {t("actions.export")}
             </button>
           </>
         }
-        desc="Encode, print and track EPC / TID identifiers across the fleet"
-        title="RFID Tags · Register & Print"
+        desc={t("page.rfid.description")}
+        title={t("page.rfid.title")}
       />
 
       <FaKpiStrip>
-        <FaStat label="Active tags" tone="brand" value={String(activeTags)} />
-        <FaStat label="Inactive" tone="info" value={String(inactiveTags)} />
-        <FaStat label="Lost" tone="danger" value={String(lostTags)} />
-        <FaStat label="Damaged" tone="warn" value={String(damagedTags)} />
+        <FaStat label={t("page.rfid.kpi.activeTags")} tone="brand" value={String(activeTags)} />
+        <FaStat label={t("page.rfid.kpi.inactive")} tone="info" value={String(inactiveTags)} />
+        <FaStat label={t("page.rfid.kpi.lost")} tone="danger" value={String(lostTags)} />
+        <FaStat label={t("page.rfid.kpi.damaged")} tone="warn" value={String(damagedTags)} />
         <FaStat
-          label="Print queue"
-          sub="Zebra ZD621"
+          label={t("page.rfid.kpi.printQueue")}
+          sub={t("page.rfid.kpi.zebraZd621")}
           tone="warn"
           value={String(printQueue.length)}
         />
@@ -181,17 +183,17 @@ export function FaRfidTagsPage() {
         <div className="ks-card-head">
           <div className="flex items-center gap-2">
             <Printer size={14} />
-            <div className="ks-card-title">Tag orders</div>
+            <div className="ks-card-title">{t("page.rfid.ordersTitle")}</div>
           </div>
           <span className="ks-badge outline">
-            {ordersResp?.page_pagination?.total_records ?? orders.length} total
+            {ordersResp?.page_pagination?.total_records ?? orders.length} {t("page.rfid.total")}
           </span>
         </div>
         <div style={{ overflowX: "auto" }}>
           <table className="w-full text-sm">
             <thead>
               <tr>
-                {["Order", "Supplier", "Items", "Qty", "Status", "Placed"].map((c) => (
+                {[t("page.rfid.orderColumns.order"), t("page.rfid.orderColumns.supplier"), t("page.rfid.orderColumns.items"), t("page.rfid.orderColumns.qty"), t("page.rfid.orderColumns.status"), t("page.rfid.orderColumns.placed")].map((c) => (
                   <th key={c} className="p-3 text-left font-medium text-muted-foreground">
                     {c}
                   </th>
@@ -226,7 +228,7 @@ export function FaRfidTagsPage() {
               {orders.length === 0 && (
                 <tr>
                   <td className="border-t border-border p-3 text-muted-foreground" colSpan={6}>
-                    No tag orders yet — orders appear here after placing one.
+                    {t("page.rfid.noOrders")}
                   </td>
                 </tr>
               )}
@@ -236,8 +238,8 @@ export function FaRfidTagsPage() {
       </div>
 
       <FaQueryState
-        emptyDescription="No RFID tags registered yet."
-        emptyTitle="No tags found"
+        emptyDescription={t("page.rfid.noTagsDesc")}
+        emptyTitle={t("page.rfid.noTags")}
         isEmpty={tags.length === 0}
         isError={isError}
         isLoading={isLoading}
@@ -247,11 +249,11 @@ export function FaRfidTagsPage() {
         <div className="ks-card-head">
           <div className="flex items-center gap-2">
             <Tag size={14} />
-            <div className="ks-card-title">RFID tags</div>
+            <div className="ks-card-title">{t("page.rfid.tagsTitle")}</div>
           </div>
           <div className="ks-search-box">
             <Search size={14} />
-            Search EPC / asset
+            {t("page.rfid.searchPlaceholder")}
           </div>
         </div>
         <div style={{ overflowX: "auto" }}>
@@ -259,34 +261,34 @@ export function FaRfidTagsPage() {
             <thead>
               <tr>
                 <th className="p-3 text-left font-medium text-muted-foreground">
-                  EPC
+                  {t("page.rfid.columns.epc")}
                 </th>
                 <th className="p-3 text-left font-medium text-muted-foreground">
-                  Asset
+                  {t("page.rfid.columns.asset")}
                 </th>
                 <th className="p-3 text-left font-medium text-muted-foreground">
-                  Format
+                  {t("page.rfid.columns.format")}
                 </th>
                 <th className="p-3 text-left font-medium text-muted-foreground">
-                  TID
+                  {t("page.rfid.columns.tid")}
                 </th>
                 <th className="p-3 text-left font-medium text-muted-foreground">
-                  Last read
+                  {t("page.rfid.columns.lastRead")}
                 </th>
                 <th className="p-3 text-left font-medium text-muted-foreground">
-                  RSSI
+                  {t("page.rfid.columns.rssi")}
                 </th>
                 <th className="p-3 text-left font-medium text-muted-foreground">
-                  Status
+                  {t("page.rfid.columns.status")}
                 </th>
                 <th className="p-3 text-left font-medium text-muted-foreground">
-                  Notes
+                  {t("page.rfid.columns.notes")}
                 </th>
                 <th className="p-3 text-left font-medium text-muted-foreground">
-                  Print status
+                  {t("page.rfid.columns.printStatus")}
                 </th>
                 <th className="p-3 text-left font-medium text-muted-foreground">
-                  Actions
+                  {t("page.rfid.columns.actions")}
                 </th>
               </tr>
             </thead>
@@ -319,7 +321,7 @@ export function FaRfidTagsPage() {
                         className="font-mono text-xs font-medium"
                         style={{ color: rssiTone(tag.rssi) }}
                       >
-                        {tag.rssi} dBm
+                        {t("page.rfid.dbm", { value: tag.rssi })}
                       </span>
                     )}
                   </td>
@@ -339,12 +341,12 @@ export function FaRfidTagsPage() {
                     {tag.printed ? (
                       <span className="inline-flex items-center gap-1 text-xs font-medium text-success">
                         <CheckCircle2 size={13} />
-                        Printed
+                        {t("page.rfid.printed")}
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground">
                         <Printer size={13} />
-                        Queued
+                        {t("page.rfid.queued")}
                       </span>
                     )}
                   </td>
@@ -361,12 +363,12 @@ export function FaRfidTagsPage() {
                             onClick={() => handleEncode(tag)}
                           >
                             <Zap size={13} />
-                            Encode
+                            {t("actions.encode")}
                           </button>
                           <button
-                            aria-label="Print label"
+                            aria-label={t("page.rfid.printLabel")}
                             className="ks-btn ks-btn-icon ks-btn-sm"
-                            title="Print label"
+                            title={t("page.rfid.printLabel")}
                             type="button"
                             onClick={() =>
                               openModal("printTag", { tags: [tag] })
@@ -375,9 +377,9 @@ export function FaRfidTagsPage() {
                             <Printer size={13} />
                           </button>
                           <button
-                            aria-label="Edit tag"
+                            aria-label={t("page.rfid.editTag")}
                             className="ks-btn ks-btn-icon ks-btn-sm"
-                            title="Edit tag"
+                            title={t("page.rfid.editTag")}
                             type="button"
                             onClick={() => openModal("editTag", { tag })}
                           >
@@ -396,7 +398,7 @@ export function FaRfidTagsPage() {
           className="justify-between text-xs text-muted-foreground flex items-center"
           style={{ borderTop: "1px solid hsl(var(--border))", padding: "10px 18px" }}
         >
-          <span>Showing {tags.length} of {resp?.page_pagination?.total_records ?? 0}</span>
+          <span>{t("pagination.showing", { current: tags.length, total: resp?.page_pagination?.total_records ?? 0 })}</span>
           <PaginationCursor
             currentPage={page}
             hasNextPage={resp?.page_pagination?.has_next ?? false}

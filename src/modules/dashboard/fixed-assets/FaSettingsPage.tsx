@@ -1,9 +1,12 @@
 "use client";
 
+/* eslint-disable max-lines */
+
 import type { LucideIcon } from "lucide-react";
 import {
   Bell, BookOpen, Check, Database, DollarSign, Loader2, Mail, MessageSquare, Network, Plug, Printer, Radio, RefreshCw, Save, Settings as Cog, Shield,
 } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
 
 import Loading from "@/components/shared/Loading";
@@ -21,6 +24,7 @@ import {
   useUpdateNotificationTriggersMutation,
 } from "@/hooks/api/fixed-assets";
 import { FaMeter, FaShellHead,formatDate } from "@/modules/dashboard/fixed-assets";
+import { FaQueryError } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 import type { FaSettings } from "@/types/fixed-assets";
 
@@ -34,13 +38,13 @@ const DEFAULT_SETTINGS: FaSettings = {
 };
 
 const NAV = [
-  { icon: Cog, id: "general", label: "General" },
-  { icon: Bell, id: "notif", label: "Notifications" },
-  { icon: RefreshCw, id: "maint", label: "Maintenance Reminders" },
-  { icon: Database, id: "integ", label: "Integrations" },
-  { icon: Radio, id: "rfid", label: "RFID Hardware" },
-  { icon: Shield, id: "security", label: "Security" },
-  { icon: DollarSign, id: "billing", label: "Billing" },
+  { icon: Cog, id: "general", labelKey: "page.settings.nav.general" },
+  { icon: Bell, id: "notif", labelKey: "page.settings.nav.notif" },
+  { icon: RefreshCw, id: "maint", labelKey: "page.settings.nav.maint" },
+  { icon: Database, id: "integ", labelKey: "page.settings.nav.integ" },
+  { icon: Radio, id: "rfid", labelKey: "page.settings.nav.rfid" },
+  { icon: Shield, id: "security", labelKey: "page.settings.nav.security" },
+  { icon: DollarSign, id: "billing", labelKey: "page.settings.nav.billing" },
 ];
 
 function Field({ label, onChange, value }: { label: string; onChange: (v: string) => void; value: string }) {
@@ -57,27 +61,28 @@ function GeneralPanel({ onChange, organizationId, workspace }: {
   organizationId: string;
   workspace: FaSettings["workspace"];
 }) {
+  const { t } = useTranslation("fixed-assets");
   const { data: tagsResp } = useGetRFIDTagsQuery({ organizationId });
   const totalTagged = tagsResp?.data?.tags.length ?? 0;
 
   return (
     <div className="ks-card">
-      <div className="ks-card-head"><span className="ks-card-title">Workspace</span></div>
+      <div className="ks-card-head"><span className="ks-card-title">{t("page.settings.workspace")}</span></div>
       <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div className="ks-grid-2" style={{ gap: 14 }}>
-          <Field label="Company Name" value={workspace.company_name} onChange={(v) => onChange({ company_name: v })} />
-          <Field label="NPWP" value={workspace.npwp} onChange={(v) => onChange({ npwp: v })} />
-          <Field label="Currency" value={workspace.currency} onChange={(v) => onChange({ currency: v })} />
-          <Field label="Fiscal Year Start" value={workspace.fiscal_year_start} onChange={(v) => onChange({ fiscal_year_start: v })} />
-          <Field label="Depreciation Standard" value={workspace.depreciation_standard} onChange={(v) => onChange({ depreciation_standard: v })} />
+          <Field label={t("page.settings.companyName")} value={workspace.company_name} onChange={(v) => onChange({ company_name: v })} />
+          <Field label={t("page.settings.npwp")} value={workspace.npwp} onChange={(v) => onChange({ npwp: v })} />
+          <Field label={t("page.settings.currency")} value={workspace.currency} onChange={(v) => onChange({ currency: v })} />
+          <Field label={t("page.settings.fiscalYearStart")} value={workspace.fiscal_year_start} onChange={(v) => onChange({ fiscal_year_start: v })} />
+          <Field label={t("page.settings.depreciationStandard")} value={workspace.depreciation_standard} onChange={(v) => onChange({ depreciation_standard: v })} />
         </div>
         <div>
-          <div style={{ color: "hsl(var(--text-3))", fontSize: 11, fontWeight: 600, marginBottom: 10, textTransform: "uppercase" }}>Asset Numbering Scheme</div>
+          <div style={{ color: "hsl(var(--text-3))", fontSize: 11, fontWeight: 600, marginBottom: 10, textTransform: "uppercase" }}>{t("page.settings.assetNumberingScheme")}</div>
           <div className="ks-grid-3" style={{ gap: 12 }}>
             {[
-              { k: "Format", v: workspace.asset_id_prefix },
-              { k: "Next Sequence", v: String(workspace.next_asset_number) },
-              { k: "Total Tagged", v: totalTagged.toLocaleString("id-ID") },
+              { k: t("page.settings.numberingFormat"), v: workspace.asset_id_prefix },
+              { k: t("page.settings.numberingNextSequence"), v: String(workspace.next_asset_number) },
+              { k: t("page.settings.numberingTotalTagged"), v: totalTagged.toLocaleString("id-ID") },
             ].map((item) => (
               <div key={item.k} style={{ background: "hsl(var(--surface-2))", borderRadius: 8, padding: 12 }}>
                 <div style={{ color: "hsl(var(--text-3))", fontSize: 11 }}>{item.k}</div>
@@ -92,6 +97,7 @@ function GeneralPanel({ onChange, organizationId, workspace }: {
 }
 
 function NotificationsPanel({ notifications, organizationId }: { notifications: FaSettings["notifications"]; organizationId: string }) {
+  const { t } = useTranslation("fixed-assets");
   const { data: resp } = useGetNotificationTriggersQuery({ organizationId });
   const { isPending: isUpdating, mutateAsync: updateTriggersAsync } = useUpdateNotificationTriggersMutation({ organizationId });
   const triggers = resp?.data?.triggers ?? [];
@@ -113,23 +119,23 @@ function NotificationsPanel({ notifications, organizationId }: { notifications: 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div className="ks-card">
-        <div className="ks-card-head"><span className="ks-card-title">Channels</span></div>
+        <div className="ks-card-head"><span className="ks-card-title">{t("page.settings.channels")}</span></div>
         <div className="ks-card-body">
           <div className="ks-grid-2" style={{ gap: 12 }}>
             {channels.map((c) => (
               <div key={c.name} style={{ alignItems: "center", background: "hsl(var(--surface-2))", borderRadius: 8, display: "flex", justifyContent: "space-between", padding: "10px 14px" }}>
                 <span style={{ fontSize: 13, fontWeight: 500 }}>{c.name}</span>
-                {c.on ? <span className="ks-badge success">Connected</span> : <span className="ks-badge outline">Off</span>}
+                {c.on ? <span className="ks-badge success">{t("page.settings.connected")}</span> : <span className="ks-badge outline">{t("page.settings.off")}</span>}
               </div>
             ))}
           </div>
         </div>
       </div>
       <div className="ks-card">
-        <div className="ks-card-head"><span className="ks-card-title">Triggers</span></div>
+        <div className="ks-card-head"><span className="ks-card-title">{t("page.settings.triggers")}</span></div>
         <div style={{ overflowX: "auto" }}>
         <table className="w-full text-sm">
-          <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">Event</th><th className="p-3 text-left font-medium text-muted-foreground">Email</th><th className="p-3 text-left font-medium text-muted-foreground">WhatsApp</th><th className="p-3 text-left font-medium text-muted-foreground">Slack</th></tr></thead>
+          <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.event")}</th><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.email")}</th><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.whatsapp")}</th><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.slack")}</th></tr></thead>
           <tbody>
             {triggers.map((t) => {
               const emailOn = t.channels.includes("email");
@@ -153,6 +159,7 @@ function NotificationsPanel({ notifications, organizationId }: { notifications: 
 }
 
 function MaintenancePanel({ organizationId }: { organizationId: string }) {
+  const { t } = useTranslation("fixed-assets");
   const { data: resp } = useGetMaintenanceQuery({ organizationId });
   const pmRules = resp?.data?.pm_rules ?? [];
   const upcoming = (resp?.data?.work_orders ?? [])
@@ -163,10 +170,10 @@ function MaintenancePanel({ organizationId }: { organizationId: string }) {
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.4fr_1fr]">
       <div className="ks-card">
-        <div className="ks-card-head"><span className="ks-card-title">Reminder Rules</span></div>
+        <div className="ks-card-head"><span className="ks-card-title">{t("page.settings.reminderRules")}</span></div>
         <div style={{ overflowX: "auto" }}>
         <table className="w-full text-sm">
-          <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">Rule</th><th className="p-3 text-left font-medium text-muted-foreground">Trigger</th><th className="p-3 text-left font-medium text-muted-foreground">Lead time</th></tr></thead>
+          <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.rule")}</th><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.trigger")}</th><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.leadTime")}</th></tr></thead>
           <tbody>
             {pmRules.map((r) => (
               <tr key={r.name}>
@@ -180,7 +187,7 @@ function MaintenancePanel({ organizationId }: { organizationId: string }) {
         </div>
       </div>
       <div className="ks-card">
-        <div className="ks-card-head"><span className="ks-card-title">Upcoming</span></div>
+        <div className="ks-card-head"><span className="ks-card-title">{t("page.settings.upcoming")}</span></div>
         <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {upcoming.map((w) => (
             <div key={w.id} style={{ alignItems: "center", background: "hsl(var(--surface-2))", borderRadius: 8, display: "flex", gap: 10, padding: "9px 12px" }}>
@@ -202,13 +209,13 @@ const CONNECT_TYPE_BY_KEY: Record<string, "active-directory" | "email" | "erp"> 
   erp: "erp",
 };
 
-const INTEGRATION_META: Record<string, { desc: string; icon: LucideIcon; name: string }> = {
-  accounting: { desc: "Accounting sync", icon: BookOpen, name: "Accounting" },
-  active_directory: { desc: "SSO / directory", icon: Network, name: "Active Directory" },
-  email_provider: { desc: "Notifications channel", icon: Mail, name: "Email" },
-  erp: { desc: "ERP / asset sync", icon: Database, name: "ERP" },
-  label_printers: { desc: "Label & tag printers", icon: Printer, name: "Label Printers" },
-  messaging: { desc: "Messaging / chat alerts", icon: MessageSquare, name: "Messaging" },
+const INTEGRATION_META: Record<string, { descKey: string; icon: LucideIcon; nameKey: string }> = {
+  accounting: { descKey: "page.settings.integration.accountingDesc", icon: BookOpen, nameKey: "page.settings.integration.accounting" },
+  active_directory: { descKey: "page.settings.integration.activeDirectoryDesc", icon: Network, nameKey: "page.settings.integration.activeDirectory" },
+  email_provider: { descKey: "page.settings.integration.emailDesc", icon: Mail, nameKey: "page.settings.integration.email" },
+  erp: { descKey: "page.settings.integration.erpDesc", icon: Database, nameKey: "page.settings.integration.erp" },
+  label_printers: { descKey: "page.settings.integration.labelPrintersDesc", icon: Printer, nameKey: "page.settings.integration.labelPrinters" },
+  messaging: { descKey: "page.settings.integration.messagingDesc", icon: MessageSquare, nameKey: "page.settings.integration.messaging" },
 };
 
 function IntegrationsPanel({ canManageSettings, integrations, isConnecting, onConnect }: {
@@ -217,11 +224,11 @@ function IntegrationsPanel({ canManageSettings, integrations, isConnecting, onCo
   isConnecting: boolean;
   onConnect: (key: string) => Promise<void>;
 }) {
+  const { t } = useTranslation("fixed-assets");
   const cards = Object.entries(integrations)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, state]) => {
-      const fallback = { desc: "Integration", icon: Plug, name: key.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ") };
-      const meta = INTEGRATION_META[key] ?? fallback;
+      const meta = INTEGRATION_META[key] ?? { descKey: "page.settings.integration.genericDesc", icon: Plug, nameKey: "" };
       return { ...meta, connected: state?.connected === true, key };
     });
 
@@ -230,13 +237,14 @@ function IntegrationsPanel({ canManageSettings, integrations, isConnecting, onCo
       {cards.map((i) => {
         const Icon = i.icon;
         const connectType = CONNECT_TYPE_BY_KEY[i.key];
+        const name = i.nameKey ? t(i.nameKey) : i.key.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
         return (
           <div key={i.key} className="ks-card">
             <div className="ks-card-body" style={{ alignItems: "center", display: "flex", flexDirection: "column", gap: 10, textAlign: "center" }}>
               <div style={{ alignItems: "center", background: "hsl(var(--surface-2))", borderRadius: 10, display: "flex", height: 44, justifyContent: "center", width: 44 }}><Icon size={20} /></div>
-              <div style={{ fontSize: 14, fontWeight: 600 }}>{i.name}</div>
-              <div style={{ color: "hsl(var(--text-3))", fontSize: 12 }}>{i.desc}</div>
-              {i.connected ? <span className="ks-badge success">Connected</span> : connectType && canManageSettings ? (
+              <div style={{ fontSize: 14, fontWeight: 600 }}>{name}</div>
+              <div style={{ color: "hsl(var(--text-3))", fontSize: 12 }}>{t(i.descKey)}</div>
+              {i.connected ? <span className="ks-badge success">{t("page.settings.connected")}</span> : connectType && canManageSettings ? (
                 <button
                   className="ks-btn ks-btn-sm"
                   disabled={isConnecting}
@@ -244,9 +252,9 @@ function IntegrationsPanel({ canManageSettings, integrations, isConnecting, onCo
                   onClick={() => onConnect(i.key)}
                 >
                   {isConnecting ? <Loader2 className="animate-spin" size={14} /> : null}
-                  Connect
+                  {t("page.settings.connect")}
                 </button>
-              ) : connectType ? <span className="ks-badge outline">Available</span> : <span className="ks-badge outline">Coming soon</span>}
+              ) : connectType ? <span className="ks-badge outline">{t("page.settings.available")}</span> : <span className="ks-badge outline">{t("page.settings.comingSoon")}</span>}
             </div>
           </div>
         );
@@ -260,27 +268,28 @@ function RfidPanel({ onChange, organizationId, rfidHardware }: {
   organizationId: string;
   rfidHardware: FaSettings["rfid_hardware"];
 }) {
+  const { t } = useTranslation("fixed-assets");
   const { data: resp } = useGetRfidReadersQuery({ organizationId });
   const readers = resp?.data?.readers ?? [];
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div className="ks-card">
-        <div className="ks-card-head"><span className="ks-card-title">Hardware Config</span></div>
+        <div className="ks-card-head"><span className="ks-card-title">{t("page.settings.hardwareConfig")}</span></div>
         <div className="ks-card-body">
           <div className="ks-grid-2" style={{ gap: 14 }}>
-            <Field label="Reader Polling Interval" value={String(rfidHardware.reader_polling_interval_ms)} onChange={(v) => onChange({ reader_polling_interval_ms: Number(v) || 0 })} />
-            <Field label="RSSI Threshold" value={String(rfidHardware.rssi_threshold)} onChange={(v) => onChange({ rssi_threshold: Number(v) || 0 })} />
-            <Field label="EPC Encoding" value={rfidHardware.epc_encoding} onChange={(v) => onChange({ epc_encoding: v })} />
-            <Field label="Default Tag Type" value={rfidHardware.default_tag_type} onChange={(v) => onChange({ default_tag_type: v })} />
+            <Field label={t("page.settings.readerPollingInterval")} value={String(rfidHardware.reader_polling_interval_ms)} onChange={(v) => onChange({ reader_polling_interval_ms: Number(v) || 0 })} />
+            <Field label={t("page.settings.rssiThreshold")} value={String(rfidHardware.rssi_threshold)} onChange={(v) => onChange({ rssi_threshold: Number(v) || 0 })} />
+            <Field label={t("page.settings.epcEncoding")} value={rfidHardware.epc_encoding} onChange={(v) => onChange({ epc_encoding: v })} />
+            <Field label={t("page.settings.defaultTagType")} value={rfidHardware.default_tag_type} onChange={(v) => onChange({ default_tag_type: v })} />
           </div>
         </div>
       </div>
       <div className="ks-card">
-        <div className="ks-card-head"><span className="ks-card-title">Readers · {readers.length}</span></div>
+        <div className="ks-card-head"><span className="ks-card-title">{t("page.settings.readersCount", { count: readers.length })}</span></div>
         <div style={{ overflowX: "auto" }}>
         <table className="w-full text-sm">
-          <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">Name</th><th className="p-3 text-left font-medium text-muted-foreground">Location</th><th className="p-3 text-left font-medium text-muted-foreground">Model</th><th className="p-3 text-left font-medium text-muted-foreground">IP</th><th className="p-3 text-left font-medium text-muted-foreground">Status</th></tr></thead>
+          <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.name")}</th><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.location")}</th><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.model")}</th><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.ip")}</th><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.status")}</th></tr></thead>
           <tbody>
             {readers.map((r) => (
               <tr key={r.id}>
@@ -288,7 +297,7 @@ function RfidPanel({ onChange, organizationId, rfidHardware }: {
                 <td className="border-t border-border p-3">{r.location}</td>
                 <td className="border-t border-border p-3">{r.model}</td>
                 <td className="border-t border-border p-3" style={{ fontFamily: "ui-monospace, monospace" }}>{r.ip || "—"}</td>
-                <td className="border-t border-border p-3">{r.status === "online" ? <span className="ks-badge success">Online</span> : r.status === "error" ? <span className="ks-badge danger">Error</span> : <span className="ks-badge danger">Offline</span>}</td>
+                <td className="border-t border-border p-3">{r.status === "online" ? <span className="ks-badge success">{t("page.settings.statusOnline")}</span> : r.status === "error" ? <span className="ks-badge danger">{t("page.settings.statusError")}</span> : <span className="ks-badge danger">{t("page.settings.statusOffline")}</span>}</td>
               </tr>
             ))}
           </tbody>
@@ -300,16 +309,17 @@ function RfidPanel({ onChange, organizationId, rfidHardware }: {
 }
 
 function SecurityPanel({ security }: { security: FaSettings["security"] }) {
+  const { t } = useTranslation("fixed-assets");
   const rows = [
-    { desc: "Minutes of inactivity before auto-logout", title: "Session Timeout", val: `${security.session_timeout_min} min` },
-    { desc: "Restrict access to specified ranges", title: "IP Whitelist", val: security.ip_whitelist.length > 0 ? security.ip_whitelist.join(", ") : "Any" },
-    { desc: "Required for Admin & Finance roles", title: "MFA Requirement", val: security.mfa_required ? "Enforced" : "Off" },
-    { desc: "Min 12 chars, mixed case, symbol", title: "Password Policy", val: security.password_policy || "Default" },
+    { desc: t("page.settings.security.sessionTimeoutDesc"), title: t("page.settings.security.sessionTimeout"), val: t("page.settings.security.minutes", { count: security.session_timeout_min }) },
+    { desc: t("page.settings.security.ipWhitelistDesc"), title: t("page.settings.security.ipWhitelist"), val: security.ip_whitelist.length > 0 ? security.ip_whitelist.join(", ") : t("page.settings.security.any") },
+    { desc: t("page.settings.security.mfaRequirementDesc"), title: t("page.settings.security.mfaRequirement"), val: security.mfa_required ? t("page.settings.security.enforced") : t("page.settings.off") },
+    { desc: t("page.settings.security.passwordPolicyDesc"), title: t("page.settings.security.passwordPolicy"), val: security.password_policy || t("page.settings.security.defaultPolicy") },
   ];
 
   return (
     <div className="ks-card">
-      <div className="ks-card-head"><span className="ks-card-title">Security</span></div>
+      <div className="ks-card-head"><span className="ks-card-title">{t("page.settings.nav.security")}</span></div>
       <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 0 }}>
         {rows.map((r, i) => (
           <div key={r.title} style={{ alignItems: "center", borderBottom: i < rows.length - 1 ? "1px solid hsl(var(--border))" : "none", display: "flex", gap: 16, justifyContent: "space-between", padding: "14px 0" }}>
@@ -326,6 +336,7 @@ function SecurityPanel({ security }: { security: FaSettings["security"] }) {
 }
 
 function BillingPanel({ organizationId }: { organizationId: string }) {
+  const { t } = useTranslation("fixed-assets");
   const { data: billingResp } = useGetBillingQuery({ organizationId });
   const { data: invoicesResp } = useGetInvoicesQuery({ organizationId });
   const billing = billingResp?.data;
@@ -338,9 +349,9 @@ function BillingPanel({ organizationId }: { organizationId: string }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div className="ks-card">
-        <div className="ks-card-head"><span className="ks-card-title">Plan</span><span className="ks-badge brand">{billing.plan}</span></div>
+        <div className="ks-card-head"><span className="ks-card-title">{t("page.settings.plan")}</span><span className="ks-badge brand">{billing.plan}</span></div>
         <div className="ks-card-body ks-grid-3" style={{ gap: 14 }}>
-          {[["Plan", billing.plan], ["Renewal", formatDate(billing.renewal_date)], ["Seats", `${billing.seats_used} / ${billing.seat_count}`]].map(([k, v]) => (
+          {[[t("page.settings.billing.plan"), billing.plan], [t("page.settings.billing.renewal"), formatDate(billing.renewal_date)], [t("page.settings.billing.seats"), `${billing.seats_used} / ${billing.seat_count}`]].map(([k, v]) => (
             <div key={k} style={{ background: "hsl(var(--surface-2))", borderRadius: 8, padding: 12 }}>
               <div style={{ color: "hsl(var(--text-3))", fontSize: 11 }}>{k}</div>
               <div style={{ fontSize: 15, fontWeight: 600 }}>{v}</div>
@@ -349,11 +360,11 @@ function BillingPanel({ organizationId }: { organizationId: string }) {
         </div>
       </div>
       <div className="ks-card">
-        <div className="ks-card-head"><span className="ks-card-title">Usage</span></div>
+        <div className="ks-card-head"><span className="ks-card-title">{t("page.settings.usage")}</span></div>
         <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {[
-            { cur: billing.asset_count, label: "Assets", max: billing.asset_limit, tone: "brand", unit: "" },
-            { cur: billing.storage_used_mb, label: "Storage", max: billing.storage_limit_mb, tone: "info", unit: " MB" },
+            { cur: billing.asset_count, label: t("page.settings.billing.assets"), max: billing.asset_limit, tone: "brand", unit: "" },
+            { cur: billing.storage_used_mb, label: t("page.settings.billing.storage"), max: billing.storage_limit_mb, tone: "info", unit: " MB" },
           ].map((item) => (
             <div key={item.label}>
               <div style={{ alignItems: "center", display: "flex", fontSize: 13, justifyContent: "space-between", marginBottom: 5 }}>
@@ -365,10 +376,10 @@ function BillingPanel({ organizationId }: { organizationId: string }) {
         </div>
       </div>
       <div className="ks-card">
-        <div className="ks-card-head"><span className="ks-card-title">Invoice History</span></div>
+        <div className="ks-card-head"><span className="ks-card-title">{t("page.settings.invoiceHistory")}</span></div>
         <div style={{ overflowX: "auto" }}>
         <table className="w-full text-sm">
-          <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">Invoice</th><th className="p-3 text-left font-medium text-muted-foreground">Amount</th><th className="p-3 text-left font-medium text-muted-foreground">Status</th></tr></thead>
+          <thead><tr><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.invoice")}</th><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.amount")}</th><th className="p-3 text-left font-medium text-muted-foreground">{t("page.settings.columns.status")}</th></tr></thead>
           <tbody>
             {invoices.map((inv) => (
               <tr key={inv.id}>
@@ -386,11 +397,12 @@ function BillingPanel({ organizationId }: { organizationId: string }) {
 }
 
 export function FaSettingsPage() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { canManageSettings } = useFaPermission();
   const [tab, setTab] = useState("general");
-  const { data: resp, isLoading } = useGetFASettingsQuery({ organizationId });
+  const { data: resp, isError, isLoading, refetch } = useGetFASettingsQuery({ organizationId });
   const { isPending: isSaving, mutateAsync: updateSettingsAsync } = useUpdateFASettingsMutation({ organizationId });
   const { isPending: isConnecting, mutateAsync: connectAsync } = useConnectIntegrationMutation({ organizationId });
   const settings = resp?.data;
@@ -422,6 +434,7 @@ export function FaSettingsPage() {
   };
 
   if (isLoading) return <Loading />;
+  if (isError) return <FaQueryError onRetry={() => { refetch(); }} />;
 
   return (
     <div>
@@ -435,12 +448,12 @@ export function FaSettingsPage() {
               onClick={handleSave}
             >
               {isSaving ? <Loader2 className="animate-spin" size={14} /> : <Save size={14} />}
-              Save changes
+              {t("page.settings.saveChanges")}
             </button>
           ) : null
         }
-        desc="Workspace, notifications, integrations, hardware, security, and billing."
-        title="Settings"
+        desc={t("page.settings.description")}
+        title={t("page.settings.title")}
       />
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[220px_1fr]">
         <div className="ks-card">
@@ -457,7 +470,7 @@ export function FaSettingsPage() {
                   type="button"
                   onClick={() => setTab(n.id)}
                 >
-                  <Icon size={15} />{n.label}
+                  <Icon size={15} />{t(n.labelKey)}
                 </button>
               );
             })}

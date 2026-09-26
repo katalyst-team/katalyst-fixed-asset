@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle2, Clock } from "lucide-react";
+import { useTranslation } from "next-i18next";
 
 import type {
   FaAuditSignOffEntry,
@@ -8,11 +9,11 @@ import type {
 } from "@/types/fixed-assets";
 
 const SIGNOFF_ROLES: { label: string; role: FaAuditSignOffRole }[] = [
-  { label: "Stock count lead", role: "stock_count_lead" },
-  { label: "Department head", role: "dept_head" },
-  { label: "Internal audit", role: "internal_audit" },
-  { label: "Finance manager", role: "finance_manager" },
-  { label: "External accountant", role: "external_accountant" },
+  { label: "ui.signoff.roles.stockCountLead", role: "stock_count_lead" },
+  { label: "ui.signoff.roles.deptHead", role: "dept_head" },
+  { label: "ui.signoff.roles.internalAudit", role: "internal_audit" },
+  { label: "ui.signoff.roles.financeManager", role: "finance_manager" },
+  { label: "ui.signoff.roles.externalAccountant", role: "external_accountant" },
 ];
 
 export const SIGNOFF_ROLE_COUNT = SIGNOFF_ROLES.length;
@@ -34,17 +35,18 @@ export function FaAuditSignOffCard({
   signoffRequired,
   onSignOff,
 }: FaAuditSignOffCardProps) {
+  const { t } = useTranslation("fixed-assets");
   return (
     <div className="ks-card">
       <div className="ks-card-head">
         <div>
-          <div className="ks-card-title">Sign-off · Audit report</div>
+          <div className="ks-card-title">{t("ui.signoff.title")}</div>
           <div className="ks-card-desc">
-            {signoffDone} of {signoffRequired} required approvals
+            {t("ui.signoff.approvals", { done: signoffDone, required: signoffRequired })}
           </div>
         </div>
         <span className="ks-badge warn">
-          {Math.max(signoffRequired - signoffDone, 0)} pending
+          {t("ui.signoff.pendingCount", { n: Math.max(signoffRequired - signoffDone, 0) })}
         </span>
       </div>
       <div
@@ -71,13 +73,13 @@ export function FaAuditSignOffCard({
                 />
               )}
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, fontWeight: 600 }}>{s.label}</div>
+                <div style={{ fontSize: 13, fontWeight: 600 }}>{t(s.label)}</div>
                 <div style={{ color: "hsl(var(--text-3))", fontSize: 12 }}>
-                  {entry?.user_name || "Awaiting signature"}
+                  {entry?.user_name || t("ui.signoff.awaiting")}
                 </div>
               </div>
               {done ? (
-                <span className="ks-badge success">Signed</span>
+                <span className="ks-badge success">{t("ui.signoff.signed")}</span>
               ) : canManage ? (
                 <button
                   className="ks-btn ks-btn-primary ks-btn-sm"
@@ -85,10 +87,10 @@ export function FaAuditSignOffCard({
                   type="button"
                   onClick={() => onSignOff(s.role)}
                 >
-                  Sign off
+                  {t("ui.signoff.signOff")}
                 </button>
               ) : (
-                <span className="ks-badge outline">Pending</span>
+                <span className="ks-badge outline">{t("ui.signoff.pending")}</span>
               )}
             </div>
           );

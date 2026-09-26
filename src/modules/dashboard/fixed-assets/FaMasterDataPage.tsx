@@ -1,6 +1,7 @@
 "use client";
 
 import { Download, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { type ChangeEvent, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -37,42 +38,42 @@ type ExtraFieldKey = Exclude<keyof CreateMasterDataRequest, "name" | "parent_id"
 
 interface FieldDef {
   key: ExtraFieldKey;
-  label: string;
-  options?: { label: string; value: string }[];
+  labelKey: string;
+  options?: { labelKey: string; value: string }[];
   type?: "text" | "number" | "select";
 }
 
 const SECTION_FIELDS: Partial<Record<FaMasterDataSectionTab, FieldDef[]>> = {
   cc: [
-    { key: "code", label: "Code" },
-    { key: "department", label: "Department" },
+    { key: "code", labelKey: "page.masterData.field.code" },
+    { key: "department", labelKey: "page.masterData.field.department" },
   ],
   cls: [
-    { key: "psak16_code", label: "PSAK 16 code" },
+    { key: "psak16_code", labelKey: "page.masterData.field.psak16Code" },
     {
       key: "depreciation_method",
-      label: "Depreciation method",
+      labelKey: "page.masterData.field.depreciationMethod",
       options: [
-        { label: "Straight Line", value: "straight-line" },
-        { label: "Declining Balance", value: "declining-balance" },
+        { labelKey: "page.masterData.field.methodStraightLine", value: "straight-line" },
+        { labelKey: "page.masterData.field.methodDecliningBalance", value: "declining-balance" },
       ],
       type: "select",
     },
-    { key: "useful_life_years", label: "Useful life (years)", type: "number" },
+    { key: "useful_life_years", labelKey: "page.masterData.field.usefulLifeYears", type: "number" },
   ],
   cust: [
-    { key: "email", label: "Email" },
-    { key: "department", label: "Department" },
-    { key: "employee_id", label: "Employee ID" },
+    { key: "email", labelKey: "page.masterData.field.email" },
+    { key: "department", labelKey: "page.masterData.field.department" },
+    { key: "employee_id", labelKey: "page.masterData.field.employeeId" },
   ],
   loc: [
-    { key: "address", label: "Address" },
-    { key: "city", label: "City" },
+    { key: "address", labelKey: "page.masterData.field.address" },
+    { key: "city", labelKey: "page.masterData.field.city" },
   ],
   sup: [
-    { key: "contact", label: "Contact person" },
-    { key: "phone", label: "Phone" },
-    { key: "email", label: "Email" },
+    { key: "contact", labelKey: "page.masterData.field.contactPerson" },
+    { key: "phone", labelKey: "page.masterData.field.phone" },
+    { key: "email", labelKey: "page.masterData.field.email" },
   ],
 };
 
@@ -113,6 +114,7 @@ function TabBar({
   onSelect: (t: FaMasterDataSectionTab) => void;
   sections: FaMasterDataSection[];
 }) {
+  const { t } = useTranslation("fixed-assets");
   return (
     <div className="ks-card" style={{ overflow: "visible" }}>
       <div style={{ borderBottom: "1px solid hsl(var(--border))", display: "flex", overflowX: "auto" }}>
@@ -141,7 +143,7 @@ function TabBar({
                 <FaProtoIcon name={s.icon} size={14} />
                 {s.label}
               </span>
-              <span style={{ color: "hsl(var(--text-3))", fontSize: 11 }}>{s.rows.length} entries</span>
+              <span style={{ color: "hsl(var(--text-3))", fontSize: 11 }}>{t("page.masterData.entriesCount", { count: s.rows.length })}</span>
             </button>
           );
         })}
@@ -162,16 +164,19 @@ function rowLabel(tab: FaMasterDataSectionTab, row: FaMasterDataRow): string {
 }
 
 function RowsTab({
+  canDelete,
   canManage,
   onDelete,
   onEdit,
   section,
 }: {
+  canDelete: boolean;
   canManage: boolean;
   onDelete: (id: string) => void;
   onEdit: (row: FaMasterDataRow) => void;
   section: FaMasterDataSection;
 }) {
+  const { t } = useTranslation("fixed-assets");
   const [q, setQ] = useState("");
   const rows = section.rows.filter((r) => rowLabel(section.tab as FaMasterDataSectionTab, r).toLowerCase().includes(q.toLowerCase()));
 
@@ -182,7 +187,7 @@ function RowsTab({
         <div className="ks-search-box" style={{ maxWidth: 260, width: "100%" }}>
           <Search size={14} />
           <input
-            placeholder="Search…"
+            placeholder={t("page.masterData.searchPlaceholder")}
             style={{ background: "transparent", border: 0, color: "hsl(var(--text))", fontFamily: "inherit", fontSize: 13, outline: "none", width: "100%" }}
             onChange={(e) => setQ(e.target.value)}
           />
@@ -192,7 +197,7 @@ function RowsTab({
         <table className="w-full text-sm">
           <thead>
             <tr>
-              <Th>Name</Th><Th>Detail</Th><Th>Assets</Th><Th>Actions</Th>
+              <Th>{t("page.masterData.columns.name")}</Th><Th>{t("page.masterData.columns.detail")}</Th><Th>{t("page.masterData.columns.assets")}</Th><Th>{t("page.masterData.columns.actions")}</Th>
             </tr>
           </thead>
           <tbody>
@@ -202,14 +207,18 @@ function RowsTab({
                 <Td>{r.desc || "—"}</Td>
                 <Td>{r.count.toLocaleString("id-ID")}</Td>
                 <Td>
-                  {canManage && r.id && (
+                  {r.id && (
                     <div style={{ display: "flex", gap: 4 }}>
-                      <button className="ks-btn ks-btn-icon ks-btn-ghost" type="button" onClick={() => onEdit(r)}>
-                        <Pencil size={14} />
-                      </button>
-                      <button className="ks-btn ks-btn-icon ks-btn-ghost" type="button" onClick={() => onDelete(r.id)}>
-                        <Trash2 size={14} />
-                      </button>
+                      {canManage && (
+                        <button aria-label={t("page.masterData.edit")} className="ks-btn ks-btn-icon ks-btn-ghost" type="button" onClick={() => onEdit(r)}>
+                          <Pencil size={14} />
+                        </button>
+                      )}
+                      {canDelete && (
+                        <button aria-label={t("page.masterData.delete")} className="ks-btn ks-btn-icon ks-btn-ghost" type="button" onClick={() => onDelete(r.id)}>
+                          <Trash2 size={14} />
+                        </button>
+                      )}
                     </div>
                   )}
                 </Td>
@@ -223,8 +232,9 @@ function RowsTab({
 }
 
 export function FaMasterDataPage() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
-  const { canManage } = useFaPermission();
+  const { canCreate, canDelete, canManage } = useFaPermission();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp, isError, isLoading } = useGetFAMasterDataQuery({ organizationId });
   const sections = resp?.data?.master_data_sections ?? [];
@@ -287,7 +297,7 @@ export function FaMasterDataPage() {
         actions={
           <>
             {canManage && tab !== "cat" && (
-              <button className="ks-btn" type="button" onClick={handleImport}><Download size={14} />Import CSV</button>
+              <button className="ks-btn" type="button" onClick={handleImport}><Download size={14} />{t("page.masterData.importCsv")}</button>
             )}
             <input
               ref={fileRef}
@@ -296,58 +306,58 @@ export function FaMasterDataPage() {
               type="file"
               onChange={handleFileChange}
             />
-            {canManage && tab !== "cat" && (
-              <button className="ks-btn ks-btn-primary" type="button" onClick={handleAdd}><Plus size={14} />Add</button>
+            {canCreate && tab !== "cat" && (
+              <button className="ks-btn ks-btn-primary" type="button" onClick={handleAdd}><Plus size={14} />{t("page.masterData.add")}</button>
             )}
           </>
         }
-        desc="Manage categories, locations, custodians, cost centers, suppliers and asset classes."
-        title="Master Data"
+        desc={t("page.masterData.description")}
+        title={t("page.masterData.title")}
       />
       <div style={{ marginBottom: 16 }}>
         <TabBar active={tab} sections={sections} onSelect={setTab} />
       </div>
       <FaQueryState
-        emptyDescription="No master data rows for this section."
-        emptyTitle="No data"
+        emptyDescription={t("page.masterData.noDataDesc")}
+        emptyTitle={t("page.masterData.noData")}
         isEmpty={sections.length === 0}
         isError={isError}
         isLoading={isLoading}
       >
         {activeSection && (
-          <RowsTab canManage={canManage} section={activeSection} onDelete={handleDelete} onEdit={handleEdit} />
+          <RowsTab canDelete={canDelete} canManage={canManage} section={activeSection} onDelete={handleDelete} onEdit={handleEdit} />
         )}
       </FaQueryState>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingId ? `Edit ${activeSection?.label ?? ""}` : `Add ${activeSection?.label ?? ""}`}</DialogTitle>
+            <DialogTitle>{editingId ? t("page.masterData.editSection", { section: activeSection?.label ?? "" }) : t("page.masterData.addSection", { section: activeSection?.label ?? "" })}</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="md-name">Name</Label>
+              <Label htmlFor="md-name">{t("page.masterData.field.name")}</Label>
               <Input
                 autoFocus
                 id="md-name"
-                placeholder="Enter name"
+                placeholder={t("page.masterData.namePlaceholder")}
                 value={form.name ?? ""}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               />
             </div>
             {extraFields.map((field) => (
               <div key={field.key} className="flex flex-col gap-1.5">
-                <Label htmlFor={`md-${field.key}`}>{field.label}</Label>
+                <Label htmlFor={`md-${field.key}`}>{t(field.labelKey)}</Label>
                 {field.type === "select" ? (
                   <Select
                     value={form[field.key] ?? ""}
                     onValueChange={(v) => setForm((f) => ({ ...f, [field.key]: v }))}
                   >
                     <SelectTrigger id={`md-${field.key}`}>
-                      <SelectValue placeholder={`Select ${field.label.toLowerCase()}`} />
+                      <SelectValue placeholder={t("page.masterData.selectField", { field: t(field.labelKey) })} />
                     </SelectTrigger>
                     <SelectContent>
                       {field.options?.map((o) => (
-                        <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                        <SelectItem key={o.value} value={o.value}>{t(o.labelKey)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -363,7 +373,7 @@ export function FaMasterDataPage() {
             ))}
           </div>
           <DialogFooter>
-            <Button onClick={handleDialogSubmit}>{editingId ? "Save" : "Add"}</Button>
+            <Button onClick={handleDialogSubmit}>{editingId ? t("page.masterData.save") : t("page.masterData.add")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

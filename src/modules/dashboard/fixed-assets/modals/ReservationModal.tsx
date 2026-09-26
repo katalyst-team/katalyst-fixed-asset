@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarClock } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -38,6 +40,14 @@ import { useFaPeopleOptions } from "@/modules/dashboard/fixed-assets/modals/type
 
 const DURATIONS = ["2 hours", "4 hours", "Full day", "2 days", "1 week"];
 
+const DURATION_LABELS: Record<string, string> = {
+  "1 week": "modals.reservation.duration1Week",
+  "2 days": "modals.reservation.duration2Days",
+  "2 hours": "modals.reservation.duration2Hours",
+  "4 hours": "modals.reservation.duration4Hours",
+  "Full day": "modals.reservation.durationFullDay",
+};
+
 const START_TIMES = [
   "Today 13:00",
   "Tomorrow 08:00",
@@ -48,14 +58,15 @@ const START_TIMES = [
   "Mon 08:00",
 ];
 
-const formSchema = z.object({
-  assetId: z.string().min(1, "Asset is required"),
-  duration: z.string().optional(),
-  reserveBy: z.string().optional(),
-  start: z.string().min(1, "Start time is required"),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+const START_LABELS: Record<string, string> = {
+  "Fri 09:00": "modals.reservation.startFri0900",
+  "Fri 13:00": "modals.reservation.startFri1300",
+  "Mon 08:00": "modals.reservation.startMon0800",
+  "Thu 09:00": "modals.reservation.startThu0900",
+  "Today 13:00": "modals.reservation.startToday1300",
+  "Tomorrow 08:00": "modals.reservation.startTomorrow0800",
+  "Tomorrow 13:00": "modals.reservation.startTomorrow1300",
+};
 
 interface ReservationModalProps {
   onClose: () => void;
@@ -63,6 +74,7 @@ interface ReservationModalProps {
 }
 
 export function ReservationModal({ onClose, open }: ReservationModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp } = useGetAssetRegisterQuery({ organizationId });
@@ -72,12 +84,21 @@ export function ReservationModal({ onClose, open }: ReservationModalProps) {
   const assets = resp?.data ?? [];
   const reserveByOptions = useMemo(() => {
     const extraOptions = [
-      { label: "Facilities", value: "Facilities" },
-      { label: "HR Training", value: "HR Training" },
-      { label: "Survey Team", value: "Survey Team" },
+      { label: t("modals.reservation.teamFacilities"), value: "Facilities" },
+      { label: t("modals.reservation.teamHrTraining"), value: "HR Training" },
+      { label: t("modals.reservation.teamSurveyTeam"), value: "Survey Team" },
     ];
     return [...peopleOptions, ...extraOptions];
-  }, [peopleOptions]);
+  }, [peopleOptions, t]);
+
+  const formSchema = z.object({
+    assetId: z.string().min(1, t("modals.reservation.assetRequired")),
+    duration: z.string().optional(),
+    reserveBy: z.string().optional(),
+    start: z.string().min(1, t("modals.reservation.startRequired")),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -103,6 +124,7 @@ export function ReservationModal({ onClose, open }: ReservationModalProps) {
         reserved_by: values.reserveBy ?? "",
         start_time: values.start,
       });
+      toast.success(t("toasts.reservationCreated"));
       onClose();
     } catch {
       // hook handles toast
@@ -115,11 +137,10 @@ export function ReservationModal({ onClose, open }: ReservationModalProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CalendarClock size={18} />
-            Reserve Asset
+            {t("modals.reservation.title")}
           </DialogTitle>
           <DialogDescription>
-            Book a shared asset for a time window. It converts to a loan on
-            pickup.
+            {t("modals.reservation.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -130,11 +151,11 @@ export function ReservationModal({ onClose, open }: ReservationModalProps) {
               name="assetId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Asset</FormLabel>
+                  <FormLabel>{t("modals.reservation.assetLabel")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select asset" />
+                        <SelectValue placeholder={t("modals.reservation.assetPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -155,11 +176,11 @@ export function ReservationModal({ onClose, open }: ReservationModalProps) {
               name="reserveBy"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Reserved by</FormLabel>
+                  <FormLabel>{t("modals.reservation.reservedByLabel")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select person or team" />
+                        <SelectValue placeholder={t("modals.reservation.reservedByPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -181,17 +202,17 @@ export function ReservationModal({ onClose, open }: ReservationModalProps) {
                 name="start"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Start time</FormLabel>
+                    <FormLabel>{t("modals.reservation.startLabel")}</FormLabel>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select slot" />
+                          <SelectValue placeholder={t("modals.reservation.startPlaceholder")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {START_TIMES.map((s) => (
                           <SelectItem key={s} value={s}>
-                            {s}
+                            {t(START_LABELS[s])}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -206,17 +227,17 @@ export function ReservationModal({ onClose, open }: ReservationModalProps) {
                 name="duration"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Duration</FormLabel>
+                    <FormLabel>{t("modals.reservation.durationLabel")}</FormLabel>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select duration" />
+                          <SelectValue placeholder={t("modals.reservation.durationPlaceholder")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {DURATIONS.map((d) => (
                           <SelectItem key={d} value={d}>
-                            {d}
+                            {t(DURATION_LABELS[d])}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -228,8 +249,7 @@ export function ReservationModal({ onClose, open }: ReservationModalProps) {
             </div>
 
             <p className="rounded-lg bg-muted/40 p-3 text-xs text-muted-foreground">
-              The reservation converts to a loan automatically on the pickup gate
-              scan.
+              {t("modals.reservation.pickupNote")}
             </p>
 
             <DialogFooter>
@@ -238,14 +258,14 @@ export function ReservationModal({ onClose, open }: ReservationModalProps) {
                 type="button"
                 onClick={onClose}
               >
-                Cancel
+                {t("modals.reservation.cancel")}
               </Button>
               <Button
                 className={cn("ks-btn ks-btn-primary")}
                 disabled={isPending}
                 type="submit"
               >
-                Reserve
+                {t("modals.reservation.submit")}
               </Button>
             </DialogFooter>
           </form>

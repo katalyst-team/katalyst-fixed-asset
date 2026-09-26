@@ -1,7 +1,9 @@
 "use client";
 
 import { StickyNote } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import {
   Dialog,
@@ -35,6 +37,7 @@ const TAG_STATUSES = ["active", "inactive", "lost", "damaged"] as const;
 type TagStatus = (typeof TAG_STATUSES)[number];
 
 export function EditTagModal({ onClose, open }: EditTagModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { payload } = useFaModal();
@@ -54,12 +57,20 @@ export function EditTagModal({ onClose, open }: EditTagModalProps) {
     organizationId,
   });
 
+  const statusLabels: Record<TagStatus, string> = {
+    active: t("modals.editTag.statusActive"),
+    damaged: t("modals.editTag.statusDamaged"),
+    inactive: t("modals.editTag.statusInactive"),
+    lost: t("modals.editTag.statusLost"),
+  };
+
   const handleSubmit = async () => {
     if (!tag) return;
     await updateTag({
       data: { notes, status },
       tagId: tag.id,
     });
+    toast.success(t("toasts.tagUpdated"));
     onClose();
   };
 
@@ -69,17 +80,17 @@ export function EditTagModal({ onClose, open }: EditTagModalProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <StickyNote size={16} />
-            Edit RFID tag
+            {t("modals.editTag.title")}
           </DialogTitle>
           <DialogDescription>
-            Update condition status and notes for EPC{" "}
+            {t("modals.editTag.description")}{" "}
             <span className="font-mono text-xs">{tag?.epc ?? "—"}</span>
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Status</Label>
+            <Label>{t("modals.editTag.status")}</Label>
             <Select
               value={status}
               onValueChange={(v) => {
@@ -92,21 +103,20 @@ export function EditTagModal({ onClose, open }: EditTagModalProps) {
               <SelectContent>
                 {TAG_STATUSES.map((s) => (
                   <SelectItem key={s} value={s}>
-                    {s}
+                    {statusLabels[s]}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              Tag condition is separate from asset status — an asset under
-              maintenance keeps its tag attached and active.
+              {t("modals.editTag.helper")}
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label>Notes</Label>
+            <Label>{t("modals.editTag.notes")}</Label>
             <Textarea
-              placeholder="e.g. Label peeling off, re-encode scheduled"
+              placeholder={t("modals.editTag.notesPlaceholder")}
               value={notes}
               onChange={(e) => {
                 setNotes(e.target.value);
@@ -122,7 +132,7 @@ export function EditTagModal({ onClose, open }: EditTagModalProps) {
             type="button"
             onClick={onClose}
           >
-            Cancel
+            {t("modals.editTag.cancel")}
           </button>
           <button
             className="ks-btn ks-btn-primary"
@@ -130,7 +140,9 @@ export function EditTagModal({ onClose, open }: EditTagModalProps) {
             type="button"
             onClick={handleSubmit}
           >
-            {isPending ? "Saving…" : "Save changes"}
+            {isPending
+              ? t("modals.editTag.saving")
+              : t("modals.editTag.saveChanges")}
           </button>
         </DialogFooter>
       </DialogContent>

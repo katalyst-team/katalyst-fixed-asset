@@ -9,6 +9,7 @@ import {
   Plus,
   RefreshCw,
 } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import PaginationCursor from "@/components/shared/PaginationCursor";
@@ -23,6 +24,7 @@ import {
   useRejectDisposalMutation,
   useReviseDisposalMutation,
 } from "@/hooks/api/fixed-assets";
+import { useUrlFilterSync } from "@/hooks/useUrlFilterSync";
 import {
   catToLucide,
   catToneClass,
@@ -45,12 +47,22 @@ function statusBadgeClass(status: string): string {
 }
 
 export function FaScanOutPage() {
+  const { t } = useTranslation("fixed-assets");
   const { openModal } = useFaModal();
-  const { canManage } = useFaPermission();
+  const { canCreate, canManage } = useFaPermission();
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const [page, setPage] = useState(1);
   const PAGE_LIMIT = 20;
+  const { syncToUrl } = useUrlFilterSync<{ page: number }>({
+    fromQuery: (query) => ({ page: Number(query.page) > 0 ? Number(query.page) : 1 }),
+    onInit: (f) => setPage(f.page ?? 1),
+    toQuery: (f) => (f.page > 1 ? { page: String(f.page) } : {}),
+  });
+  const goToPage = (p: number) => {
+    setPage(p);
+    syncToUrl({ page: p });
+  };
   const { data: resp, isError, isLoading } = useGetDisposalsQuery({
     limit: PAGE_LIMIT,
     organizationId,
@@ -86,23 +98,23 @@ export function FaScanOutPage() {
       <div className="space-y-4">
         <FaShellHead
           actions={
-            canManage ? (
+            canCreate ? (
               <button
                 className="ks-btn ks-btn-primary"
                 type="button"
                 onClick={() => openModal("disposal")}
               >
                 <Plus size={15} />
-                New disposal
+                {t("actions.newDisposal")}
               </button>
             ) : null
           }
-          desc="Retire, sell, or donate assets with full approval + journal trail"
-          title="Scan-Out · Asset Disposal"
+          desc={t("page.scanout.description")}
+          title={t("page.scanout.title")}
         />
         <div className="ks-card">
           <div className="ks-card-body">
-            <p className="text-sm text-muted-foreground">No disposal requests in the queue.</p>
+            <p className="text-sm text-muted-foreground">{t("page.scanout.noDisposalsInQueue")}</p>
           </div>
         </div>
       </div>
@@ -133,13 +145,13 @@ export function FaScanOutPage() {
 
   const handleNext = () => {
     if (resp?.page_pagination?.has_next) {
-      setPage((p) => p + 1);
+      goToPage(page + 1);
       setSelectedIdx(0);
     }
   };
 
   const handlePrev = () => {
-    setPage((p) => Math.max(1, p - 1));
+    goToPage(Math.max(1, page - 1));
     setSelectedIdx(0);
   };
 
@@ -155,42 +167,44 @@ export function FaScanOutPage() {
               onClick={handleExport}
             >
               <Download size={15} />
-              Export
-            </button>
-            <button
-              className="ks-btn ks-btn-ghost"
-              type="button"
-              onClick={handleGenerateBast}
-            >
-              <FileText size={15} />
-              BAST PDF
+              {t("actions.export")}
             </button>
             {canManage && (
+              <button
+                className="ks-btn ks-btn-ghost"
+                type="button"
+                onClick={handleGenerateBast}
+              >
+                <FileText size={15} />
+                {t("actions.bastPdf")}
+              </button>
+            )}
+            {canCreate && (
               <button
                 className="ks-btn ks-btn-primary"
                 type="button"
                 onClick={() => openModal("disposal")}
               >
                 <Plus size={15} />
-                New disposal
+                {t("actions.newDisposal")}
               </button>
             )}
           </>
         }
-        desc="Retire, sell, or donate assets with full approval + journal trail"
-        title="Scan-Out · Asset Disposal"
+        desc={t("page.scanout.description")}
+        title={t("page.scanout.title")}
       />
 
       <FaKpiStrip>
-        <FaStat label="This month" sub="disposals" tone="info" value={String(disposals.length)} />
-        <FaStat label="Awaiting approval" sub="pending" tone="warn" value={String(awaitingApproval)} />
-        <FaStat label="Recovery YTD" tone="success" value={recoveryYTD > 0 ? formatIDR(recoveryYTD) : "—"} />
-        <FaStat label="Tax impact" sub="NBV write-off" tone="danger" value={summary && summary.total_nbv > 0 ? formatIDR(summary.total_nbv) : "—"} />
+        <FaStat label={t("page.scanout.kpi.thisMonth")} sub={t("page.scanout.kpi.disposals")} tone="info" value={String(disposals.length)} />
+        <FaStat label={t("page.scanout.kpi.awaitingApproval")} sub={t("page.scanout.kpi.pending")} tone="warn" value={String(awaitingApproval)} />
+        <FaStat label={t("page.scanout.kpi.recoveryYtd")} tone="success" value={recoveryYTD > 0 ? formatIDR(recoveryYTD) : "—"} />
+        <FaStat label={t("page.scanout.kpi.taxImpact")} sub={t("page.scanout.kpi.nbvWriteoff")} tone="danger" value={summary && summary.total_nbv > 0 ? formatIDR(summary.total_nbv) : "—"} />
       </FaKpiStrip>
 
       <FaQueryState
-        emptyDescription="No disposal requests in the queue."
-        emptyTitle="No disposals"
+        emptyDescription={t("page.scanout.noDisposalsDesc")}
+        emptyTitle={t("page.scanout.noDisposals")}
         isEmpty={!item}
         isError={isError}
         isLoading={isLoading}
@@ -200,19 +214,19 @@ export function FaScanOutPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Disposal Queue</div>
-              <div className="ks-card-desc">{disposals.length} items in workflow</div>
+              <div className="ks-card-title">{t("page.scanout.queueTitle")}</div>
+              <div className="ks-card-desc">{t("page.scanout.queueDescription", { count: disposals.length })}</div>
             </div>
           </div>
           <div className="ks-card-body">
             <table className="w-full text-sm">
               <thead>
                 <tr>
-                  <th className="text-left font-medium text-muted-foreground p-3">Asset</th>
-                  <th className="text-left font-medium text-muted-foreground p-3">Reason</th>
-                  <th className="text-right font-medium text-muted-foreground p-3">NBV</th>
-                  <th className="text-right font-medium text-muted-foreground p-3">Recovery</th>
-                  <th className="text-left font-medium text-muted-foreground p-3">Status</th>
+                  <th className="text-left font-medium text-muted-foreground p-3">{t("page.scanout.columns.asset")}</th>
+                  <th className="text-left font-medium text-muted-foreground p-3">{t("page.scanout.columns.reason")}</th>
+                  <th className="text-right font-medium text-muted-foreground p-3">{t("page.scanout.columns.nbv")}</th>
+                  <th className="text-right font-medium text-muted-foreground p-3">{t("page.scanout.columns.recovery")}</th>
+                  <th className="text-left font-medium text-muted-foreground p-3">{t("page.scanout.columns.status")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -261,8 +275,8 @@ export function FaScanOutPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Disposal Detail</div>
-              <div className="ks-card-desc">{item.a} · approval workflow</div>
+              <div className="ks-card-title">{t("page.scanout.detailTitle")}</div>
+              <div className="ks-card-desc">{t("page.scanout.detailDescription", { id: item.a })}</div>
             </div>
           </div>
           <div className="ks-card-body space-y-4">
@@ -281,11 +295,11 @@ export function FaScanOutPage() {
 
             <div className="ks-grid-2">
               <div className="rounded-lg border border-border p-3">
-                <p className="text-xs text-muted-foreground">Net Book Value</p>
+                <p className="text-xs text-muted-foreground">{t("page.scanout.netBookValue")}</p>
                 <p className="mt-1 text-lg font-bold">{formatIDR(item.nbv)}</p>
               </div>
               <div className="rounded-lg border border-border p-3">
-                <p className="text-xs text-muted-foreground">Recovery Value</p>
+                <p className="text-xs text-muted-foreground">{t("page.scanout.recoveryValue")}</p>
                 <p className="mt-1 text-lg font-bold text-[hsl(var(--success))]">
                   {item.rec > 0 ? formatIDR(item.rec) : "—"}
                 </p>
@@ -293,9 +307,9 @@ export function FaScanOutPage() {
             </div>
 
             <div>
-              <p className="mb-2 text-xs font-medium text-muted-foreground">Approval Flow</p>
+              <p className="mb-2 text-xs font-medium text-muted-foreground">{t("page.scanout.approvalFlow")}</p>
               {approvalHistory.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No approval actions yet.</p>
+                <p className="text-sm text-muted-foreground">{t("page.scanout.noApprovalActions")}</p>
               ) : (
                 <div className="space-y-0">
                   {approvalHistory.map((s, i) => (
@@ -324,32 +338,34 @@ export function FaScanOutPage() {
             <div className="rounded-lg border border-border p-3">
               <div className="mb-2 flex items-center gap-2">
                 <DollarSign size={14} />
-                <span className="text-xs font-medium text-muted-foreground">Journal Entry Preview</span>
+                <span className="text-xs font-medium text-muted-foreground">{t("page.scanout.journalEntryPreview")}</span>
               </div>
               <div className="space-y-1 font-mono text-xs">
                 <div className="flex justify-between">
-                  <span>Dr. Accumulated depreciation</span>
+                  <span>Dr. {t("page.scanout.accumDep")}</span>
                   <span className="font-semibold">{formatIDR(accumDepDebit)}</span>
                 </div>
                 {item.rec > 0 && (
                   <div className="flex justify-between">
-                    <span>Dr. Cash / Bank</span>
+                    <span>Dr. {t("page.scanout.cashBank")}</span>
                     <span className="font-semibold">{formatIDR(item.rec)}</span>
                   </div>
                 )}
                 <div className="flex justify-between border-t border-border pt-1">
-                  <span>Cr. Aset Tetap</span>
+                  <span>Cr. {t("page.scanout.fixedAssetsCost")}</span>
                   <span className="font-semibold">{formatIDR(item.nbv)}</span>
                 </div>
               </div>
-              <button
-                className="ks-btn ks-btn-ghost mt-3 w-full"
-                type="button"
-                onClick={handlePostJE}
-              >
-                <DollarSign size={15} />
-                Post JE to GL
-              </button>
+              {canManage && (
+                <button
+                  className="ks-btn ks-btn-ghost mt-3 w-full"
+                  type="button"
+                  onClick={handlePostJE}
+                >
+                  <DollarSign size={15} />
+                  {t("actions.postJe")}
+                </button>
+              )}
             </div>
 
             <div className="flex items-center gap-2">
@@ -360,7 +376,7 @@ export function FaScanOutPage() {
                   onClick={() => reviseDisposal({ disposalId: item.id, notes: "Revision requested" })}
                 >
                   <RefreshCw size={15} />
-                  Revise
+                  {t("actions.revise")}
                 </button>
               )}
               {canManage && (
@@ -370,7 +386,7 @@ export function FaScanOutPage() {
                   onClick={() => rejectDisposal({ disposalId: item.id, reason: "Rejected by reviewer" })}
                 >
                   <Ban size={15} />
-                  Reject
+                  {t("actions.reject")}
                 </button>
               )}
               {canManage && (
@@ -380,7 +396,7 @@ export function FaScanOutPage() {
                   onClick={() => approveDisposal({ disposalId: item.id })}
                 >
                   <CheckCircle2 size={15} />
-                  Approve
+                  {t("actions.approve")}
                 </button>
               )}
             </div>

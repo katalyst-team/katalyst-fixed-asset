@@ -3,7 +3,7 @@
 import { ChevronRight, Download, Filter, Plus, Search, Upload } from "lucide-react";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import PaginationCursor from "@/components/shared/PaginationCursor";
@@ -15,6 +15,7 @@ import {
   useExportDataMutation,
   useGetAssetRegisterQuery,
 } from "@/hooks/api/fixed-assets";
+import { useUrlFilterSync } from "@/hooks/useUrlFilterSync";
 import {
   avatarColor,
   catToLucide,
@@ -72,6 +73,43 @@ export function FaRegisterPage() {
   const [page, setPage] = useState(1);
   const PAGE_LIMIT = 20;
 
+  const { syncToUrl } = useUrlFilterSync<{ cat: string; page: number; q: string; status: string }>({
+    fromQuery: (query) => ({
+      cat: typeof query.cat === "string" ? query.cat : "",
+      page: Number(query.page) > 0 ? Number(query.page) : 1,
+      q: typeof query.q === "string" ? query.q : "",
+      status: typeof query.status === "string" ? query.status : "",
+    }),
+    onInit: (f) => {
+      setCat(f.cat ?? "");
+      setPage(f.page ?? 1);
+      setQ(f.q ?? "");
+      setStatus(f.status ?? "");
+    },
+    toQuery: (f) => {
+      const query: Record<string, string> = {};
+      if (f.cat) query.cat = f.cat;
+      if (f.page > 1) query.page = String(f.page);
+      if (f.q) query.q = f.q;
+      if (f.status) query.status = f.status;
+      return query;
+    },
+  });
+
+  const handleFilterChange = (patch: { cat?: string; q?: string; status?: string }) => {
+    const next = { cat: patch.cat ?? cat, page: 1, q: patch.q ?? q, status: patch.status ?? status };
+    if (patch.cat !== undefined) setCat(patch.cat);
+    if (patch.q !== undefined) setQ(patch.q);
+    if (patch.status !== undefined) setStatus(patch.status);
+    setPage(1);
+    syncToUrl(next);
+  };
+
+  const goToPage = (p: number) => {
+    setPage(p);
+    syncToUrl({ cat, page: p, q, status });
+  };
+
   const { data: resp, isError, isLoading } = useGetAssetRegisterQuery({
     cat: (cat || undefined) as AssetCategory | undefined,
     limit: PAGE_LIMIT,
@@ -81,9 +119,15 @@ export function FaRegisterPage() {
     status: (status || undefined) as AssetStatus | undefined,
   });
 
-  useEffect(() => {
-    setPage(1);
-  }, [cat, q, status]);
+  const handleNext = () => {
+    if (resp?.page_pagination?.has_next) {
+      goToPage(page + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    goToPage(Math.max(1, page - 1));
+  };
   const { openModal } = useFaModal();
   const { mutateAsync: bulkCreateAsset } = useBulkCreateAssetMutation({ organizationId });
   const { mutateAsync: bulkUpdateAsset } = useBulkUpdateAssetMutation({ organizationId });
@@ -105,16 +149,6 @@ export function FaRegisterPage() {
   }, [assets, q, cat, status]);
 
   const allChecked = filtered.length > 0 && filtered.every((a) => sel.has(a.id));
-
-  const handleNext = () => {
-    if (resp?.page_pagination?.has_next) {
-      setPage((p) => p + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    setPage((p) => Math.max(1, p - 1));
-  };
 
   const toggleAll = () => {
     setSel(allChecked ? new Set() : new Set(filtered.map((a) => a.id)));
@@ -202,14 +236,14 @@ export function FaRegisterPage() {
               outline: 0,
             }}
             value={q}
-            onChange={(e) => setQ(e.target.value)}
+            onChange={(e) => handleFilterChange({ q: e.target.value })}
           />
         </div>
         <select
           className="ks-btn ks-btn-sm"
           style={{ appearance: "none" }}
           value={cat}
-          onChange={(e) => setCat(e.target.value)}
+          onChange={(e) => handleFilterChange({ cat: e.target.value })}
         >
           <option value="">{t("filters.allCategories")}</option>
           {Object.entries(CAT_LABEL).map(([k, v]) => (
@@ -220,7 +254,7 @@ export function FaRegisterPage() {
           className="ks-btn ks-btn-sm"
           style={{ appearance: "none" }}
           value={status}
-          onChange={(e) => setStatus(e.target.value)}
+          onChange={(e) => handleFilterChange({ status: e.target.value })}
         >
           <option value="">{t("filters.allStatuses")}</option>
           {Object.entries(STATUS_LABEL).map(([k, v]) => (
@@ -250,14 +284,14 @@ export function FaRegisterPage() {
             padding: "8px 16px",
           }}
         >
-          <span className="text-sm font-semibold">{sel.size} selected</span>
+          <span className="text-sm font-semibold">{sel.size} {t("actions.selected")}</span>
           <div className="flex items-center gap-1" style={{ marginLeft: "auto" }}>
-            {canManage && <button className="ks-btn ks-btn-sm" type="button" onClick={() => bulkUpdateAsset({ action: "transfer", asset_ids: [...sel], payload: {} })}>Transfer</button>}
-            {canManage && <button className="ks-btn ks-btn-sm" type="button" onClick={() => bulkUpdateAsset({ action: "dispose", asset_ids: [...sel], payload: {} })}>Dispose</button>}
-            <button className="ks-btn ks-btn-sm" type="button" onClick={() => toast(`Print labels · ${sel.size} assets`)}>Print</button>
-            {canManage && <button className="ks-btn ks-btn-sm" type="button" onClick={() => bulkUpdateAsset({ action: "change-custodian", asset_ids: [...sel], payload: {} })}>Custodian</button>}
-            <button className="ks-btn ks-btn-sm" disabled={isExporting} type="button" onClick={() => handleExport([...sel])}>Export</button>
-            <button className="ks-btn ks-btn-ghost ks-btn-sm" type="button" onClick={() => setSel(new Set())}>Clear</button>
+            {canManage && <button className="ks-btn ks-btn-sm" type="button" onClick={() => bulkUpdateAsset({ action: "transfer", asset_ids: [...sel], payload: {} })}>{t("actions.transfer")}</button>}
+            {canManage && <button className="ks-btn ks-btn-sm" type="button" onClick={() => bulkUpdateAsset({ action: "dispose", asset_ids: [...sel], payload: {} })}>{t("actions.dispose")}</button>}
+            <button className="ks-btn ks-btn-sm" type="button" onClick={() => toast(t("toasts.printLabels", { count: sel.size }))}>{t("actions.print")}</button>
+            {canManage && <button className="ks-btn ks-btn-sm" type="button" onClick={() => bulkUpdateAsset({ action: "change-custodian", asset_ids: [...sel], payload: {} })}>{t("actions.custodian")}</button>}
+            <button className="ks-btn ks-btn-sm" disabled={isExporting} type="button" onClick={() => handleExport([...sel])}>{t("actions.export")}</button>
+            <button className="ks-btn ks-btn-ghost ks-btn-sm" type="button" onClick={() => setSel(new Set())}>{t("actions.clear")}</button>
           </div>
         </div>
       )}

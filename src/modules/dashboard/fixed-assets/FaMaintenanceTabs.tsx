@@ -8,6 +8,7 @@ import {
   Wrench,
   Zap,
 } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import { useUser } from "@/context/user-context";
@@ -61,13 +62,14 @@ export function iconBox(size = 34): React.CSSProperties {
 }
 
 const WO_TYPE_META: Record<string, { icon: LucideIcon; label: string }> = {
-  corrective: { icon: Wrench, label: "Corrective" },
-  inspection: { icon: Eye, label: "Inspection" },
-  pm: { icon: Calendar, label: "PM" },
-  predictive: { icon: Zap, label: "Predictive AI" },
+  corrective: { icon: Wrench, label: "page.maintenanceTabs.woType.corrective" },
+  inspection: { icon: Eye, label: "page.maintenanceTabs.woType.inspection" },
+  pm: { icon: Calendar, label: "page.maintenanceTabs.woType.pm" },
+  predictive: { icon: Zap, label: "page.maintenanceTabs.woType.predictive" },
 };
 
 export function FlowTab() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp, isError, isLoading } = useGetMaintenanceQuery({ organizationId });
@@ -80,10 +82,26 @@ export function FlowTab() {
     .map(([type, meta]) => ({ ...meta, n: openWorkOrders.filter((w) => w.type === type).length }))
     .filter((s) => s.n > 0);
   const buckets = [
-    { label: "Critical (<40)", n: HEALTH_DATA.filter((h) => h.health_score < 40).length, tone: "danger" },
-    { label: "Alert (40-59)", n: HEALTH_DATA.filter((h) => h.health_score >= 40 && h.health_score < 60).length, tone: "warn" },
-    { label: "Watch (60-79)", n: HEALTH_DATA.filter((h) => h.health_score >= 60 && h.health_score < 80).length, tone: "brand" },
-    { label: "Healthy (80+)", n: HEALTH_DATA.filter((h) => h.health_score >= 80).length, tone: "success" },
+    {
+      label: t("page.maintenanceTabs.bucket.critical"),
+      n: HEALTH_DATA.filter((h) => h.health_score < 40).length,
+      tone: "danger",
+    },
+    {
+      label: t("page.maintenanceTabs.bucket.alert"),
+      n: HEALTH_DATA.filter((h) => h.health_score >= 40 && h.health_score < 60).length,
+      tone: "warn",
+    },
+    {
+      label: t("page.maintenanceTabs.bucket.watch"),
+      n: HEALTH_DATA.filter((h) => h.health_score >= 60 && h.health_score < 80).length,
+      tone: "brand",
+    },
+    {
+      label: t("page.maintenanceTabs.bucket.healthy"),
+      n: HEALTH_DATA.filter((h) => h.health_score >= 80).length,
+      tone: "success",
+    },
   ];
   return (
     <div style={{ ...flexCol, gap: 16 }}>
@@ -101,7 +119,7 @@ export function FlowTab() {
         >
           <Wrench size={16} style={{ color: "hsl(var(--brand))" }} />
           <span style={{ fontSize: 13, fontWeight: 600 }}>
-            Work Order intake · {openWorkOrders.length} open across {woBySource.length} sources
+            {t("page.maintenanceTabs.intake", { m: woBySource.length, n: openWorkOrders.length })}
           </span>
           <div className="ks-chips" style={{ marginLeft: "auto" }}>
             {woBySource.map((src) => {
@@ -109,7 +127,7 @@ export function FlowTab() {
               return (
                 <span key={src.label} className="ks-chip">
                   <Icon size={12} />
-                  {src.label} · {src.n}
+                  {`${t(src.label)} · ${src.n}`}
                 </span>
               );
             })}
@@ -118,8 +136,8 @@ export function FlowTab() {
       )}
 
       <FaQueryState
-        emptyDescription="No health monitoring data available."
-        emptyTitle="No data"
+        emptyDescription={t("page.maintenanceTabs.noDataDesc")}
+        emptyTitle={t("page.maintenanceTabs.noData")}
         isEmpty={HEALTH_DATA.length === 0}
         isError={isError}
         isLoading={isLoading}
@@ -127,8 +145,8 @@ export function FlowTab() {
         <div className="ks-grid-2">
           <div className="ks-card">
             <div className="ks-card-head">
-              <div className="ks-card-title">Critical alerts</div>
-              <span className="ks-badge danger">{alerts.length} active</span>
+              <div className="ks-card-title">{t("page.maintenanceTabs.criticalAlerts")}</div>
+              <span className="ks-badge danger">{t("page.maintenanceTabs.activeCount", { n: alerts.length })}</span>
             </div>
             <div className="ks-card-body" style={{ ...flexCol, gap: 10 }}>
               {alerts.map((a) => (
@@ -138,7 +156,7 @@ export function FlowTab() {
                     <div style={{ fontSize: 13, fontWeight: 600 }}>{a.name}</div>
                     <div style={{ ...muted, marginTop: 2 }}>{a.ai}</div>
                     <div style={{ ...muted, fontSize: 11, marginTop: 2 }}>
-                      last seen {a.lastSeenLabel}
+                      {t("page.maintenanceTabs.lastSeen", { time: a.lastSeenLabel })}
                     </div>
                   </div>
                   <span className={`ks-badge ${healthTone(a.status)}`}>{a.status}</span>
@@ -149,8 +167,8 @@ export function FlowTab() {
 
           <div className="ks-card">
             <div className="ks-card-head">
-              <div className="ks-card-title">Health score distribution</div>
-              <span className="ks-badge outline">{HEALTH_DATA.length} assets</span>
+              <div className="ks-card-title">{t("page.maintenanceTabs.healthDist")}</div>
+              <span className="ks-badge outline">{t("page.maintenanceTabs.assetsCount", { n: HEALTH_DATA.length })}</span>
             </div>
             <div className="ks-card-body" style={{ ...flexCol, gap: 16 }}>
               {buckets.map((b) => (
@@ -172,7 +190,18 @@ export function FlowTab() {
 
 const HEALTH_FILTERS = ["All", "Critical", "Alert", "Watch", "Dormant", "No maint", "PM due"];
 
+const HEALTH_FILTER_KEY: Record<string, string> = {
+  Alert: "page.maintenanceTabs.healthFilter.alert",
+  All: "page.maintenanceTabs.healthFilter.all",
+  Critical: "page.maintenanceTabs.healthFilter.critical",
+  Dormant: "page.maintenanceTabs.healthFilter.dormant",
+  "No maint": "page.maintenanceTabs.healthFilter.noMaint",
+  "PM due": "page.maintenanceTabs.healthFilter.pmDue",
+  Watch: "page.maintenanceTabs.healthFilter.watch",
+};
+
 export function HealthTab() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp, isError, isLoading } = useGetMaintenanceQuery({ organizationId });
@@ -188,18 +217,28 @@ export function HealthTab() {
     if (filter === "PM due") return h.next_pm_days <= 0;
     return true;
   });
-  const cols = ["Asset", "Age", "Last seen", "No maint", "Next PM", "Cycles/Hours", "MTBF", "Health", "Status"];
+  const cols = [
+    "page.maintenanceTabs.cols.asset",
+    "page.maintenanceTabs.cols.age",
+    "page.maintenanceTabs.cols.lastSeen",
+    "page.maintenanceTabs.cols.noMaint",
+    "page.maintenanceTabs.cols.nextPm",
+    "page.maintenanceTabs.cols.cyclesHours",
+    "page.maintenanceTabs.cols.mtbf",
+    "page.maintenanceTabs.cols.health",
+    "page.maintenanceTabs.cols.status",
+  ];
   return (
     <FaQueryState
-      emptyDescription="No assets registered for health monitoring."
-      emptyTitle="No assets found"
+      emptyDescription={t("page.maintenanceTabs.noAssetsDesc")}
+      emptyTitle={t("page.register.noAssetsFound")}
       isEmpty={HEALTH_DATA.length === 0}
       isError={isError}
       isLoading={isLoading}
     >
       <div className="ks-card">
         <div className="ks-card-head">
-          <div className="ks-card-title">Asset health register</div>
+          <div className="ks-card-title">{t("page.maintenanceTabs.registerTitle")}</div>
           <div className="ks-chips">
             {HEALTH_FILTERS.map((f) => (
               <button
@@ -208,7 +247,7 @@ export function HealthTab() {
                 type="button"
                 onClick={() => setFilter(f)}
               >
-                {f}
+                {t(HEALTH_FILTER_KEY[f])}
               </button>
             ))}
           </div>
@@ -217,7 +256,7 @@ export function HealthTab() {
           <thead>
             <tr>
               {cols.map((c) => (
-                <TH key={c}>{c}</TH>
+                <TH key={c}>{t(c)}</TH>
               ))}
             </tr>
           </thead>
@@ -232,9 +271,9 @@ export function HealthTab() {
                 </TD>
                 <TD style={mono}>{formatAge(h.ageDays)}</TD>
                 <TD>{h.lastSeenLabel}</TD>
-                <TD style={mono}>{h.since_maint_days}d</TD>
+                <TD style={mono}>{`${h.since_maint_days}d`}</TD>
                 <TD style={{ ...mono, color: h.next_pm_days < 0 ? "hsl(var(--destructive))" : "inherit", fontWeight: h.next_pm_days < 0 ? 600 : 400 }}>
-                  {h.next_pm_days <= 0 ? `${Math.abs(h.next_pm_days)}d over` : `${h.next_pm_days}d`}
+                  {h.next_pm_days <= 0 ? t("page.maintenanceTabs.daysOver", { n: Math.abs(h.next_pm_days) }) : `${h.next_pm_days}d`}
                 </TD>
                 <TD style={mono}>{h.cycles > 0 ? `${h.cycles}c` : `${h.run_hours}h`}</TD>
                 <TD style={mono}>{h.mtbf_days > 0 ? `${h.mtbf_days}d` : "—"}</TD>

@@ -1,7 +1,9 @@
 "use client";
 
 import { Plus, Trash2 } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import {
   Dialog,
@@ -39,22 +41,18 @@ interface RuleStep {
 }
 
 const APPROVAL_TYPES = [
-  { label: "Disposal", value: "disposal" },
-  { label: "Transfer", value: "transfer" },
-  { label: "Maintenance", value: "maintenance" },
-  { label: "Acquisition", value: "acquisition" },
-  { label: "Write-off", value: "write-off" },
-  { label: "Revaluation", value: "revaluation" },
-];
+  "disposal",
+  "transfer",
+  "maintenance",
+  "acquisition",
+  "write-off",
+  "revaluation",
+] as const;
 
-const SCOPES = [
-  { label: "Organization", value: "organization" },
-  { label: "Category", value: "category" },
-  { label: "Cost center", value: "cost_center" },
-  { label: "Store", value: "store" },
-];
+const SCOPES = ["organization", "category", "cost_center", "store"] as const;
 
 export function ApprovalRuleModal({ onClose, open }: ApprovalRuleModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { mutateAsync } = useCreateApprovalRuleMutation({ organizationId });
@@ -71,6 +69,22 @@ export function ApprovalRuleModal({ onClose, open }: ApprovalRuleModalProps) {
   const [steps, setSteps] = useState<RuleStep[]>([
     { approver_id: "", step_name: "Review" },
   ]);
+
+  const approvalTypeLabels: Record<(typeof APPROVAL_TYPES)[number], string> = {
+    acquisition: t("modals.approvalRule.typeAcquisition"),
+    disposal: t("modals.approvalRule.typeDisposal"),
+    maintenance: t("modals.approvalRule.typeMaintenance"),
+    revaluation: t("modals.approvalRule.typeRevaluation"),
+    transfer: t("modals.approvalRule.typeTransfer"),
+    "write-off": t("modals.approvalRule.typeWriteOff"),
+  };
+
+  const scopeLabels: Record<(typeof SCOPES)[number], string> = {
+    category: t("modals.approvalRule.scopeCategory"),
+    cost_center: t("modals.approvalRule.scopeCostCenter"),
+    organization: t("modals.approvalRule.scopeOrganization"),
+    store: t("modals.approvalRule.scopeStore"),
+  };
 
   const needsScopeValue = scope !== "organization";
   const stepsValid =
@@ -97,6 +111,7 @@ export function ApprovalRuleModal({ onClose, open }: ApprovalRuleModalProps) {
         step_name: step.step_name.trim(),
       })),
     });
+    toast.success(t("toasts.approvalRuleCreated"));
     onClose();
   }
 
@@ -104,20 +119,20 @@ export function ApprovalRuleModal({ onClose, open }: ApprovalRuleModalProps) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[560px]">
         <DialogHeader>
-          <DialogTitle>New approval rule</DialogTitle>
+          <DialogTitle>{t("modals.approvalRule.title")}</DialogTitle>
           <DialogDescription>
-            Multi-step approval workflow with assigned approvers per step
+            {t("modals.approvalRule.description")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label isRequired htmlFor="rule-name">
-              Rule name
+              {t("modals.approvalRule.ruleName")}
             </Label>
             <Input
               id="rule-name"
-              placeholder="e.g. Disposal above threshold"
+              placeholder={t("modals.approvalRule.namePlaceholder")}
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -125,7 +140,9 @@ export function ApprovalRuleModal({ onClose, open }: ApprovalRuleModalProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="rule-type">Approval type</Label>
+              <Label htmlFor="rule-type">
+                {t("modals.approvalRule.approvalType")}
+              </Label>
               <Select
                 value={approvalType}
                 onValueChange={(value) => setApprovalType(value as ApprovalType)}
@@ -135,15 +152,17 @@ export function ApprovalRuleModal({ onClose, open }: ApprovalRuleModalProps) {
                 </SelectTrigger>
                 <SelectContent>
                   {APPROVAL_TYPES.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.label}
+                    <SelectItem key={type} value={type}>
+                      {approvalTypeLabels[type]}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="rule-scope">Scope</Label>
+              <Label htmlFor="rule-scope">
+                {t("modals.approvalRule.scope")}
+              </Label>
               <Select
                 value={scope}
                 onValueChange={(value) => setScope(value as ApprovalScope)}
@@ -153,8 +172,8 @@ export function ApprovalRuleModal({ onClose, open }: ApprovalRuleModalProps) {
                 </SelectTrigger>
                 <SelectContent>
                   {SCOPES.map((scopeOption) => (
-                    <SelectItem key={scopeOption.value} value={scopeOption.value}>
-                      {scopeOption.label}
+                    <SelectItem key={scopeOption} value={scopeOption}>
+                      {scopeLabels[scopeOption]}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -165,11 +184,11 @@ export function ApprovalRuleModal({ onClose, open }: ApprovalRuleModalProps) {
           {needsScopeValue && (
             <div className="grid gap-2">
               <Label isRequired htmlFor="rule-scope-value">
-                Scope value
+                {t("modals.approvalRule.scopeValue")}
               </Label>
               <Input
                 id="rule-scope-value"
-                placeholder="e.g. it, store-uuid"
+                placeholder={t("modals.approvalRule.scopeValuePlaceholder")}
                 value={scopeValue}
                 onChange={(e) => setScopeValue(e.target.value)}
               />
@@ -177,12 +196,14 @@ export function ApprovalRuleModal({ onClose, open }: ApprovalRuleModalProps) {
           )}
 
           <div className="grid gap-2">
-            <Label>Workflow steps</Label>
+            <Label>{t("modals.approvalRule.workflowSteps")}</Label>
             {steps.map((step, index) => (
               <div key={index} className="flex items-center gap-2">
                 <Input
-                  aria-label={`Step ${index + 1} name`}
-                  placeholder="Step name"
+                  aria-label={t("modals.approvalRule.stepNameAria", {
+                    number: index + 1,
+                  })}
+                  placeholder={t("modals.approvalRule.stepNamePlaceholder")}
                   value={step.step_name}
                   onChange={(e) => updateStep(index, { step_name: e.target.value })}
                 />
@@ -190,8 +211,15 @@ export function ApprovalRuleModal({ onClose, open }: ApprovalRuleModalProps) {
                   value={step.approver_id || undefined}
                   onValueChange={(approverId) => updateStep(index, { approver_id: approverId })}
                 >
-                  <SelectTrigger aria-label={`Step ${index + 1} approver`} className="w-[180px]">
-                    <SelectValue placeholder="Approver" />
+                  <SelectTrigger
+                    aria-label={t("modals.approvalRule.stepApproverAria", {
+                      number: index + 1,
+                    })}
+                    className="w-[180px]"
+                  >
+                    <SelectValue
+                      placeholder={t("modals.approvalRule.approverPlaceholder")}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {users.map((user) => (
@@ -202,7 +230,9 @@ export function ApprovalRuleModal({ onClose, open }: ApprovalRuleModalProps) {
                   </SelectContent>
                 </Select>
                 <button
-                  aria-label={`Remove step ${index + 1}`}
+                  aria-label={t("modals.approvalRule.removeStepAria", {
+                    number: index + 1,
+                  })}
                   className="ks-btn ks-btn-icon"
                   disabled={steps.length === 1}
                   type="button"
@@ -222,14 +252,14 @@ export function ApprovalRuleModal({ onClose, open }: ApprovalRuleModalProps) {
               }
             >
               <Plus size={14} />
-              Add step
+              {t("modals.approvalRule.addStep")}
             </button>
           </div>
         </div>
 
         <DialogFooter>
           <button className="ks-btn" type="button" onClick={onClose}>
-            Cancel
+            {t("modals.approvalRule.cancel")}
           </button>
           <button
             className={cn("ks-btn ks-btn-primary", !isValid && "opacity-50")}
@@ -237,7 +267,7 @@ export function ApprovalRuleModal({ onClose, open }: ApprovalRuleModalProps) {
             type="button"
             onClick={handleSubmit}
           >
-            Create rule
+            {t("modals.approvalRule.createRule")}
           </button>
         </DialogFooter>
       </DialogContent>

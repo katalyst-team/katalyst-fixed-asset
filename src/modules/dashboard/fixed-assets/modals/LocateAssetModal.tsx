@@ -2,6 +2,7 @@
 
 import { MapPin, Package, Search, User } from "lucide-react";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -25,6 +26,7 @@ interface LocateAssetModalProps {
 }
 
 export function LocateAssetModal({ onClose, open }: LocateAssetModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const router = useRouter();
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
@@ -44,7 +46,7 @@ export function LocateAssetModal({ onClose, open }: LocateAssetModalProps) {
 
   function handleMap(id: string) {
     onClose();
-    toast.info(`Showing ${id} on the live map`);
+    toast.info(t("modals.locate.showingOnMap", { id }));
   }
 
   function handleProfile(id: string) {
@@ -56,8 +58,8 @@ export function LocateAssetModal({ onClose, open }: LocateAssetModalProps) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Locate asset</DialogTitle>
-          <DialogDescription>Search by name, asset ID, or EPC</DialogDescription>
+          <DialogTitle>{t("modals.locate.title")}</DialogTitle>
+          <DialogDescription>{t("modals.locate.description")}</DialogDescription>
         </DialogHeader>
 
         <div className="relative">
@@ -65,7 +67,7 @@ export function LocateAssetModal({ onClose, open }: LocateAssetModalProps) {
           <Input
             autoFocus={true}
             className="pl-9"
-            placeholder="Search assets…"
+            placeholder={t("modals.locate.searchPlaceholder")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -74,7 +76,7 @@ export function LocateAssetModal({ onClose, open }: LocateAssetModalProps) {
         <div className="flex flex-col gap-1.5">
           {results.length === 0 ? (
             <div className="rounded-lg border border-dashed border-border py-8 text-center text-sm text-muted-foreground">
-              No assets match &lsquo;{query}&rsquo;
+              {t("modals.locate.noMatch", { query })}
             </div>
           ) : (
             results.map((a) => (
@@ -103,7 +105,7 @@ export function LocateAssetModal({ onClose, open }: LocateAssetModalProps) {
                     onClick={() => handleMap(a.id)}
                   >
                     <MapPin className="h-3.5 w-3.5" />
-                    Map
+                    {t("modals.locate.mapButton")}
                   </button>
                   <button
                     className="ks-btn ks-btn-sm"
@@ -111,7 +113,7 @@ export function LocateAssetModal({ onClose, open }: LocateAssetModalProps) {
                     onClick={() => handleProfile(a.id)}
                   >
                     <User className="h-3.5 w-3.5" />
-                    Profile
+                    {t("modals.locate.profileButton")}
                   </button>
                 </div>
               </div>
@@ -125,7 +127,7 @@ export function LocateAssetModal({ onClose, open }: LocateAssetModalProps) {
             type="button"
             onClick={onClose}
           >
-            Close
+            {t("modals.locate.close")}
           </button>
         </DialogFooter>
       </DialogContent>

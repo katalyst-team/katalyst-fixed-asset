@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { useTranslation } from "next-i18next";
 
 import {
   Dialog,
@@ -21,6 +22,7 @@ export function TransferHistoryModal({
   onClose,
   open,
 }: TransferHistoryModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp } = useGetTransferHistoryQuery({ organizationId });
@@ -30,9 +32,9 @@ export function TransferHistoryModal({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Transfer history · last 30 days</DialogTitle>
+          <DialogTitle>{t("modals.transferHistory.title")}</DialogTitle>
           <DialogDescription>
-            All completed transfers · receipt confirmed by destination gate scan
+            {t("modals.transferHistory.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -40,10 +42,18 @@ export function TransferHistoryModal({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-left text-xs text-muted-foreground">
-                <th className="py-2 pr-3 font-medium">Transfer</th>
-                <th className="px-3 py-2 font-medium">Route</th>
-                <th className="px-3 py-2 font-medium">Completed</th>
-                <th className="py-2 pl-3 font-medium">By</th>
+                <th className="py-2 pr-3 font-medium">
+                  {t("modals.transferHistory.colTransfer")}
+                </th>
+                <th className="px-3 py-2 font-medium">
+                  {t("modals.transferHistory.colRoute")}
+                </th>
+                <th className="px-3 py-2 font-medium">
+                  {t("modals.transferHistory.colCompleted")}
+                </th>
+                <th className="py-2 pl-3 font-medium">
+                  {t("modals.transferHistory.colBy")}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -83,7 +93,7 @@ export function TransferHistoryModal({
             type="button"
             onClick={onClose}
           >
-            Close
+            {t("modals.transferHistory.close")}
           </button>
         </DialogFooter>
       </DialogContent>

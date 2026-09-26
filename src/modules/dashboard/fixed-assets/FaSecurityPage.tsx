@@ -9,6 +9,7 @@ import {
   Shield,
 } from "lucide-react";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import { toast } from "sonner";
 
 import { useUser } from "@/context/user-context";
@@ -31,10 +32,10 @@ import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
 import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 
 const SEV_LABEL: Record<string, string> = {
-  critical: "Critical",
-  high: "High",
-  low: "Low",
-  medium: "Medium",
+  critical: "page.security.sev.critical",
+  high: "page.security.sev.high",
+  low: "page.security.sev.low",
+  medium: "page.security.sev.medium",
 };
 
 const SEV_TONE: Record<string, string> = {
@@ -45,6 +46,7 @@ const SEV_TONE: Record<string, string> = {
 };
 
 export function FaSecurityPage() {
+  const { t } = useTranslation("fixed-assets");
   const router = useRouter();
   const { tokenPayload } = useUser();
   const { canManage } = useFaPermission();
@@ -74,7 +76,7 @@ export function FaSecurityPage() {
     if (cam?.stream_url) {
       safeOpenUrl(cam.stream_url);
     } else {
-      toast.info("Opening CCTV " + cameraName);
+      toast.info(t("toasts.openingCctv", { camera: cameraName }));
     }
   };
 
@@ -98,7 +100,7 @@ export function FaSecurityPage() {
                 onClick={handleGeofenceRules}
               >
                 <Shield size={14} />
-                Geofence rules
+                {t("page.security.geofenceRules")}
               </button>
             )}
             <button
@@ -110,19 +112,19 @@ export function FaSecurityPage() {
               }}
               type="button"
             >
-              <AlertTriangle size={14} />{totalAlerts} active alerts
+              <AlertTriangle size={14} />{t("page.security.activeAlerts", { count: totalAlerts })}
             </button>
           </>
         }
-        desc="Geofence violations · exit scans · CCTV correlation"
-        title="Loss Prevention · Security"
+        desc={t("page.security.desc")}
+        title={t("page.security.title")}
       />
 
       <FaKpiStrip>
-        <FaStat label="Total alerts" tone="brand" value={String(totalAlerts)} />
-        <FaStat label="Critical" tone="danger" value={String(summary?.critical ?? 0)} />
-        <FaStat label="Investigating" tone="warn" value={String(summary?.investigating ?? 0)} />
-        <FaStat label="Resolution rate" tone="success" value={summary ? `${Math.round(summary.resolution_rate)}%` : "—"} />
+        <FaStat label={t("page.security.kpi.total")} tone="brand" value={String(totalAlerts)} />
+        <FaStat label={t("page.security.kpi.critical")} tone="danger" value={String(summary?.critical ?? 0)} />
+        <FaStat label={t("page.security.kpi.investigating")} tone="warn" value={String(summary?.investigating ?? 0)} />
+        <FaStat label={t("page.security.kpi.resolutionRate")} tone="success" value={summary ? `${Math.round(summary.resolution_rate)}%` : "—"} />
       </FaKpiStrip>
 
       <FaQueryState
@@ -132,8 +134,8 @@ export function FaSecurityPage() {
       >
       <div className="ks-card">
         <div className="ks-card-head">
-          <div className="ks-card-title">Live alerts</div>
-          <span className="ks-badge danger">{alerts.length} active</span>
+          <div className="ks-card-title">{t("page.security.liveAlerts")}</div>
+          <span className="ks-badge danger">{t("page.security.activeCount", { count: alerts.length })}</span>
         </div>
         <div className="ks-card-body">
           <div className="flex flex-col gap-3">
@@ -158,7 +160,7 @@ export function FaSecurityPage() {
                 >
                   <div className="flex flex-wrap items-center gap-2">
                     <span className={"ks-badge " + SEV_TONE[alert.severity]}>
-                      {SEV_LABEL[alert.severity]}
+                      {t(SEV_LABEL[alert.severity])}
                     </span>
                     <span className="text-xs text-muted-foreground">
                       {alert.time} · {alert.zone} · {alert.camera}
@@ -176,13 +178,13 @@ export function FaSecurityPage() {
                   </div>
                   <div className="mt-2 flex flex-wrap gap-4 text-xs text-muted-foreground">
                     <span>
-                      Custodian:{" "}
+                      {t("page.security.custodian")}{" "}
                       <span className="font-medium text-foreground">
                         {asset?.custodian ?? "—"}
                       </span>
                     </span>
                     <span>
-                      Value:{" "}
+                      {t("page.security.value")}{" "}
                       <span className="font-medium text-foreground">
                         {asset ? formatIDRShort(asset.val) : "—"}
                       </span>
@@ -198,7 +200,7 @@ export function FaSecurityPage() {
                         }
                       >
                         <Lock size={13} />
-                        Halt + page security
+                        {t("page.security.halt")}
                       </button>
                     )}
                     <button
@@ -207,7 +209,7 @@ export function FaSecurityPage() {
                       onClick={() => handleOpenCCTV(alert.camera)}
                     >
                       <Eye size={13} />
-                      Review CCTV
+                      {t("page.security.reviewCctv")}
                     </button>
                     <button
                       className="ks-btn ks-btn-sm"
@@ -215,7 +217,7 @@ export function FaSecurityPage() {
                       onClick={() => router.push(`/dashboard/fixed-assets/register/${alert.asset_id}/`)}
                     >
                       <Search size={13} />
-                      View asset
+                      {t("page.security.viewAsset")}
                     </button>
                     {canManage && (
                       <button
@@ -224,12 +226,12 @@ export function FaSecurityPage() {
                         onClick={() =>
                           resolveAlert({
                             alertId: alert.id,
-                            resolution_notes: "Resolved by operator",
+                            resolution_notes: t("page.security.resolvedNote"),
                           })
                         }
                       >
                         <CheckCircle2 size={13} />
-                        Mark resolved
+                        {t("page.security.markResolved")}
                       </button>
                     )}
                   </div>

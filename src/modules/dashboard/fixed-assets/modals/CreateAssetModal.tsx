@@ -1,7 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import {
@@ -43,21 +45,8 @@ interface CreateAssetModalProps {
   open: boolean;
 }
 
-const formSchema = z.object({
-  cat: z.string().min(1, "Category is required"),
-  custodian: z.string().optional(),
-  loc: z.string().optional(),
-  name: z.string().min(1, "Asset name is required"),
-  purchased: z.string().min(1, "Purchase date is required"),
-  serial: z.string().min(1, "Serial number is required"),
-  supplier: z.string().optional(),
-  val: z.coerce.number().min(0, "Value must be 0 or more"),
-  warranty: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
-
 export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { isPending: isSaving, mutateAsync } = useCreateAssetMutation({
@@ -65,6 +54,20 @@ export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
   });
   const peopleOptions = useFaPeopleOptions();
   const locationOptions = useFaLocationOptions();
+
+  const formSchema = z.object({
+    cat: z.string().min(1, t("modals.createAsset.categoryRequired")),
+    custodian: z.string().optional(),
+    loc: z.string().optional(),
+    name: z.string().min(1, t("modals.createAsset.nameRequired")),
+    purchased: z.string().min(1, t("modals.createAsset.purchasedRequired")),
+    serial: z.string().min(1, t("modals.createAsset.serialRequired")),
+    supplier: z.string().optional(),
+    val: z.coerce.number().min(0, t("modals.createAsset.valueMin")),
+    warranty: z.string().optional(),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -93,6 +96,7 @@ export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
       val: values.val,
       warranty: values.warranty ?? "",
     });
+    toast.success(t("toasts.assetCreated"));
     form.reset();
     onClose();
   }
@@ -103,9 +107,9 @@ export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add asset</DialogTitle>
+          <DialogTitle>{t("modals.createAsset.title")}</DialogTitle>
           <DialogDescription>
-            Register a new fixed asset
+            {t("modals.createAsset.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -116,9 +120,15 @@ export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
               name="name"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <FormLabel htmlFor="ca-name">Asset name</FormLabel>
+                  <FormLabel htmlFor="ca-name">
+                    {t("modals.createAsset.nameLabel")}
+                  </FormLabel>
                   <FormControl>
-                    <Input id="ca-name" placeholder="Asset name" {...field} />
+                    <Input
+                      id="ca-name"
+                      placeholder={t("modals.createAsset.nameLabel")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -130,11 +140,13 @@ export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
               name="cat"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="ca-category">Category</FormLabel>
+                  <FormLabel htmlFor="ca-category">
+                    {t("modals.createAsset.categoryLabel")}
+                  </FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger id="ca-category">
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder={t("modals.createAsset.categoryPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -155,9 +167,15 @@ export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
               name="serial"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="ca-serial">Serial number</FormLabel>
+                  <FormLabel htmlFor="ca-serial">
+                    {t("modals.createAsset.serialLabel")}
+                  </FormLabel>
                   <FormControl>
-                    <Input id="ca-serial" placeholder="Serial number" {...field} />
+                    <Input
+                      id="ca-serial"
+                      placeholder={t("modals.createAsset.serialLabel")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -169,11 +187,13 @@ export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
               name="custodian"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="ca-custodian">Custodian</FormLabel>
+                  <FormLabel htmlFor="ca-custodian">
+                    {t("modals.createAsset.custodianLabel")}
+                  </FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger id="ca-custodian">
-                        <SelectValue placeholder="Select custodian" />
+                        <SelectValue placeholder={t("modals.createAsset.custodianPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -194,11 +214,13 @@ export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
               name="loc"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="ca-location">Location</FormLabel>
+                  <FormLabel htmlFor="ca-location">
+                    {t("modals.createAsset.locationLabel")}
+                  </FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger id="ca-location">
-                        <SelectValue placeholder="Select location" />
+                        <SelectValue placeholder={t("modals.createAsset.locationPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -219,7 +241,9 @@ export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
               name="val"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="ca-val">Acquisition value (IDR)</FormLabel>
+                  <FormLabel htmlFor="ca-val">
+                    {t("modals.createAsset.valueLabel")}
+                  </FormLabel>
                   <FormControl>
                     <Input id="ca-val" min={0} type="number" {...field} />
                   </FormControl>
@@ -233,7 +257,9 @@ export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
               name="purchased"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="ca-purchased">Purchase date</FormLabel>
+                  <FormLabel htmlFor="ca-purchased">
+                    {t("modals.createAsset.purchasedLabel")}
+                  </FormLabel>
                   <FormControl>
                     <Input id="ca-purchased" type="date" {...field} />
                   </FormControl>
@@ -247,9 +273,15 @@ export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
               name="supplier"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="ca-supplier">Supplier</FormLabel>
+                  <FormLabel htmlFor="ca-supplier">
+                    {t("modals.createAsset.supplierLabel")}
+                  </FormLabel>
                   <FormControl>
-                    <Input id="ca-supplier" placeholder="Supplier" {...field} />
+                    <Input
+                      id="ca-supplier"
+                      placeholder={t("modals.createAsset.supplierLabel")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -261,7 +293,9 @@ export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
               name="warranty"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="ca-warranty">Warranty until</FormLabel>
+                  <FormLabel htmlFor="ca-warranty">
+                    {t("modals.createAsset.warrantyLabel")}
+                  </FormLabel>
                   <FormControl>
                     <Input id="ca-warranty" type="date" {...field} />
                   </FormControl>
@@ -276,14 +310,14 @@ export function CreateAssetModal({ onClose, open }: CreateAssetModalProps) {
                 type="button"
                 onClick={onClose}
               >
-                Cancel
+                {t("modals.createAsset.cancel")}
               </button>
               <button
                 className="ks-btn ks-btn-primary"
                 disabled={isSaving}
                 type="submit"
               >
-                Add asset
+                {t("modals.createAsset.submit")}
               </button>
             </DialogFooter>
           </form>

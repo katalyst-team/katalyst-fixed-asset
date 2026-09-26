@@ -1,6 +1,7 @@
 "use client";
 
 import { History, Search, UserPlus } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -31,13 +32,15 @@ function Td({ children, style }: { children: React.ReactNode; style?: React.CSSP
   return <td className="border-t border-border p-3" style={style}>{children}</td>;
 }
 
-function statusBadge(s: string) {
-  if (s === "active") return <span className="ks-badge success">Active</span>;
-  if (s === "inactive") return <span className="ks-badge warn">Invited</span>;
-  return <span className="ks-badge danger">Suspended</span>;
+function StatusBadge({ status }: { status: string }) {
+  const { t } = useTranslation("fixed-assets");
+  if (status === "active") return <span className="ks-badge success">{t("page.users.status.active")}</span>;
+  if (status === "inactive") return <span className="ks-badge warn">{t("page.users.status.invited")}</span>;
+  return <span className="ks-badge danger">{t("page.users.status.suspended")}</span>;
 }
 
 function UsersTab({ organizationId }: { organizationId: string }) {
+  const { t } = useTranslation("fixed-assets");
   const [q, setQ] = useState("");
   const [role, setRole] = useState("All");
   const { data: resp } = useGetFAUsersQuery({ organizationId });
@@ -49,18 +52,18 @@ function UsersTab({ organizationId }: { organizationId: string }) {
       <div className="ks-card-head" style={{ flexWrap: "wrap" }}>
         <div className="ks-search-box" style={{ maxWidth: 240, width: "100%" }}>
           <Search size={14} />
-          <input placeholder="Search users…" style={{ background: "transparent", border: 0, color: "hsl(var(--text))", fontFamily: "inherit", fontSize: 13, outline: "none", width: "100%" }} onChange={(e) => setQ(e.target.value)} />
+          <input placeholder={t("page.users.searchPlaceholder")} style={{ background: "transparent", border: 0, color: "hsl(var(--text))", fontFamily: "inherit", fontSize: 13, outline: "none", width: "100%" }} onChange={(e) => setQ(e.target.value)} />
         </div>
         <div className="ks-chips">
           {roles.map((r) => (
-            <button key={r} className={"ks-chip" + (r === role ? " on" : "")} type="button" onClick={() => setRole(r)}>{r}</button>
+            <button key={r} className={"ks-chip" + (r === role ? " on" : "")} type="button" onClick={() => setRole(r)}>{r === "All" ? t("page.users.allRoles") : r}</button>
           ))}
         </div>
       </div>
       <div style={{ overflowX: "auto" }}>
       <table className="w-full text-sm">
         <thead>
-          <tr><Th>User</Th><Th>Role</Th><Th>Department</Th><Th>Last active</Th><Th>Status</Th></tr>
+          <tr><Th>{t("page.users.columns.user")}</Th><Th>{t("page.users.columns.role")}</Th><Th>{t("page.users.columns.department")}</Th><Th>{t("page.users.columns.lastActive")}</Th><Th>{t("page.users.columns.status")}</Th></tr>
         </thead>
         <tbody>
           {rows.map((u, idx) => (
@@ -74,7 +77,7 @@ function UsersTab({ organizationId }: { organizationId: string }) {
               <Td><span className="ks-badge info">{u.role}</span></Td>
               <Td>{u.department}</Td>
               <Td>{u.last_active}</Td>
-              <Td>{statusBadge(u.status)}</Td>
+              <Td><StatusBadge status={u.status} /></Td>
             </tr>
           ))}
         </tbody>
@@ -85,12 +88,13 @@ function UsersTab({ organizationId }: { organizationId: string }) {
 }
 
 function RolesTab({ organizationId }: { organizationId: string }) {
+  const { t } = useTranslation("fixed-assets");
   const { data: resp, isError, isLoading } = useGetRolesQuery({ organizationId });
   const roles = resp?.data?.roles ?? [];
   return (
     <FaQueryState
-      emptyDescription="No roles are configured for this organization yet."
-      emptyTitle="No roles"
+      emptyDescription={t("page.users.noRolesDesc")}
+      emptyTitle={t("page.users.noRoles")}
       isEmpty={roles.length === 0}
       isError={isError}
       isLoading={isLoading}
@@ -101,7 +105,7 @@ function RolesTab({ organizationId }: { organizationId: string }) {
             <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <div style={{ alignItems: "center", display: "flex", justifyContent: "space-between" }}>
                 <span style={{ fontSize: 14, fontWeight: 600 }}>{r.name}</span>
-                <span className="ks-badge brand">{r.user_count} users</span>
+                <span className="ks-badge brand">{t("page.users.usersCount", { count: r.user_count })}</span>
               </div>
               <p style={{ color: "hsl(var(--text-2))", fontSize: 12.5, lineHeight: 1.5, margin: 0 }}>{r.description}</p>
               <div className="ks-chips">
@@ -118,15 +122,16 @@ function RolesTab({ organizationId }: { organizationId: string }) {
 }
 
 function AuditTab({ organizationId }: { organizationId: string }) {
+  const { t } = useTranslation("fixed-assets");
   const { data: resp } = useGetFAUserAuditLogQuery({ organizationId });
   const logs = resp?.data?.logs ?? [];
   return (
     <div className="ks-card">
-      <div className="ks-card-head"><span className="ks-card-title">Audit Log</span></div>
+      <div className="ks-card-head"><span className="ks-card-title">{t("page.users.auditLog")}</span></div>
       <div style={{ overflowX: "auto" }}>
       <table className="w-full text-sm">
         <thead>
-          <tr><Th>Time</Th><Th>User</Th><Th>Action</Th><Th>Resource</Th><Th>IP</Th></tr>
+          <tr><Th>{t("page.users.columns.time")}</Th><Th>{t("page.users.columns.user")}</Th><Th>{t("page.users.columns.action")}</Th><Th>{t("page.users.columns.resource")}</Th><Th>{t("page.users.columns.ip")}</Th></tr>
         </thead>
         <tbody>
           {logs.map((a) => (
@@ -146,6 +151,7 @@ function AuditTab({ organizationId }: { organizationId: string }) {
 }
 
 export function FaUsersPage() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const { canManageUsers } = useFaPermission();
   const organizationId = tokenPayload?.organization_id ?? "";
@@ -160,9 +166,9 @@ export function FaUsersPage() {
   const inviteRoles = rolesResp?.data?.roles ?? [];
   const { mutateAsync: inviteUser } = useInviteFAUserMutation({ organizationId });
   const tabs = [
-    { id: "users", label: "Users", meta: String(userCount) },
-    { id: "roles", label: "Roles & Permissions", meta: String(inviteRoles.length) },
-    { id: "audit", label: "Audit Log", meta: "" },
+    { id: "users", label: t("page.users.tabUsers"), meta: String(userCount) },
+    { id: "roles", label: t("page.users.tabRoles"), meta: String(inviteRoles.length) },
+    { id: "audit", label: t("page.users.auditLog"), meta: "" },
   ];
   const handleInvite = async () => {
     if (!inviteEmail || !inviteRole) return;
@@ -175,20 +181,20 @@ export function FaUsersPage() {
       <FaShellHead
         actions={
           <>
-            {canManageUsers && <button className="ks-btn" type="button" onClick={() => setTab("audit")}><History size={14} />Audit log</button>}
+            {canManageUsers && <button className="ks-btn" type="button" onClick={() => setTab("audit")}><History size={14} />{t("page.users.auditLog")}</button>}
             {canManageUsers && (
-              <button className="ks-btn ks-btn-primary" type="button" onClick={() => setInviteOpen(true)}><UserPlus size={14} />Invite user</button>
+              <button className="ks-btn ks-btn-primary" type="button" onClick={() => setInviteOpen(true)}><UserPlus size={14} />{t("page.users.invite")}</button>
             )}
           </>
         }
-        desc="Manage users, roles, permissions, and audit activity."
-        title="User Management"
+        desc={t("page.users.description")}
+        title={t("page.users.title")}
       />
       <FaKpiStrip>
-        <FaStat label="Total users" tone="brand" value={String(userCount)} />
-        <FaStat label="Active rate" sub="of all users" tone="success" value={summary ? `${Math.round(summary.active_rate)}%` : "—"} />
-        <FaStat label="Pending invite" tone="warn" value={String(summary?.pending_invites ?? "—")} />
-        <FaStat label="Failed logins" sub="last 24h" tone="danger" value="—" />
+        <FaStat label={t("page.users.kpi.totalUsers")} tone="brand" value={String(userCount)} />
+        <FaStat label={t("page.users.kpi.activeRate")} sub={t("page.users.kpi.activeRateSub")} tone="success" value={summary ? `${Math.round(summary.active_rate)}%` : "—"} />
+        <FaStat label={t("page.users.kpi.pendingInvite")} tone="warn" value={String(summary?.pending_invites ?? "—")} />
+        <FaStat label={t("page.users.kpi.failedLogins")} sub={t("page.users.kpi.failedLoginsSub")} tone="danger" value="—" />
       </FaKpiStrip>
       <div className="ks-seg" style={{ marginBottom: 16 }}>
         {tabs.map((t) => (
@@ -203,11 +209,11 @@ export function FaUsersPage() {
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Invite user</DialogTitle>
+            <DialogTitle>{t("page.users.invite")}</DialogTitle>
           </DialogHeader>
           <Input
             autoFocus
-            placeholder="Enter email address"
+            placeholder={t("page.users.emailPlaceholder")}
             type="email"
             value={inviteEmail}
             onChange={(e) => setInviteEmail(e.target.value)}
@@ -218,7 +224,7 @@ export function FaUsersPage() {
             onValueChange={setInviteRole}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select role" />
+              <SelectValue placeholder={t("page.users.selectRole")} />
             </SelectTrigger>
             <SelectContent>
               {inviteRoles.map((r) => (
@@ -227,7 +233,7 @@ export function FaUsersPage() {
             </SelectContent>
           </Select>
           <DialogFooter>
-            <Button disabled={!inviteEmail || !inviteRole} onClick={handleInvite}>Send invite</Button>
+            <Button disabled={!inviteEmail || !inviteRole} onClick={handleInvite}>{t("page.users.sendInvite")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

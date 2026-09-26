@@ -2,6 +2,7 @@
 
 import { Printer, Upload } from "lucide-react";
 import Image from "next/image";
+import { useTranslation } from "next-i18next";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -55,14 +56,15 @@ interface PrintTagModalProps {
 }
 
 export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { payload } = useFaModal();
   const tags: FaRfidTag[] = payload.tags ?? [];
 
   const persistedTagIds = tags
-    .filter((t) => t.id && t.id !== "sample")
-    .map((t) => t.id);
+    .filter((tag) => tag.id && tag.id !== "sample")
+    .map((tag) => tag.id);
 
   const print = useFaTagPrint();
   const {
@@ -203,7 +205,7 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
       const text = await file.text();
       setRawZplCode(text);
     } catch {
-      toast.error("Failed to read ZPL file");
+      toast.error(t("modals.printTag.zplFileReadFailed"));
     } finally {
       e.target.value = "";
     }
@@ -215,11 +217,11 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
 
   const handlePrint = async () => {
     if (!settings.rawZplCode.trim()) {
-      toast.error("Please enter or load a ZPL template first");
+      toast.error(t("modals.printTag.zplRequiredPrint"));
       return;
     }
     if (tags.length === 0) {
-      toast.info("No tags to print");
+      toast.info(t("modals.printTag.noTagsToPrint"));
       return;
     }
     let connected = settings.qzStatus === "connected";
@@ -251,22 +253,22 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
       await markPrinted({ tag_ids: persistedTagIds });
     }
     await saveZplTemplate();
-    toast.success(`Printed ${printed} label(s)`);
+    toast.success(t("toasts.labelsPrinted", { count: printed }));
     onClose();
   };
 
   const handleSaveTemplate = async () => {
     if (!settings.rawZplCode.trim()) {
-      toast.error("Enter ZPL code before saving a template");
+      toast.error(t("modals.printTag.zplRequiredSave"));
       return;
     }
     const saved = await saveZplTemplate();
-    if (saved) toast.success("Template saved");
+    if (saved) toast.success(t("toasts.templateSaved"));
   };
 
   const handleMarkPrinted = async () => {
     if (persistedTagIds.length === 0) {
-      toast.info("No registered tags to mark");
+      toast.info(t("modals.printTag.noRegisteredTags"));
       return;
     }
     await markPrinted({ tag_ids: persistedTagIds });
@@ -279,12 +281,10 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Printer size={16} />
-            Print RFID labels
+            {t("modals.printTag.title")}
           </DialogTitle>
           <DialogDescription>
-            {tags.length > 0
-              ? `${tags.length} tag(s) queued · ZPL templates are saved per organization and reused across devices.`
-              : "No tags in the print queue. Queue tags from the register first."}
+            {tags.length > 0 ? t("modals.printTag.descriptionQueued", { count: tags.length }) : t("modals.printTag.descriptionEmpty")}
           </DialogDescription>
         </DialogHeader>
 
@@ -301,7 +301,7 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>ZPL code</Label>
+              <Label>{t("modals.printTag.zplCode")}</Label>
               <input
                 ref={zplFileInputRef}
                 accept=".zpl,.txt,text/plain"
@@ -316,7 +316,7 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
                 onClick={() => zplFileInputRef.current?.click()}
               >
                 <Upload className="h-4 w-4" />
-                Upload ZPL file
+                {t("modals.printTag.uploadZpl")}
               </Button>
             </div>
             <Textarea
@@ -333,7 +333,7 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
 
           {placeholders.length > 0 && (
             <div className="space-y-2">
-              <Label>Field mapping</Label>
+              <Label>{t("modals.printTag.fieldMapping")}</Label>
               {placeholders.map((fieldId) => (
                 <div
                   key={fieldId}
@@ -347,7 +347,9 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
                     }}
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Map to asset field…" />
+                      <SelectValue
+                        placeholder={t("modals.printTag.mapToAssetField")}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {FIELD_OPTIONS.map((option) => (
@@ -374,12 +376,12 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
               variant="outline"
               onClick={handlePreview}
             >
-              {settings.isLoadingPreview ? "Generating…" : "Generate preview"}
+              {settings.isLoadingPreview ? t("modals.printTag.generating") : t("modals.printTag.generatePreview")}
             </Button>
             {settings.previewImage && (
               <Image
                 unoptimized
-                alt="Label preview"
+                alt={t("modals.printTag.previewAlt")}
                 className="max-h-24 rounded border border-border"
                 height={96}
                 src={settings.previewImage}
@@ -390,7 +392,7 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
 
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1">
-              <Label>Printer</Label>
+              <Label>{t("modals.printTag.printer")}</Label>
               <div className="flex gap-2">
                 <Select
                   disabled={settings.availablePrinters.length === 0}
@@ -401,8 +403,8 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
                     <SelectValue
                       placeholder={
                         settings.availablePrinters.length === 0
-                          ? "Connect QZ Tray first"
-                          : "Select printer"
+                          ? t("modals.printTag.connectQzFirst")
+                          : t("modals.printTag.selectPrinter")
                       }
                     />
                   </SelectTrigger>
@@ -425,12 +427,12 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
                     }
                   }}
                 >
-                  {settings.qzStatus === "connected" ? "Disconnect" : "Connect"}
+                  {settings.qzStatus === "connected" ? t("modals.printTag.disconnect") : t("modals.printTag.connect")}
                 </Button>
               </div>
             </div>
             <div className="space-y-1">
-              <Label>Copies per tag</Label>
+              <Label>{t("modals.printTag.copiesPerTag")}</Label>
               <Input
                 max={10}
                 min={1}
@@ -452,7 +454,7 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
 
           {progress && (
             <div className="text-xs text-muted-foreground">
-              Printing… {progress.current}/{progress.total}
+              {t("modals.printTag.printingProgress", { current: progress.current, total: progress.total })}
             </div>
           )}
         </div>
@@ -464,7 +466,7 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
             type="button"
             onClick={onClose}
           >
-            Cancel
+            {t("modals.printTag.cancel")}
           </button>
           <button
             className="ks-btn ks-btn-ghost"
@@ -472,7 +474,7 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
             type="button"
             onClick={handleMarkPrinted}
           >
-            Mark printed
+            {t("modals.printTag.markPrinted")}
           </button>
           <button
             className="ks-btn ks-btn-primary"
@@ -485,7 +487,7 @@ export function PrintTagModal({ onClose, open }: PrintTagModalProps) {
             type="button"
             onClick={handlePrint}
           >
-            {progress ? "Printing…" : "Print labels"}
+            {progress ? t("modals.printTag.printing") : t("modals.printTag.printLabels")}
           </button>
         </DialogFooter>
       </DialogContent>

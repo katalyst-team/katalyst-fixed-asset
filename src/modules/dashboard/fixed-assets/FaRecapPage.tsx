@@ -1,6 +1,7 @@
 "use client";
 
 import { FileSpreadsheet } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useMemo, useState } from "react";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -28,6 +29,7 @@ interface ExportProgress {
 }
 
 export function FaRecapPage() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp, isError, isLoading } = useGetFADashboardQuery({
@@ -69,28 +71,28 @@ export function FaRecapPage() {
         sheets: [
           {
             columns: [
-              { key: "asset_code", label: "Code" },
-              { key: "name", label: "Name" },
-              { formatter: (v) => CAT_LABEL[v as FaAsset["cat"]] ?? String(v), key: "cat", label: "Category" },
-              { formatter: (v) => STATUS_LABEL[v as FaAsset["status"]] ?? String(v), key: "status", label: "Status" },
-              { key: "loc", label: "Location" },
-              { key: "custodian", label: "Custodian" },
-              { key: "serial", label: "Serial" },
-              { key: "epc", label: "EPC" },
-              { key: "purchased", label: "Purchased" },
-              { key: "val", label: "Value (IDR)" },
-              { key: "warranty", label: "Warranty" },
-              { key: "supplier", label: "Supplier" },
+              { key: "asset_code", label: t("page.recap.export.code") },
+              { key: "name", label: t("page.recap.export.name") },
+              { formatter: (v) => CAT_LABEL[v as FaAsset["cat"]] ?? String(v), key: "cat", label: t("page.recap.export.category") },
+              { formatter: (v) => STATUS_LABEL[v as FaAsset["status"]] ?? String(v), key: "status", label: t("page.recap.export.status") },
+              { key: "loc", label: t("page.recap.export.location") },
+              { key: "custodian", label: t("page.recap.export.custodian") },
+              { key: "serial", label: t("page.recap.export.serial") },
+              { key: "epc", label: t("page.recap.export.epc") },
+              { key: "purchased", label: t("page.recap.export.purchased") },
+              { key: "val", label: t("page.recap.export.value") },
+              { key: "warranty", label: t("page.recap.export.warranty") },
+              { key: "supplier", label: t("page.recap.export.supplier") },
             ],
             data: assets,
-            sheetName: "Assets",
+            sheetName: t("page.recap.export.sheetAssets"),
           },
           {
             columns: [
-              { key: "label", label: "Category" },
-              { key: "n", label: "Assets" },
-              { key: "v", label: "Value (IDR)" },
-              { key: "pct", label: "Share (%)" },
+              { key: "label", label: t("page.recap.export.category") },
+              { key: "n", label: t("page.recap.export.assets") },
+              { key: "v", label: t("page.recap.export.value") },
+              { key: "pct", label: t("page.recap.export.share") },
             ],
             data: catStats.map((c) => ({
               label: CAT_LABEL[c.cat] ?? c.cat,
@@ -98,18 +100,18 @@ export function FaRecapPage() {
               pct: c.pct,
               v: c.v,
             })),
-            sheetName: "Per category",
+            sheetName: t("page.recap.export.sheetCategory"),
           },
           {
             columns: [
-              { key: "n", label: "Site" },
-              { key: "city", label: "City" },
-              { key: "assets", label: "Assets" },
-              { key: "val", label: "Value (IDR)" },
-              { key: "pct", label: "Share (%)" },
+              { key: "n", label: t("page.recap.export.site") },
+              { key: "city", label: t("page.recap.export.city") },
+              { key: "assets", label: t("page.recap.export.assets") },
+              { key: "val", label: t("page.recap.export.value") },
+              { key: "pct", label: t("page.recap.export.share") },
             ],
             data: sites,
-            sheetName: "Per site",
+            sheetName: t("page.recap.export.sheetSite"),
           },
         ],
       });
@@ -136,23 +138,23 @@ export function FaRecapPage() {
             onClick={handleExport}
           >
             <FileSpreadsheet size={14} />
-            Export Excel
+            {t("page.recap.exportExcel")}
           </button>
         }
-        desc="Asset totals, category breakdown, and site breakdown — exportable to Excel."
-        title="Asset Recap"
+        desc={t("page.recap.desc")}
+        title={t("page.recap.title")}
       />
 
       <FaKpiStrip>
-        <FaStat label="Total assets" tone="brand" value={String(data?.total_assets ?? "—")} />
-        <FaStat label="Total acquisition" tone="info" value={data ? formatIDRShort(data.total_acquisition) : "—"} />
-        <FaStat label="Net book value" tone="success" value={data ? formatIDRShort(data.net_book_value) : "—"} />
-        <FaStat label="Utilization" sub="assets in use" tone="warn" value={data ? `${data.utilization_pct}%` : "—"} />
+        <FaStat label={t("page.recap.kpi.totalAssets")} tone="brand" value={String(data?.total_assets ?? "—")} />
+        <FaStat label={t("page.recap.kpi.totalAcquisition")} tone="info" value={data ? formatIDRShort(data.total_acquisition) : "—"} />
+        <FaStat label={t("page.recap.kpi.nbv")} tone="success" value={data ? formatIDRShort(data.net_book_value) : "—"} />
+        <FaStat label={t("page.recap.kpi.utilization")} sub={t("page.recap.kpi.utilizationSub")} tone="warn" value={data ? `${data.utilization_pct}%` : "—"} />
       </FaKpiStrip>
 
       <FaQueryState
-        emptyDescription="No recap data available yet."
-        emptyTitle="Nothing to recap"
+        emptyDescription={t("page.recap.emptyDesc")}
+        emptyTitle={t("page.recap.emptyTitle")}
         isEmpty={catStats.length === 0 && sites.length === 0}
         isError={isError}
         isLoading={isLoading}
@@ -160,16 +162,16 @@ export function FaRecapPage() {
         <div className="grid gap-4 lg:grid-cols-2">
           <div className="ks-card">
             <div className="ks-card-head">
-              <div className="ks-card-title">Recap per category</div>
+              <div className="ks-card-title">{t("page.recap.perCategory")}</div>
             </div>
             <div className="ks-card-body">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-[11px] uppercase tracking-wide text-muted-foreground">
-                    <th className="pb-2">Category</th>
-                    <th className="pb-2 text-right">Assets</th>
-                    <th className="pb-2 text-right">Value</th>
-                    <th className="pb-2 text-right">Share</th>
+                    <th className="pb-2">{t("page.register.columns.category")}</th>
+                    <th className="pb-2 text-right">{t("page.recap.columns.assets")}</th>
+                    <th className="pb-2 text-right">{t("page.recap.columns.value")}</th>
+                    <th className="pb-2 text-right">{t("page.recap.columns.share")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -191,17 +193,17 @@ export function FaRecapPage() {
 
           <div className="ks-card">
             <div className="ks-card-head">
-              <div className="ks-card-title">Recap per site</div>
+              <div className="ks-card-title">{t("page.recap.perSite")}</div>
             </div>
             <div className="ks-card-body">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-[11px] uppercase tracking-wide text-muted-foreground">
-                    <th className="pb-2">Site</th>
-                    <th className="pb-2">City</th>
-                    <th className="pb-2 text-right">Assets</th>
-                    <th className="pb-2 text-right">Value</th>
-                    <th className="pb-2 text-right">Share</th>
+                    <th className="pb-2">{t("page.recap.columns.site")}</th>
+                    <th className="pb-2">{t("page.recap.columns.city")}</th>
+                    <th className="pb-2 text-right">{t("page.recap.columns.assets")}</th>
+                    <th className="pb-2 text-right">{t("page.recap.columns.value")}</th>
+                    <th className="pb-2 text-right">{t("page.recap.columns.share")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -232,13 +234,13 @@ export function FaRecapPage() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Exporting recap</DialogTitle>
+            <DialogTitle>{t("page.recap.exportingTitle")}</DialogTitle>
           </DialogHeader>
           <Progress value={progressPct} />
           <p className="text-sm text-muted-foreground">
             {progress?.phase === "write"
-              ? "Generating Excel file…"
-              : `Fetching assets ${progress?.done ?? 0}/${progress?.total ?? 0} (batches of ${BATCH_SIZE})…`}
+              ? t("page.recap.generating")
+              : t("page.recap.fetching", { batch: BATCH_SIZE, done: progress?.done ?? 0, total: progress?.total ?? 0 })}
           </p>
         </DialogContent>
       </Dialog>

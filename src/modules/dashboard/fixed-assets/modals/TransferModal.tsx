@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftRight } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -40,21 +42,13 @@ import {
   useFaPeopleOptions,
 } from "@/modules/dashboard/fixed-assets/modals/types";
 
-const formSchema = z.object({
-  assetId: z.string().min(1, "Asset is required"),
-  custodian: z.string().optional(),
-  reason: z.string().optional(),
-  toLoc: z.string().min(1, "Destination location is required"),
-});
-
-type FormValues = z.infer<typeof formSchema>;
-
 interface TransferModalProps {
   onClose: () => void;
   open: boolean;
 }
 
 export function TransferModal({ onClose, open }: TransferModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp } = useGetAssetRegisterQuery({ organizationId });
@@ -64,6 +58,15 @@ export function TransferModal({ onClose, open }: TransferModalProps) {
   const locationOptions = useFaLocationOptions();
   const peopleOptions = useFaPeopleOptions();
   const assets = resp?.data ?? [];
+
+  const formSchema = z.object({
+    assetId: z.string().min(1, t("modals.transfer.assetRequired")),
+    custodian: z.string().optional(),
+    reason: z.string().optional(),
+    toLoc: z.string().min(1, t("modals.transfer.toLocRequired")),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -90,6 +93,7 @@ export function TransferModal({ onClose, open }: TransferModalProps) {
       from_loc: asset?.loc ?? "",
       to_loc: values.toLoc,
     });
+    toast.success(t("toasts.transferCreated"));
     onClose();
   };
 
@@ -99,10 +103,10 @@ export function TransferModal({ onClose, open }: TransferModalProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <ArrowLeftRight size={18} />
-            Create Transfer
+            {t("modals.transfer.title")}
           </DialogTitle>
           <DialogDescription>
-            Move an asset to a new location and custodian.
+            {t("modals.transfer.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -113,11 +117,11 @@ export function TransferModal({ onClose, open }: TransferModalProps) {
               name="assetId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Asset</FormLabel>
+                  <FormLabel>{t("modals.transfer.assetLabel")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select asset" />
+                        <SelectValue placeholder={t("modals.transfer.assetPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -129,8 +133,7 @@ export function TransferModal({ onClose, open }: TransferModalProps) {
                     </SelectContent>
                   </Select>
                   <p className="text-xs text-muted-foreground">
-                    Need to move several assets? Use the transfer register for
-                    bulk moves.
+                    {t("modals.transfer.bulkHint")}
                   </p>
                   <FormMessage />
                 </FormItem>
@@ -139,7 +142,7 @@ export function TransferModal({ onClose, open }: TransferModalProps) {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label>From location</Label>
+                <Label>{t("modals.transfer.fromLabel")}</Label>
                 <Input
                   disabled
                   placeholder="—"
@@ -152,14 +155,14 @@ export function TransferModal({ onClose, open }: TransferModalProps) {
                 name="toLoc"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>To location</FormLabel>
+                    <FormLabel>{t("modals.transfer.toLabel")}</FormLabel>
                     <Select
                       value={field.value}
                       onValueChange={field.onChange}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select location" />
+                          <SelectValue placeholder={t("modals.transfer.toPlaceholder")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -181,20 +184,20 @@ export function TransferModal({ onClose, open }: TransferModalProps) {
               name="custodian"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New custodian</FormLabel>
+                  <FormLabel>{t("modals.transfer.custodianLabel")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select custodian" />
+                        <SelectValue placeholder={t("modals.transfer.custodianPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
-                      <SelectContent>
-                        {peopleOptions.map((p) => (
-                          <SelectItem key={p.value} value={p.value}>
-                            {p.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
+                    <SelectContent>
+                      {peopleOptions.map((p) => (
+                        <SelectItem key={p.value} value={p.value}>
+                          {p.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                   <FormMessage />
                 </FormItem>
@@ -206,10 +209,10 @@ export function TransferModal({ onClose, open }: TransferModalProps) {
               name="reason"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Reason (optional)</FormLabel>
+                  <FormLabel>{t("modals.transfer.reasonLabel")}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="e.g. Reassignment to project team"
+                      placeholder={t("modals.transfer.reasonPlaceholder")}
                       {...field}
                     />
                   </FormControl>
@@ -219,8 +222,7 @@ export function TransferModal({ onClose, open }: TransferModalProps) {
             />
 
             <p className="rounded-lg bg-muted/40 p-3 text-xs text-muted-foreground">
-              Moves within the same cost center are auto-approved. Cross-cost-center
-              transfers route to the PIC + Finance.
+              {t("modals.transfer.approvalNote")}
             </p>
 
             <DialogFooter>
@@ -229,13 +231,13 @@ export function TransferModal({ onClose, open }: TransferModalProps) {
                 type="button"
                 onClick={onClose}
               >
-                Cancel
+                {t("modals.transfer.cancel")}
               </Button>
               <Button
                 className={cn("ks-btn ks-btn-primary")}
                 type="submit"
               >
-                Create transfer
+                {t("modals.transfer.submit")}
               </Button>
             </DialogFooter>
           </form>

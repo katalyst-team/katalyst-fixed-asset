@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronRight, Trash2 } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -40,11 +42,11 @@ import { formatIDRShort } from "@/modules/dashboard/fixed-assets/helpers";
 import type { FaAsset, FaDisposalReason } from "@/types/fixed-assets";
 
 const APPROVAL_CHAIN = [
-  "Requester",
-  "Dept Head",
-  "Finance Manager",
-  "CFO",
-  "BAST + GL post",
+  "modals.disposal.approvalRequester",
+  "modals.disposal.approvalDeptHead",
+  "modals.disposal.approvalFinanceManager",
+  "modals.disposal.approvalCfo",
+  "modals.disposal.approvalBastGlPost",
 ];
 
 const DISPOSAL_METHODS = [
@@ -57,14 +59,15 @@ const DISPOSAL_METHODS = [
   "Sold · direct",
 ];
 
-const formSchema = z.object({
-  assetId: z.string().min(1, "Asset is required"),
-  method: z.string().optional(),
-  reason: z.string().min(1, "Reason is required"),
-  recovery: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+const METHOD_LABELS: Record<string, string> = {
+  "Donated": "modals.disposal.methodDonated",
+  "Lost / written off": "modals.disposal.methodLostWrittenOff",
+  "Obsolete · end of life": "modals.disposal.methodObsoleteEol",
+  "Return to vendor": "modals.disposal.methodReturnToVendor",
+  "Scrapped / e-waste": "modals.disposal.methodScrappedEwaste",
+  "Sold · auction": "modals.disposal.methodSoldAuction",
+  "Sold · direct": "modals.disposal.methodSoldDirect",
+};
 
 interface DisposalRequestModalProps {
   onClose: () => void;
@@ -75,6 +78,7 @@ export function DisposalRequestModal({
   onClose,
   open,
 }: DisposalRequestModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp } = useGetAssetRegisterQuery({ organizationId });
@@ -82,6 +86,15 @@ export function DisposalRequestModal({
     organizationId,
   });
   const assets = resp?.data ?? [];
+
+  const formSchema = z.object({
+    assetId: z.string().min(1, t("modals.disposal.assetRequired")),
+    method: z.string().optional(),
+    reason: z.string().min(1, t("modals.disposal.reasonRequired")),
+    recovery: z.string().optional(),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -111,6 +124,7 @@ export function DisposalRequestModal({
       reason: (values.method || "obsolete").toLowerCase() as FaDisposalReason,
       recovery_value: values.recovery ? Number(values.recovery) : 0,
     });
+    toast.success(t("toasts.disposalSubmitted"));
     onClose();
   };
 
@@ -120,11 +134,10 @@ export function DisposalRequestModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Trash2 size={18} />
-            Disposal Request
+            {t("modals.disposal.title")}
           </DialogTitle>
           <DialogDescription>
-            Route an asset through the disposal approval workflow. The RFID tag
-            is retired on final sign-off.
+            {t("modals.disposal.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -135,11 +148,11 @@ export function DisposalRequestModal({
               name="assetId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Asset</FormLabel>
+                  <FormLabel>{t("modals.disposal.assetLabel")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select asset" />
+                        <SelectValue placeholder={t("modals.disposal.assetPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -164,13 +177,17 @@ export function DisposalRequestModal({
                   </div>
                 </div>
                 <div className="rounded-lg border border-border bg-muted/30 p-3">
-                  <div className="text-xs text-muted-foreground">Location</div>
+                  <div className="text-xs text-muted-foreground">
+                    {t("modals.disposal.locationLabel")}
+                  </div>
                   <div className="mt-0.5 truncate text-sm font-medium">
                     {asset.loc}
                   </div>
                 </div>
                 <div className="rounded-lg border border-border bg-muted/30 p-3">
-                  <div className="text-xs text-muted-foreground">Custodian</div>
+                  <div className="text-xs text-muted-foreground">
+                    {t("modals.disposal.custodianLabel")}
+                  </div>
                   <div className="mt-0.5 truncate text-sm font-medium">
                     {asset.custodian}
                   </div>
@@ -183,17 +200,17 @@ export function DisposalRequestModal({
               name="method"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Disposal method</FormLabel>
+                  <FormLabel>{t("modals.disposal.methodLabel")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select method" />
+                        <SelectValue placeholder={t("modals.disposal.methodPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {DISPOSAL_METHODS.map((m) => (
                         <SelectItem key={m} value={m}>
-                          {m}
+                          {t(METHOD_LABELS[m])}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -208,7 +225,7 @@ export function DisposalRequestModal({
               name="recovery"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Recovery value (optional)</FormLabel>
+                  <FormLabel>{t("modals.disposal.recoveryLabel")}</FormLabel>
                   <FormControl>
                     <Input
                       min={0}
@@ -218,7 +235,7 @@ export function DisposalRequestModal({
                     />
                   </FormControl>
                   <p className="text-xs text-muted-foreground">
-                    Expected proceeds from sale or trade-in. Leave blank if none.
+                    {t("modals.disposal.recoveryHint")}
                   </p>
                   <FormMessage />
                 </FormItem>
@@ -230,10 +247,10 @@ export function DisposalRequestModal({
               name="reason"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Reason</FormLabel>
+                  <FormLabel>{t("modals.disposal.reasonLabel")}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Explain why this asset should be disposed…"
+                      placeholder={t("modals.disposal.reasonPlaceholder")}
                       {...field}
                     />
                   </FormControl>
@@ -243,12 +260,12 @@ export function DisposalRequestModal({
             />
 
             <div className="space-y-1.5">
-              <Label>Approval chain</Label>
+              <Label>{t("modals.disposal.approvalChainLabel")}</Label>
               <div className="flex flex-wrap items-center gap-1.5">
                 {APPROVAL_CHAIN.map((step, i) => (
                   <div key={step} className="flex items-center gap-1.5">
                     <span className="ks-badge brand">
-                      {i + 1} · {step}
+                      {i + 1} · {t(step)}
                     </span>
                     {i < APPROVAL_CHAIN.length - 1 && (
                       <ChevronRight className="text-muted-foreground" size={14} />
@@ -259,9 +276,7 @@ export function DisposalRequestModal({
             </div>
 
             <p className="rounded-lg bg-muted/40 p-3 text-xs text-muted-foreground">
-              On final approval the RFID tag is deactivated (kill password), the
-              loss/gain entry posts to the GL, and the signed BAST PDF is emailed
-              to all approvers.
+              {t("modals.disposal.glNote")}
             </p>
 
             <DialogFooter>
@@ -270,13 +285,13 @@ export function DisposalRequestModal({
                 type="button"
                 onClick={onClose}
               >
-                Cancel
+                {t("modals.disposal.cancel")}
               </Button>
               <Button
                 className={cn("ks-btn ks-btn-primary")}
                 type="submit"
               >
-                Submit for approval
+                {t("modals.disposal.submit")}
               </Button>
             </DialogFooter>
           </form>

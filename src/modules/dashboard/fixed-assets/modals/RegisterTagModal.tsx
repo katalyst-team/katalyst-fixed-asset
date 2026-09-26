@@ -1,6 +1,7 @@
 "use client";
 
 import { Tag } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -35,6 +36,7 @@ interface RegisterTagModalProps {
 const TAG_TYPES = ["passive", "anti-metal", "industrial"] as const;
 
 export function RegisterTagModal({ onClose, open }: RegisterTagModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { data: resp, isLoading: isLoadingAssets } = useGetAssetRegisterQuery({
@@ -53,12 +55,12 @@ export function RegisterTagModal({ onClose, open }: RegisterTagModalProps) {
 
   const handleSubmit = async () => {
     if (!selectedAsset) {
-      toast.error("Select an asset first");
+      toast.error(t("modals.registerTag.selectAssetFirst"));
       return;
     }
     const scannedEpc = epc.trim().toUpperCase();
     if (scannedEpc && !/^[0-9A-F]{24}$/.test(scannedEpc)) {
-      toast.error("EPC must be 24 hex characters");
+      toast.error(t("modals.registerTag.epcInvalid"));
       return;
     }
     const result = await encodeTag({
@@ -67,7 +69,7 @@ export function RegisterTagModal({ onClose, open }: RegisterTagModalProps) {
       tag_type: tagType,
     });
     if (result?.data?.epc) {
-      toast.success(`Tag registered · EPC ${result.data.epc}`);
+      toast.success(t("toasts.tagRegistered", { epc: result.data.epc }));
     }
     setEpc("");
     onClose();
@@ -79,17 +81,16 @@ export function RegisterTagModal({ onClose, open }: RegisterTagModalProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Tag size={16} />
-            Register RFID tag
+            {t("modals.registerTag.title")}
           </DialogTitle>
           <DialogDescription>
-            Manually register a tag to an asset without RFID hardware. An EPC
-            is generated from the asset code when no EPC is scanned or typed.
+            {t("modals.registerTag.description")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Asset</Label>
+            <Label>{t("modals.registerTag.asset")}</Label>
             <Select
               value={assetId}
               onValueChange={(v) => {
@@ -98,7 +99,11 @@ export function RegisterTagModal({ onClose, open }: RegisterTagModalProps) {
             >
               <SelectTrigger className="w-full">
                 <SelectValue
-                  placeholder={isLoadingAssets ? "Loading assets…" : "Select asset"}
+                  placeholder={
+                    isLoadingAssets
+                      ? t("modals.registerTag.loadingAssets")
+                      : t("modals.registerTag.selectAsset")
+                  }
                 />
               </SelectTrigger>
               <SelectContent>
@@ -116,14 +121,14 @@ export function RegisterTagModal({ onClose, open }: RegisterTagModalProps) {
             <FaDesktopReaderPanel onEpc={setEpc} />
             <input
               className="w-full rounded-lg border border-border bg-transparent px-3 py-1.5 font-mono text-xs uppercase outline-none focus:border-[hsl(var(--brand))]"
-              placeholder="Scan a tag or type 24-hex EPC (optional)"
+              placeholder={t("modals.registerTag.epcPlaceholder")}
               value={epc}
               onChange={(e) => setEpc(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <Label>Tag type</Label>
+            <Label>{t("modals.registerTag.tagType")}</Label>
             <Select
               value={tagType}
               onValueChange={(v) => {
@@ -131,12 +136,14 @@ export function RegisterTagModal({ onClose, open }: RegisterTagModalProps) {
               }}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select tag type" />
+                <SelectValue
+                  placeholder={t("modals.registerTag.selectTagType")}
+                />
               </SelectTrigger>
               <SelectContent>
-                {TAG_TYPES.map((t) => (
-                  <SelectItem key={t} value={t}>
-                    {t}
+                {TAG_TYPES.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -151,7 +158,7 @@ export function RegisterTagModal({ onClose, open }: RegisterTagModalProps) {
             type="button"
             onClick={onClose}
           >
-            Cancel
+            {t("modals.registerTag.cancel")}
           </button>
           <button
             className="ks-btn ks-btn-primary"
@@ -159,7 +166,9 @@ export function RegisterTagModal({ onClose, open }: RegisterTagModalProps) {
             type="button"
             onClick={handleSubmit}
           >
-            {isEncoding ? "Registering…" : "Register tag"}
+            {isEncoding
+              ? t("modals.registerTag.registering")
+              : t("modals.registerTag.registerTag")}
           </button>
         </DialogFooter>
       </DialogContent>

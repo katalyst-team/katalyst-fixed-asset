@@ -1,6 +1,7 @@
 "use client";
 
 import { Calendar, Download, FileText, Play, Shield } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import {
@@ -35,19 +36,22 @@ import {
 import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { safeOpenUrl } from "@/modules/dashboard/fixed-assets/safeOpenUrl";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 
 type Tab = "depreciation" | "journal" | "bast" | "insurance";
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: "depreciation", label: "Depreciation" },
-  { id: "journal", label: "Journal Entries" },
-  { id: "bast", label: "BAST Documents" },
-  { id: "insurance", label: "Insurance" },
+  { id: "depreciation", label: "page.finance.tabs.depreciation" },
+  { id: "journal", label: "page.finance.tabs.journal" },
+  { id: "bast", label: "page.finance.tabs.bast" },
+  { id: "insurance", label: "page.finance.tabs.insurance" },
 ];
 
 function DepreciationTab({ organizationId }: { organizationId: string }) {
+  const { t } = useTranslation("fixed-assets");
   const { data: resp, isError, isLoading } = useGetDepreciationScheduleQuery({ organizationId });
   const schedules = resp?.data?.schedules ?? [];
+  const { canManage } = useFaPermission();
   const { isPending: isRunning, mutateAsync: runDepreciation } = useRunDepreciationMutation({ organizationId });
 
   const handleRunDepreciation = async () => {
@@ -58,43 +62,45 @@ function DepreciationTab({ organizationId }: { organizationId: string }) {
     <FaQueryState isEmpty={schedules.length === 0} isError={isError} isLoading={isLoading}>
       <div style={{ alignItems: "center", display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
         <div className="text-xs text-muted-foreground">
-          {schedules.length} schedules · straight-line PSAK 16
+          {t("page.finance.depreciation.count", { count: schedules.length })}
         </div>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <button
-              className="ks-btn ks-btn-sm ks-btn-primary"
-              disabled={isRunning}
-              type="button"
-            >
-              <Play size={12} />
-              {isRunning ? "Posting…" : "Run depreciation"}
-            </button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Post depreciation for this fiscal year?</AlertDialogTitle>
-              <AlertDialogDescription>
-                All unposted depreciation schedules for the current year will be posted, asset net book values updated, and a journal entry created. This cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <Button onClick={handleRunDepreciation}>Run depreciation</Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        {canManage && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button
+                className="ks-btn ks-btn-sm ks-btn-primary"
+                disabled={isRunning}
+                type="button"
+              >
+                <Play size={12} />
+                {isRunning ? t("page.finance.depreciation.posting") : t("page.finance.depreciation.run")}
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{t("page.finance.depreciation.confirmTitle")}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {t("page.finance.depreciation.confirmDesc")}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>{t("page.finance.depreciation.cancel")}</AlertDialogCancel>
+                <Button onClick={handleRunDepreciation}>{t("page.finance.depreciation.run")}</Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </div>
       <table className="w-full">
         <thead>
           <tr style={{ borderBottom: "1px solid hsl(var(--border))" }}>
-            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Asset</th>
-            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Category</th>
-            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Method</th>
-            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Acquisition</th>
-            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Monthly Depr.</th>
-            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Net Book Value</th>
-            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Progress</th>
+            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.register.columns.asset")}</th>
+            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.register.columns.category")}</th>
+            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.finance.depreciation.columns.method")}</th>
+            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.finance.depreciation.columns.acquisition")}</th>
+            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.finance.depreciation.columns.monthly")}</th>
+            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.finance.kpi.nbv")}</th>
+            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.finance.depreciation.columns.progress")}</th>
           </tr>
         </thead>
         <tbody>
@@ -113,7 +119,7 @@ function DepreciationTab({ organizationId }: { organizationId: string }) {
                 <div style={{ minWidth: 80 }}>
                   <FaMeter pct={sch.usefulLife > 0 ? Math.round(((sch.usefulLife - sch.remainingLife) / sch.usefulLife) * 100) : 0} tone={sch.remainingLife < 12 ? "danger" : sch.remainingLife < 36 ? "warn" : "brand"} />
                   <div className="text-xs text-muted-foreground mt-1">
-                    {sch.ageYears}y / {sch.usefulLife}y
+                    {t("page.finance.depreciation.age", { age: sch.ageYears, life: sch.usefulLife })}
                   </div>
                 </div>
               </td>
@@ -126,8 +132,10 @@ function DepreciationTab({ organizationId }: { organizationId: string }) {
 }
 
 function JournalTab({ organizationId }: { organizationId: string }) {
+  const { t } = useTranslation("fixed-assets");
   const { data: resp, isError, isLoading } = useGetJournalEntriesQuery({ organizationId });
   const entries = resp?.data?.journal_entries ?? [];
+  const { canManage } = useFaPermission();
   const { isPending: isPosting, mutateAsync: postJournalEntry } = usePostJournalEntryMutation({ organizationId });
 
   const handlePost = async (journalEntryId: string) => {
@@ -139,13 +147,13 @@ function JournalTab({ organizationId }: { organizationId: string }) {
       <table className="w-full">
         <thead>
           <tr style={{ borderBottom: "1px solid hsl(var(--border))" }}>
-            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Reference</th>
-            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Type</th>
-            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Account</th>
-            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Debit</th>
-            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Credit</th>
-            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
-            <th className="text-right p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Action</th>
+            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.finance.journal.columns.reference")}</th>
+            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.finance.journal.columns.type")}</th>
+            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.finance.journal.columns.account")}</th>
+            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.finance.journal.columns.debit")}</th>
+            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.finance.journal.columns.credit")}</th>
+            <th className="text-left p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.register.columns.status")}</th>
+            <th className="text-right p-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("page.finance.journal.columns.action")}</th>
           </tr>
         </thead>
         <tbody>
@@ -170,14 +178,14 @@ function JournalTab({ organizationId }: { organizationId: string }) {
                 </span>
               </td>
               <td className="p-3 text-right">
-                {entry.status === "pending" && (
+                {canManage && entry.status === "pending" && (
                   <button
                     className="ks-btn ks-btn-sm"
                     disabled={isPosting}
                     type="button"
                     onClick={() => handlePost(entry.id)}
                   >
-                    Post
+                    {t("page.finance.journal.post")}
                   </button>
                 )}
               </td>
@@ -190,6 +198,7 @@ function JournalTab({ organizationId }: { organizationId: string }) {
 }
 
 function BastTab({ organizationId }: { organizationId: string }) {
+  const { t } = useTranslation("fixed-assets");
   const { data: resp, isError, isLoading } = useGetBastDocumentsQuery({ organizationId });
   const documents = resp?.data?.documents ?? [];
 
@@ -204,7 +213,7 @@ function BastTab({ organizationId }: { organizationId: string }) {
             <div style={{ flex: 1, minWidth: 0 }}>
               <div className="font-semibold text-sm">{doc.document_type} · {doc.reference_type}</div>
               <div className="text-xs text-muted-foreground">
-                Recipient: {doc.recipient_name} ({doc.recipient_role}) · Handover: {doc.handover_date ?? "—"}
+                {t("page.finance.bast.recipient", { date: doc.handover_date ?? "—", name: doc.recipient_name, role: doc.recipient_role })}
               </div>
             </div>
             <span className={`ks-badge ${doc.status === "signed" ? "success" : doc.status === "pending-signature" ? "warn" : "outline"}`}>
@@ -213,7 +222,7 @@ function BastTab({ organizationId }: { organizationId: string }) {
             {doc.file_url && (
               <button className="ks-btn ks-btn-sm" type="button" onClick={() => safeOpenUrl(doc.file_url)}>
                 <Download size={12} />
-                Download
+                {t("page.finance.bast.download")}
               </button>
             )}
           </div>
@@ -224,6 +233,7 @@ function BastTab({ organizationId }: { organizationId: string }) {
 }
 
 function InsuranceTab({ organizationId }: { organizationId: string }) {
+  const { t } = useTranslation("fixed-assets");
   const { data: resp, isError, isLoading } = useGetInsurancePoliciesQuery({ organizationId });
   const policies = resp?.data?.policies ?? [];
 
@@ -243,30 +253,30 @@ function InsuranceTab({ organizationId }: { organizationId: string }) {
             </div>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div>
-                <div className="text-xs text-muted-foreground">Policy</div>
+                <div className="text-xs text-muted-foreground">{t("page.finance.insurance.policy")}</div>
                 <div className="font-mono">{policy.policy_number}</div>
               </div>
               <div>
-                <div className="text-xs text-muted-foreground">Type</div>
+                <div className="text-xs text-muted-foreground">{t("page.finance.insurance.type")}</div>
                 <div>{policy.policy_type}</div>
               </div>
               <div>
-                <div className="text-xs text-muted-foreground">Coverage</div>
+                <div className="text-xs text-muted-foreground">{t("page.finance.insurance.coverage")}</div>
                 <div className="font-mono">{formatIDRShort(policy.coverage_amount)}</div>
               </div>
               <div>
-                <div className="text-xs text-muted-foreground">Premium</div>
+                <div className="text-xs text-muted-foreground">{t("page.finance.insurance.premium")}</div>
                 <div className="font-mono">{formatIDR(policy.premium)}</div>
               </div>
               <div>
-                <div className="text-xs text-muted-foreground">Expiry</div>
+                <div className="text-xs text-muted-foreground">{t("page.finance.insurance.expiry")}</div>
                 <div className="flex items-center gap-1">
                   <Calendar size={11} />
                   {policy.expiry_date ?? "—"}
                 </div>
               </div>
               <div>
-                <div className="text-xs text-muted-foreground">Assets</div>
+                <div className="text-xs text-muted-foreground">{t("page.finance.insurance.assets")}</div>
                 <div>{policy.asset_count}</div>
               </div>
             </div>
@@ -278,6 +288,7 @@ function InsuranceTab({ organizationId }: { organizationId: string }) {
 }
 
 export function FaFinancePage() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const [tab, setTab] = useState<Tab>("depreciation");
@@ -294,21 +305,21 @@ export function FaFinancePage() {
   return (
     <div>
       <FaShellHead
-        desc="PSAK 16 compliant depreciation, GL journal entries, BAST documents, and insurance"
-        title="Financial Integration"
+        desc={t("page.finance.desc")}
+        title={t("page.finance.title")}
       />
 
       <FaKpiStrip>
-        <FaStat label="Total Acquisition" tone="brand" value={summary ? formatIDRShort(summary.total_acquisition) : "—"} />
-        <FaStat label="Net Book Value" tone="success" value={summary ? formatIDRShort(summary.net_book_value) : "—"} />
-        <FaStat label="Pending Postings" sub="journal entries" tone={pendingPostings && pendingPostings > 0 ? "warn" : "success"} value={String(pendingPostings ?? 0)} />
-        <FaStat label="GL Status" tone="info" value="—" />
+        <FaStat label={t("page.finance.kpi.totalAcquisition")} tone="brand" value={summary ? formatIDRShort(summary.total_acquisition) : "—"} />
+        <FaStat label={t("page.finance.kpi.nbv")} tone="success" value={summary ? formatIDRShort(summary.net_book_value) : "—"} />
+        <FaStat label={t("page.finance.kpi.pendingPostings")} sub={t("page.finance.kpi.pendingPostingsSub")} tone={pendingPostings && pendingPostings > 0 ? "warn" : "success"} value={String(pendingPostings ?? 0)} />
+        <FaStat label={t("page.finance.kpi.glStatus")} tone="info" value="—" />
       </FaKpiStrip>
 
       <div className="ks-seg" style={{ marginBottom: 16 }}>
-        {TABS.map((t) => (
-          <button key={t.id} className={tab === t.id ? "on" : ""} type="button" onClick={() => setTab(t.id)}>
-            {t.label}
+        {TABS.map((tb) => (
+          <button key={tb.id} className={tab === tb.id ? "on" : ""} type="button" onClick={() => setTab(tb.id)}>
+            {t(tb.label)}
           </button>
         ))}
       </div>

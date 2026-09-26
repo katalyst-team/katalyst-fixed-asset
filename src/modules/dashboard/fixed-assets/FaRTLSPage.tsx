@@ -2,6 +2,7 @@
 
 import { MapPin, Pencil, Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -34,8 +35,10 @@ import {
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { FloorPlanEditor, PulseDot, ROOM_TONE } from "@/modules/dashboard/fixed-assets/FaRTLSFloorPlanEditor";
 import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 
 export function FaRTLSPage() {
+  const { t } = useTranslation("fixed-assets");
   const router = useRouter();
   const { openModal } = useFaModal();
   const { tokenPayload } = useUser();
@@ -81,6 +84,7 @@ export function FaRTLSPage() {
   const { mutateAsync: deleteSavedQuery } = useDeleteSavedQueryMutation({
     organizationId,
   });
+  const { canCreate, canDelete } = useFaPermission();
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
 
@@ -120,13 +124,13 @@ export function FaRTLSPage() {
   const selectedAsset = selectedPosition ? assetById.get(selectedPosition.asset_id) : undefined;
   const infoRows = selectedPosition
     ? [
-        { k: "Asset", v: selectedPosition.name },
-        { k: "Asset ID", v: selectedPosition.asset_id },
-        { k: "Site / Floor", v: `${siteId} · Floor ${floor}` },
-        { k: "Custodian", v: selectedAsset?.custodian ?? "—" },
-        { k: "Last seen", v: selectedPosition.last_seen },
-        { k: "Accuracy", v: `±${selectedPosition.accuracy_m.toFixed(1)} m` },
-        { k: "Value", v: selectedAsset ? formatIDRShort(selectedAsset.val) : "—" },
+        { k: t("page.rtls.info.asset"), v: selectedPosition.name },
+        { k: t("page.rtls.info.assetId"), v: selectedPosition.asset_id },
+        { k: t("page.rtls.info.siteFloor"), v: t("page.rtls.siteFloor", { floor, site: siteId }) },
+        { k: t("page.rtls.info.custodian"), v: selectedAsset?.custodian ?? "—" },
+        { k: t("page.rtls.info.lastSeen"), v: selectedPosition.last_seen },
+        { k: t("page.rtls.info.accuracy"), v: `±${selectedPosition.accuracy_m.toFixed(1)} m` },
+        { k: t("page.rtls.info.value"), v: selectedAsset ? formatIDRShort(selectedAsset.val) : "—" },
       ]
     : [];
 
@@ -159,7 +163,7 @@ export function FaRTLSPage() {
               onClick={() => openModal("locateAsset")}
             >
               <Search size={14} />
-              Locate asset
+              {t("page.rtls.locateAsset")}
             </button>
             <Select
               value={siteId ? `${siteId}|${floor}` : ""}
@@ -170,7 +174,7 @@ export function FaRTLSPage() {
             >
               <SelectTrigger className="w-[190px]">
                 <SelectValue
-                  placeholder={locations.length > 0 ? "Select location" : "No saved location"}
+                  placeholder={locations.length > 0 ? t("page.rtls.selectLocation") : t("page.rtls.noSavedLocation")}
                 />
               </SelectTrigger>
               <SelectContent>
@@ -179,24 +183,24 @@ export function FaRTLSPage() {
                     key={`${l.site_id}|${l.floor}`}
                     value={`${l.site_id}|${l.floor}`}
                   >
-                    {l.site_id} · Floor {l.floor}
+                    {t("page.rtls.siteFloor", { floor: l.floor, site: l.site_id })}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </>
         }
-        desc="Indoor positioning via BLE anchors · ±0.4 m accuracy · live"
-        title="Real-Time Asset Location"
+        desc={t("page.rtls.description")}
+        title={t("page.rtls.title")}
       />
 
       <FaKpiStrip>
-        <FaStat label="Tracked assets" tone="brand" value={String(positions.length)} />
-        <FaStat label="Accuracy" tone="info" value={avgAccuracy ? `±${avgAccuracy} m` : "—"} />
-        <FaStat label="Zones" tone="success" value={String(rtlsSummary?.zones_active ?? "—")} />
+        <FaStat label={t("page.rtls.kpi.tracked")} tone="brand" value={String(positions.length)} />
+        <FaStat label={t("page.rtls.kpi.accuracy")} tone="info" value={avgAccuracy ? `±${avgAccuracy} m` : "—"} />
+        <FaStat label={t("page.rtls.kpi.zones")} tone="success" value={String(rtlsSummary?.zones_active ?? "—")} />
         <FaStat
-          label="Missing >24h"
-          sub="needs attention"
+          label={t("page.rtls.kpi.missing24h")}
+          sub={t("page.rtls.kpi.missing24hSub")}
           tone="danger"
           value={String(rtlsSummary?.missing_24h ?? "—")}
         />
@@ -205,10 +209,10 @@ export function FaRTLSPage() {
       <FaQueryState
         emptyDescription={
           hasLocation
-            ? "No assets are being tracked on this floor."
-            : "Save a location query first, then pick it from the location selector."
+            ? t("page.rtls.noTrackedDesc")
+            : t("page.rtls.noLocationDesc")
         }
-        emptyTitle={hasLocation ? "No tracked assets" : "No location selected"}
+        emptyTitle={hasLocation ? t("page.rtls.noTrackedTitle") : t("page.rtls.noLocationTitle")}
         isEmpty={!hasLocation || positions.length === 0}
         isError={isError}
         isLoading={isLoading}
@@ -218,19 +222,18 @@ export function FaRTLSPage() {
           <div className="ks-card-head">
             <div>
               <div className="ks-card-title">
-                {siteId ? `${siteId} · Floor ${floor}` : "No location selected"}
+                {siteId ? t("page.rtls.siteFloor", { floor, site: siteId }) : t("page.rtls.noLocationTitle")}
               </div>
               <div className="ks-card-desc">
-                live · {anchors.length} anchors · {positions.length} assets on
-                floor
+                {t("page.rtls.liveSummary", { anchors: anchors.length, assets: positions.length })}
               </div>
             </div>
             <div style={{ alignItems: "center", display: "flex", gap: 8 }}>
               <button className="ks-btn ks-btn-sm" type="button" onClick={() => setEditorOpen(true)}>
                 <Pencil size={13} />
-                Edit layout
+                {t("page.rtls.editLayout")}
               </button>
-              <span className="ks-badge success">● live</span>
+              <span className="ks-badge success">{t("page.rtls.live")}</span>
             </div>
           </div>
           <div className="ks-card-body">
@@ -327,21 +330,21 @@ export function FaRTLSPage() {
                   className="ks-legend-swatch"
                   style={{ background: "#22d3ee" }}
                 />
-                BLE anchor
+                BLE {t("page.rtls.legend.anchor")}
               </span>
               <span className="ks-legend-item">
                 <span
                   className="ks-legend-swatch"
                   style={{ background: "#3b82f6" }}
                 />
-                Asset
+                {t("page.rtls.legend.asset")}
               </span>
               <span className="ks-legend-item">
                 <span
                   className="ks-legend-swatch"
                   style={{ background: "#ef4444" }}
                 />
-                Alert
+                {t("page.rtls.legend.alert")}
               </span>
             </div>
           </div>
@@ -351,7 +354,7 @@ export function FaRTLSPage() {
           <div className="ks-card">
             <div className="ks-card-head">
               <div className="ks-card-title">
-                {selectedPosition ? `Selected · ${selectedPosition.asset_id}` : "Selected"}
+                {selectedPosition ? t("page.rtls.selectedNamed", { id: selectedPosition.asset_id }) : t("page.rtls.selected")}
               </div>
               <MapPin size={14} />
             </div>
@@ -375,25 +378,27 @@ export function FaRTLSPage() {
                 onClick={() => router.push(`/dashboard/fixed-assets/register/${selectedPosition.asset_id}/`)}
               >
                 <Search size={14} />
-                Open profile
+                {t("page.rtls.openProfile")}
               </button>
                 </>
               ) : (
-                <p className="text-sm text-muted-foreground">No assets tracked on this floor.</p>
+                <p className="text-sm text-muted-foreground">{t("page.rtls.noAssetsFloor")}</p>
               )}
             </div>
           </div>
 
           <div className="ks-card">
             <div className="ks-card-head">
-              <div className="ks-card-title">Saved location queries</div>
-              <button
-                className="ks-btn ks-btn-sm"
-                type="button"
-                onClick={() => setQueryOpen(true)}
-              >
-                Save query
-              </button>
+              <div className="ks-card-title">{t("page.rtls.savedQueries")}</div>
+              {canCreate && (
+                <button
+                  className="ks-btn ks-btn-sm"
+                  type="button"
+                  onClick={() => setQueryOpen(true)}
+                >
+                  {t("page.rtls.saveQuery")}
+                </button>
+              )}
             </div>
             <div className="ks-card-body">
               <div className="flex flex-col gap-2">
@@ -411,13 +416,16 @@ export function FaRTLSPage() {
                       <MapPin size={13} />
                       {q.name}
                     </button>
-                    <button
-                      className="ks-btn ks-btn-ghost ks-btn-icon ks-btn-sm"
-                      type="button"
-                      onClick={() => handleDeleteQuery(q.id)}
-                    >
-                      <Trash2 size={13} />
-                    </button>
+                    {canDelete && (
+                      <button
+                        aria-label={t("page.rtls.deleteQuery")}
+                        className="ks-btn ks-btn-ghost ks-btn-icon ks-btn-sm"
+                        type="button"
+                        onClick={() => handleDeleteQuery(q.id)}
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -438,22 +446,22 @@ export function FaRTLSPage() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Save location query</DialogTitle>
+            <DialogTitle>{t("page.rtls.saveQueryTitle")}</DialogTitle>
           </DialogHeader>
           <Input
             autoFocus
-            placeholder="Query name"
+            placeholder={t("page.rtls.queryNamePlaceholder")}
             value={queryName}
             onChange={(e) => setQueryName(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") handleSaveQuery(); }}
           />
           <Input
-            placeholder="Site ID"
+            placeholder={t("page.rtls.siteIdPlaceholder")}
             value={querySite}
             onChange={(e) => setQuerySite(e.target.value)}
           />
           <Input
-            placeholder="Floor"
+            placeholder={t("page.rtls.floorPlaceholder")}
             value={queryFloor}
             onChange={(e) => setQueryFloor(e.target.value)}
           />
@@ -462,7 +470,7 @@ export function FaRTLSPage() {
               disabled={!queryName || !querySite || !queryFloor}
               onClick={handleSaveQuery}
             >
-              Save
+              {t("page.rtls.save")}
             </Button>
           </DialogFooter>
         </DialogContent>

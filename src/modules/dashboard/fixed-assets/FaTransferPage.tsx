@@ -9,6 +9,7 @@ import {
   Plus,
   Truck,
 } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import PaginationCursor from "@/components/shared/PaginationCursor";
@@ -18,6 +19,7 @@ import {
   useConfirmTransferReceiptMutation,
   useGetTransfersQuery,
 } from "@/hooks/api/fixed-assets";
+import { useUrlFilterSync } from "@/hooks/useUrlFilterSync";
 import {
   avatarColor,
   FaKpiStrip,
@@ -27,13 +29,20 @@ import {
 } from "@/modules/dashboard/fixed-assets";
 import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 
-const STAGES = ["Dispatched", "In-transit", "Received"];
+const STAGE_KEYS = [
+  "page.transfer.stages.dispatched",
+  "page.transfer.stages.inTransit",
+  "page.transfer.stages.received",
+];
 
 function StageDots({ stage }: { stage: number }) {
+  const { t } = useTranslation("fixed-assets");
   return (
     <div className="flex items-center gap-1.5">
-      {STAGES.map((label, i) => {
+      {STAGE_KEYS.map((key, i) => {
+        const label = t(key);
         const idx = i + 1;
         const done = idx <= stage;
         return (
@@ -58,7 +67,7 @@ function StageDots({ stage }: { stage: number }) {
             >
               {label}
             </span>
-            {idx < STAGES.length && (
+            {idx < STAGE_KEYS.length && (
               <span
                 style={{
                   background:
@@ -76,11 +85,22 @@ function StageDots({ stage }: { stage: number }) {
 }
 
 export function FaTransferPage() {
+  const { t } = useTranslation("fixed-assets");
   const { openModal } = useFaModal();
+  const { canCreate, canManage } = useFaPermission();
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const [page, setPage] = useState(1);
   const PAGE_LIMIT = 20;
+  const { syncToUrl } = useUrlFilterSync<{ page: number }>({
+    fromQuery: (query) => ({ page: Number(query.page) > 0 ? Number(query.page) : 1 }),
+    onInit: (f) => setPage(f.page ?? 1),
+    toQuery: (f) => (f.page > 1 ? { page: String(f.page) } : {}),
+  });
+  const goToPage = (p: number) => {
+    setPage(p);
+    syncToUrl({ page: p });
+  };
   const { data: resp, isError, isLoading } = useGetTransfersQuery({
     limit: PAGE_LIMIT,
     organizationId,
@@ -92,12 +112,12 @@ export function FaTransferPage() {
 
   const handleNext = () => {
     if (resp?.page_pagination?.has_next) {
-      setPage((p) => p + 1);
+      goToPage(page + 1);
     }
   };
 
   const handlePrev = () => {
-    setPage((p) => Math.max(1, p - 1));
+    goToPage(Math.max(1, page - 1));
   };
   const inTransit = transfers.filter((t) => t.stage < 3).length;
   const awaitingReceipt = transfers.filter((t) => t.stage === 2).length;
@@ -109,31 +129,33 @@ export function FaTransferPage() {
           <>
             <button className="ks-btn ks-btn-ghost" type="button">
               <History size={14} />
-              History
+              {t("actions.history")}
             </button>
-            <button
-              className="ks-btn ks-btn-primary"
-              type="button"
-              onClick={() => openModal("transfer")}
-            >
-              <Plus size={14} />
-              New transfer
-            </button>
+            {canCreate && (
+              <button
+                className="ks-btn ks-btn-primary"
+                type="button"
+                onClick={() => openModal("transfer")}
+              >
+                <Plus size={14} />
+                {t("actions.newTransfer")}
+              </button>
+            )}
           </>
         }
-        title="Asset Transfers"
+        title={t("page.transfer.title")}
       />
 
       <FaKpiStrip>
-        <FaStat label="In transit" tone="brand" value={String(inTransit)} />
-        <FaStat label="Awaiting receipt" tone="warn" value={String(awaitingReceipt)} />
-        <FaStat label="This month" tone="info" value={String(transfers.length)} />
-        <FaStat label="Cross-site" tone="success" value="—" />
+        <FaStat label={t("page.transfer.kpi.inTransit")} tone="brand" value={String(inTransit)} />
+        <FaStat label={t("page.transfer.kpi.awaitingReceipt")} tone="warn" value={String(awaitingReceipt)} />
+        <FaStat label={t("page.transfer.kpi.thisMonth")} tone="info" value={String(transfers.length)} />
+        <FaStat label={t("page.transfer.kpi.crossSite")} tone="success" value="—" />
       </FaKpiStrip>
 
       <FaQueryState
-        emptyDescription="No transfers in progress."
-        emptyTitle="No transfers"
+        emptyDescription={t("page.transfer.noTransfersDesc")}
+        emptyTitle={t("page.transfer.noTransfers")}
         isEmpty={transfers.length === 0}
         isError={isError}
         isLoading={isLoading}
@@ -142,20 +164,20 @@ export function FaTransferPage() {
       <div className="ks-card">
         <div className="ks-card-head">
           <div>
-            <div className="ks-card-title">Active Transfers</div>
+            <div className="ks-card-title">{t("page.transfer.activeTitle")}</div>
             <div className="ks-card-desc">
-              {transfers.length} movements in progress · RFID-tracked chain of custody
+              {t("page.transfer.activeDescription", { count: transfers.length })}
             </div>
           </div>
           <button className="ks-btn ks-btn-sm" type="button">
             <Download size={13} />
-            Export
+            {t("actions.export")}
           </button>
         </div>
         <div className="ks-card-body" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {transfers.map((t, i) => (
+          {transfers.map((tr, i) => (
             <div
-              key={t.id}
+              key={tr.id}
               style={{
                 alignItems: "center",
                 border: "1px solid hsl(var(--border))",
@@ -191,17 +213,17 @@ export function FaTransferPage() {
                       fontWeight: 600,
                     }}
                   >
-                    {t.n}
+                    {tr.n}
                   </span>
-                  {t.late && (
+                  {tr.late && (
                     <span className="ks-badge danger">
                       <Clock size={10} />
-                      Late
+                      {t("page.transfer.late")}
                     </span>
                   )}
                 </div>
                 <div style={{ fontSize: 13, fontWeight: 600, marginTop: 2 }}>
-                  {t.n}
+                  {tr.n}
                 </div>
                 <div
                   style={{
@@ -210,12 +232,12 @@ export function FaTransferPage() {
                     marginTop: 2,
                   }}
                 >
-                  {t.from} <ArrowLeft size={11} style={{ display: "inline", verticalAlign: -1 }} /> {t.to}
+                  {tr.from} <ArrowLeft size={11} style={{ display: "inline", verticalAlign: -1 }} /> {tr.to}
                 </div>
               </div>
 
               <div style={{ flexShrink: 0 }}>
-                <StageDots stage={t.stage} />
+                <StageDots stage={tr.stage} />
               </div>
 
               <div
@@ -239,32 +261,32 @@ export function FaTransferPage() {
                     justifyContent: "center",
                     width: 28,
                   }}
-                  title={t.by}
+                  title={tr.by}
                 >
-                  {initials(t.by)}
+                  {initials(tr.by)}
                 </div>
                 <span style={{ color: "hsl(var(--text-3))", fontSize: 12 }}>
-                  {t.by}
+                  {tr.by}
                 </span>
               </div>
 
-              {t.stage === 2 ? (
+              {canManage && tr.stage === 2 ? (
                 <button
                   className="ks-btn ks-btn-primary ks-btn-sm"
                   type="button"
-                  onClick={() => confirmReceipt({ transferId: t.id })}
+                  onClick={() => confirmReceipt({ transferId: tr.id })}
                 >
                   <CheckCircle2 size={13} />
-                  Confirm receipt
+                  {t("actions.confirmReceipt")}
                 </button>
-              ) : t.stage >= 3 ? (
+              ) : tr.stage >= 3 ? (
                 <span className="ks-badge success">
                   <CheckCircle2 size={11} />
-                  Received
+                  {t("page.transfer.stages.received")}
                 </span>
               ) : (
                 <span style={{ color: "hsl(var(--text-3))", fontSize: 12 }}>
-                  In dispatch
+                  {t("page.transfer.inDispatch")}
                 </span>
               )}
             </div>

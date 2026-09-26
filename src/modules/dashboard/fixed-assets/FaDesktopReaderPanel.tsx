@@ -1,6 +1,7 @@
 "use client";
 
 import { Radio, RefreshCw, Square, Usb } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import useGetDesktopReaderStatusQuery from "@/hooks/api/desktop-reader/useGetDesktopReaderStatusQuery";
@@ -13,6 +14,7 @@ interface FaDesktopReaderPanelProps {
 }
 
 export function FaDesktopReaderPanel({ onEpc }: FaDesktopReaderPanelProps) {
+  const { t } = useTranslation("fixed-assets");
   const {
     data: status,
     isError,
@@ -58,10 +60,10 @@ export function FaDesktopReaderPanel({ onEpc }: FaDesktopReaderPanelProps) {
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-sm font-medium">
           <Usb size={14} />
-          RFID Reader · Desktop
+          {t("reader.desktopTitle")}
         </div>
         <span className={`ks-badge ${connected ? "success" : "warn"}`}>
-          {isError ? "unavailable" : (status?.status ?? "checking")}
+          {isError ? t("reader.statusUnavailable") : (status?.status ?? t("reader.statusChecking"))}
         </span>
       </div>
       {connected ? (
@@ -73,7 +75,7 @@ export function FaDesktopReaderPanel({ onEpc }: FaDesktopReaderPanelProps) {
               onClick={stop}
             >
               <Square size={13} />
-              Stop scan
+              {t("reader.stopScan")}
             </button>
           ) : (
             <button
@@ -82,20 +84,19 @@ export function FaDesktopReaderPanel({ onEpc }: FaDesktopReaderPanelProps) {
               onClick={handleStart}
             >
               <Radio size={13} />
-              Start scan
+              {t("reader.startScan")}
             </button>
           )}
           {lastEpc && (
             <span className="font-mono text-xs text-muted-foreground">
-              Last read: {lastEpc}
+              {t("reader.lastRead", { epc: lastEpc })}
             </span>
           )}
         </div>
       ) : (
         <div className="mt-2 flex items-center gap-2">
           <p className="flex-1 text-xs text-muted-foreground">
-            Desktop reader app not detected. Start it on this machine to scan
-            tags.
+            {t("reader.desktopUnavailable")}
           </p>
           <button
             className="ks-btn ks-btn-ghost ks-btn-sm"
@@ -104,7 +105,7 @@ export function FaDesktopReaderPanel({ onEpc }: FaDesktopReaderPanelProps) {
             onClick={() => void refetch()}
           >
             <RefreshCw size={13} />
-            Retry
+            {t("reader.retry")}
           </button>
         </div>
       )}

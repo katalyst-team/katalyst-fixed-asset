@@ -7,6 +7,7 @@ import {
   PlayCircle,
   Shield,
 } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useState } from "react";
 
 import { useUser } from "@/context/user-context";
@@ -38,6 +39,7 @@ import type {
 } from "@/types/fixed-assets";
 
 export function FaAuditPage() {
+  const { t } = useTranslation("fixed-assets");
   const [sweepEpcs, setSweepEpcs] = useState<string[]>([]);
   const { tokenPayload } = useUser();
   const { canManage } = useFaPermission();
@@ -83,13 +85,13 @@ export function FaAuditPage() {
           account: "1.500 · Aset Tetap",
           credit: journalAmount,
           debit: 0,
-          description: `Audit variance adjustment — ${worstZone.z}`,
+          description: t("page.audit.journalAdjustmentDesc", { zone: worstZone.z }),
         },
         {
           account: "7.120 · Beban Selisih Stok",
           credit: 0,
           debit: journalAmount,
-          description: `Audit variance adjustment — ${worstZone.z}`,
+          description: t("page.audit.journalAdjustmentDesc", { zone: worstZone.z }),
         },
       ]
     : [];
@@ -152,7 +154,7 @@ export function FaAuditPage() {
                 onClick={() => void startSession(undefined)}
               >
                 <PlayCircle size={14} />
-                Start audit session
+                {t("page.audit.startSession")}
               </button>
             )}
             <button
@@ -162,7 +164,7 @@ export function FaAuditPage() {
               onClick={handleAuditReport}
             >
               <FileText size={14} />
-              Audit report PDF
+              {t("page.audit.reportPdf")}
             </button>
             {canManage && (
               <button
@@ -172,12 +174,12 @@ export function FaAuditPage() {
                 onClick={handleResumeSweep}
               >
                 <PlayCircle size={14} />
-                Continue sweep
+                {t("page.audit.continueSweep")}
               </button>
             )}
           </>
         }
-        title={session?.name ? `Stock Audit · ${session.name}` : "Stock Audit"}
+        title={session?.name ? t("page.audit.titleNamed", { name: session.name }) : t("page.audit.title")}
       />
 
       <div
@@ -204,9 +206,9 @@ export function FaAuditPage() {
             >
               <Shield size={16} style={{ color: "hsl(var(--brand))" }} />
               <span style={{ fontSize: 14, fontWeight: 600 }}>
-                Physical count sweep in progress
+                {t("page.audit.sweepInProgress")}
               </span>
-              <span className="ks-badge brand">{session?.status ?? "Live"}</span>
+              <span className="ks-badge brand">{session?.status ?? t("page.audit.live")}</span>
             </div>
             <div
               style={{
@@ -219,12 +221,12 @@ export function FaAuditPage() {
               }}
             >
               <span style={{ fontFamily: "ui-monospace, monospace", fontWeight: 600 }}>
-                {auditProgress ? `${auditProgress.scanned_zones} of ${auditProgress.total_zones} zones` : "—"}
+                {auditProgress ? t("page.audit.zonesProgress", { scanned: auditProgress.scanned_zones, total: auditProgress.total_zones }) : "—"}
               </span>
               {nextZoneToScan && (
                 <span style={{ alignItems: "center", display: "inline-flex", gap: 4 }}>
                   <Clock size={12} />
-                  Next: {nextZoneToScan.z}
+                  {t("page.audit.nextZone", { zone: nextZoneToScan.z })}
                 </span>
               )}
             </div>
@@ -233,8 +235,7 @@ export function FaAuditPage() {
               <div style={{ marginTop: 10 }}>
                 <FaDesktopReaderPanel onEpc={handleSweepEpc} />
                 <p className="mt-1 text-xs text-muted-foreground">
-                  {sweepEpcs.length} tag(s) read for {nextZoneToScan.z} · counted
-                  on Continue sweep
+                  {t("page.audit.tagsRead", { count: sweepEpcs.length, zone: nextZoneToScan.z })}
                 </p>
               </div>
             )}
@@ -250,23 +251,23 @@ export function FaAuditPage() {
               {auditProgress ? `${Math.round(auditProgress.pct_complete)}%` : "—"}
             </div>
             <div style={{ color: "hsl(var(--text-3))", fontSize: 12 }}>
-              {auditProgress ? `${auditProgress.total_zones - auditProgress.scanned_zones} zones remaining` : ""}
+              {auditProgress ? t("page.audit.zonesLeft", { count: auditProgress.total_zones - auditProgress.scanned_zones }) : ""}
             </div>
           </div>
         </div>
       </div>
 
       <FaKpiStrip>
-        <FaStat label="Counted" sub="physical units" tone="brand" value={String(countedTotal)} />
-        <FaStat label="Variances found" tone="warn" value={String(varianceCount)} />
+        <FaStat label={t("page.audit.kpi.counted")} sub={t("page.audit.kpi.countedSub")} tone="brand" value={String(countedTotal)} />
+        <FaStat label={t("page.audit.kpi.variances")} tone="warn" value={String(varianceCount)} />
         <FaStat
-          label="Impact NBV"
-          sub="net book value"
+          label={t("page.audit.kpi.nbvImpact")}
+          sub={t("page.audit.kpi.nbvImpactSub")}
           tone="danger"
           value={nbvImpact !== 0 ? formatIDRShort(nbvImpact) : "—"}
         />
-        <FaStat label="Zones remaining" tone="info" value={String(zonesRemaining)} />
-        <FaStat label="Sign-off" sub={`${signoffDone} of ${signoffRequired} done`} tone="success" value={`${signoffDone}/${signoffRequired}`} />
+        <FaStat label={t("page.audit.kpi.zonesRemaining")} tone="info" value={String(zonesRemaining)} />
+        <FaStat label={t("page.audit.kpi.signOff")} sub={t("page.audit.kpi.signOffSub", { done: signoffDone, required: signoffRequired })} tone="success" value={`${signoffDone}/${signoffRequired}`} />
       </FaKpiStrip>
 
       <FaQueryState
@@ -278,36 +279,36 @@ export function FaAuditPage() {
         <div className="ks-card">
           <div className="ks-card-head">
             <div>
-              <div className="ks-card-title">Reconciliation</div>
+              <div className="ks-card-title">{t("page.audit.reconciliation")}</div>
               <div className="ks-card-desc">
-                System vs physical count · per zone
+                {t("page.audit.reconciliationDesc")}
               </div>
             </div>
             <button className="ks-btn ks-btn-sm" type="button">
               <Download size={13} />
-              Export
+              {t("actions.export")}
             </button>
           </div>
           <table className="w-full text-sm">
             <thead>
               <tr>
                 <th className="text-left font-medium text-muted-foreground p-3">
-                  Zone
+                  {t("page.audit.columns.zone")}
                 </th>
                 <th className="text-left font-medium text-muted-foreground p-3">
-                  System
+                  {t("page.audit.columns.system")}
                 </th>
                 <th className="text-left font-medium text-muted-foreground p-3">
-                  Physical
+                  {t("page.audit.columns.physical")}
                 </th>
                 <th className="text-left font-medium text-muted-foreground p-3">
-                  Var.
+                  {t("page.audit.columns.variance")}
                 </th>
                 <th className="text-left font-medium text-muted-foreground p-3">
-                  NBV Δ
+                  {t("page.audit.columns.nbvDelta")}
                 </th>
                 <th className="text-left font-medium text-muted-foreground p-3">
-                  Status
+                  {t("page.audit.columns.status")}
                 </th>
               </tr>
             </thead>
@@ -353,13 +354,13 @@ export function FaAuditPage() {
                   </td>
                   <td className="p-3 border-t border-border">
                     {z.tone === "success" ? (
-                      <span className="ks-badge success">Match</span>
+                      <span className="ks-badge success">{t("page.audit.badge.match")}</span>
                     ) : z.tone === "danger" ? (
-                      <span className="ks-badge danger">Variance</span>
+                      <span className="ks-badge danger">{t("page.audit.badge.variance")}</span>
                     ) : z.tone === "warn" ? (
-                      <span className="ks-badge warn">Review</span>
+                      <span className="ks-badge warn">{t("page.audit.badge.review")}</span>
                     ) : (
-                      <span className="ks-badge outline">Pending</span>
+                      <span className="ks-badge outline">{t("page.audit.badge.pending")}</span>
                     )}
                   </td>
                 </tr>
@@ -372,12 +373,12 @@ export function FaAuditPage() {
           <div className="ks-card">
             <div className="ks-card-head">
               <div>
-                <div className="ks-card-title">Adjustment journal entry</div>
+                <div className="ks-card-title">{t("page.audit.journalTitle")}</div>
                 <div className="ks-card-desc">
-                  {worstZone ? `Largest variance · ${worstZone.z}` : "No variance to adjust"}
+                  {worstZone ? t("page.audit.journalLargest", { zone: worstZone.z }) : t("page.audit.journalNone")}
                 </div>
               </div>
-              <span className="ks-badge outline">Draft</span>
+              <span className="ks-badge outline">{t("page.audit.draft")}</span>
             </div>
             <div className="ks-card-body">
               <div
@@ -421,7 +422,7 @@ export function FaAuditPage() {
                     paddingTop: 8,
                   }}
                 >
-                  <span style={{ color: "hsl(var(--text-3))" }}>Net NBV impact</span>
+                  <span style={{ color: "hsl(var(--text-3))" }}>{t("page.audit.netNbvImpact")}</span>
                   <span
                     style={{
                       color: "hsl(var(--destructive))",
@@ -440,7 +441,7 @@ export function FaAuditPage() {
                   type="button"
                   onClick={handlePostToGl}
                 >
-                  Post to GL
+                  {t("page.audit.postToGl")}
                 </button>
               )}
             </div>

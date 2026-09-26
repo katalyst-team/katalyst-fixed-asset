@@ -1,6 +1,7 @@
 "use client";
 
 import { Plug, PlugZap, RefreshCw } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useCallback, useState } from "react";
 
 import { useQZSerialRfid } from "@/hooks/useQZSerialRfid";
@@ -18,6 +19,7 @@ interface FaRfidReaderPanelProps {
 }
 
 export function FaRfidReaderPanel({ onEpc }: FaRfidReaderPanelProps) {
+  const { t } = useTranslation("fixed-assets");
   const [lastEpc, setLastEpc] = useState("");
   const reader = useQZSerialRfid(
     useCallback(
@@ -35,7 +37,7 @@ export function FaRfidReaderPanel({ onEpc }: FaRfidReaderPanelProps) {
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-sm font-medium">
           <PlugZap size={14} />
-          RFID Reader · QZ Tray
+          {t("reader.qzTitle")}
         </div>
         <span className={`ks-badge ${STATUS_LABEL[reader.status] ?? "outline"}`}>
           {reader.status}
@@ -43,8 +45,7 @@ export function FaRfidReaderPanel({ onEpc }: FaRfidReaderPanelProps) {
       </div>
       {reader.status === "unavailable" ? (
         <p className="mt-2 text-xs text-muted-foreground">
-          QZ Tray not detected. Start QZ Tray on this machine to read tags from
-          a serial RFID reader.
+          {t("reader.qzUnavailable")}
         </p>
       ) : (
         <>
@@ -55,7 +56,7 @@ export function FaRfidReaderPanel({ onEpc }: FaRfidReaderPanelProps) {
               value={reader.port}
               onChange={(e) => reader.setPort(e.target.value)}
             >
-              <option value="">Select port</option>
+              <option value="">{t("reader.selectPort")}</option>
               {reader.ports.map((p) => (
                 <option key={p} value={p}>
                   {p}
@@ -69,7 +70,7 @@ export function FaRfidReaderPanel({ onEpc }: FaRfidReaderPanelProps) {
               onClick={() => void reader.refreshPorts()}
             >
               <RefreshCw size={13} />
-              Ports
+              {t("reader.ports")}
             </button>
             {isConnected ? (
               <button
@@ -77,7 +78,7 @@ export function FaRfidReaderPanel({ onEpc }: FaRfidReaderPanelProps) {
                 type="button"
                 onClick={() => void reader.disconnect()}
               >
-                Disconnect
+                {t("reader.disconnect")}
               </button>
             ) : (
               <button
@@ -87,7 +88,7 @@ export function FaRfidReaderPanel({ onEpc }: FaRfidReaderPanelProps) {
                 onClick={() => void reader.connect(reader.port)}
               >
                 <Plug size={13} />
-                Connect
+                {t("reader.connect")}
               </button>
             )}
           </div>
@@ -96,7 +97,7 @@ export function FaRfidReaderPanel({ onEpc }: FaRfidReaderPanelProps) {
           )}
           {lastEpc && (
             <p className="mt-2 font-mono text-xs text-muted-foreground">
-              Last read: {lastEpc}
+              {t("reader.lastRead", { epc: lastEpc })}
             </p>
           )}
         </>

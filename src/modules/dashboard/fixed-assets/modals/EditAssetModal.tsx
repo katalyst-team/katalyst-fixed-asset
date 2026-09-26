@@ -2,8 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Info } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import {
@@ -46,25 +48,26 @@ interface EditAssetModalProps {
   open: boolean;
 }
 
-const STATUS_OPTIONS: { label: string; value: string }[] = [
-  { label: "Checked Out", value: "checked-out" },
-  { label: "Deployed", value: "deployed" },
-  { label: "Idle", value: "idle" },
-  { label: "In Service", value: "in-service" },
-  { label: "Maintenance", value: "maint" },
-  { label: "Retired", value: "retired" },
+const STATUS_OPTIONS: { value: string }[] = [
+  { value: "checked-out" },
+  { value: "deployed" },
+  { value: "idle" },
+  { value: "in-service" },
+  { value: "maint" },
+  { value: "retired" },
 ];
 
-const formSchema = z.object({
-  custodian: z.string().optional(),
-  loc: z.string().optional(),
-  name: z.string().min(1, "Asset name is required"),
-  status: z.string(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+const STATUS_LABELS: Record<string, string> = {
+  "checked-out": "modals.editAsset.statusCheckedOut",
+  deployed: "modals.editAsset.statusDeployed",
+  idle: "modals.editAsset.statusIdle",
+  "in-service": "modals.editAsset.statusInService",
+  maint: "modals.editAsset.statusMaintenance",
+  retired: "modals.editAsset.statusRetired",
+};
 
 export function EditAssetModal({ asset, onClose, open }: EditAssetModalProps) {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
   const { isPending: isSaving, mutateAsync } = useUpdateAssetMutation({
@@ -72,6 +75,15 @@ export function EditAssetModal({ asset, onClose, open }: EditAssetModalProps) {
   });
   const peopleOptions = useFaPeopleOptions();
   const locationOptions = useFaLocationOptions();
+
+  const formSchema = z.object({
+    custodian: z.string().optional(),
+    loc: z.string().optional(),
+    name: z.string().min(1, t("modals.editAsset.nameRequired")),
+    status: z.string(),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -122,6 +134,7 @@ export function EditAssetModal({ asset, onClose, open }: EditAssetModalProps) {
         status: values.status as AssetStatus,
       },
     });
+    toast.success(t("toasts.assetUpdated"));
     onClose();
   }
 
@@ -131,9 +144,11 @@ export function EditAssetModal({ asset, onClose, open }: EditAssetModalProps) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit asset · {asset.asset_code}</DialogTitle>
+          <DialogTitle>
+            {t("modals.editAsset.title", { code: asset.asset_code })}
+          </DialogTitle>
           <DialogDescription>
-            Changes are versioned in the audit log
+            {t("modals.editAsset.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -144,11 +159,13 @@ export function EditAssetModal({ asset, onClose, open }: EditAssetModalProps) {
               name="name"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <FormLabel htmlFor="ea-name">Asset name</FormLabel>
+                  <FormLabel htmlFor="ea-name">
+                    {t("modals.editAsset.nameLabel")}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       id="ea-name"
-                      placeholder="Asset name"
+                      placeholder={t("modals.editAsset.nameLabel")}
                       {...field}
                     />
                   </FormControl>
@@ -162,11 +179,13 @@ export function EditAssetModal({ asset, onClose, open }: EditAssetModalProps) {
               name="custodian"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="ea-custodian">Custodian</FormLabel>
+                  <FormLabel htmlFor="ea-custodian">
+                    {t("modals.editAsset.custodianLabel")}
+                  </FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger id="ea-custodian">
-                        <SelectValue placeholder="Select custodian" />
+                        <SelectValue placeholder={t("modals.editAsset.custodianPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -187,11 +206,13 @@ export function EditAssetModal({ asset, onClose, open }: EditAssetModalProps) {
               name="loc"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="ea-location">Location</FormLabel>
+                  <FormLabel htmlFor="ea-location">
+                    {t("modals.editAsset.locationLabel")}
+                  </FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger id="ea-location">
-                        <SelectValue placeholder="Select location" />
+                        <SelectValue placeholder={t("modals.editAsset.locationPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -201,28 +222,30 @@ export function EditAssetModal({ asset, onClose, open }: EditAssetModalProps) {
                         </SelectItem>
                       ))}
                     </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="ea-status">Status</FormLabel>
+                  <FormLabel htmlFor="ea-status">
+                    {t("modals.editAsset.statusLabel")}
+                  </FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger id="ea-status">
-                        <SelectValue placeholder="Select status" />
+                        <SelectValue placeholder={t("modals.editAsset.statusPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {STATUS_OPTIONS.map((s) => (
                         <SelectItem key={s.value} value={s.value}>
-                          {s.label}
+                          {t(STATUS_LABELS[s.value])}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -233,15 +256,14 @@ export function EditAssetModal({ asset, onClose, open }: EditAssetModalProps) {
             />
 
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="ea-serial">Serial number</Label>
+              <Label htmlFor="ea-serial">{t("modals.editAsset.serialLabel")}</Label>
               <Input disabled={true} id="ea-serial" value={asset.serial} />
             </div>
 
             <div className="flex items-start gap-2 rounded-lg border border-border bg-muted/40 p-3 text-xs text-muted-foreground sm:col-span-2">
               <Info className="h-3.5 w-3.5 shrink-0" />
               <span>
-                EPC {asset.epc} is locked to this asset. Re-tag via RFID Tags →
-                Print if the physical tag is damaged.
+                {t("modals.editAsset.epcLocked", { epc: asset.epc })}
               </span>
             </div>
 
@@ -251,14 +273,14 @@ export function EditAssetModal({ asset, onClose, open }: EditAssetModalProps) {
                 type="button"
                 onClick={onClose}
               >
-                Cancel
+                {t("modals.editAsset.cancel")}
               </button>
               <button
                 className="ks-btn ks-btn-primary"
                 disabled={isSaving}
                 type="submit"
               >
-                Save changes
+                {t("modals.editAsset.submit")}
               </button>
             </DialogFooter>
           </form>

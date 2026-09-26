@@ -11,9 +11,11 @@ import {
   Radio,
   Upload,
 } from "lucide-react";
+import { useTranslation } from "next-i18next";
 import { type ChangeEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import SkeletonTable from "@/components/shared/SkeletonTable";
 import { useUser } from "@/context/user-context";
 import {
   useDeployScanInMutation,
@@ -32,6 +34,7 @@ import {
 } from "@/modules/dashboard/fixed-assets";
 import { CAT_LABEL } from "@/modules/dashboard/fixed-assets/constants";
 import { FaDesktopReaderPanel } from "@/modules/dashboard/fixed-assets/FaDesktopReaderPanel";
+import { FaQueryState } from "@/modules/dashboard/fixed-assets/FaQueryState";
 import { FaRfidReaderPanel } from "@/modules/dashboard/fixed-assets/FaRfidReaderPanel";
 import {
   useFaCostCenterOptions,
@@ -39,6 +42,7 @@ import {
   useFaModal,
   useFaPeopleOptions,
 } from "@/modules/dashboard/fixed-assets/modals";
+import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 import type { DeployScanInRequest, FaRfidTag } from "@/types/fixed-assets";
 
 interface PoLineItem {
@@ -68,14 +72,20 @@ interface ScanEntry {
   t: string;
 }
 
-const STEPS = ["Select PO", "Tagging RFID", "QC + Deploy"];
+const STEP_KEYS = [
+  "page.scanin.steps.selectPo",
+  "page.scanin.steps.taggingRfid",
+  "page.scanin.steps.qcDeploy",
+];
 
 function StepIndicator({ current }: { current: number }) {
+  const { t } = useTranslation("fixed-assets");
   return (
     <div className="ks-card">
       <div className="ks-card-body">
         <div className="flex items-center">
-          {STEPS.map((label, i) => {
+          {STEP_KEYS.map((key, i) => {
+            const label = t(key);
             const done = i < current;
             const active = i === current;
             return (
@@ -96,7 +106,7 @@ function StepIndicator({ current }: { current: number }) {
                     {label}
                   </span>
                 </div>
-                {i < STEPS.length - 1 && (
+                {i < STEP_KEYS.length - 1 && (
                   <div className="mx-4 h-px w-16 bg-border sm:w-24" />
                 )}
               </div>
@@ -125,14 +135,15 @@ function ScanPortal({ scanning }: { scanning: boolean }) {
 }
 
 export function FaScanInPage() {
+  const { t } = useTranslation("fixed-assets");
   const { tokenPayload } = useUser();
   const organizationId = tokenPayload?.organization_id ?? "";
-  const { data: poResp } = useGetPOQuery({ organizationId });
+  const { data: poResp, isError: isPoError, isLoading: isPoLoading } = useGetPOQuery({ organizationId });
   const { mutateAsync: deployScanIn } = useDeployScanInMutation({
     organizationId,
   });
   const { mutateAsync: importPO } = useImportPOMutation({ organizationId });
-  const { data: historyResp } = useGetScanInHistoryQuery({ organizationId });
+  const { data: historyResp, isError: isHistoryError, isLoading: isHistoryLoading } = useGetScanInHistoryQuery({ organizationId });
   const RECENT_SCANS: ScanEntry[] = (historyResp?.data?.history ?? []).map((h) => ({
     epc: h.epc,
     id: h.asset_id,
@@ -167,6 +178,7 @@ export function FaScanInPage() {
   const ccOptions = useFaCostCenterOptions();
   const { isBypassEnabled } = useBypassHardware();
   const { openModal } = useFaModal();
+  const { canManage } = useFaPermission();
 
   const selectedPO = apiPOs[selectedPo];
   const PO_LINES: PoLineItem[] = (selectedPO?.lines ?? []).map((l) => ({
@@ -216,17 +228,17 @@ export function FaScanInPage() {
   const handleEpc = (epc: string) => {
     setRealEpCs((prev) => (prev.includes(epc) ? prev : [...prev, epc]));
     setScannedCount((c) => Math.min(c + 1, totalItems));
-    toast.success(`Tag read · ${epc}`);
+    toast.success(t("toasts.tagRead", { epc }));
   };
 
   const handleManualEpc = () => {
     const value = manualEpc.trim().toUpperCase();
     if (!/^[0-9A-F]{24}$/.test(value)) {
-      toast.error("EPC must be 24 hex characters");
+      toast.error(t("toasts.epcInvalid"));
       return;
     }
     if (realEpCs.includes(value)) {
-      toast.error("EPC already scanned");
+      toast.error(t("toasts.epcDuplicate"));
       return;
     }
     handleEpc(value);
@@ -235,7 +247,7 @@ export function FaScanInPage() {
 
   const handlePrintLabels = () => {
     if (realEpCs.length === 0) {
-      toast.info("Scan at least one tag first");
+      toast.info(t("toasts.scanFirst"));
       return;
     }
     const tags: FaRfidTag[] = realEpCs.map((epc) => ({
@@ -271,7 +283,7 @@ export function FaScanInPage() {
     setTimeout(() => {
       setScanning(false);
       setScannedCount((c) => Math.min(c + 1, totalItems));
-      toast.success("Tag encoded · EPC written");
+      toast.success(t("toasts.tagEncoded"));
     }, 700);
   };
 
@@ -280,14 +292,16 @@ export function FaScanInPage() {
       <FaShellHead
         actions={
           <>
-            <button
-              className="ks-btn ks-btn-ghost"
-              type="button"
-              onClick={handleImportPO}
-            >
-              <Upload size={15} />
-              Import PO
-            </button>
+            {canManage && (
+              <button
+                className="ks-btn ks-btn-ghost"
+                type="button"
+                onClick={handleImportPO}
+              >
+                <Upload size={15} />
+                {t("page.scanin.importPo")}
+              </button>
+            )}
             <input
               ref={poFileRef}
               accept=".csv,.xlsx,.xls"
@@ -300,23 +314,31 @@ export function FaScanInPage() {
               type="button"
             >
               <Download size={15} />
-              History
+              {t("actions.history")}
             </button>
           </>
         }
-        desc="RFID tagging workflow — receive, tag, and deploy new assets"
-        title="Scan-In · Asset Receiving"
+        desc={t("page.scanin.description")}
+        title={t("page.scanin.title")}
       />
 
       <StepIndicator current={step} />
 
       {step === 0 && (
+        <FaQueryState
+          emptyDescription={t("page.scanin.noPosDesc")}
+          emptyTitle={t("page.scanin.noPos")}
+          isEmpty={PO_QUEUE.length === 0}
+          isError={isPoError}
+          isLoading={isPoLoading}
+          skeleton={<SkeletonTable columns={2} rows={5} />}
+        >
         <div className="ks-grid-2">
           <div className="ks-card">
             <div className="ks-card-head">
               <div>
-                <div className="ks-card-title">PO Queue</div>
-                <div className="ks-card-desc">{PO_QUEUE.length} awaiting receiving</div>
+                <div className="ks-card-title">{t("page.scanin.poQueue")}</div>
+                <div className="ks-card-desc">{t("page.scanin.awaitingReceiving", { count: PO_QUEUE.length })}</div>
               </div>
             </div>
             <div className="ks-card-body space-y-2">
@@ -339,7 +361,7 @@ export function FaScanInPage() {
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">{p.supplier}</p>
                   <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>{p.items} items</span>
+                    <span>{t("page.scanin.itemsCount", { count: p.items })}</span>
                     <span>·</span>
                     <span>{formatIDRShort(p.value)}</span>
                     <span>·</span>
@@ -353,7 +375,7 @@ export function FaScanInPage() {
           <div className="ks-card">
             <div className="ks-card-head">
               <div>
-                <div className="ks-card-title">{po.supplier} · Detail</div>
+                <div className="ks-card-title">{po.supplier} · {t("page.scanin.detail")}</div>
                 <div className="ks-card-desc">{po.supplier} · {po.date}</div>
               </div>
               <span className={`ks-badge ${po.status === "received" ? "success" : "warn"}`}>
@@ -364,10 +386,10 @@ export function FaScanInPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr>
-                    <th className="text-left font-medium text-muted-foreground p-3">Item</th>
-                    <th className="text-left font-medium text-muted-foreground p-3">Qty</th>
-                    <th className="text-left font-medium text-muted-foreground p-3">Tag</th>
-                    <th className="text-right font-medium text-muted-foreground p-3">Unit</th>
+                    <th className="text-left font-medium text-muted-foreground p-3">{t("page.scanin.columns.item")}</th>
+                    <th className="text-left font-medium text-muted-foreground p-3">{t("page.scanin.columns.qty")}</th>
+                    <th className="text-left font-medium text-muted-foreground p-3">{t("page.scanin.columns.tag")}</th>
+                    <th className="text-right font-medium text-muted-foreground p-3">{t("page.scanin.columns.unit")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -392,7 +414,7 @@ export function FaScanInPage() {
               </table>
               <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
                 <div className="text-sm text-muted-foreground">
-                  Total <span className="font-semibold text-foreground">{totalItems} units</span>
+                  {t("page.scanin.total")} <span className="font-semibold text-foreground">{t("page.scanin.totalUnits", { count: totalItems })}</span>
                 </div>
                 <button
                   className="ks-btn ks-btn-primary"
@@ -401,16 +423,17 @@ export function FaScanInPage() {
                     setStep(1);
                     setScannedCount(0);
                     setRealEpCs([]);
-                    toast.success("RFID tagging station ready");
+                    toast.success(t("toasts.taggingReady"));
                   }}
                 >
-                  Start tagging
+                  {t("page.scanin.startTagging")}
                   <ArrowRight size={15} />
                 </button>
               </div>
             </div>
           </div>
         </div>
+        </FaQueryState>
       )}
 
       {step === 1 && (
@@ -418,8 +441,8 @@ export function FaScanInPage() {
           <div className="ks-card">
             <div className="ks-card-head">
               <div>
-                <div className="ks-card-title">Item Info</div>
-                <div className="ks-card-desc">Tagging targets for {po.supplier}</div>
+                <div className="ks-card-title">{t("page.scanin.itemInfo")}</div>
+                <div className="ks-card-desc">{t("page.scanin.taggingTargets", { supplier: po.supplier })}</div>
               </div>
             </div>
             <div className="ks-card-body space-y-3">
@@ -433,9 +456,9 @@ export function FaScanInPage() {
                         <span className={`ks-badge ${catToneClass(line.cat)}`}>{CAT_LABEL[line.cat]}</span>
                         <span className="font-medium">{line.name}</span>
                       </div>
-                      <span className="text-sm text-muted-foreground">{line.qty} units</span>
+                      <span className="text-sm text-muted-foreground">{t("page.scanin.totalUnits", { count: line.qty })}</span>
                     </div>
-                    <div className="mt-2 text-xs text-muted-foreground">Tag: {line.size} · Chip: {line.tagType}</div>
+                    <div className="mt-2 text-xs text-muted-foreground">{t("page.scanin.tagChip", { chip: line.tagType, size: line.size })}</div>
                   </div>
                 );
               })}
@@ -446,14 +469,14 @@ export function FaScanInPage() {
                   onClick={() => setStep(0)}
                 >
                   <ArrowLeft size={15} />
-                  Back
+                  {t("page.scanin.back")}
                 </button>
                 <button
                   className="ks-btn ks-btn-primary"
                   type="button"
                   onClick={() => setStep(2)}
                 >
-                  QC + Deploy
+                  {t(STEP_KEYS[2])}
                   <ArrowRight size={15} />
                 </button>
               </div>
@@ -463,8 +486,8 @@ export function FaScanInPage() {
           <div className="ks-card">
             <div className="ks-card-head">
               <div>
-                <div className="ks-card-title">RFID Tagging Station</div>
-                <div className="ks-card-desc">Place blank tag on writer pad</div>
+                <div className="ks-card-title">{t("page.scanin.taggingStation")}</div>
+                <div className="ks-card-desc">{t("page.scanin.placeTag")}</div>
               </div>
             </div>
             <div className="ks-card-body">
@@ -474,14 +497,14 @@ export function FaScanInPage() {
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 text-sm font-medium">
                         <Keyboard size={14} />
-                        Manual EPC entry
+                        {t("page.scanin.manualEpcEntry")}
                       </div>
-                      <span className="ks-badge warn">Hardware bypassed</span>
+                      <span className="ks-badge warn">{t("page.scanin.hardwareBypassed")}</span>
                     </div>
                     <div className="mt-2 flex items-center gap-2">
                       <input
                         className="min-w-0 flex-1 rounded-lg border border-border bg-transparent px-3 py-1.5 font-mono text-xs uppercase outline-none focus:border-[hsl(var(--brand))]"
-                        placeholder="Enter 24-hex EPC"
+                        placeholder={t("page.scanin.enterEpc")}
                         value={manualEpc}
                         onChange={(e) => setManualEpc(e.target.value)}
                         onKeyDown={(e) => {
@@ -494,7 +517,7 @@ export function FaScanInPage() {
                         type="button"
                         onClick={handleManualEpc}
                       >
-                        Add tag
+                        {t("page.scanin.addTag")}
                       </button>
                     </div>
                   </div>
@@ -522,7 +545,7 @@ export function FaScanInPage() {
                     onClick={handleScan}
                   >
                     <Radio size={16} />
-                    {scanning ? "Writing EPC…" : "Simulate scan"}
+                    {scanning ? t("page.scanin.writingEpc") : t("page.scanin.simulateScan")}
                   </button>
                 )}
                 <button
@@ -532,16 +555,21 @@ export function FaScanInPage() {
                   onClick={handlePrintLabels}
                 >
                   <Printer size={14} />
-                  Print labels ({realEpCs.length})
+                  {t("page.scanin.printLabels", { count: realEpCs.length })}
                 </button>
                 {!isBypassEnabled && (
                   <p className="text-xs text-muted-foreground">
-                    Waiting for tag reads from the connected reader…
+                    {t("page.scanin.waitingReads")}
                   </p>
                 )}
               </div>
               <div className="mt-4 border-t border-border pt-3">
-                <p className="mb-2 text-xs font-medium text-muted-foreground">Recently scanned</p>
+                <p className="mb-2 text-xs font-medium text-muted-foreground">{t("page.scanin.recentlyScanned")}</p>
+                <FaQueryState
+                  isError={isHistoryError}
+                  isLoading={isHistoryLoading}
+                  skeleton={<SkeletonTable columns={1} rows={3} />}
+                >
                 <div className="space-y-1">
                   {RECENT_SCANS.map((s) => (
                     <div key={s.id} className="flex items-center justify-between rounded px-2 py-1.5 text-xs hover:bg-muted">
@@ -549,10 +577,11 @@ export function FaScanInPage() {
                         <CheckCircle2 className="text-[hsl(var(--success))]" size={13} />
                         <span className="font-medium">{s.name}</span>
                       </div>
-                      <span className="text-muted-foreground">RSSI {s.rssi}dBm · {s.t} ago</span>
+                      <span className="text-muted-foreground">{t("page.scanin.rssiAgo", { rssi: s.rssi, time: s.t })}</span>
                     </div>
                   ))}
                 </div>
+                </FaQueryState>
               </div>
             </div>
           </div>
@@ -564,19 +593,19 @@ export function FaScanInPage() {
           <div className="ks-card">
             <div className="ks-card-head">
               <div>
-                <div className="ks-card-title">QC + Deploy</div>
-                <div className="ks-card-desc">Assign custody and confirm quality</div>
+                <div className="ks-card-title">{t(STEP_KEYS[2])}</div>
+                <div className="ks-card-desc">{t("page.scanin.assignCustody")}</div>
               </div>
             </div>
             <div className="ks-card-body space-y-3">
               <div>
-                <label className="mb-1 block text-xs font-medium text-muted-foreground">Custodian</label>
+                <label className="mb-1 block text-xs font-medium text-muted-foreground">{t("page.scanin.custodian")}</label>
                 <select
                   className="w-full rounded-lg border border-border bg-transparent px-3 py-2 text-sm outline-none focus:border-[hsl(var(--brand))]"
                   value={custodian}
                   onChange={(e) => setCustodian(e.target.value)}
                 >
-                  <option value="">Select custodian</option>
+                  <option value="">{t("page.scanin.selectCustodian")}</option>
                   {custodianOptions.map((c) => (
                     <option key={c.value} value={c.value}>
                       {c.label}
@@ -585,13 +614,13 @@ export function FaScanInPage() {
                 </select>
               </div>
               <div>
-                <label className="mb-1 block text-xs font-medium text-muted-foreground">Location</label>
+                <label className="mb-1 block text-xs font-medium text-muted-foreground">{t("page.scanin.location")}</label>
                 <select
                   className="w-full rounded-lg border border-border bg-transparent px-3 py-2 text-sm outline-none focus:border-[hsl(var(--brand))]"
                   value={loc}
                   onChange={(e) => setLoc(e.target.value)}
                 >
-                  <option value="">Select location</option>
+                  <option value="">{t("page.scanin.selectLocation")}</option>
                   {locationOptions.map((l) => (
                     <option key={l.value} value={l.value}>
                       {l.label}
@@ -600,13 +629,13 @@ export function FaScanInPage() {
                 </select>
               </div>
               <div>
-                <label className="mb-1 block text-xs font-medium text-muted-foreground">Cost Center</label>
+                <label className="mb-1 block text-xs font-medium text-muted-foreground">{t("page.scanin.costCenter")}</label>
                 <select
                   className="w-full rounded-lg border border-border bg-transparent px-3 py-2 text-sm outline-none focus:border-[hsl(var(--brand))]"
                   value={costCenter}
                   onChange={(e) => setCostCenter(e.target.value)}
                 >
-                  <option value="">Select cost center</option>
+                  <option value="">{t("page.scanin.selectCostCenter")}</option>
                   {ccOptions.map((c) => (
                     <option key={c.value} value={c.value}>
                       {c.label}
@@ -620,7 +649,7 @@ export function FaScanInPage() {
                   type="checkbox"
                   onChange={(e) => setQcPassed(e.target.checked)}
                 />
-                <span>QC inspection passed — packaging & accessory complete</span>
+                <span>{t("page.scanin.qcPassed")}</span>
               </label>
               <button
                 className="ks-btn ks-btn-ghost mt-1"
@@ -628,7 +657,7 @@ export function FaScanInPage() {
                 onClick={() => setStep(1)}
               >
                 <ArrowLeft size={15} />
-                Back
+                {t("page.scanin.back")}
               </button>
             </div>
           </div>
@@ -636,42 +665,44 @@ export function FaScanInPage() {
           <div className="ks-card">
             <div className="ks-card-head">
               <div>
-                <div className="ks-card-title">Deploy Summary</div>
-                <div className="ks-card-desc">Ready to register {scannedCount} assets</div>
+                <div className="ks-card-title">{t("page.scanin.deploySummary")}</div>
+                <div className="ks-card-desc">{t("page.scanin.readyToRegister", { count: scannedCount })}</div>
               </div>
             </div>
             <div className="ks-card-body space-y-3">
               <div className="ks-grid-3">
                 <div className="rounded-lg border border-border p-3 text-center">
                   <p className="text-2xl font-bold">{totalItems}</p>
-                  <p className="text-xs text-muted-foreground">Total units</p>
+                  <p className="text-xs text-muted-foreground">{t("page.scanin.kpiTotalUnits")}</p>
                 </div>
                 <div className="rounded-lg border border-border p-3 text-center">
                   <p className="text-2xl font-bold text-[hsl(var(--brand))]">{scannedCount}</p>
-                  <p className="text-xs text-muted-foreground">Tagged</p>
+                  <p className="text-xs text-muted-foreground">{t("page.scanin.kpiTagged")}</p>
                 </div>
                 <div className="rounded-lg border border-border p-3 text-center">
                   <p className="text-2xl font-bold text-[hsl(var(--success))]">{remaining}</p>
-                  <p className="text-xs text-muted-foreground">Remaining</p>
+                  <p className="text-xs text-muted-foreground">{t("page.scanin.kpiRemaining")}</p>
                 </div>
               </div>
               <div className="rounded-lg border border-border p-3">
-                <p className="text-xs text-muted-foreground">Acquisition value</p>
+                <p className="text-xs text-muted-foreground">{t("page.scanin.acquisitionValue")}</p>
                 <p className="mt-1 text-xl font-bold">{formatIDR(PO_LINES.reduce((s, l) => s + l.unit * l.qty, 0))}</p>
               </div>
               <div className="flex items-center gap-2 rounded-lg border border-[hsl(var(--brand)/0.3)] bg-[hsl(var(--brand)/0.06)] p-3 text-sm">
                 <CheckCircle2 className="text-[hsl(var(--success))]" size={16} />
-                <span>All {scannedCount} tags encoded · EPCIS events queued</span>
+                <span>{t("page.scanin.allEncoded", { count: scannedCount })}</span>
               </div>
-              <button
-                className="ks-btn ks-btn-primary w-full"
-                disabled={!custodian || !loc || scannedCount === 0}
-                type="button"
-                onClick={handleDeploy}
-              >
-                <CheckCircle2 size={16} />
-                Deploy to register
-              </button>
+              {canManage && (
+                <button
+                  className="ks-btn ks-btn-primary w-full"
+                  disabled={!custodian || !loc || scannedCount === 0}
+                  type="button"
+                  onClick={handleDeploy}
+                >
+                  <CheckCircle2 size={16} />
+                  {t("page.scanin.deployToRegister")}
+                </button>
+              )}
             </div>
           </div>
         </div>
