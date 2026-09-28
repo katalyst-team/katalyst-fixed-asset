@@ -6,6 +6,7 @@ import { EditAssetModal } from "./EditAssetModal";
 import { EditTagModal } from "./EditTagModal";
 import { EpcRangeModal } from "./EpcRangeModal";
 import { useFaModal } from "./FaModalContext";
+import { ImportAssetsModal } from "./ImportAssetsModal";
 import { LocateAssetModal } from "./LocateAssetModal";
 import { OrderStockModal } from "./OrderStockModal";
 import { PmRuleModal } from "./PmRuleModal";
@@ -48,6 +49,10 @@ export function FaModalRoot() {
       />
       <EpcRangeModal
         open={type === "epcRange"}
+        onClose={closeModal}
+      />
+      <ImportAssetsModal
+        open={type === "importAssets"}
         onClose={closeModal}
       />
       <LocateAssetModal

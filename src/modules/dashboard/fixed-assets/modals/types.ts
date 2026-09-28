@@ -13,6 +13,7 @@ export type FaModalType =
   | "createAsset"
   | "editAsset"
   | "editTag"
+  | "importAssets"
   | "printTag"
   | "locateAsset"
   | "epcRange"

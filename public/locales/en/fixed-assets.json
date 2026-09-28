@@ -350,6 +350,33 @@
       "colTransfer": "Transfer",
       "description": "All completed transfers · receipt confirmed by destination gate scan",
       "title": "Transfer history · last 30 days"
+    },
+    "importAssets": {
+      "back": "Back",
+      "chooseFile": "Choose CSV or Excel file",
+      "colCategory": "Category",
+      "colIssues": "Issues",
+      "colName": "Name",
+      "colValue": "Value",
+      "defaultCategory": "No category column — apply:",
+      "description": "Upload a spreadsheet, map the columns, then import. Existing assets are not modified.",
+      "downloadTemplate": "Download CSV template",
+      "epc": "EPC / RFID",
+      "fileHint": "CSV or XLSX, up to 1,000 rows",
+      "importBtn": "Import",
+      "invalidCategory": "Unknown category (use: IT Equipment, Furniture, Vehicles, Lab, Machinery, Medical, Tools)",
+      "invalidDate": "Invalid date (use YYYY-MM-DD or DD/MM/YYYY)",
+      "invalidValue": "Invalid number",
+      "mappingTitle": "Column mapping",
+      "missingName": "Name is required",
+      "nameColumnRequired": "Map at least one column to Name",
+      "parseError": "Could not read the file. Make sure it is a valid CSV or Excel file with a header row.",
+      "previewTitle": "Preview",
+      "rowsFound": "rows",
+      "rowsWithErrors": "rows with errors will be skipped",
+      "skip": "Skip",
+      "title": "Import assets",
+      "tooManyRows": "Maximum 1,000 rows per import. Split the file and import again."
     }
   },
   "page": {

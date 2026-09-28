@@ -10,7 +10,6 @@ import PaginationCursor from "@/components/shared/PaginationCursor";
 import SkeletonTable from "@/components/shared/SkeletonTable";
 import { useUser } from "@/context/user-context";
 import {
-  useBulkCreateAssetMutation,
   useBulkUpdateAssetMutation,
   useExportDataMutation,
   useGetAssetRegisterQuery,
@@ -63,7 +62,7 @@ export function FaRegisterPage() {
   const { t } = useTranslation("fixed-assets");
   const router = useRouter();
   const { tokenPayload } = useUser();
-  const { canManage } = useFaPermission();
+  const { canCreate, canManage } = useFaPermission();
   const organizationId = tokenPayload?.organization_id ?? "";
 
   const [cat, setCat] = useState("");
@@ -129,7 +128,6 @@ export function FaRegisterPage() {
     goToPage(Math.max(1, page - 1));
   };
   const { openModal } = useFaModal();
-  const { mutateAsync: bulkCreateAsset } = useBulkCreateAssetMutation({ organizationId });
   const { mutateAsync: bulkUpdateAsset } = useBulkUpdateAssetMutation({ organizationId });
   const { isPending: isExporting, mutateAsync: exportData } = useExportDataMutation({ organizationId });
   const assets = useMemo(() => resp?.data ?? [], [resp]);
@@ -189,11 +187,11 @@ export function FaRegisterPage() {
           <p className="ks-page-desc">{assets.length} {t("page.register.description")}</p>
         </div>
         <div className="ks-page-actions">
-          {canManage && (
+          {canCreate && (
             <button
               className="ks-btn ks-btn-sm"
               type="button"
-              onClick={() => bulkCreateAsset({ assets: [] })}
+              onClick={() => openModal("importAssets")}
             >
               <Upload size={14} />
               {t("actions.import")}

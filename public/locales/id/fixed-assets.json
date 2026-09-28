@@ -350,6 +350,33 @@
       "colTransfer": "Transfer",
       "description": "Semua transfer selesai · penerimaan dikonfirmasi oleh pemindaian gerbang tujuan",
       "title": "Riwayat transfer · 30 hari terakhir"
+    },
+    "importAssets": {
+      "back": "Kembali",
+      "chooseFile": "Pilih file CSV atau Excel",
+      "colCategory": "Kategori",
+      "colIssues": "Masalah",
+      "colName": "Nama",
+      "colValue": "Nilai",
+      "defaultCategory": "Tidak ada kolom kategori — gunakan:",
+      "description": "Unggah spreadsheet, petakan kolomnya, lalu impor. Aset yang sudah ada tidak diubah.",
+      "downloadTemplate": "Unduh template CSV",
+      "epc": "EPC / RFID",
+      "fileHint": "CSV atau XLSX, hingga 1.000 baris",
+      "importBtn": "Impor",
+      "invalidCategory": "Kategori tidak dikenal (gunakan: IT Equipment, Furniture, Vehicles, Lab, Machinery, Medical, Tools)",
+      "invalidDate": "Tanggal tidak valid (gunakan YYYY-MM-DD atau DD/MM/YYYY)",
+      "invalidValue": "Angka tidak valid",
+      "mappingTitle": "Pemetaan kolom",
+      "missingName": "Nama wajib diisi",
+      "nameColumnRequired": "Petakan minimal satu kolom ke Nama",
+      "parseError": "File tidak dapat dibaca. Pastikan file CSV atau Excel yang valid dan memiliki baris header.",
+      "previewTitle": "Pratinjau",
+      "rowsFound": "baris",
+      "rowsWithErrors": "baris bermasalah akan dilewati",
+      "skip": "Lewati",
+      "title": "Impor aset",
+      "tooManyRows": "Maksimal 1.000 baris per impor. Pecah file dan impor kembali."
     }
   },
   "page": {
