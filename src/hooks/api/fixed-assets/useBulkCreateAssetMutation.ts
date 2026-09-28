@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 import { toastError } from "@/services";
 import {
@@ -23,7 +22,6 @@ const useBulkCreateAssetMutation = ({
       toastError(error);
     },
     onSuccess: () => {
-      toast.success("Assets imported successfully");
       queryClient.invalidateQueries({
         queryKey: ["faAssetRegister", organizationId],
       });

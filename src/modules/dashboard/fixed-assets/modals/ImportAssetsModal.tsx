@@ -3,6 +3,7 @@
 import { ArrowLeft, Download, FileUp } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import { useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 import * as XLSX from "xlsx";
 
 import {
@@ -171,10 +172,8 @@ export function ImportAssetsModal({ onClose, open }: ImportAssetsModalProps) {
   }
 
   function handleDownloadTemplate() {
-    const csv = [
-      "name,category,location,custodian,value,serial,supplier,purchased,warranty",
-      "Laptop ThinkPad,IT Equipment,HQ Floor 2,Budi Santoso,15000000,SN-001,PT Sumber Aman,2026-01-15,2029-01-15",
-    ].join("\n");
+    const csv =
+      "name,category,location,custodian,value,serial,supplier,purchased,warranty\nLaptop ThinkPad,IT Equipment,HQ Floor 2,Budi Santoso,15000000,SN-001,PT Sumber Aman,2026-01-15,2029-01-15";
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
@@ -189,6 +188,7 @@ export function ImportAssetsModal({ onClose, open }: ImportAssetsModalProps) {
   );
 
   function fieldLabel(field: ImportField): string {
+    if (field === "cat") return t("modals.createAsset.categoryLabel");
     if (field === "epc") return t("modals.importAssets.epc");
     if (field === "loc") return t("modals.createAsset.locationLabel");
     if (field === "val") return t("modals.createAsset.valueLabel");
@@ -293,6 +293,7 @@ export function ImportAssetsModal({ onClose, open }: ImportAssetsModalProps) {
       })),
     }).catch(() => null);
     if (!result) return;
+    toast.success(t("toasts.assetsImported"));
     onClose();
   }
 
@@ -418,7 +419,7 @@ export function ImportAssetsModal({ onClose, open }: ImportAssetsModalProps) {
                   {t("modals.importAssets.previewTitle")}
                 </span>
                 <span className="text-muted-foreground">
-                  {validRows.length} OK
+                  {validRows.length} {t("modals.importAssets.ok")}
                   {errorCount > 0
                     ? ` · ${errorCount} ${t("modals.importAssets.rowsWithErrors")}`
                     : ""}
