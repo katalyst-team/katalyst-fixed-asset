@@ -48,6 +48,8 @@ export type { DeleteSavedQueryResponse } from "./deleteSavedQueryService";
 export { deleteSavedQueryService } from "./deleteSavedQueryService";
 export type { DeployScanInResponse } from "./deployScanInService";
 export { deployScanInService } from "./deployScanInService";
+export type { DisconnectIntegrationResponse } from "./disconnectIntegrationService";
+export { disconnectIntegrationService } from "./disconnectIntegrationService";
 export type { EncodeRFIDTagResponse } from "./encodeRFIDTagService";
 export { encodeRFIDTagService } from "./encodeRFIDTagService";
 export type { EscalateRequestResponse } from "./escalateRequestService";

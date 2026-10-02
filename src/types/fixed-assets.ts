@@ -521,7 +521,7 @@ export interface FaSettings {
     default_useful_life_years: Partial<Record<AssetCategory, number>>;
     method: "straight-line" | "declining-balance";
   };
-  integrations: Record<string, { connected: boolean; type?: string }>;
+  integrations: Record<string, { config?: Record<string, string>; connected: boolean; type?: string }>;
   notifications: {
     audit_complete_notify: boolean;
     disposal_approval_notify: boolean;

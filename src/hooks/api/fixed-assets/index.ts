@@ -23,6 +23,7 @@ export { default as useCreateWorkOrderMutation } from "./useCreateWorkOrderMutat
 export { default as useDeleteFAMasterDataMutation } from "./useDeleteFAMasterDataMutation";
 export { default as useDeleteSavedQueryMutation } from "./useDeleteSavedQueryMutation";
 export { default as useDeployScanInMutation } from "./useDeployScanInMutation";
+export { default as useDisconnectIntegrationMutation } from "./useDisconnectIntegrationMutation";
 export { default as useEncodeRFIDTagMutation } from "./useEncodeRFIDTagMutation";
 export { default as useEscalateRequestMutation } from "./useEscalateRequestMutation";
 export { default as useExportDataMutation } from "./useExportDataMutation";

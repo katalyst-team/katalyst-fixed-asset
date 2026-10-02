@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import Loading from "@/components/shared/Loading";
 import { useUser } from "@/context/user-context";
 import {
-  useConnectIntegrationMutation,
+  useDisconnectIntegrationMutation,
   useGetBillingQuery,
   useGetFASettingsQuery,
   useGetInvoicesQuery,
@@ -25,6 +25,7 @@ import {
 } from "@/hooks/api/fixed-assets";
 import { FaMeter, FaShellHead,formatDate } from "@/modules/dashboard/fixed-assets";
 import { FaQueryError } from "@/modules/dashboard/fixed-assets/FaQueryState";
+import { useFaModal } from "@/modules/dashboard/fixed-assets/modals";
 import { useFaPermission } from "@/modules/dashboard/fixed-assets/useFaPermission";
 import type { FaSettings } from "@/types/fixed-assets";
 
@@ -218,11 +219,12 @@ const INTEGRATION_META: Record<string, { descKey: string; icon: LucideIcon; name
   messaging: { descKey: "page.settings.integration.messagingDesc", icon: MessageSquare, nameKey: "page.settings.integration.messaging" },
 };
 
-function IntegrationsPanel({ canManageSettings, integrations, isConnecting, onConnect }: {
+function IntegrationsPanel({ canManageSettings, integrations, isDisconnecting, onConnect, onDisconnect }: {
   canManageSettings: boolean;
   integrations: FaSettings["integrations"];
-  isConnecting: boolean;
-  onConnect: (key: string) => Promise<void>;
+  isDisconnecting: boolean;
+  onConnect: (key: string, name: string) => void;
+  onDisconnect: (key: string) => Promise<void>;
 }) {
   const { t } = useTranslation("fixed-assets");
   const cards = Object.entries(integrations)
@@ -244,14 +246,27 @@ function IntegrationsPanel({ canManageSettings, integrations, isConnecting, onCo
               <div style={{ alignItems: "center", background: "hsl(var(--surface-2))", borderRadius: 10, display: "flex", height: 44, justifyContent: "center", width: 44 }}><Icon size={20} /></div>
               <div style={{ fontSize: 14, fontWeight: 600 }}>{name}</div>
               <div style={{ color: "hsl(var(--text-3))", fontSize: 12 }}>{t(i.descKey)}</div>
-              {i.connected ? <span className="ks-badge success">{t("page.settings.connected")}</span> : connectType && canManageSettings ? (
+              {i.connected ? (
+                <>
+                  <span className="ks-badge success">{t("page.settings.connected")}</span>
+                  {connectType && canManageSettings ? (
+                    <button
+                      className="ks-btn ks-btn-sm"
+                      disabled={isDisconnecting}
+                      type="button"
+                      onClick={() => onDisconnect(i.key)}
+                    >
+                      {isDisconnecting ? <Loader2 className="animate-spin" size={14} /> : null}
+                      {t("page.settings.disconnect")}
+                    </button>
+                  ) : null}
+                </>
+              ) : connectType && canManageSettings ? (
                 <button
                   className="ks-btn ks-btn-sm"
-                  disabled={isConnecting}
                   type="button"
-                  onClick={() => onConnect(i.key)}
+                  onClick={() => onConnect(i.key, name)}
                 >
-                  {isConnecting ? <Loader2 className="animate-spin" size={14} /> : null}
                   {t("page.settings.connect")}
                 </button>
               ) : connectType ? <span className="ks-badge outline">{t("page.settings.available")}</span> : <span className="ks-badge outline">{t("page.settings.comingSoon")}</span>}
@@ -404,7 +419,8 @@ export function FaSettingsPage() {
   const [tab, setTab] = useState("general");
   const { data: resp, isError, isLoading, refetch } = useGetFASettingsQuery({ organizationId });
   const { isPending: isSaving, mutateAsync: updateSettingsAsync } = useUpdateFASettingsMutation({ organizationId });
-  const { isPending: isConnecting, mutateAsync: connectAsync } = useConnectIntegrationMutation({ organizationId });
+  const { isPending: isDisconnecting, mutateAsync: disconnectAsync } = useDisconnectIntegrationMutation({ organizationId });
+  const { openModal } = useFaModal();
   const settings = resp?.data;
   const [form, setForm] = useState<FaSettings>(DEFAULT_SETTINGS);
 
@@ -427,10 +443,16 @@ export function FaSettingsPage() {
     await updateSettingsAsync(form);
   };
 
-  const handleConnect = async (key: string) => {
+  const handleConnect = (key: string, name: string) => {
     const type = CONNECT_TYPE_BY_KEY[key];
     if (!type) return;
-    await connectAsync({ data: {}, type });
+    openModal("integrationConfig", { integration: { key, name, type } });
+  };
+
+  const handleDisconnect = async (key: string) => {
+    const type = CONNECT_TYPE_BY_KEY[key];
+    if (!type) return;
+    await disconnectAsync({ type });
   };
 
   if (isLoading) return <Loading />;
@@ -490,8 +512,9 @@ export function FaSettingsPage() {
             <IntegrationsPanel
               canManageSettings={canManageSettings}
               integrations={form.integrations}
-              isConnecting={isConnecting}
+              isDisconnecting={isDisconnecting}
               onConnect={handleConnect}
+              onDisconnect={handleDisconnect}
             />
           )}
           {tab === "rfid" && (

@@ -198,6 +198,20 @@
       "registerRange": "Register range",
       "title": "Register EPC range"
     },
+    "integrationConfig": {
+      "cancel": "Cancel",
+      "connect": "Connect",
+      "connecting": "Connecting…",
+      "description": "Enter the connection details. Values are stored in workspace settings.",
+      "fields": {
+        "apiKey": "API key",
+        "baseUrl": "Endpoint URL",
+        "bindDn": "Bind DN",
+        "host": "Server / host",
+        "smtpHost": "SMTP host"
+      },
+      "title": "Connect {{name}}"
+    },
     "locate": {
       "close": "Close",
       "description": "Search by name, asset ID, or EPC",
@@ -1264,6 +1278,7 @@
       "defaultTagType": "Default Tag Type",
       "depreciationStandard": "Depreciation Standard",
       "description": "Workspace, notifications, integrations, hardware, security, and billing.",
+      "disconnect": "Disconnect",
       "epcEncoding": "EPC Encoding",
       "fiscalYearStart": "Fiscal Year Start",
       "hardwareConfig": "Hardware Config",

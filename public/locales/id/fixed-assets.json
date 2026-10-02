@@ -198,6 +198,20 @@
       "registerRange": "Daftarkan rentang",
       "title": "Daftarkan rentang EPC"
     },
+    "integrationConfig": {
+      "cancel": "Batal",
+      "connect": "Hubungkan",
+      "connecting": "Menghubungkan…",
+      "description": "Masukkan detail koneksi. Nilai disimpan di pengaturan workspace.",
+      "fields": {
+        "apiKey": "API key",
+        "baseUrl": "Endpoint URL",
+        "bindDn": "Bind DN",
+        "host": "Server / host",
+        "smtpHost": "Host SMTP"
+      },
+      "title": "Hubungkan {{name}}"
+    },
     "locate": {
       "close": "Tutup",
       "description": "Cari berdasarkan nama, ID aset, atau EPC",
@@ -1262,6 +1276,7 @@
       "connected": "Terhubung",
       "currency": "Mata Uang",
       "defaultTagType": "Tipe Tag Bawaan",
+      "disconnect": "Putuskan",
       "depreciationStandard": "Standar Penyusutan",
       "description": "Ruang kerja, notifikasi, integrasi, perangkat keras, keamanan, dan penagihan.",
       "epcEncoding": "Enkoding EPC",

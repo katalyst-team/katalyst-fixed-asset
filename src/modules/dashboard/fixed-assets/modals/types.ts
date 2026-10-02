@@ -2,6 +2,8 @@ import { useUser } from "@/context/user-context";
 import { useGetFAMasterDataQuery } from "@/hooks/api/fixed-assets";
 import type { FaAsset, FaRfidTag } from "@/types/fixed-assets";
 
+export type FaIntegrationConnectType = "erp" | "active-directory" | "email";
+
 export type FaModalType =
   | "approvalRule"
   | "disposal"
@@ -14,6 +16,7 @@ export type FaModalType =
   | "editAsset"
   | "editTag"
   | "importAssets"
+  | "integrationConfig"
   | "printTag"
   | "locateAsset"
   | "epcRange"
@@ -25,6 +28,7 @@ export type FaModalType =
 export interface FaModalPayload {
   asset?: FaAsset;
   assetId?: string;
+  integration?: { key: string; name: string; type: FaIntegrationConnectType };
   tag?: FaRfidTag;
   tags?: FaRfidTag[];
 }
